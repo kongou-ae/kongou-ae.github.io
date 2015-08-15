@@ -111,7 +111,11 @@
 
 <p>　とりあえずということで、認証情報の扱いは適当です。AWSの認証情報はコード内にベタ書きします。Azureの証明書は、lambdaファンクションのZIPに含めます。実際のところは、API Gatewayにアクセスする際のHTTPヘッダに認証情報を含め、Lambdaファンクションに渡す方法がカッコいいと思います。</p>
 
+<script src="https://gist.github.com/kongou-ae/ad0b1366da2ee5efbbaa.js"></script>
+
 <p>　ブラウザでAPI Gatewayの/computeにアクセスすると、以下のJSONが返ってきます。AzureとAWSのインスタンス情報が一つのJSONのレスポンスになっています。いい感じですね。このレスポンスをJavascriptでいい感じに表示するHTMLを作ってS3に配置すれば、サーバレスのマルチクラウド管理ポータルが作れるかも？</p>
+
+<script src="https://gist.github.com/kongou-ae/825a49a087311e0814ad.js"></script>
 
 <p><img src="http://aimless.jp/blog/wp-content/uploads/2015/07/result_of_api.png" alt="" />
 </p>
