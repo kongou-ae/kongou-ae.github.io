@@ -1,0 +1,146 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+
+  
+  <meta charset="UTF-8">
+  <title>
+    YAMAHAのIPIPトンネルが上手く動かない | Aimless
+  </title>
+
+
+  
+  <meta name="viewport" content="width=device-width,user-scalable=no,maximum-scale=1,initial-scale=1">
+
+
+  
+  <link rel="stylesheet" href="/css/sanitize.css">
+  <link rel="stylesheet" href="/css/responsive.css">
+  <link rel="stylesheet" href="/css/highlight_monokai.css">
+  <link rel="stylesheet/less" href="/css/theme.less">
+  <link rel="stylesheet" href="/css/custom.css">
+
+
+  
+  <script src="/js/less.js" type="text/javascript"></script>
+
+
+</head>
+
+
+
+<body>
+<div class="container">
+
+  
+  <header role="banner">
+    <div class="row gutters">
+      <div id="site-title" class="col span_6">
+        <h1><a href="/">Aimless</a></h1>
+        <h2>Powered by aimless emotion</h2>
+      </div>
+      <div id="social" class="col span_6">
+        <ul>
+          <li><a href="https://twitter.com/kongou_ae" target="_blank">Twitter</a></li>
+          
+          <li><a href="https://github.com/kongou-ae" target="_blank">GitHub</a></li>
+        </ul>
+      </div>
+    </div>
+  </header>
+
+
+  
+  <main id="single" role="main">
+    <div class="article-header">
+      <h1>YAMAHAのIPIPトンネルが上手く動かない</h1>
+      <div class="meta">
+        Feb 4, 2012 &nbsp;
+        
+          #<a href="/categories/cisco">cisco</a>&nbsp;
+        
+          #<a href="/categories/network">network</a>&nbsp;
+        
+      </div>
+    </div>
+    <article>
+      <p><a href="http://aimless.jp/blog/blog/archives/644" title="IPIPトンネル">前回</a>から引き続き、Cisco892JとRTX1000でグローバルIP経由のIPIPトンネルを掘ろうと試行錯誤しているものの、開通には至っていません。トンネルの対向にPingすら飛ばず・・・</p>
+
+<pre><code>■Cisco Configuration
+interface Tunnel11
+ description test-ipip
+ ip address 172.16.16.5 255.255.255.252
+ tunnel source 36.2.107.xxx
+ tunnel mode ipip
+ tunnel destination 122.26.28.xxx
+</code></pre>
+
+<pre><code>■YAMAHA Configuration
+tunnel select 11
+ description tunnel test-ipip
+ tunnel encapsulation ipip
+ tunnel endpoint address 122.26.28.xxx 36.2.107.xxx
+ ip tunnel address 172.16.16.6/30
+ tunnel enable 11
+</code></pre>
+
+<p>　全スルーなfilterを明示的にPPインターフェースにしても駄目。困り果ててキャプチャしたところ、RTX側のトンネルが受信パケットに対してDestination unreachableを返していました。なぜ・・・。</p>
+
+<p>　CiscoからRTXにPingを打つと、Replyが返ってこず代わりにトンネル先のグローバルIPアドレスからDestination Unreachable・・・</p>
+
+<p><img src="http://aimless.jp/images/ICMPfromCisco.png" alt="ICMPfromCisco" /></p>
+
+<p>RTXからCiscoにPingを打つと、Ciscoから返ってきたReplyにDestinationUnreachable・・・</p>
+
+<p>![ICMPfromRTX][3]</p>
+
+<p>　Network Unreachableって事はRTXに経路がないって事になるけど、トンネル用セグメントはshow ip route の結果にちゃんと載っている。なぜNetwork　Unreachable・・・。もう分らないよ・・・。</p>
+
+<pre><code># show ip route                                                            
+Destination         Gateway          Interface       Kind  Additional Info.
+default             -                    PP[01]    static  
+172.16.16.4/30      -                TUNNEL[11]  implicit  
+</code></pre>
+
+<p>[3]: <a href="http://aimless.jp/images/ICMPfromRTX.png">http://aimless.jp/images/ICMPfromRTX.png</a></p>
+
+    </article>
+    
+ <aside><div id="disqus_thread"></div></aside> 
+
+<script type="text/javascript">
+     
+    var disqus_shortname = 'aimlessjpblog';
+
+     
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+  </main>
+
+
+  
+  <footer role="contentinfo">
+    <div style="text-align:center;">
+      
+      Written by kongou_ae
+    </div>
+  </footer>
+
+
+</div>
+
+<script src="/js/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+</body>
+</html>
+

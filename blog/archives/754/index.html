@@ -1,0 +1,242 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+
+  
+  <meta charset="UTF-8">
+  <title>
+    FortigateのVDOMで遊んでみた | Aimless
+  </title>
+
+
+  
+  <meta name="viewport" content="width=device-width,user-scalable=no,maximum-scale=1,initial-scale=1">
+
+
+  
+  <link rel="stylesheet" href="/css/sanitize.css">
+  <link rel="stylesheet" href="/css/responsive.css">
+  <link rel="stylesheet" href="/css/highlight_monokai.css">
+  <link rel="stylesheet/less" href="/css/theme.less">
+  <link rel="stylesheet" href="/css/custom.css">
+
+
+  
+  <script src="/js/less.js" type="text/javascript"></script>
+
+
+</head>
+
+
+
+<body>
+<div class="container">
+
+  
+  <header role="banner">
+    <div class="row gutters">
+      <div id="site-title" class="col span_6">
+        <h1><a href="/">Aimless</a></h1>
+        <h2>Powered by aimless emotion</h2>
+      </div>
+      <div id="social" class="col span_6">
+        <ul>
+          <li><a href="https://twitter.com/kongou_ae" target="_blank">Twitter</a></li>
+          
+          <li><a href="https://github.com/kongou-ae" target="_blank">GitHub</a></li>
+        </ul>
+      </div>
+    </div>
+  </header>
+
+
+  
+  <main id="single" role="main">
+    <div class="article-header">
+      <h1>FortigateのVDOMで遊んでみた</h1>
+      <div class="meta">
+        Apr 2, 2012 &nbsp;
+        
+          #<a href="/categories/network">network</a>&nbsp;
+        
+      </div>
+    </div>
+    <article>
+      
+
+<p>念願のFortiOS4.0が動くFortigateを手に入れたぞ！！という事で、VDOMで遊んでみました。環境はFortigate50BとFortiOS4.0 MR3 Patch 6です。</p>
+
+<h3 id="構成図:53c738c0f35b9e72e785be171e1cc256">構成図</h3>
+
+<p>　上の箱がFortigate50B、下の箱がCisco892Jです。1台のFortigate50Bの中にL3SW1台と2台のFWを作ってみました。VDOM rootはインターネットとFWをつなぐL3SW、VDOM14はLAN側のNICが二つ（InternalとDMZ）があるFW、VDOM15はLAN側のNICが一つだけのFWをイメージしています。今回のエントリーはVDOM14に関する部分だけです。</p>
+
+<p><img src="http://aimless.jp/images/vdom-topo.png" alt="" /></p>
+
+<h3 id="global設定:53c738c0f35b9e72e785be171e1cc256">Global設定</h3>
+
+<p>　インターフェースの設定は下記の通りです。各VDOMのWAN側にグローバルIPアドレスを振る余裕はないので、グローバルIPアドレスを振ったWAN1をVDOM rootにルーテッドポートで接続します。そして、VDOM配下の端末がインターネットと通信できる様、VDOMリンクを利用してVDOM-14/15とVDOM rootを接続します。VDOMリンクはVLAN-14の様にIPアドレスを固定で設定する方法だけでなく、VDOM-15の様にunnumberedにすることもできます。</p>
+
+<p>　LAN側のInternalはルーテッドにしてしまうと1つしかIPアドレスが振れないので、tagVLANで分割しVLANインターフェースにします。それぞれのVLANインターフェースにIPアドレスとVLAN-ID、所属するVDOMを設定します。</p>
+
+<p><img src="http://aimless.jp/images/vdom-global-interface.png" alt="" /></p>
+
+<h3 id="vdom-root設定:53c738c0f35b9e72e785be171e1cc256">VDOM root設定</h3>
+
+<p>　VDOM rootにインターネット向けのデフォルトルートと、下にぶら下がっているVDOM向けのルーティングを追加します。VDOM向けのネクストホップはVDOMリンクのIPアドレスです。unnumbered設定の場合、ネクストホップは不要です。初めは少々混乱しましたが、FW間の物理リンクが仮想的なVDOMリンクに置き換わっただけです。</p>
+
+<p><img src="http://aimless.jp/images/vdom-root-routing.png" alt="" /></p>
+
+<p>　VDOM rootのFWポリシーは全開けし、個別の制御は各VDOMに任せます。VDOMからInternetへのルールはNATを有効にします。</p>
+
+<h3 id="vdom14設定:53c738c0f35b9e72e785be171e1cc256">VDOM14設定</h3>
+
+<p>　VDOM14のインターフェースを確認すると、グローバルで設定した通りWAN側1つ、LAN側2つになっています。</p>
+
+<p><img src="http://aimless.jp/images/vdom-vdom14-interface.png" alt="" /></p>
+
+<p>　インターネットと通信するために、デフォルトルートをVDOM root側のVDOMリンクアドレスに向けます。</p>
+
+<p><img src="http://aimless.jp/images/vdom-vdom14-routing.png" alt="" /></p>
+
+<p>　それっぽいルールを追加します。Internal⇒DMZ、DMZ⇒Internet、DMZ⇒Internalです。InternalからInternetへの通信は許可しません。記載されているホストは、ルータのSVIに振ってあるIPアドレスです。</p>
+
+<p><img src="http://aimless.jp/images/vdom-vdom14-policy.png" alt="" /></p>
+
+<h3 id="動作確認:53c738c0f35b9e72e785be171e1cc256">動作確認</h3>
+
+<p>　Cisco892Jから疎通確認を行います。各SVIはVRFで論理分割されているので、SVI間の通信は必ずVDOM14を経由します。想定通り動きました。</p>
+
+<pre><code>■InternalからDMZへの疎通確認
+Router#traceroute vrf vlan14 192.168.13.254
+Type escape sequence to abort.
+Tracing the route to 192.168.13.254
+VRF info: (vrf in name/id, vrf out name/id)
+  1 192.168.14.200 4 msec 0 msec 0 msec　←VDOM14を経由してる
+  2 192.168.13.254 12 msec *  0 msec
+
+■DMZからInternalへの疎通確認
+Router#traceroute vrf vlan13 192.168.14.254
+Type escape sequence to abort.
+Tracing the route to 192.168.14.254
+VRF info: (vrf in name/id, vrf out name/id)
+  1 192.168.13.200 4 msec 0 msec 0 msec　←VDOM14を経由してる
+  2 192.168.14.254 0 msec *  0 msec
+
+■DMZからInternetへの疎通確認
+Router#traceroute vrf vlan13 8.8.8.8       
+Type escape sequence to abort.
+Tracing the route to google-public-dns-a.google.com (8.8.8.8)
+VRF info: (vrf in name/id, vrf out name/id)
+  1 192.168.13.200 0 msec 0 msec 0 msec　←VDOM14
+  2 192.168.16.1 0 msec 0 msec 4 msec　　←VDOM root
+  3 153.16.66.xxx 0 msec 0 msec 4 msec
+中略
+ 14 tyo-t1600-xe4-0-2-17.jp.apan.net (203.181.249.174) 16 msec 20 msec 20 msec
+ 15 tpr2-ae0-6.jp.apan.net (203.181.249.97) 20 msec 20 msec 24 msec
+ 16 as15169.dix-ie.jp (202.249.2.189) 20 msec 20 msec 16 msec
+ 17 209.85.255.80 [MPLS: Label 404514 Exp 4] 20 msec 20 msec 20 msec
+ 18 209.85.249.192 16 msec 132 msec 20 msec
+ 19 209.85.243.59 20 msec 16 msec 20 msec
+ 20 209.85.241.139 24 msec 20 msec 24 msec
+ 21 google-public-dns-a.google.com (8.8.8.8) 20 msec 20 msec 20 msec
+
+■InternalからInternetへの疎通確認
+Router#traceroute vrf vlan14 8.8.8.8
+Type escape sequence to abort.
+Tracing the route to google-public-dns-a.google.com (8.8.8.8)
+VRF info: (vrf in name/id, vrf out name/id)
+  1 192.168.14.200 0 msec 0 msec 0 msec
+  2  *  *  * 　←FWのルールがないので通信不可。
+</code></pre>
+
+<h3 id="その他:53c738c0f35b9e72e785be171e1cc256">その他</h3>
+
+<p>　何もしないと装置のリソースを全てのVDOMで共有しますが、VDOM単位で装置全体のリソースを固定割り当てすることもできます。</p>
+
+<p>　</p>
+
+<p>![][7]</p>
+
+<p>　また、CLIで操作する時には、都度どのVDOMを操作するか選ぶ必要があります。</p>
+
+<pre><code>FGT50Bxxxxxxxxxx # config 
+global    config global
+vdom      config vdom
+ 
+FGT50Bxxxxxxxxxx # config vdom ←VDOMの設定に移動
+
+FGT50Bxxxxxxxxxx (vdom) # 
+edit      add/edit a table value
+delete    delete a table value
+end       end and save last config
+ 
+FGT50Bxxxxxxxxxx (vdom) # edit 
+&lt;vdom&gt;    Virtual Domain Name
+VDOM-14
+VDOM-15
+root
+
+FGT50Bxxxxxxxxxx (vdom) # edit VDOM-14 ←VDOM14の設定に移動                                                               
+current vf=VDOM-14:2
+
+FGT50Bxxxxxxxxxx (VDOM-14) # 
+config      config object
+get         get dynamic and system information
+show        show configuration
+diagnose    diagnose facility
+execute     execute static commands
+next        config next table entry
+abort       end and discard last config
+end         end and save last config
+ 
+FGT50B3G08625936 (VDOM-14) # 
+</code></pre>
+
+<h3 id="まとめ:53c738c0f35b9e72e785be171e1cc256">まとめ</h3>
+
+<p>　これはすごい。設定はGUIでぽちぽち、各VDOM上の操作も通常のFortigateと変わりません。動作確認はしていませんが、VDOM単位でアカウントを作成して権限を付与できそう。</p>
+
+<p>　複数のFWを統合して管理コストを削減したり、1台のFWを仮想化して複数のユーザを異なるポリシーで収容したり、Virtual Private Firewallみたいな事をしたりと、色々な使い方ができるなーと思いました。自宅でどう使うかはこれから考えます。。。</p>
+
+<p>[7]: <a href="http://aimless.jp/images/vdom-resouce.png">http://aimless.jp/images/vdom-resouce.png</a></p>
+
+    </article>
+    
+ <aside><div id="disqus_thread"></div></aside> 
+
+<script type="text/javascript">
+     
+    var disqus_shortname = 'aimlessjpblog';
+
+     
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+  </main>
+
+
+  
+  <footer role="contentinfo">
+    <div style="text-align:center;">
+      
+      Written by kongou_ae
+    </div>
+  </footer>
+
+
+</div>
+
+<script src="/js/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+</body>
+</html>
+

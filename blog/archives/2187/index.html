@@ -1,0 +1,207 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+
+  
+  <meta charset="UTF-8">
+  <title>
+    SSLインスペクションについて調べた | Aimless
+  </title>
+
+
+  
+  <meta name="viewport" content="width=device-width,user-scalable=no,maximum-scale=1,initial-scale=1">
+
+
+  
+  <link rel="stylesheet" href="/css/sanitize.css">
+  <link rel="stylesheet" href="/css/responsive.css">
+  <link rel="stylesheet" href="/css/highlight_monokai.css">
+  <link rel="stylesheet/less" href="/css/theme.less">
+  <link rel="stylesheet" href="/css/custom.css">
+
+
+  
+  <script src="/js/less.js" type="text/javascript"></script>
+
+
+</head>
+
+
+
+<body>
+<div class="container">
+
+  
+  <header role="banner">
+    <div class="row gutters">
+      <div id="site-title" class="col span_6">
+        <h1><a href="/">Aimless</a></h1>
+        <h2>Powered by aimless emotion</h2>
+      </div>
+      <div id="social" class="col span_6">
+        <ul>
+          <li><a href="https://twitter.com/kongou_ae" target="_blank">Twitter</a></li>
+          
+          <li><a href="https://github.com/kongou-ae" target="_blank">GitHub</a></li>
+        </ul>
+      </div>
+    </div>
+  </header>
+
+
+  
+  <main id="single" role="main">
+    <div class="article-header">
+      <h1>SSLインスペクションについて調べた</h1>
+      <div class="meta">
+        Aug 30, 2014 &nbsp;
+        
+          #<a href="/categories/fortigate">Fortigate</a>&nbsp;
+        
+          #<a href="/categories/network">network</a>&nbsp;
+        
+      </div>
+    </div>
+    <article>
+      
+
+<p>UTM製品は、SSLによって暗号化されている通信の中身を見てUTM処理を行うものがあります。イマイチ振る舞いが分からなかったので、いろいろと調べました。きっとこんな感じだろレベルであり、あってるかどうかは不明です。なお、絵を描く気力はなかったです。</p>
+
+<h1 id="ssl通信の流れ:7fa59bb8c2a35e1843fcd1fa00ab3ce6">SSL通信の流れ</h1>
+
+<p>　クライアントとサーバ間で、SSLのセッションとコネクションを確立するまでの流れは以下の通りです。</p>
+
+<ol>
+<li>クライアントとサーバ間で暗号化方式のネゴシエーションを行う。</li>
+<li>サーバは、クライアントにサーバ証明書（とCA中間証明書）を送る。</li>
+<li>クライアントは、受信したサーバ証明書を検証する。（検証プロセスは後述）</li>
+<li>クライアントは、サーバ証明書からサーバの公開鍵を取り出す。</li>
+<li>クライアントは、共通鍵の元を作る。</li>
+<li>クライアントは、サーバの公開鍵を利用して、共通鍵の元を暗号化する。</li>
+<li>クライアントは、暗号化した共通鍵の元をサーバへ送る。</li>
+<li>サーバは、暗号化された共通鍵の元を受け取り、サーバの秘密鍵で復号する。</li>
+<li>サーバとクライアントは、互いに持っている共通鍵の元を利用して共通鍵を生成する。</li>
+<li>サーバとクライアントは、生成した共通鍵を利用して通信を暗号化する。</li>
+</ol>
+
+<h1 id="サーバ証明書に書かれている事:7fa59bb8c2a35e1843fcd1fa00ab3ce6">サーバ証明書に書かれている事</h1>
+
+<p>　3つのことが書かれている。</p>
+
+<ol>
+<li>tbsCertificate : 証明書の基本的な情報と公開鍵（＝証明書が証明したい内容）</li>
+<li>signatureAlgorithm : 署名アルゴリズム</li>
+<li>signatureValue : 認証局の署名</li>
+</ol>
+
+<h1 id="証明書検証の流れ:7fa59bb8c2a35e1843fcd1fa00ab3ce6">証明書検証の流れ</h1>
+
+<ol>
+<li>クライアントは、サーバ証明書に記載された認証局が、自身の信頼された認証局に登録されているかを確認する。（証明書の発行者が信じるに値するかをチェックする）</li>
+<li>クライアントは、自身に登録されている認証局の公開鍵を利用して、サーバ証明書の署名を検証する。（信じられる発行者が発行した証明書かどうかをチェックする）</li>
+<li>クライアントは、サーバ証明書に記載されているコモンネームが、アクセスしようとしているサーバのFQDNと一致することを確認する。（信じられる証明書に記載されている場所にアクセスしているかチェックする）</li>
+</ol>
+
+<h1 id="sslインスペクションにおけるssl通信の仕組み:7fa59bb8c2a35e1843fcd1fa00ab3ce6">SSLインスペクションにおけるSSL通信の仕組み</h1>
+
+<p>　SSLインスペクションでは、暗号化されたSL通信に対してUTM処理を行う必要があります。</p>
+
+<p>　しかし、「SSL通信の流れ」で確認した通り、クライアントとサーバ間のセッションとコネクションの確立において、通信の復号化に必要な共有鍵は一切交換されません。クライアントとサーバの間でやり取りされる情報は、「サーバの公開鍵」と「公開鍵で暗号化された共有鍵の元」だけです。共有鍵のヒントとなる「公開鍵で暗号化された共有鍵の元」を復号するためには「サーバの秘密鍵」が必要ですから、経路上に存在するUTM装置はお手上げです。</p>
+
+<p>　そこでUTM装置は、綺麗な中間者攻撃を行います。SSLインスペクションにおいて、SSLセッションとコネクションを確立する流れは以下の通りです。</p>
+
+<ol>
+<li>クライアントはサーバに暗号化方式のネゴシエーションを行う。</li>
+<li>クライアントからサーバへのネゴシエーションを検知したUTM製品は、クライアントからサーバへのネゴシエーションをいったんストップする。</li>
+<li>UTM製品は、クライアントの代わりにサーバに暗号化方式のネゴシエーションを行う。</li>
+<li>サーバとUTM製品間で暗号化方式のネゴシエーションを行う。</li>
+<li>サーバは、UTM製品にサーバ証明書（と中間CA証明書）を送る。</li>
+<li>UTM製品は、受信したサーバ証明書を検証する。
+
+<ul>
+<li>以降は、UTM製品とサーバ間で上述したSSL通信の流れを実施します。その結果、UTM製品とサーバ間でSSLのセッションとコネクションが確立します。</li>
+</ul></li>
+<li>UTM製品は、サーバのサーバ証明書のtbsCertificateの中の「発行者」と「公開鍵」をUTM製品のものに書き換える。（多分。自宅のFG60Bにdeep-scanの設定が入らなかったため、UTM製品が作るオレオレサーバ証明書が入手できなかった）</li>
+<li>UTM製品は、サーバのサーバ証明書を元に作ったオレオレtbsCertificateに対して、UTM製品のオレオレ認証局の秘密鍵で署名する。その結果、発行者と公開鍵以外は、サーバのサーバ証明書と同じ「オレオレサーバ証明書」が完成する。</li>
+<li>UTM製品は、ストップしていたクライアントからサーバへの暗号化方式のネゴシエーションに代理応答する形で、クライアントと暗号化方式のネゴシエーションを行う。</li>
+<li>UTM製品は、クライアントにオレオレサーバ証明書（とオレオレCA証明書）を送る。</li>
+<li>クライアントは、受信したUTM製品のオレオレサーバ証明書を検証する。
+
+<ul>
+<li>ここで検証が失敗します。なぜなら、クライアント自身の信頼された認証局に、UTM製品のオレオレ認証局が存在しないためです。信頼していない認証局が発行したオレオレサーバ証明書は信じないというわけです。</li>
+<li>この問題を解決するため、クライアントにUTM製品のオレオレ認証局のCA証明書をインポートする必要があります。UTM製品のオレオレ認証局を信頼された認証局にすると、UTM製品のオレオレサーバ証明書の検証は成功します。信じられる発行者が発行したサーバ証明書なのですから。</li>
+<li>オレオレサーバ証明書に記載されている実在証明に関する情報は、サーバのサーバ証明書と同一です。従って、サーバのサーバ証明書がEV SSLであれば、UTM製品が発行したオレオレサーバ証明書であっても、ブラウザには鍵マークと緑色の企業名が表示されます。</li>
+</ul></li>
+<li>クライアントは、UTM製品のオレオレサーバ証明書からUTM製品の公開鍵を取り出す。</li>
+<li>クライアントは、共通鍵の元を作る。</li>
+<li>クライアントは、UTM製のオレオレサーバ証明書の公開鍵を利用して、共通かぎの元を暗号化する。</li>
+<li>クライアントは、暗号化した共通鍵の元をUTM製品へ送る。</li>
+<li>UTM製品は、暗号化された共通鍵の元を受け取り、UTM製品の秘密鍵で復号する。</li>
+<li>クライアントとUTM製品は、互いに持っている共通鍵の元を利用して共通鍵を生成する。</li>
+<li>クライアントとUTM製品は、生成した共通鍵を利用して通信を暗号化する。</li>
+</ol>
+
+<p>　最終的には、クライアントとUTM製品間、UTM製品とサーバ間で、2つのSSL通信が確立します。こうすることで、UTM製品はサーバとクライアントがやりとりする通信を平文で得ることができますので、UTM処理を行うことができます。よくできてるなーと思いますし、SSLインスペクションが高負荷であること理由も納得がいきます。</p>
+
+<h1 id="備考:7fa59bb8c2a35e1843fcd1fa00ab3ce6">備考</h1>
+
+<p>　ふと、UTM製品用にサーバ証明書をインストールしたらどうなるんだろうかと思いました。しかし、サーバのサーバ証明書に含まれるtbsCertificateをクライアントに提示しないと、実在証明の検証失敗による証明書エラーが出てしまうので意味がないですね。</p>
+
+<p>　tbsCertificateの情報はそのままで、サーバ証明書の公開鍵だけをUTM製品のサーバ証明書の公開鍵に変更すると、証明書のハッシュ値と署名と異なってしまうのでやはり検証エラーになります。</p>
+
+<p>　これを回避するには自分で再署名して署名を作り直すしかありません。結局オレオレ認証局に頼るしかないので、結果は同じですね。サーバ証明書が無駄になります。</p>
+
+<h1 id="参考:7fa59bb8c2a35e1843fcd1fa00ab3ce6">参考</h1>
+
+<ul>
+<li><a href="http://support.microsoft.com/kb/257587/ja">SSL ハンドシェイクでのサーバー認証プロセスに関する説明</a></li>
+<li><a href="http://support.microsoft.com/kb/257591/ja">SSL (Secure Sockets Layer) ハンドシェイクの概要</a></li>
+<li><a href="http://e-publishing.jp/contents/koutantech/aidd02_01.pdf">暗号化、認証、証明</a></li>
+<li><a href="http://www.tama200x.com/blog/?p=565">[SSL] SSLサーバ証明書について考える</a></li>
+<li><a href="http://itpro.nikkeibp.co.jp/article/COLUMN/20071002/283518/?ST=selfup">図解で学ぶネットワークの基礎：SSL編</a></li>
+<li><a href="https://www.ipa.go.jp/security/rfc/RFC2459JA.html#041">インターネットX.509 PKI &#8211; 証明書と CRL のプロファイル</a> [電子証明書のデータ形式 &#8211; RFC3289 X.509 Public Key Infrastructure Certificate and CRL Profile][7]</li>
+</ul>
+
+<p>[7]: <a href="http://www.trustss.co.jp/smnDataFormat410.html">http://www.trustss.co.jp/smnDataFormat410.html</a></p>
+
+    </article>
+    
+ <aside><div id="disqus_thread"></div></aside> 
+
+<script type="text/javascript">
+     
+    var disqus_shortname = 'aimlessjpblog';
+
+     
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+  </main>
+
+
+  
+  <footer role="contentinfo">
+    <div style="text-align:center;">
+      
+      Written by kongou_ae
+    </div>
+  </footer>
+
+
+</div>
+
+<script src="/js/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+</body>
+</html>
+

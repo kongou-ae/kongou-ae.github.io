@@ -1,0 +1,147 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+
+  
+  <meta charset="UTF-8">
+  <title>
+    ForigateでSSL-VPN（トンネルモード） | Aimless
+  </title>
+
+
+  
+  <meta name="viewport" content="width=device-width,user-scalable=no,maximum-scale=1,initial-scale=1">
+
+
+  
+  <link rel="stylesheet" href="/css/sanitize.css">
+  <link rel="stylesheet" href="/css/responsive.css">
+  <link rel="stylesheet" href="/css/highlight_monokai.css">
+  <link rel="stylesheet/less" href="/css/theme.less">
+  <link rel="stylesheet" href="/css/custom.css">
+
+
+  
+  <script src="/js/less.js" type="text/javascript"></script>
+
+
+</head>
+
+
+
+<body>
+<div class="container">
+
+  
+  <header role="banner">
+    <div class="row gutters">
+      <div id="site-title" class="col span_6">
+        <h1><a href="/">Aimless</a></h1>
+        <h2>Powered by aimless emotion</h2>
+      </div>
+      <div id="social" class="col span_6">
+        <ul>
+          <li><a href="https://twitter.com/kongou_ae" target="_blank">Twitter</a></li>
+          
+          <li><a href="https://github.com/kongou-ae" target="_blank">GitHub</a></li>
+        </ul>
+      </div>
+    </div>
+  </header>
+
+
+  
+  <main id="single" role="main">
+    <div class="article-header">
+      <h1>ForigateでSSL-VPN（トンネルモード）</h1>
+      <div class="meta">
+        Jun 17, 2012 &nbsp;
+        
+          #<a href="/categories/fortigate">Fortigate</a>&nbsp;
+        
+          #<a href="/categories/network">network</a>&nbsp;
+        
+      </div>
+    </div>
+    <article>
+      
+
+<p></p></p>
+
+<p>　そのうち仕事でやるだろうということで、自宅で試した手順をメモしておきます。環境は、Fortigate-50B＋FortiOS4.0 MR3 Patch 6です。</p>
+
+<p>　やりたかった事は下図の通り。利用ユーザのグループ単位で、ポータルを変えたり、IPアドレスを変えたり、社内へのアクセスポリシーを変えたり等々柔軟に。自社ユーザは社内にフルアクセスで、社外保守ベンダは社員とは別IPアドレスで、さらにアクセス先を制限するみたいな使い方を想定しています。</p>
+
+<p><img src="http://aimless.jp/images/sslvpn.png" alt="sslvpn" /></p>
+
+<h3 id="ユーザ作成のハマりどころ:483e536bcb93d01cf7c3b5a7bcb27b43">ユーザ作成のハマりどころ</h3>
+
+<p>　ユーザとIPアドレスを直接関連付ける設定箇所が見当たりませんでした。トンネル用のIPアドレスを指定できる場所は、ポータルの設定部分しかありません。そこで下記の様にしました。</p>
+
+<ol>
+<li>IPアドレスを分けたいユーザグループごとにポータルを作成して、そのグループが利用するIPアドレスを設定する。</li>
+<li>ユーザグループ作成時に、そのグループ用のポータルを割り当てる</li>
+</ol>
+
+<h3 id="fwの設定:483e536bcb93d01cf7c3b5a7bcb27b43">FWの設定</h3>
+
+<p>　必要な設定は大きく二つ。一つはSSL-VPNでのアクセスを自体を許可するルール、もう一つはトンネル接続を許可するルールです。</p>
+
+<p><img src="http://aimless.jp/images/sslvpn-policy.png" alt="sslvpn-policy" /></p>
+
+<p>　1つ目のルール（上図ルール8）の詳細は下記の通りです。必要なユーザグループに対して、インターネットの全てからLAN内の192.168.2.0/24へのSSLVPNを許可します。</p>
+
+<p><img src="http://aimless.jp/images/sslvpn-policy-detail.png" alt="sslvpn-policy-detail" /></p>
+
+<p>　2つ目のルール（上図ルール4）の詳細は下記の通りです。sslall_group内のユーザがトンネル接続した時に割り当てられるIPアドレスから、LAN内の192.168.2.0/24に対してTELNETとICMPを許可します。Fortigateから見ると、トンネル接続用のIPアドレスはssl.root（SSLVPNトンネルインターフェース）の先にいますので、WANではなくssl.rootを選択します。</p>
+
+<p>![sslvpn-policy-detail2][4]</p>
+
+<h3 id="forticlientの設定:483e536bcb93d01cf7c3b5a7bcb27b43">FortiClientの設定</h3>
+
+<p>　これでブラウザ経由でのトンネル接続が可能になります。なお、FortigateにはFortiClinetと呼ばれるクライアントソフトがあります。昔はFortiClientそのものが一般公開されていたように記憶していますが、現在はFortiClient Liteしか一般公開されていないみたいです。これを使うための特殊な設定は不要です。クライアントを入れてアクセス先を指定すれば普通に繋がります。</p>
+
+<p>　クライアントインストール時に「IE6じゃ動かないからIE8以上にしてねー（意訳）」という注意が出ますので、素直に従ってください。本当にIE6では動きませんでした。</p>
+
+<p>[4]: <a href="http://aimless.jp/images/sslvpn-policy-detail2.png">http://aimless.jp/images/sslvpn-policy-detail2.png</a></p>
+
+    </article>
+    
+ <aside><div id="disqus_thread"></div></aside> 
+
+<script type="text/javascript">
+     
+    var disqus_shortname = 'aimlessjpblog';
+
+     
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+  </main>
+
+
+  
+  <footer role="contentinfo">
+    <div style="text-align:center;">
+      
+      Written by kongou_ae
+    </div>
+  </footer>
+
+
+</div>
+
+<script src="/js/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+</body>
+</html>
+

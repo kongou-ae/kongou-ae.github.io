@@ -1,0 +1,112 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+
+  
+  <meta charset="UTF-8">
+  <title>
+    ケイオプのレンタルサーバがIPv6 enableだった | Aimless
+  </title>
+
+
+  
+  <meta name="viewport" content="width=device-width,user-scalable=no,maximum-scale=1,initial-scale=1">
+
+
+  
+  <link rel="stylesheet" href="/css/sanitize.css">
+  <link rel="stylesheet" href="/css/responsive.css">
+  <link rel="stylesheet" href="/css/highlight_monokai.css">
+  <link rel="stylesheet/less" href="/css/theme.less">
+  <link rel="stylesheet" href="/css/custom.css">
+
+
+  
+  <script src="/js/less.js" type="text/javascript"></script>
+
+
+</head>
+
+
+
+<body>
+<div class="container">
+
+  
+  <header role="banner">
+    <div class="row gutters">
+      <div id="site-title" class="col span_6">
+        <h1><a href="/">Aimless</a></h1>
+        <h2>Powered by aimless emotion</h2>
+      </div>
+      <div id="social" class="col span_6">
+        <ul>
+          <li><a href="https://twitter.com/kongou_ae" target="_blank">Twitter</a></li>
+          
+          <li><a href="https://github.com/kongou-ae" target="_blank">GitHub</a></li>
+        </ul>
+      </div>
+    </div>
+  </header>
+
+
+  
+  <main id="single" role="main">
+    <div class="article-header">
+      <h1>ケイオプのレンタルサーバがIPv6 enableだった</h1>
+      <div class="meta">
+        Nov 26, 2011 &nbsp;
+        
+          #<a href="/categories/dc">DC</a>&nbsp;
+        
+          #<a href="/categories/network">network</a>&nbsp;
+        
+      </div>
+    </div>
+    <article>
+      <p>@IPv6kumaを機能拡張すべく、企業/団体のWebサイトにAAAAレコードがついたことをPostさせようとコーディングしています。まずは東証上場企業と大証上場企業を対象とし、ゆくゆくは官庁、行政、団体なども対象にしていきたいなーと。監視対象のリスト作りが大変。。。。</p>
+
+<p>　コードの動作確認で東証・大証に上場している企業約4000社を確認した結果、AAAAが付いていた企業は9社のみ。。。（IIJ、さくら、Nifty、フリービット、日立、kddi、ユニテック、大和工業、ダイビル）　通信事業者やIT企業が多い中で、なぜか大和工業株式会社とダイビル株式会社というコテコテのユーザ企業がいます。</p>
+
+<p>&lt;/&gt;　なんでだろ？と調べてみると、両社とも2001:ce8:0:604::20（biz-www.eonet.ne.jp）というケイ・オプテイコムのサーバに載っている模様。別会社なのに同じIPアドレスである事、両社ともケイオプからPrefixの割り当てを受けていない事から考えると、ケイオプ提供のIPv6な共有サーバサービスを利用しているのでしょう。ホームページには専用しかないのけども。。。ケイオプはIPv6を売ってるんだなぁ。弊社も頑張ってIPv6をマネタイズしないとなー。</p>
+
+    </article>
+    
+ <aside><div id="disqus_thread"></div></aside> 
+
+<script type="text/javascript">
+     
+    var disqus_shortname = 'aimlessjpblog';
+
+     
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+  </main>
+
+
+  
+  <footer role="contentinfo">
+    <div style="text-align:center;">
+      
+      Written by kongou_ae
+    </div>
+  </footer>
+
+
+</div>
+
+<script src="/js/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+</body>
+</html>
+

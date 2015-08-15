@@ -1,0 +1,309 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+
+  
+  <meta charset="UTF-8">
+  <title>
+    asciidocをPDFに変換してみた（asciidoctor-pdf） | Aimless
+  </title>
+
+
+  
+  <meta name="viewport" content="width=device-width,user-scalable=no,maximum-scale=1,initial-scale=1">
+
+
+  
+  <link rel="stylesheet" href="/css/sanitize.css">
+  <link rel="stylesheet" href="/css/responsive.css">
+  <link rel="stylesheet" href="/css/highlight_monokai.css">
+  <link rel="stylesheet/less" href="/css/theme.less">
+  <link rel="stylesheet" href="/css/custom.css">
+
+
+  
+  <script src="/js/less.js" type="text/javascript"></script>
+
+
+</head>
+
+
+
+<body>
+<div class="container">
+
+  
+  <header role="banner">
+    <div class="row gutters">
+      <div id="site-title" class="col span_6">
+        <h1><a href="/">Aimless</a></h1>
+        <h2>Powered by aimless emotion</h2>
+      </div>
+      <div id="social" class="col span_6">
+        <ul>
+          <li><a href="https://twitter.com/kongou_ae" target="_blank">Twitter</a></li>
+          
+          <li><a href="https://github.com/kongou-ae" target="_blank">GitHub</a></li>
+        </ul>
+      </div>
+    </div>
+  </header>
+
+
+  
+  <main id="single" role="main">
+    <div class="article-header">
+      <h1>asciidocをPDFに変換してみた（asciidoctor-pdf）</h1>
+      <div class="meta">
+        Jul 1, 2015 &nbsp;
+        
+          #<a href="/categories/uncategorized">Uncategorized</a>&nbsp;
+        
+      </div>
+    </div>
+    <article>
+      
+
+<p><a href="http://aimless.jp/blog/blog/archives/2506">気軽にドキュメントを書く</a>シリーズです。</p>
+
+<p>asciidocで書き、asciidoctor-pdfでさくっとPDFにするというソリューションがあるようなので試行錯誤を繰り返した結果、<a href="https://gist.githubusercontent.com/kongou-ae/a3df7fb5aedf644acd72/raw/3227df201731519db0974813c1ff1f49dff19cc3/README.adoc">この.adoc</a>を<a href="http://aimless.jp/blog/wp-content/uploads/2015/07/README.pdf">このPDF</a>に変換できるようになりました。</p>
+
+<p>使い方ではまった箇所をメモしておきます。</p>
+
+<h2 id="インストール:0276447e54b8cc1adc3ebe7f7301ea42">インストール</h2>
+
+<p>githubのREADMEに書いてある通り、gemでインストールするだけ。</p>
+
+<pre><code>$ gem install --pre asciidoctor-pdf
+</code></pre>
+
+<h2 id="デフォルトのテーマでpdfに変換する:0276447e54b8cc1adc3ebe7f7301ea42">デフォルトのテーマでPDFに変換する</h2>
+
+<p>asciidoctor-pdfコマンドを利用します。</p>
+
+<pre><code>$ asciidoctor-pdf basic-example.adoc
+</code></pre>
+
+<h2 id="自作テーマを利用してpdfに変換する:0276447e54b8cc1adc3ebe7f7301ea42">自作テーマを利用してPDFに変換する</h2>
+
+<p><a href="https://github.com/asciidoctor/asciidoctor-pdf/blob/master/docs/theming-guide.adoc">Asciidoctor PDF Theming Guide</a>に記載されている通り、自分なりのテーマを作ることができます。テーマを自作するにあたっては、<a href="https://github.com/asciidoctor/asciidoctor-pdf/blob/master/data/themes/default-theme.yml">デフォルトテーマ</a>の記載内容が参考になります。</p>
+
+<p>今回は<a href="https://gist.github.com/kongou-ae/46291f86c53d959271a7">basic-theme.yml</a>を作りました。ファイルはresources/themes配下に配置されています。</p>
+
+<pre><code>$ tree
+.
+|-- build.sh
+|-- README.adoc
+|-- README.pdf
+|-- README.pdfmarks
+`-- resources
+    |-- fonts
+    |-- images
+    `-- themes
+        |-- basic-theme.yml
+        `-- header-img-10mm.png
+</code></pre>
+
+<p>自作テーマを利用するためには、asciidoctor-pdfコマンドの-aオプションで、pdf-stylesdirとpdf-styleを指定します。</p>
+
+<pre><code>asciidoctor-pdf -a pdf-stylesdir=/resources/themes -a pdf-style=basic README.adoc
+</code></pre>
+
+<h2 id="ページ番号を振る:0276447e54b8cc1adc3ebe7f7301ea42">ページ番号を振る</h2>
+
+<p>ヘッダーとフッターにページ番号を振ることができます。今回は、.adocに:pagenums:を設定した上で、テーマファイルにページ番号の具体的なスタイルを記載します。</p>
+
+<pre><code>$ more README.adoc                                                                                   
+= ほげほげサービス仕様書
+ほげほげ株式会社 &lt;doc.writer@example.jp&gt;
+v1.0, 2014-01-01
+:toc:
+:toc-title: 目次
+:figure-caption: 図
+:table-caption: 表
+:toclevels: 2
+:pagenums:
+:sectnums:
+:imagesdir: resources/images/
+
+
+== はじめに 
+
+</code></pre>
+
+<p>今回はフッターの真ん中にページ番号を表示してみましょう。</p>
+
+<pre><code>footer:
+  font_size: $base_font_size_small
+  font_color: $base_font_color
+  border_color: dddddd
+  border_width: 0.25
+  height: 25mm
+  padding: [3mm,0,0,0]
+  valign: top
+  recto_content:
+    center: &#039;{page-number} / {page-count}&#039;
+  verso_content:
+    center: &#039;{page-number} / {page-count}&#039;
+</code></pre>
+
+<p>このようにフッターにページ番号が表示されます。今回はフッターにページ番号を付与しましたが、ヘッダーに付与することも可能です。</p>
+
+<p><img src="http://aimless.jp/blog/wp-content/uploads/2015/07/asciidoctor_page_number.png" alt="フッタ" /></p>
+
+<h2 id="ヘッダーやフッターに画像を追加する:0276447e54b8cc1adc3ebe7f7301ea42">ヘッダーやフッターに画像を追加する</h2>
+
+<p>ヘッダーやフッターに画像を追加することが可能です。まずは。追加したい画像をテーマと同じディレクトリに配置します。</p>
+
+<pre><code>$ tree
+.
+|-- build.sh
+|-- README.adoc
+|-- README.pdf
+|-- README.pdfmarks
+`-- resources
+    |-- fonts
+    |-- images
+    `-- themes
+        |-- basic-theme.yml
+        `-- header-img-10mm.png
+</code></pre>
+
+<p>そして、以下の様に設定します。今回はrecto_content_rightに画像を表示します。</p>
+
+<pre><code>header:
+  font_size: $base_font_size_small
+  font_color: $base_font_color
+  border_color: dddddd
+  border_width: 0.25
+  height: 25mm
+  padding: [0,0,3mm,0]
+  valign: bottom
+  image_valign: 50
+  recto_content:
+    left: &#039;{document-title}&#039;
+    right: image:header-img-10mm.png[width="75"]
+  verso_content:
+    left: &#039;{document-title}&#039;
+</code></pre>
+
+<p>ヘッダの右に画像が表示されました。ただしverso_content_rightにはimageを指定していないので、右ページには画像が出ますが、左ページには画像が出ません。</p>
+
+<p>![ヘッダーに画像][8]</p>
+
+<h2 id="フォントを指定する:0276447e54b8cc1adc3ebe7f7301ea42">フォントを指定する</h2>
+
+<p>デフォルトでは以下3種類のフォントが利用可能です。これら以外のフォントを利用することも可能です。</p>
+
+<ul>
+<li>NotoSerif</li>
+<li>Mplus1mn</li>
+<li>Mplus1pMultilingual</li>
+</ul>
+
+<p>Mplus1pMultilingual　にはboldがないので、migmix-1pを利用してみましょう。</p>
+
+<p>今回はresources/fonts配下にフォントを配置します。</p>
+
+<pre><code>$ tree                                                                                   
+.
+|-- build.sh
+|-- README.adoc
+|-- README.pdf
+|-- README.pdfmarks
+`-- resources
+    |-- fonts
+    |   `-- migmix-1p
+    |       |-- ipag00303
+    |       |   |-- IPA_Font_License_Agreement_v1.0.txt
+    |       |   `-- Readme_ipag00303.txt
+    |       |-- migmix-1p-bold.ttf
+    |       |-- migmix-1p-regular.ttf
+    |       `-- migmix-README.txt
+    |-- images
+    `-- themes
+        |-- basic-theme.yml
+        `-- header-img-10mm.png
+</code></pre>
+
+<p>テーマファイルでmigmixを使うことを宣言します。</p>
+
+<pre><code>font:
+  catalog:
+    migmix:
+      normal: migmix-1p/migmix-1p-regular.ttf
+      bold: migmix-1p/migmix-1p-bold.ttf
+      italic: migmix-1p/migmix-1p-regular.ttf
+      bold_italic: migmix-1p/migmix-1p-bold.ttf
+  fallbacks:
+    - migmix                                                                                                               
+page:
+  background_color: ffffff
+  layout: portrait
+  margin: [30mm, 30mm, 30mm, 30mm]
+  size: A4
+base:
+  font_color: 000000
+  font_family: migmix
+</code></pre>
+
+<p>asciidoctor-pdfコマンドの-aオプションでpdf-fontsdirを指定します。</p>
+
+<pre><code>asciidoctor-pdf -a pdf-stylesdir=/resources/themes -a pdf-style=basic -a pdf-fontsdir=/resources/fonts README.adoc
+</code></pre>
+
+<h2 id="所感:0276447e54b8cc1adc3ebe7f7301ea42">所感</h2>
+
+<ul>
+<li>PDFは綺麗に描画された。</li>
+<li>描画に至るまでの準備が簡単</li>
+<li>テーマのスタイルファイルは独自形式なので、CSSでの装飾と比べると自由度は狭い。
+
+<ul>
+<li>たとえば、現在の私の力では、テーブルの横幅を縮めることができない。[width=&#8221;50&#8243;]で表の横幅が50%になるはずなのだが、PDFに表示される表の横幅は100%になってしまいまう</li>
+</ul></li>
+<li>必要最低限に装飾したPDFを作る分にはもってこいかも</li>
+</ul>
+
+<p>[8]: <a href="http://aimless.jp/blog/wp-content/uploads/2015/07/asciidoctor_header_image.png">http://aimless.jp/blog/wp-content/uploads/2015/07/asciidoctor_header_image.png</a></p>
+
+    </article>
+    
+ <aside><div id="disqus_thread"></div></aside> 
+
+<script type="text/javascript">
+     
+    var disqus_shortname = 'aimlessjpblog';
+
+     
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+  </main>
+
+
+  
+  <footer role="contentinfo">
+    <div style="text-align:center;">
+      
+      Written by kongou_ae
+    </div>
+  </footer>
+
+
+</div>
+
+<script src="/js/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+</body>
+</html>
+

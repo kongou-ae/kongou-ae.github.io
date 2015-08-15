@@ -1,0 +1,558 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+
+  
+  <meta charset="UTF-8">
+  <title>
+    DTIのキャッシュDNSサーバで遊んでみた | Aimless
+  </title>
+
+
+  
+  <meta name="viewport" content="width=device-width,user-scalable=no,maximum-scale=1,initial-scale=1">
+
+
+  
+  <link rel="stylesheet" href="/css/sanitize.css">
+  <link rel="stylesheet" href="/css/responsive.css">
+  <link rel="stylesheet" href="/css/highlight_monokai.css">
+  <link rel="stylesheet/less" href="/css/theme.less">
+  <link rel="stylesheet" href="/css/custom.css">
+
+
+  
+  <script src="/js/less.js" type="text/javascript"></script>
+
+
+</head>
+
+
+
+<body>
+<div class="container">
+
+  
+  <header role="banner">
+    <div class="row gutters">
+      <div id="site-title" class="col span_6">
+        <h1><a href="/">Aimless</a></h1>
+        <h2>Powered by aimless emotion</h2>
+      </div>
+      <div id="social" class="col span_6">
+        <ul>
+          <li><a href="https://twitter.com/kongou_ae" target="_blank">Twitter</a></li>
+          
+          <li><a href="https://github.com/kongou-ae" target="_blank">GitHub</a></li>
+        </ul>
+      </div>
+    </div>
+  </header>
+
+
+  
+  <main id="single" role="main">
+    <div class="article-header">
+      <h1>DTIのキャッシュDNSサーバで遊んでみた</h1>
+      <div class="meta">
+        Jun 16, 2014 &nbsp;
+        
+          #<a href="/categories/dns">DNS</a>&nbsp;
+        
+      </div>
+    </div>
+    <article>
+      
+
+<h1 id="きっかけ:ccef5413ddce8dddbd1d207018f25004">きっかけ</h1>
+
+<blockquote class="twitter-tweet" lang="ja">
+  <p>
+    DTIのDNSサーバ202.216.229.30、なんでcloudfrontの正引きを高確率で127.0.0.1返すの。
+  </p>
+  
+  <p>
+    — エアコンが新しくなったmatsuu (@matsuu)
+  </p>
+  
+  <p>
+    <a href="https://twitter.com/matsuu/statuses/478153480327016449">2014, 6月 15</a>
+  </p>
+</blockquote>
+
+<p>まじか！と思い、conohaからdigって見るものの、REFUSEDになってしまいました。「ちぇー、ちゃんアクセス制限してんのかー」と思っていたところ、@tss_ontapさんから「繰り返し聞いてみましょう」とのアドバイスをいただきました。</p>
+
+<p>言われた通り何度もdigった結果、、、</p>
+
+<blockquote class="twitter-tweet" lang="ja">
+  <p>
+    <a href="https://twitter.com/tss_ontap">@tss_ontap</a> うお、返ってきた！え！？
+  </p>
+  
+  <p>
+    — こんごー@頑張らないために頑張る (@kongou_ae)
+  </p>
+  
+  <p>
+    <a href="https://twitter.com/kongou_ae/statuses/478173202749718528">2014, 6月 15</a>
+  </p>
+</blockquote>
+
+<p>アクセス制限しているにも関わらず、何回かに1回、応答を返すという謎動作。「このDNS、ロードバランサか？」ということで、どんな構成なのか調べてみました。</p>
+
+<h1 id="調べかた:ccef5413ddce8dddbd1d207018f25004">調べかた</h1>
+
+<ul>
+<li>DTIが提供する以下のキャッシュDNSサーバ（202.216.224.30、202.216.229.30）にServersMans VPSから再帰問い合わせ行う。（このためだけにVPSを借りた。）</li>
+<li>問い合わせで利用するFQDNは、絶対にキャッシュされていないドメイン（自ドメインのNXDOMAINになるもの）を使う</li>
+<li>自ドメインの権威DNSはIPv4アドレスのみでListenする。</li>
+<li>自ドメインの権威DNSのクエリログを確認し、問い合わせで使ったFQDNを問い合わせに来たDNSサーバをチェックする。</li>
+<li>問い合わせに来たDNSサーバに、ConohaVPSから再帰問い合わせを行い、オープンリゾルバかどうかチェックする。</li>
+<li>面白そうなので、問い合わせに来たDNSサーバに、ServersManからversion.bindを問い合わせる。</li>
+</ul>
+
+<h1 id="結果:ccef5413ddce8dddbd1d207018f25004">結果</h1>
+
+<h2 id="202-46-216-224-30:ccef5413ddce8dddbd1d207018f25004">202&#46;216.224.30</h2>
+
+<p>202&#46;216.224.30は13台中2台がオープンリゾルバでした。version.bindを信じるのであれば、ソースからコンパイルしたbindはちゃんとしていて、RHELのパッケージを使っているbindはオープンリゾルバのようです。</p>
+
+<table>
+  <tr>
+    <th>
+      VIP
+    </th>
+    
+    <th>
+      Real server
+    </th>
+    
+    <th>
+      Open Resolver
+    </th>
+    
+    <th>
+      Version bind
+    </th>
+  </tr>
+  
+  <tr>
+    <td>
+      202.216.224.30
+    </td>
+    
+    <td>
+      202.216.224.10
+    </td>
+    
+    <td>
+      Yes
+    </td>
+    
+    <td>
+      9.8.2rc1-RedHat-9.8.2-0.23.rc1.el6_5.1
+    </td>
+  </tr>
+  
+  <tr>
+    <td>
+    </td>
+    
+    <td>
+      202.216.224.11
+    </td>
+    
+    <td>
+    </td>
+    
+    <td>
+      9.10.0-P1
+    </td>
+  </tr>
+  
+  <tr>
+    <td>
+    </td>
+    
+    <td>
+      202.216.224.12
+    </td>
+    
+    <td>
+    </td>
+    
+    <td>
+      9.10.0-P1
+    </td>
+  </tr>
+  
+  <tr>
+    <td>
+    </td>
+    
+    <td>
+      202.216.224.13
+    </td>
+    
+    <td>
+    </td>
+    
+    <td>
+      9.10.0-P1
+    </td>
+  </tr>
+  
+  <tr>
+    <td>
+    </td>
+    
+    <td>
+      202.216.224.14
+    </td>
+    
+    <td>
+    </td>
+    
+    <td>
+      9.10.0-P1
+    </td>
+  </tr>
+  
+  <tr>
+    <td>
+    </td>
+    
+    <td>
+      202.216.224.15
+    </td>
+    
+    <td>
+    </td>
+    
+    <td>
+      9.10.0-P1
+    </td>
+  </tr>
+  
+  <tr>
+    <td>
+    </td>
+    
+    <td>
+      202.216.224.16
+    </td>
+    
+    <td>
+    </td>
+    
+    <td>
+      9.10.0-P1
+    </td>
+  </tr>
+  
+  <tr>
+    <td>
+    </td>
+    
+    <td>
+      202.216.224.17
+    </td>
+    
+    <td>
+    </td>
+    
+    <td>
+      9.10.0-P1
+    </td>
+  </tr>
+  
+  <tr>
+    <td>
+    </td>
+    
+    <td>
+      202.216.224.18
+    </td>
+    
+    <td>
+    </td>
+    
+    <td>
+      9.10.0-P1
+    </td>
+  </tr>
+  
+  <tr>
+    <td>
+    </td>
+    
+    <td>
+      202.216.224.19
+    </td>
+    
+    <td>
+    </td>
+    
+    <td>
+      9.10.0-P1
+    </td>
+  </tr>
+  
+  <tr>
+    <td>
+    </td>
+    
+    <td>
+      202.216.224.34
+    </td>
+    
+    <td>
+      Yes
+    </td>
+    
+    <td>
+      9.8.2rc1-RedHat-9.8.2-0.23.rc1.el6_5.1
+    </td>
+  </tr>
+  
+  <tr>
+    <td>
+    </td>
+    
+    <td>
+      202.216.224.60
+    </td>
+    
+    <td>
+    </td>
+    
+    <td>
+      9.10.0-P1
+    </td>
+  </tr>
+  
+  <tr>
+    <td>
+    </td>
+    
+    <td>
+      202.216.224.61
+    </td>
+    
+    <td>
+    </td>
+    
+    <td>
+      9.10.0-P1
+    </td>
+  </tr>
+</table>
+
+<h2 id="202-46-216-229-30:ccef5413ddce8dddbd1d207018f25004">202&#46;216.229.30</h2>
+
+<p>202&#46;216.229.30は8台中5台がオープンリゾルバでした。version.bindを信じるのであれば、202.216.224.30と同様、ソースからコンパイルしたbindはちゃんとしていて、RHELのパッケージを使っているbindはオープンリゾルバのようです。</p>
+
+<table>
+  <tr>
+    <th>
+      VIP
+    </th>
+    
+    <th>
+      Real server
+    </th>
+    
+    <th>
+      Open Resolver
+    </th>
+    
+    <th>
+      Version bind
+    </th>
+  </tr>
+  
+  <tr>
+    <td>
+      202.216.229.30
+    </td>
+    
+    <td>
+      202.216.229.6
+    </td>
+    
+    <td>
+      Yes
+    </td>
+    
+    <td>
+      9.8.2rc1-RedHat-9.8.2-0.23.rc1.el6_5.1
+    </td>
+  </tr>
+  
+  <tr>
+    <td>
+    </td>
+    
+    <td>
+      202.216.229.10
+    </td>
+    
+    <td>
+      Yes
+    </td>
+    
+    <td>
+      9.8.2rc1-RedHat-9.8.2-0.23.rc1.el6_5.1
+    </td>
+  </tr>
+  
+  <tr>
+    <td>
+    </td>
+    
+    <td>
+      202.216.229.11
+    </td>
+    
+    <td>
+    </td>
+    
+    <td>
+      9.10.0-P1
+    </td>
+  </tr>
+  
+  <tr>
+    <td>
+    </td>
+    
+    <td>
+      202.216.229.13
+    </td>
+    
+    <td>
+    </td>
+    
+    <td>
+      9.10.0-P1
+    </td>
+  </tr>
+  
+  <tr>
+    <td>
+    </td>
+    
+    <td>
+      202.216.229.14
+    </td>
+    
+    <td>
+    </td>
+    
+    <td>
+      9.10.0-P1
+    </td>
+  </tr>
+  
+  <tr>
+    <td>
+    </td>
+    
+    <td>
+      202.216.229.41
+    </td>
+    
+    <td>
+      Yes
+    </td>
+    
+    <td>
+      9.8.2rc1-RedHat-9.8.2-0.23.rc1.el6_5.1
+    </td>
+  </tr>
+  
+  <tr>
+    <td>
+    </td>
+    
+    <td>
+      202.216.229.135
+    </td>
+    
+    <td>
+      Yes
+    </td>
+    
+    <td>
+      9.8.2rc1-RedHat-9.8.2-0.23.rc1.el6_5.1
+    </td>
+  </tr>
+  
+  <tr>
+    <td>
+    </td>
+    
+    <td>
+      202.216.229.146
+    </td>
+    
+    <td>
+      Yes
+    </td>
+    
+    <td>
+      9.8.2rc1-RedHat-9.8.2-0.23.rc1.el6_5.1
+    </td>
+  </tr>
+</table>
+
+<h1 id="雑感:ccef5413ddce8dddbd1d207018f25004">雑感</h1>
+
+<ul>
+<li>ロードバランサの配下に置くサーバは、設定を合わせた方がいいと思います。。。</li>
+<li>DNSサービスって、リアルサーバが沢山必要なのね。。。</li>
+<li>BINDのバージョンをあわせないのは、脆弱性対策なのかなあ。。。全部同じバージョンだと、ひとつの脆弱性で全部死ぬから。</li>
+<li>でも、全部BINDだから、新BINDコロリが出たら全滅だよなぁ。。。</li>
+<li>LBの配下で異なるキャッシュDNSサーバ（e.g.unboundとBIND）を動かすと強いDNSサービスが作れそう。</li>
+</ul>
+
+    </article>
+    
+ <aside><div id="disqus_thread"></div></aside> 
+
+<script type="text/javascript">
+     
+    var disqus_shortname = 'aimlessjpblog';
+
+     
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+  </main>
+
+
+  
+  <footer role="contentinfo">
+    <div style="text-align:center;">
+      
+      Written by kongou_ae
+    </div>
+  </footer>
+
+
+</div>
+
+<script src="/js/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+</body>
+</html>
+

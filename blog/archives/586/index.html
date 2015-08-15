@@ -1,0 +1,153 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+
+  
+  <meta charset="UTF-8">
+  <title>
+    FortigateでGREトンネルを掘ってみた | Aimless
+  </title>
+
+
+  
+  <meta name="viewport" content="width=device-width,user-scalable=no,maximum-scale=1,initial-scale=1">
+
+
+  
+  <link rel="stylesheet" href="/css/sanitize.css">
+  <link rel="stylesheet" href="/css/responsive.css">
+  <link rel="stylesheet" href="/css/highlight_monokai.css">
+  <link rel="stylesheet/less" href="/css/theme.less">
+  <link rel="stylesheet" href="/css/custom.css">
+
+
+  
+  <script src="/js/less.js" type="text/javascript"></script>
+
+
+</head>
+
+
+
+<body>
+<div class="container">
+
+  
+  <header role="banner">
+    <div class="row gutters">
+      <div id="site-title" class="col span_6">
+        <h1><a href="/">Aimless</a></h1>
+        <h2>Powered by aimless emotion</h2>
+      </div>
+      <div id="social" class="col span_6">
+        <ul>
+          <li><a href="https://twitter.com/kongou_ae" target="_blank">Twitter</a></li>
+          
+          <li><a href="https://github.com/kongou-ae" target="_blank">GitHub</a></li>
+        </ul>
+      </div>
+    </div>
+  </header>
+
+
+  
+  <main id="single" role="main">
+    <div class="article-header">
+      <h1>FortigateでGREトンネルを掘ってみた</h1>
+      <div class="meta">
+        Jan 2, 2012 &nbsp;
+        
+          #<a href="/categories/network">network</a>&nbsp;
+        
+      </div>
+    </div>
+    <article>
+      <p>あけましておめでとうございます。本年もよろしくお願いいたします。</p>
+
+<p>　さて、年越しから年明けにかけて、Fortigate60とCisco892JでGREトンネルを掘ったのでメモ。なお、本エントリーとは関係ありませんが、Forigate60はFortiOS 4.0が乗らないのでご注意ください。年度の初めにヤフオクで60を買ったのですが、少し高くても60Bを買うべきでした。。。</p>
+
+<p><img src="http://aimless.jp/images/gre.png" alt="GREトンネル論理図" /></p>
+
+<p>　まずはGREトンネル自体を定義します。GUIでは出来ないのでCLIでトンネルを張りたいインターフェース、自分のIPと対向のIPと対向のIPアドレスを入力します。</p>
+
+<pre><code>config system gre-tunnel
+    edit "tunnel1"
+        set interface "wan1"
+        set local-gw 自分のIP
+        set remote-gw 相手のIP
+    next
+end
+</code></pre>
+
+<p>　設定が完了すると、GUI上ではWANインターフェースのサブインターフェースとして表示されます。</p>
+
+<p>![GUI][2]</p>
+
+<p>　続いて、トンネルインターフェースの設定をします。ここではトンネルインターフェースのIPアドレスと対向のIPアドレスを入力します。</p>
+
+<pre><code>config system interface
+    edit "tunnel1"
+        set vdom "root"
+        set ip 172.25.1.2 255.255.255.255
+        set allowaccess ping https ssh
+        set type tunnel
+        set remote-ip 172.25.1.1
+        set interface "wan1"
+    next
+end
+</code></pre>
+
+<p>　接続先のCisco892Jのコンフィグは下記の通りです。</p>
+
+<pre><code>interface Tunnel3
+ description Fortigate
+ ip address 172.25.1.1 255.255.255.252
+ ip ospf mtu-ignore
+ tunnel source 自分のIP
+ tunnel destination 相手のIP
+</code></pre>
+
+<p>　設定完了後、お互いに問題なくPingが飛ぶことを確認しています。現在はこのリンクでOSPFを回すべく試行錯誤中です。本来ならGRE over IPSecあたりにするべきなのでしょうが、とりあえずはそのままやっています。肝心のOSPFは、MTUや再帰ルーティングの問題で上手いこといっていませんけが、いずれエントリーにしたいなとおもいます。</p>
+
+<p>[2]: <a href="http://aimless.jp/images/fortiGUI.png">http://aimless.jp/images/fortiGUI.png</a></p>
+
+    </article>
+    
+ <aside><div id="disqus_thread"></div></aside> 
+
+<script type="text/javascript">
+     
+    var disqus_shortname = 'aimlessjpblog';
+
+     
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+  </main>
+
+
+  
+  <footer role="contentinfo">
+    <div style="text-align:center;">
+      
+      Written by kongou_ae
+    </div>
+  </footer>
+
+
+</div>
+
+<script src="/js/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+</body>
+</html>
+

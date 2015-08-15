@@ -1,0 +1,255 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+
+  
+  <meta charset="UTF-8">
+  <title>
+    AWSにFortiGateをデプロイしてみた（ネットワーク設定編） | Aimless
+  </title>
+
+
+  
+  <meta name="viewport" content="width=device-width,user-scalable=no,maximum-scale=1,initial-scale=1">
+
+
+  
+  <link rel="stylesheet" href="/css/sanitize.css">
+  <link rel="stylesheet" href="/css/responsive.css">
+  <link rel="stylesheet" href="/css/highlight_monokai.css">
+  <link rel="stylesheet/less" href="/css/theme.less">
+  <link rel="stylesheet" href="/css/custom.css">
+
+
+  
+  <script src="/js/less.js" type="text/javascript"></script>
+
+
+</head>
+
+
+
+<body>
+<div class="container">
+
+  
+  <header role="banner">
+    <div class="row gutters">
+      <div id="site-title" class="col span_6">
+        <h1><a href="/">Aimless</a></h1>
+        <h2>Powered by aimless emotion</h2>
+      </div>
+      <div id="social" class="col span_6">
+        <ul>
+          <li><a href="https://twitter.com/kongou_ae" target="_blank">Twitter</a></li>
+          
+          <li><a href="https://github.com/kongou-ae" target="_blank">GitHub</a></li>
+        </ul>
+      </div>
+    </div>
+  </header>
+
+
+  
+  <main id="single" role="main">
+    <div class="article-header">
+      <h1>AWSにFortiGateをデプロイしてみた（ネットワーク設定編）</h1>
+      <div class="meta">
+        Jan 23, 2015 &nbsp;
+        
+          #<a href="/categories/aws">AWS</a>&nbsp;
+        
+          #<a href="/categories/fortigate">Fortigate</a>&nbsp;
+        
+      </div>
+    </div>
+    <article>
+      
+
+<p>いつの日か、AWS上の通信ログを取りたくなる日が来るだろうということで、使い慣れているFortiGateのVM版をAWS上にデプロイしてみました。</p>
+
+<p>　以前調べた時は、AWSのマーケットプライスで提供されているモデルがBYOL版のみであったため試せなかったのですが、現時点ではライセンス込みのモデルがあるので、気軽に試せます。</p>
+
+<h2 id="vpc環境:8dfb55f8e4769f24674df2a1c9f777e6">VPC環境</h2>
+
+<p>　FortiGate-VMをデプロイするVPCの環境は以下の通りです。</p>
+
+<p><strong>CIDR</strong></p>
+
+<table>
+<thead>
+<tr>
+<th>項目</th>
+<th>値</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>VPC CIDR</td>
+<td>10&#46;175.0.0/16</td>
+</tr>
+
+<tr>
+<td>external_subnet</td>
+<td>10&#46;175.1.0/24</td>
+</tr>
+
+<tr>
+<td>internal_subnet</td>
+<td>10&#46;175.2.0/24</td>
+</tr>
+</tbody>
+</table>
+
+<p><strong>external_subnetのroute-table</strong></p>
+
+<table>
+<thead>
+<tr>
+<th>Destination</th>
+<th>Target</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>10&#46;175.0.0/16</td>
+<td>local</td>
+</tr>
+
+<tr>
+<td>0&#46;0.0.0</td>
+<td>IGW</td>
+</tr>
+</tbody>
+</table>
+
+<p><strong>internal_subnetのroute-table</strong></p>
+
+<table>
+<thead>
+<tr>
+<th>Destination</th>
+<th>Target</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>10&#46;175.0.0/16</td>
+<td>local</td>
+</tr>
+</tbody>
+</table>
+
+<h2 id="とりあえずnic1個でデプロイ:8dfb55f8e4769f24674df2a1c9f777e6">とりあえずNIC1個でデプロイ</h2>
+
+<p>　マーケットプライスからポチポチとデプロイします。とりあえず、一般的なサーバと同様、NIC1個で始めます。</p>
+
+<table>
+<thead>
+<tr>
+<th>パラメータ</th>
+<th>設定</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>AMI</td>
+<td>FortiGate-VM</td>
+</tr>
+
+<tr>
+<td>instance type</td>
+<td>m3.medium</td>
+</tr>
+
+<tr>
+<td>Network</td>
+<td>VPC</td>
+</tr>
+
+<tr>
+<td>subnet</td>
+<td>external_subnet</td>
+</tr>
+
+<tr>
+<td>security group</td>
+<td>全通信許可</td>
+</tr>
+</tbody>
+</table>
+
+<p>　起動後、EIPを作成し、external_subnetのENIに割り当てます。この時点で、ブラウザからENIのグローバルIPアドレスにHTTPSでアクセスすると、ログイン画面が見られるはずです。初期IDとパスワード（admin/インスタンスID）を入力してログインしましょう。</p>
+
+<p>　ログインすると、FortiGateを触ったことのある人には見慣れた画面が出ます。取りあえずGUIを日本語表示にしましょう。気になる方は、管理アクセスのIPアドレス制限を行いましょう。</p>
+
+<p><img src="http://aimless.jp/blog/wp-content/uploads/2015/01/aws-1.png" alt="enter image description here" /></p>
+
+<p>　FortiGate-VMは、バンドル版なんですね。フルUTM機能が使えますので、ファイアウォール以外の使い道もありそうです。</p>
+
+<p><img src="http://aimless.jp/blog/wp-content/uploads/2015/01/aws-6.png" alt="enter image description here" /></p>
+
+<h2 id="nicを増やす:8dfb55f8e4769f24674df2a1c9f777e6">NICを増やす</h2>
+
+<p>　GUIでインターフェースを確認すると、NICは当然一つしかありません。</p>
+
+<p><img src="http://aimless.jp/blog/wp-content/uploads/2015/01/aws-3.png" alt="enter image description here" /></p>
+
+<p>　FWはインターフェースを複数持ってなんぼですので、NICを増やします。マネジメントコンソールでENIを作成し、FortiGate-VMのインスタンスにアタッチします。そして、アタッチしたNICを認識させるためにFortiGateを再起動します。（他の方法はないのか&#8230;）</p>
+
+<p>　FortiGateがENIを認識すると、IP未設定のインターフェースがリンクアップしますので、GUIでENIに設定したIPアドレスを設定します。これで、NICを二つ持ったNATモードのFortiGateの完成です。</p>
+
+<p><img src="http://aimless.jp/blog/wp-content/uploads/2015/01/aws-5.png" alt="enter image description here" /></p>
+
+<p>　なお、AWSのインスタンスは、インスタンスタイプごとに利用できるENIの数が決まっています。（<a href="http://docs.aws.amazon.com/ja_jp/AWSEC2/latest/UserGuide/using-eni.html#AvailableIpPerENI">参考：インスタンスタイプあたりの ENI ごとのプライベート IP アドレス</a>） 今回選択したm3.mediumは最大2です。そのため、GUI的には7ポートまで利用可能な様に見えますが、3つ目のENIをアタッチしようとすると、エラーになります&#8230;m3.mediumだとDMZが作れない&#8230;</p>
+
+<p>![enter image description here][6]</p>
+
+<p>　次回は、バーチャルIPを作成し、internal_subnetに設置したインスタンスとインターネット間の通信を実現します。また、複数のバーチャルIPを作成する方法を確認します。</p>
+
+<p>[6]: <a href="http://aimless.jp/blog/wp-content/uploads/2015/01/aws-7.png">http://aimless.jp/blog/wp-content/uploads/2015/01/aws-7.png</a></p>
+
+    </article>
+    
+ <aside><div id="disqus_thread"></div></aside> 
+
+<script type="text/javascript">
+     
+    var disqus_shortname = 'aimlessjpblog';
+
+     
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+  </main>
+
+
+  
+  <footer role="contentinfo">
+    <div style="text-align:center;">
+      
+      Written by kongou_ae
+    </div>
+  </footer>
+
+
+</div>
+
+<script src="/js/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+</body>
+</html>
+

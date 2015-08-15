@@ -1,0 +1,156 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+
+  
+  <meta charset="UTF-8">
+  <title>
+    気軽にドキュメントを書く（Sphinx &#43; rst2pdf &#43; LiveReload &#43; docker） | Aimless
+  </title>
+
+
+  
+  <meta name="viewport" content="width=device-width,user-scalable=no,maximum-scale=1,initial-scale=1">
+
+
+  
+  <link rel="stylesheet" href="/css/sanitize.css">
+  <link rel="stylesheet" href="/css/responsive.css">
+  <link rel="stylesheet" href="/css/highlight_monokai.css">
+  <link rel="stylesheet/less" href="/css/theme.less">
+  <link rel="stylesheet" href="/css/custom.css">
+
+
+  
+  <script src="/js/less.js" type="text/javascript"></script>
+
+
+</head>
+
+
+
+<body>
+<div class="container">
+
+  
+  <header role="banner">
+    <div class="row gutters">
+      <div id="site-title" class="col span_6">
+        <h1><a href="/">Aimless</a></h1>
+        <h2>Powered by aimless emotion</h2>
+      </div>
+      <div id="social" class="col span_6">
+        <ul>
+          <li><a href="https://twitter.com/kongou_ae" target="_blank">Twitter</a></li>
+          
+          <li><a href="https://github.com/kongou-ae" target="_blank">GitHub</a></li>
+        </ul>
+      </div>
+    </div>
+  </header>
+
+
+  
+  <main id="single" role="main">
+    <div class="article-header">
+      <h1>気軽にドキュメントを書く（Sphinx &#43; rst2pdf &#43; LiveReload &#43; docker）</h1>
+      <div class="meta">
+        Jul 9, 2014 &nbsp;
+        
+          #<a href="/categories/python">python</a>&nbsp;
+        
+          #<a href="/categories/rst2pdf">rst2pdf</a>&nbsp;
+        
+          #<a href="/categories/sphinx">sphinx</a>&nbsp;
+        
+      </div>
+    </div>
+    <article>
+      
+
+<p>本エントリーは、Wordを満足に使いこなせない私が、Wordよりも気軽にドキュメントを書く方法を試行錯誤した結果のメモです。せめて内部用のドキュメントくらいは気軽に書きたいのです。</p>
+
+<h1 id="概要図:a272f9313b7feb55abc66d4c9811e04e">概要図</h1>
+
+<p>　試行錯誤した結果、下図のような構成になりました。人がやることは、WindowsのターミナルエミュレータからSSH経由でreSTファイルを編集する事だけです。あとは全自動でいい感じな見た目のPDFファイルがChromeに表示されます。</p>
+
+<p>　&#8230;Wordでいいじゃね？とは思いますが、気のせいだと思います。</p>
+
+<p>![doc-diag][1]</p>
+
+<h1 id="sphinxを使って-文書の内容と見た目を分離する:a272f9313b7feb55abc66d4c9811e04e">Sphinxを使って、文書の内容と見た目を分離する</h1>
+
+<p>　ドキュメント作成のめんどくさいところは、想定読者向けに見た目を整える必要があることです。自分が読むだけならメモ帳でいいですが、ドキュメントとして想定読者が存在する場合、ドキュメントの第一印象は見た目が9割。</p>
+
+<p>　そうはいっても、ドキュメントの最終的な価値は内容で決まるのであり、限りある能力と時間はドキュメントの内容に注力したい。逆に考えると、見た目にかかる労力を自動化できれば、第一印象の9割を気軽に得られるわけです。</p>
+
+<p>　というわけで、Sphinxを利用して、内容と見た目を分離することにしました。これにより、編集すべきものはreSTなプレーンテキストだけになります。気軽。</p>
+
+<h1 id="rst2pdfを使って-見た目を整える:a272f9313b7feb55abc66d4c9811e04e">rst2pdfを使って、見た目を整える</h1>
+
+<p>　ドキュメント作成のめんどくさいところは、想定読者が納得する見た目にする必要があることです。見た目とは「ファイル形式」と「文章の体裁」です。</p>
+
+<p>　上司にreSTなテキストファイルを提出しようものなら、中身を見ずにやり直しを食らうことでしょう。お客様にreSTを変換したHTMLファイルを提出するわけにはいかない。また、段落がそろっていない、表の罫線の太さが違う、フォントがそろっていないといった基本的な体裁が整っていないと、ドキュメントの評価はダダ下がりです。</p>
+
+<p>　というわけで、rst2pdfを利用して、reSTファイルをPDFにすることにしました。「make pdf」を叩くと、プレーンテキストがPDFになります。気軽。これでファイル形式の問題はクリアです。</p>
+
+<p>　さらに、rst2pdfのスタイルシートを利用して、文書の体制を細かく指定します。一度スタイルシートを決めてしまえば、次から体裁に悩むことはありません。気軽。これで体裁の問題もクリアです。</p>
+
+<h1 id="python-livereloadを使って-操作性を高める:a272f9313b7feb55abc66d4c9811e04e">python-livereloadを使って、操作性を高める</h1>
+
+<p>　内容と見た目を分離したデメリットは、内容を変更した際に見た目を再生成する必要があることです。wordであれば、ドキュメントの内容を修正するだけで見た目も修正されますが、Sphinx + rst2pdfを使う場合、reSTを修正した後に「make pdf」をして、さらにPDFを開きなおす必要がある。これはすごくめんどくさい。</p>
+
+<p>　というわけで、このめんどくさい作業を、python-livereloadで自動化しました。</p>
+
+<p>　reSTを配置しているディレクトリで以下のスクリプトを起動し、Chromeでlocalhostの35729/tcpでPDFにアクセスします。そして、Chrome拡張のlivereloadで接続します。この状態でreSTまたはrst2pdfのスタイルシートを更新すると、勝手にmake pdfが走り、更にブラウザのPDFファイルがリロードされるようになります。気軽。超便利。</p>
+
+<h1 id="dockerを使って-仕組みのポータビリティを高める:a272f9313b7feb55abc66d4c9811e04e">dockerを使って、仕組みのポータビリティを高める</h1>
+
+<p>　気軽にドキュメントを書く仕組みができましたが、根本的な問題として、この仕組み自体をWindows環境で作る事が気軽ではありません。PCが変わるたびにこの環境を一から作り直すのはバカみたいです。</p>
+
+<p>　というわけで、Doeckerを利用してこの仕組みをコンテナにしました。Dockerfileにしたので、Dockerさえ動けば、どの端末でも直ぐにこの仕組みを利用できます。windowsにもboot2dockerがあるので、Docker環境の準備は簡単です。気軽。</p>
+
+<p>以上、気軽さを求めて試行錯誤した結果でした。</p>
+
+<p>[1]: <a href="http://aimless.jp/images/doc-diag.jpg">http://aimless.jp/images/doc-diag.jpg</a></p>
+
+    </article>
+    
+ <aside><div id="disqus_thread"></div></aside> 
+
+<script type="text/javascript">
+     
+    var disqus_shortname = 'aimlessjpblog';
+
+     
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+  </main>
+
+
+  
+  <footer role="contentinfo">
+    <div style="text-align:center;">
+      
+      Written by kongou_ae
+    </div>
+  </footer>
+
+
+</div>
+
+<script src="/js/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+</body>
+</html>
+

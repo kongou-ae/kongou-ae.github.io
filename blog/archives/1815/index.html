@@ -1,0 +1,179 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+
+  
+  <meta charset="UTF-8">
+  <title>
+    ネットワーク運用でも継続的デリバリしたい。 | Aimless
+  </title>
+
+
+  
+  <meta name="viewport" content="width=device-width,user-scalable=no,maximum-scale=1,initial-scale=1">
+
+
+  
+  <link rel="stylesheet" href="/css/sanitize.css">
+  <link rel="stylesheet" href="/css/responsive.css">
+  <link rel="stylesheet" href="/css/highlight_monokai.css">
+  <link rel="stylesheet/less" href="/css/theme.less">
+  <link rel="stylesheet" href="/css/custom.css">
+
+
+  
+  <script src="/js/less.js" type="text/javascript"></script>
+
+
+</head>
+
+
+
+<body>
+<div class="container">
+
+  
+  <header role="banner">
+    <div class="row gutters">
+      <div id="site-title" class="col span_6">
+        <h1><a href="/">Aimless</a></h1>
+        <h2>Powered by aimless emotion</h2>
+      </div>
+      <div id="social" class="col span_6">
+        <ul>
+          <li><a href="https://twitter.com/kongou_ae" target="_blank">Twitter</a></li>
+          
+          <li><a href="https://github.com/kongou-ae" target="_blank">GitHub</a></li>
+        </ul>
+      </div>
+    </div>
+  </header>
+
+
+  
+  <main id="single" role="main">
+    <div class="article-header">
+      <h1>ネットワーク運用でも継続的デリバリしたい。</h1>
+      <div class="meta">
+        Apr 4, 2014 &nbsp;
+        
+          #<a href="/categories/network">network</a>&nbsp;
+        
+      </div>
+    </div>
+    <article>
+      
+
+<h2 id="昔ながらの変更作業:480259f75c8c6ea6384e6478e44a3989">昔ながらの変更作業</h2>
+
+<p>　SIerの中で、ネットワーク機器の運用受託業務をやっておりまして、毎日毎日、色々なお客様のスイッチやルータ、ファイアウォールの設定変更をしています。</p>
+
+<p>　設定変更のプロセスはルール化されており、現在の以下の流れで設定変更が行われます。</p>
+
+<ol>
+<li>作業者が手順書を作成する</li>
+<li>確認者が手順書をレビューする。</li>
+<li>承認者が手順書を確認し、作業を承認する</li>
+<li>作業者と確認者が二重チェックで本番作業を実施する。</li>
+<li>作業者が事後作業を実施する。（管理資料更新等）</li>
+<li>確認者が事後作業をレビューする</li>
+<li>承認者が結果を確認し、結果を承認する。</li>
+</ol>
+
+<p>　それなりの人と時間をかけて対応している中で、上からは「コストを圧縮しろ！ただし、品質は下げるな！」という無茶を言われています。現時点では「二重チェックをやめて作業員を減らしましょうー。コストは下がりますよえへへ」という対応しか思いつかず、こんなことを言えば上長に殺されるわけです。</p>
+
+<h2 id="継続的デリバリーへの憧れ:480259f75c8c6ea6384e6478e44a3989">継続的デリバリーへの憧れ</h2>
+
+<p>　このような状況で、サーバやアプリケーションの世界で行われている「継続的デリバリ」の話を聞くと、素直にうらやましいわけです。テストが自動！？デプロイも自動！？</p>
+
+<p>　作業手順のテストですか？頻度の多いファイアウォールの設定作業のたびに、ユーザと全く同じネットワーク環境を自前で用意するのは現実的ではないので、現在の設定をベースに頭の中で手順をトレースして、ユーザの要望を満たす設定になるかをテストしてますよ？</p>
+
+<p>　作業結果のテストですか？作業後にトラフィックが流れてみないと分かりませんねー。もしかしたら考慮漏れにより作業とは関係のない通信が破棄されるかもしれませんー。または、作業時にミスってしまい、関係のない通信が破棄されるかもしれませんー。でも変更してみないと分かりません。</p>
+
+<p>　デプロイですか？GUIで操作する機器なので、毎回指さし声出し確認しながらマウスをポチポチ頑張っています！</p>
+
+<p>　このような設定変更作業を続けた結果、考慮漏れによる通信障害や作業ミスによる通信障害が発生し、ごめんなさいする羽目になります。深夜まで報告書を書いたのが懐かしい。</p>
+
+<h2 id="希望:480259f75c8c6ea6384e6478e44a3989">希望</h2>
+
+<p>　コストを下げて品質を維持するために、頻度の多いファイアウォールの設定変更作業で、継続的デリバリな仕組みができるといいなと思うわけです。ちゃんとテストしよう。手作業は止めよう。</p>
+
+<p>　理想は以下の流れです。夢のようです。</p>
+
+<ol>
+<li>作業者は設定変更の手順となるコードを作成する。</li>
+<li>確認者は手順（コード）をレビューする。</li>
+<li>レビューが完了次第、CIツールがテストを実施する。
+
+<ul>
+<li>CIツールは、変更対象機器のコンフィグを元に、テスト環境をとなるネットワークおよびファイアウォールをデプロイする</li>
+<li>CIツールが、テスト環境を利用して、ファイアウォールに対して変更手順を実施する。（手順の正しさをテストする）</li>
+<li>CIツールが、テスト環境を利用して、ファイアウォールのすべてのポリシーを網羅するトラフィックを動的に生成してファイアウォールに順次流す。（作業結果のテストする）</li>
+</ul></li>
+<li>手順と結果という2つのテストをパス次第、CIツールが本番のファイアウォールの変更作業を実施する。</li>
+</ol>
+
+<p>　運用担当者がやることは手順となるコードの作成とレビューだけです。なんて素晴らしい！お客様！業後作業を希望ですか？いいですよ！CIツールがやりますんで！</p>
+
+<h2 id="課題:480259f75c8c6ea6384e6478e44a3989">課題</h2>
+
+<p>　実現に向けた課題は以下の通りです。Programmableな仮想ファイアウォールさえあれば、あとは仮想環境とオーケストレーションツール、CIツールを組み合わて作りこみでできそうな気がする。気がする。</p>
+
+<h3 id="1-programmableなファイアウォール:480259f75c8c6ea6384e6478e44a3989">1. Programmableなファイアウォール</h3>
+
+<p>　CIツールに自動テスト、自動デプロイさせるためには、ファイアウォールがprogrammableである必要があります。GUIと同様の機能をAPIで提供するファイアウォールはあるのでしょうか。Expectでやる？</p>
+
+<h3 id="2-顧客ごとに異なるテスト環境を自動デプロイする必要がある:480259f75c8c6ea6384e6478e44a3989">2. 顧客ごとに異なるテスト環境を自動デプロイする必要がある</h3>
+
+<p>　顧客ごとにネットワーク環境が違うので、当然必要となるテスト環境も顧客ごとに異なります。そのため、CIツールが、全く違うテスト環境を気軽に作っては壊し作っては壊してできる仕組みが必要です。</p>
+
+<p>　これは初回に手作業で仮想マシンと仮想ネットワークを作り、顧客ごとにテンプレート化しておけばいけそう。2回目からは、オーケストレーションツールにテスト環境を用意してもらいましょう。</p>
+
+<h3 id="3-ポリシーに沿って動的にトラフィックを生成する必要がある:480259f75c8c6ea6384e6478e44a3989">3. ポリシーに沿って動的にトラフィックを生成する必要がある。</h3>
+
+<p>　複数の顧客を運用しているので、流れるトラフィックは送信元宛先プロトコルの組み合わせで千差万別になります。そのため、事前にテスト用のトラフィックを準備するのではなく、テストの度にファイアウォールのポリシーから動的にトラフィックを生成する必要があります。</p>
+
+<p>　テストパターンは、ファイアウォールのポリシーをパースして作る。そのテストパターンを舐めるために疎通確認サーバを沢山立てるのは非現実的なので、疎通確認サーバのIPアドレスとデフォルトゲートウェイ、NICの接続先を、テストするトラフィックにあわせてオートメーションツールで切り替えれば行けそうな気がする。</p>
+
+<p>　こういうことを考えて実現する仕事がしたい。。。</p>
+
+    </article>
+    
+ <aside><div id="disqus_thread"></div></aside> 
+
+<script type="text/javascript">
+     
+    var disqus_shortname = 'aimlessjpblog';
+
+     
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+  </main>
+
+
+  
+  <footer role="contentinfo">
+    <div style="text-align:center;">
+      
+      Written by kongou_ae
+    </div>
+  </footer>
+
+
+</div>
+
+<script src="/js/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+</body>
+</html>
+

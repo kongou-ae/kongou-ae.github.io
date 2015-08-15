@@ -1,0 +1,178 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+
+  
+  <meta charset="UTF-8">
+  <title>
+    CiscoとYAMAHAで、IPIPトンネル＆OSPFしてみた。 | Aimless
+  </title>
+
+
+  
+  <meta name="viewport" content="width=device-width,user-scalable=no,maximum-scale=1,initial-scale=1">
+
+
+  
+  <link rel="stylesheet" href="/css/sanitize.css">
+  <link rel="stylesheet" href="/css/responsive.css">
+  <link rel="stylesheet" href="/css/highlight_monokai.css">
+  <link rel="stylesheet/less" href="/css/theme.less">
+  <link rel="stylesheet" href="/css/custom.css">
+
+
+  
+  <script src="/js/less.js" type="text/javascript"></script>
+
+
+</head>
+
+
+
+<body>
+<div class="container">
+
+  
+  <header role="banner">
+    <div class="row gutters">
+      <div id="site-title" class="col span_6">
+        <h1><a href="/">Aimless</a></h1>
+        <h2>Powered by aimless emotion</h2>
+      </div>
+      <div id="social" class="col span_6">
+        <ul>
+          <li><a href="https://twitter.com/kongou_ae" target="_blank">Twitter</a></li>
+          
+          <li><a href="https://github.com/kongou-ae" target="_blank">GitHub</a></li>
+        </ul>
+      </div>
+    </div>
+  </header>
+
+
+  
+  <main id="single" role="main">
+    <div class="article-header">
+      <h1>CiscoとYAMAHAで、IPIPトンネル＆OSPFしてみた。</h1>
+      <div class="meta">
+        Jan 29, 2012 &nbsp;
+        
+          #<a href="/categories/network">network</a>&nbsp;
+        
+      </div>
+    </div>
+    <article>
+      
+
+<p>とある方とIPIPトンネルを掘ってOSPF over IPSecをやろうと頑張っておりますが、上手くいかなかったので自宅で検証しています。自宅の検証環境はこんな感じです。OCNのPPPoEとGMO固定IPがあるので、疑似的にグローバルIP間でのトンネル堀り検証が出来ます。</p>
+
+<p>![nwdiag oof IPIP tunnel][1]</p>
+
+<h3 id="lanだと上手くいくのに:8806f1b340cd4b27cc12e773e0fa59cc">LANだと上手くいくのに・・・</h3>
+
+<p>　グローバルIP同士だと上手くトンネルが掘れなかったので、まずは192.168.2.0/24のLANセグメントでIPIPトンネルを掘ってみました。下記設定で互いのトンネルIPアドレスに対してPingが飛ぶので上手くいっていると思います。</p>
+
+<pre><code>■Cisco Configuration
+interface Tunnel10                                                              
+ description test-ipip                                                          
+ ip address 172.16.16.1 255.255.255.252                                         
+ tunnel source 192.168.2.254                                                    
+ tunnel mode ipip                                                               
+ tunnel destination 192.168.2.200 
+</code></pre>
+
+<pre><code>■YAMAHA Configuration
+tunnel select 10                                                                
+ description tunnel test-ipip                                                   
+ tunnel encapsulation ipip                                                      
+ tunnel endpoint address 192.168.2.200 192.168.2.254                            
+ ip tunnel address 172.16.16.2/30                                               
+ tunnel enable 10
+</code></pre>
+
+<h3 id="さらにospf:8806f1b340cd4b27cc12e773e0fa59cc">さらにOSPF</h3>
+
+<p>　開通したIPIPトンネルでOSPFを回します。なぜだか不明ですが、RTX側のIPIPトンネルに対して明示的にRemoteAddressを追加しないとOSPFのネイバーが上がりません。</p>
+
+<pre><code>■Cisco Configuration
+router ospf 1
+ router-id 36.2.107.xxx
+ redistribute connected subnets
+ redistribute static subnets
+ network 172.16.16.0 0.0.0.3 area 0.0.0.0
+</code></pre>
+
+<pre><code>■YAMAHA Configuration
+tunnel select 10
+ description tunnel test-ipip
+ tunnel encapsulation ipip
+ tunnel endpoint address 192.168.2.200 192.168.2.254
+ ip tunnel address 172.16.16.2/30
+ ip tunnel remote address 172.16.16.1
+ ip tunnel ospf area backbone
+ tunnel enable 10
+
+ospf use on
+ospf router id 192.168.2.200
+ospf log interface neighbor packet
+ospf area backbone
+</code></pre>
+
+<pre><code>■Cisco Result
+Router#show ip ospf neighbor
+Neighbor ID     Pri   State           Dead Time   Address         Interface
+192.168.2.200     0   FULL/  -        00:00:39    172.16.16.2     Tunnel10
+</code></pre>
+
+<pre><code>■YAMAHA Result
+# show status ospf neighbor
+Neighbor ID     Pri   State           Dead Time   Address         
+36.2.107.75       1   FULL/  -        00:00:36    172.16.16.1     TUNNEL[10]
+</code></pre>
+
+<h3 id="グローバルだと全然だめ:8806f1b340cd4b27cc12e773e0fa59cc">グローバルだと全然だめ・・・</h3>
+
+<p>　いけそうな設定が確認できたの同様の設定をグローバルIPでやってみたのですが、全く上手くいきません。何よりもIPIPトンネルが開通しません（互いのトンネルIPにPingが飛ばない）・・・。なんとなーくRTX側のNAT Descriptorが怪しそうなので引き続き検証します。</p>
+
+<p>[1]: <a href="http://aimless.jp/images/nwdiag.png">http://aimless.jp/images/nwdiag.png</a></p>
+
+    </article>
+    
+ <aside><div id="disqus_thread"></div></aside> 
+
+<script type="text/javascript">
+     
+    var disqus_shortname = 'aimlessjpblog';
+
+     
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+  </main>
+
+
+  
+  <footer role="contentinfo">
+    <div style="text-align:center;">
+      
+      Written by kongou_ae
+    </div>
+  </footer>
+
+
+</div>
+
+<script src="/js/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+</body>
+</html>
+

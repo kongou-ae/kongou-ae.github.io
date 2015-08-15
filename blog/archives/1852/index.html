@@ -1,0 +1,129 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+
+  
+  <meta charset="UTF-8">
+  <title>
+    onePKで遊ぶ（ルーティング取得） | Aimless
+  </title>
+
+
+  
+  <meta name="viewport" content="width=device-width,user-scalable=no,maximum-scale=1,initial-scale=1">
+
+
+  
+  <link rel="stylesheet" href="/css/sanitize.css">
+  <link rel="stylesheet" href="/css/responsive.css">
+  <link rel="stylesheet" href="/css/highlight_monokai.css">
+  <link rel="stylesheet/less" href="/css/theme.less">
+  <link rel="stylesheet" href="/css/custom.css">
+
+
+  
+  <script src="/js/less.js" type="text/javascript"></script>
+
+
+</head>
+
+
+
+<body>
+<div class="container">
+
+  
+  <header role="banner">
+    <div class="row gutters">
+      <div id="site-title" class="col span_6">
+        <h1><a href="/">Aimless</a></h1>
+        <h2>Powered by aimless emotion</h2>
+      </div>
+      <div id="social" class="col span_6">
+        <ul>
+          <li><a href="https://twitter.com/kongou_ae" target="_blank">Twitter</a></li>
+          
+          <li><a href="https://github.com/kongou-ae" target="_blank">GitHub</a></li>
+        </ul>
+      </div>
+    </div>
+  </header>
+
+
+  
+  <main id="single" role="main">
+    <div class="article-header">
+      <h1>onePKで遊ぶ（ルーティング取得）</h1>
+      <div class="meta">
+        Apr 6, 2014 &nbsp;
+        
+          #<a href="/categories/cisco">cisco</a>&nbsp;
+        
+          #<a href="/categories/python">python</a>&nbsp;
+        
+      </div>
+    </div>
+    <article>
+      
+
+<p>GAになったonePKで遊んでいます。見よう見まねでルーティング情報を取得するスクリプトを書いてみました。必要な情報を入手するために、SSHでログインして正規表現で抽出していた従来とは全く違います。</p>
+
+<p>　次はルーティングを追加するスクリプトを書いてみようと思います。</p>
+
+<h2 id="実行結果:6e2abe9be2e5eb47329c287eceefb687">実行結果</h2>
+
+<h3 id="スクリプト:6e2abe9be2e5eb47329c287eceefb687">スクリプト</h3>
+
+<h3 id="メモ:6e2abe9be2e5eb47329c287eceefb687">メモ</h3>
+
+<ul>
+<li>ルータでonepkを有効にする。設定はGetting Staredに書いてある通り。[Using a Cisco Router with a Self-Signed Certificate][1]</li>
+<li>対象機器は、NetworkElementオブジェクトで定義する</li>
+<li>対象機器への接続方式は、SessionConfigオブジェクトで定義する。</li>
+<li>SessionConfigを利用してNetworkElement.connectすることで、実機にアクセスする。</li>
+<li>connect後のNetworkElementから必要な情報を入手する。</li>
+<li>明示的にdisconnectしないと、対象機器とのコネクションは切れない。</li>
+</ul>
+
+<p>[1]: <a href="https://developer.cisco.com/media/onepk_getting_started_guide/GUID-03D9D7BB-B201-45FD-B0DE-B928C9D70692.html">https://developer.cisco.com/media/onepk_getting_started_guide/GUID-03D9D7BB-B201-45FD-B0DE-B928C9D70692.html</a></p>
+
+    </article>
+    
+ <aside><div id="disqus_thread"></div></aside> 
+
+<script type="text/javascript">
+     
+    var disqus_shortname = 'aimlessjpblog';
+
+     
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+  </main>
+
+
+  
+  <footer role="contentinfo">
+    <div style="text-align:center;">
+      
+      Written by kongou_ae
+    </div>
+  </footer>
+
+
+</div>
+
+<script src="/js/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+</body>
+</html>
+

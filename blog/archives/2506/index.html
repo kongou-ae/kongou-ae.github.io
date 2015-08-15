@@ -1,0 +1,204 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+
+  
+  <meta charset="UTF-8">
+  <title>
+    気軽にドキュメントを書くための試行錯誤 | Aimless
+  </title>
+
+
+  
+  <meta name="viewport" content="width=device-width,user-scalable=no,maximum-scale=1,initial-scale=1">
+
+
+  
+  <link rel="stylesheet" href="/css/sanitize.css">
+  <link rel="stylesheet" href="/css/responsive.css">
+  <link rel="stylesheet" href="/css/highlight_monokai.css">
+  <link rel="stylesheet/less" href="/css/theme.less">
+  <link rel="stylesheet" href="/css/custom.css">
+
+
+  
+  <script src="/js/less.js" type="text/javascript"></script>
+
+
+</head>
+
+
+
+<body>
+<div class="container">
+
+  
+  <header role="banner">
+    <div class="row gutters">
+      <div id="site-title" class="col span_6">
+        <h1><a href="/">Aimless</a></h1>
+        <h2>Powered by aimless emotion</h2>
+      </div>
+      <div id="social" class="col span_6">
+        <ul>
+          <li><a href="https://twitter.com/kongou_ae" target="_blank">Twitter</a></li>
+          
+          <li><a href="https://github.com/kongou-ae" target="_blank">GitHub</a></li>
+        </ul>
+      </div>
+    </div>
+  </header>
+
+
+  
+  <main id="single" role="main">
+    <div class="article-header">
+      <h1>気軽にドキュメントを書くための試行錯誤</h1>
+      <div class="meta">
+        Apr 5, 2015 &nbsp;
+        
+          #<a href="/categories/uncategorized">Uncategorized</a>&nbsp;
+        
+      </div>
+    </div>
+    <article>
+      
+
+<p>これまで、Wordの使い方を覚えた方が早いのは理解しつつ、設計書や仕様書といったドキュメントを気軽に書く方法を模索してきました。</p>
+
+<h2 id="これまでの取り組み:955fa4efa5135950a9b3b93648703bd0">これまでの取り組み</h2>
+
+<h3 id="rest-rst2pdf:955fa4efa5135950a9b3b93648703bd0">reST + rst2pdf</h3>
+
+<ul>
+<li>方針
+
+<ul>
+<li>reSTとrst2pdfを使ってドキュメントの内容と見た目を分離。</li>
+<li>便利ツールの稼働環境をdockerでコンテナにすることで、会社のWindows上での動作を実現。</li>
+</ul></li>
+<li>結果
+
+<ul>
+<li><a href="http://aimless.jp/blog/blog/archives/2067">気軽にドキュメントを書く（Sphinx + rst2pdf + LiveReload + docker）</a></li>
+<li>PDF作成ツールのrst2pdfの情報が少なく、見た目を拡張することに限界を感じた。</li>
+<li>reSTよりもMarkdownを使いたくなった。</li>
+</ul></li>
+</ul>
+
+<h3 id="markdown-pandoc:955fa4efa5135950a9b3b93648703bd0">markdown + pandoc</h3>
+
+<ul>
+<li>方針
+
+<ul>
+<li>コンテナの利用は継続。</li>
+<li>PDF作成ツールとして、rst2pdfの代わりにpandocを利用。これによりMarkdownを利用可能に。</li>
+<li>rst2pdfでは実現できなかった見た目の拡張性をtexで頑張ることにした。</li>
+</ul></li>
+<li>結果
+
+<ul>
+<li><a href="https://github.com/kongou-ae/doc-man">doc-man</a></li>
+<li>pandocで日本語pdfを生成するためには日本語Latexの環境を用意する必要がある。これが気軽ではない。</li>
+<li>一からtexの作法を学習するコストが高すぎる。</li>
+<li>会社のマシンがSSDになりディスク容量が激減。ローカルに執筆環境のコンテナで持つことが厳しくなってきた。</li>
+</ul></li>
+</ul>
+
+<h3 id="atom-pdf印刷:955fa4efa5135950a9b3b93648703bd0">Atom + PDF印刷</h3>
+
+<ul>
+<li>方針
+
+<ul>
+<li>コンテナをやめる。</li>
+<li>見た目はCSSで頑張る。さようならtex。</li>
+</ul></li>
+<li>結果
+
+<ul>
+<li>Atomを使って議事メモをmarkdownで書き、Markdown Previewで確認、そのままHTMLに保存してPDFとして印刷。</li>
+<li>議事メモ等の気軽な文章を気軽に作成する事には向くが、壮大な文章を気軽に書くことに不向き。</li>
+<li>表紙や目次などが含まれるちゃんとしたドキュメントの作成に向かない。</li>
+</ul></li>
+</ul>
+
+<h2 id="現在の取り組み:955fa4efa5135950a9b3b93648703bd0">現在の取り組み</h2>
+
+<p>　上記の紆余曲折の結果、以下の形で試行錯誤を継続中です。</p>
+
+<ul>
+<li>方針
+
+<ul>
+<li>壮大な文章（設計書や仕様書）を気軽に作れる環境を目指す</li>
+<li>元ネタとなるプレーンテキストはMarkdownで書く。</li>
+<li>PDFの見た目は、CSSで頑張る。CSSで出来ない装飾はあきらめる。過剰な装飾はいらない。</li>
+<li>執筆環境をローカルのコンテナ上で動かすのをやめる。ローカルではテキストを書くだけ、管理やビルドはリモートのリポジトリに任せる。</li>
+</ul></li>
+<li>進捗
+
+<ul>
+<li><a href="https://github.com/kongou-ae/md-kumihan">md-kumihan</a></li>
+<li><a href="https://raw.githubusercontent.com/kongou-ae/md-kumihan/master/src/test.md">このMarkdown</a>が、コマンド一つで[このPDF][5]になります。</li>
+<li>md-kumihanをGialabのリポジトリ上に配置し、ローカルでMarkdownを編集してPushすると、gitlab上のgit-hookやCIツールでPDFを自動ビルド、さらにリポジトリのwikiページにpdfへのリンクを作成とかもできます。</li>
+</ul></li>
+</ul>
+
+<h2 id="ドキュメントを中心とした継続的な運用改善:955fa4efa5135950a9b3b93648703bd0">ドキュメントを中心とした継続的な運用改善</h2>
+
+<p>　現在の会社では、運用チームのリーダとして継続的な運用の改善を生業としています。ちゃんとやれているかは、かなり疑問ですが。。</p>
+
+<p>　運用の仕組みはドキュメントにする必要があります。ですが、その時間は限られています。運用の仕組みは継続的に改善する必要があり、改善の結果はドキュメントに反映させる必要があります。ですが、その時間も限られています。</p>
+
+<p>　限られた時間の中で効率よくドキュメントを作成し、改定し続けるにはどうすればいいか。自分の中の一つの仮説が「気軽にドキュメントを書く」と「ドキュメントを中心とした運用改善」です。</p>
+
+<p>　時間がない中でまとまった文章を書くためには気軽である必要があります。限られた時間は文章の内容を作成することに注力し、見た目はツールにお任せする事が望ましい。これが「気軽にドキュメントを書く」という考え方です。</p>
+
+<p>　運用の仕組み＝ドキュメントですから、運用の問題点はドキュメントの問題、運用改善のゴールはドキュメントの改定です。運用の問題点は、随時ドキュメントのIssueとして起票し、対応方法を検討し実践していく。問題点の改善が完了したら、改善点を反映させるためのWIP Marge Requestを作り、ドキュメントの改定作業を実施する。運用改善のタスクが、対応するドキュメントのリポジトリを中心にして回っていく。これが「ドキュメントを中心とした運用改善」です。</p>
+
+<p>　こんな世界も悪くないんじゃないかなと考え、仮説を検証中です。「気軽にドキュメントを書く」と「ドキュメントを中心とした運用改善」を実現するためのmd-kumihanというツールはできたので、次は自分のチームで勝手に実践だ。</p>
+
+<p>[5]: <a href="https://github.com/kongou-ae/md-kumihan/blob/master/pdf/test.pdf">https://github.com/kongou-ae/md-kumihan/blob/master/pdf/test.pdf</a></p>
+
+    </article>
+    
+ <aside><div id="disqus_thread"></div></aside> 
+
+<script type="text/javascript">
+     
+    var disqus_shortname = 'aimlessjpblog';
+
+     
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+  </main>
+
+
+  
+  <footer role="contentinfo">
+    <div style="text-align:center;">
+      
+      Written by kongou_ae
+    </div>
+  </footer>
+
+
+</div>
+
+<script src="/js/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+</body>
+</html>
+

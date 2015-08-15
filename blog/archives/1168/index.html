@@ -1,0 +1,215 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+
+  
+  <meta charset="UTF-8">
+  <title>
+    rubyでCiscoルータの設定を自動化してみた | Aimless
+  </title>
+
+
+  
+  <meta name="viewport" content="width=device-width,user-scalable=no,maximum-scale=1,initial-scale=1">
+
+
+  
+  <link rel="stylesheet" href="/css/sanitize.css">
+  <link rel="stylesheet" href="/css/responsive.css">
+  <link rel="stylesheet" href="/css/highlight_monokai.css">
+  <link rel="stylesheet/less" href="/css/theme.less">
+  <link rel="stylesheet" href="/css/custom.css">
+
+
+  
+  <script src="/js/less.js" type="text/javascript"></script>
+
+
+</head>
+
+
+
+<body>
+<div class="container">
+
+  
+  <header role="banner">
+    <div class="row gutters">
+      <div id="site-title" class="col span_6">
+        <h1><a href="/">Aimless</a></h1>
+        <h2>Powered by aimless emotion</h2>
+      </div>
+      <div id="social" class="col span_6">
+        <ul>
+          <li><a href="https://twitter.com/kongou_ae" target="_blank">Twitter</a></li>
+          
+          <li><a href="https://github.com/kongou-ae" target="_blank">GitHub</a></li>
+        </ul>
+      </div>
+    </div>
+  </header>
+
+
+  
+  <main id="single" role="main">
+    <div class="article-header">
+      <h1>rubyでCiscoルータの設定を自動化してみた</h1>
+      <div class="meta">
+        Jul 1, 2012 &nbsp;
+        
+          #<a href="/categories/network">network</a>&nbsp;
+        
+      </div>
+    </div>
+    <article>
+      
+
+<p></p></p>
+
+<p>　「Peeringする度にコマンドを手で打つのもあれだなー。やる事は同じだし」ということで、rubyで自動化しました。実行すると対話形式で必要な情報の入力を求められ、答えると自動的にCiscoルータに我が家のテンプレconfigが投入されます。本番テストはまだですが・・・</p>
+
+<p>　BGPの経路監視とLookingGrassについで3回目のrubyでCiscoルータシリーズですが、同じ事の繰り返しな作業についてはNet::Telnetを使えば何でも出来る気がしてきました。</p>
+
+<p>　また、当たり前の事ではありますが、自動化するって事はルールを決める事なんだなと実感しました。これまではPeering用のパラメータを何となく連番で決めてきましたが、今後は下記のルールで統一しようと思います。</p>
+
+<ul>
+<li>Peering用トンネル番号：AS番号</li>
+<li>トンネル用IPアドレス：2610:D0:3211:FFFF::相手のAS番号5ケタ目:相手のAS番号1~4桁名:<sup>1</sup>&frasl;<sub>126</sub></li>
+</ul>
+
+<h3 id="使い方:39aa9a0498e780dd850b503c4189fbcc">使い方</h3>
+
+<pre><code># ruby peering.rb 
+input the neighbor's name : test
+input the neighbor's AS number : 64585
+input the neighbor's IPv4 address : 192.168.1.1
+</code></pre>
+
+<h3 id="素人コード:39aa9a0498e780dd850b503c4189fbcc">素人コード</h3>
+
+<pre><code>#!/usr/local/bin/ruby
+
+require 'net/telnet'
+
+#必要情報を収集する
+print "input the neighbor's name : "
+name = gets.to_s
+name.chomp!
+
+if /^\n$/ =~ name then
+  print "name is mpty!!\n"
+  exit!
+end  
+
+print "input the neighbor's AS number : "
+as = gets.to_s
+as.chomp!
+
+if /^\n$/ =~ as then
+  print "AS number is empty!!\n"
+  exit!
+end
+
+print "input the neighbor's IPv4 address : "
+ip = gets.to_s
+ip.chomp!
+
+if /^\n$/ =~ ip then
+  print "IPv4 address is empty!!\n"
+  exit!
+elsif /[0-255]\.[0-255]\.[0-255]\.[0-255]/ !~ ip then
+  print "your input is not IPv4 address\n"
+  exit!
+end
+
+#AS番号をIPv6アドレス形式に変換
+
+ascount = as.split(//).size
+
+if ascount &gt; 4 then
+  asvar = as.split('')
+  asaddress = "#{asvar[0]}:#{asvar[1]}#{asvar[2]}#{asvar[3]}#{asvar[4]}"   
+else  
+  asaddress = as
+end
+  
+#config投入
+
+@router = "router'S IPaddress"
+@user = "username"
+@password = "password"
+@enpassword = "enable password"
+@prompt = "hostname"
+
+tn  = Net::Telnet::new("Host" =&gt; @router, "Timeout" =&gt; 5)
+
+tn.cmd("String" =&gt; "#{@user}","Match"=&gt;/^Password/) 
+tn.cmd("String" =&gt; "#{@password}","Match"=&gt;/^#{@prompt}/)
+tn.cmd("String" =&gt; "en","Match"=&gt;/^Password/)
+tn.cmd("String" =&gt; "#{@enpassword}","Match"=&gt;/^#{@prompt}/) 
+
+tn.cmd("String" =&gt; "conf t","Match"=&gt;/^#{@prompt}/)
+tn.cmd("String" =&gt; "interface tunnel #{as}","Match"=&gt;/^#{@prompt}/)
+tn.cmd("String" =&gt; "description #{name}","Match"=&gt;/^#{@prompt}/)
+tn.cmd("String" =&gt; "no ip address","Match"=&gt;/^#{@prompt}/)
+tn.cmd("String" =&gt; "ipv6 address 2610:D0:3211:FFFF::#{asaddress}:1/126","Match"=&gt;/^#{@prompt}/)
+tn.cmd("String" =&gt; "ipv6 enable","Match"=&gt;/^#{@prompt}/)
+tn.cmd("String" =&gt; "ipv6 mtu 1280","Match"=&gt;/^#{@prompt}/)
+tn.cmd("String" =&gt; "tunnel source 36.2.107.75","Match"=&gt;/^#{@prompt}/)
+tn.cmd("String" =&gt; "tunnel mode ipv6ip","Match"=&gt;/^#{@prompt}/)
+tn.cmd("String" =&gt; "tunnel destination #{ip}","Match"=&gt;/^#{@prompt}/)
+tn.cmd("String" =&gt; "exit","Match"=&gt;/^#{@prompt}/)
+tn.cmd("String" =&gt; "router bgp 64585","Match"=&gt;/^#{@prompt}/)
+tn.cmd("String" =&gt; "neighbor 2610:D0:3211:FFFF::#{asaddress}:2 remote-as #{as}","Match"=&gt;/^#{@prompt}/)
+tn.cmd("String" =&gt; "neighbor 2610:D0:3211:FFFF::#{asaddress}:2 description #{name}","Match"=&gt;/^#{@prompt}/)
+tn.cmd("String" =&gt; "neighbor 2610:D0:3211:FFFF::#{asaddress}:2 timers 10 30","Match"=&gt;/^#{@prompt}/)
+tn.cmd("String" =&gt; "address-family ipv6","Match"=&gt;/^#{@prompt}/)
+tn.cmd("String" =&gt; "neighbor 2610:D0:3211:FFFF::#{asaddress}:2 activate","Match"=&gt;/^#{@prompt}/)
+tn.cmd("String" =&gt; "neighbor 2610:D0:3211:FFFF::#{asaddress}:2 next-hop-self","Match"=&gt;/^#{@prompt}/)
+tn.cmd("String" =&gt; "neighbor 2610:D0:3211:FFFF::#{asaddress}:2 soft-reconfiguration inbound","Match"=&gt;/^#{@prompt}/)
+tn.cmd("String" =&gt; "neighbor 2610:D0:3211:FFFF::#{asaddress}:2 prefix-list this-network out","Match"=&gt;/^#{@prompt}/)
+tn.cmd("String" =&gt; "end","Match"=&gt;/^#{@prompt}/)
+tn.puts("exit") 
+tn.close
+</code></pre>
+
+    </article>
+    
+ <aside><div id="disqus_thread"></div></aside> 
+
+<script type="text/javascript">
+     
+    var disqus_shortname = 'aimlessjpblog';
+
+     
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+  </main>
+
+
+  
+  <footer role="contentinfo">
+    <div style="text-align:center;">
+      
+      Written by kongou_ae
+    </div>
+  </footer>
+
+
+</div>
+
+<script src="/js/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+</body>
+</html>
+

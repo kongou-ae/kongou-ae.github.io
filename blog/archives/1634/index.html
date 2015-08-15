@@ -1,0 +1,286 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+
+  
+  <meta charset="UTF-8">
+  <title>
+    BIND10の統計情報 | Aimless
+  </title>
+
+
+  
+  <meta name="viewport" content="width=device-width,user-scalable=no,maximum-scale=1,initial-scale=1">
+
+
+  
+  <link rel="stylesheet" href="/css/sanitize.css">
+  <link rel="stylesheet" href="/css/responsive.css">
+  <link rel="stylesheet" href="/css/highlight_monokai.css">
+  <link rel="stylesheet/less" href="/css/theme.less">
+  <link rel="stylesheet" href="/css/custom.css">
+
+
+  
+  <script src="/js/less.js" type="text/javascript"></script>
+
+
+</head>
+
+
+
+<body>
+<div class="container">
+
+  
+  <header role="banner">
+    <div class="row gutters">
+      <div id="site-title" class="col span_6">
+        <h1><a href="/">Aimless</a></h1>
+        <h2>Powered by aimless emotion</h2>
+      </div>
+      <div id="social" class="col span_6">
+        <ul>
+          <li><a href="https://twitter.com/kongou_ae" target="_blank">Twitter</a></li>
+          
+          <li><a href="https://github.com/kongou-ae" target="_blank">GitHub</a></li>
+        </ul>
+      </div>
+    </div>
+  </header>
+
+
+  
+  <main id="single" role="main">
+    <div class="article-header">
+      <h1>BIND10の統計情報</h1>
+      <div class="meta">
+        Aug 27, 2013 &nbsp;
+        
+          #<a href="/categories/dns">DNS</a>&nbsp;
+        
+      </div>
+    </div>
+    <article>
+      
+
+<p>BIND10の統計情報をZabbixで監視するために、いろいろと試行錯誤したのでメモしておきます。BIND10の統計情報を確認する方法は2つあります</p>
+
+<h3 id="bindctlを利用する:b95a6d6c552b327a457238e0c871076e">bindctlを利用する</h3>
+
+<p>　bindctlでStats showを実施すると下記のような統計情報が出力されます。</p>
+
+<pre><code>&gt; Stats show
+{
+    "Auth": {
+        "zones": {
+            "_SERVER_": {
+                "authqryrej": 4, 
+                "opcode": {
+                    "iquery": 1, 
+                    "notify": 65, 
+                    "other": 3, 
+                    "query": 45120, 
+                    "status": 0, 
+                    "update": 0
+                }, 
+                "qryauthans": 44679, 
+                "qrynoauthans": 441, 
+                "qrynxrrset": 1697, 
+                "qryreferral": 0, 
+                "qrysuccess": 42277, 
+                "rcode": {
+                    "badvers": 0, 
+                    "formerr": 4, 
+                    "noerror": 44034, 
+                    "notauth": 0, 
+                    "notimp": 1, 
+                    "notzone": 0, 
+                    "nxdomain": 705, 
+                    "nxrrset": 0, 
+                    "other": 0, 
+                    "refused": 441, 
+                    "servfail": 0, 
+                    "yxdomain": 0, 
+                    "yxrrset": 0
+                }, 
+                "request": {
+                    "badednsver": 0, 
+                    "badsig": 0, 
+                    "dnssec_ok": 36387, 
+                    "edns0": 37150, 
+                    "sig0": 0, 
+                    "tcp": 85, 
+                    "tsig": 0, 
+                    "udp": 45104, 
+                    "v4": 37427, 
+                    "v6": 7762
+                }, 
+                "response": {
+                    "edns0": 37150, 
+                    "sig0": 0, 
+                    "truncated": 770, 
+                    "tsig": 0
+                }, 
+                "responses": 45185
+            }
+        }
+    }, 
+    "Init": {
+        "boot_time": "2013-06-29T11:22:04Z"
+    }, 
+    "Stats": {
+        "boot_time": "2013-06-30T16:04:01Z", 
+        "last_update_time": "2013-08-27T11:38:54Z", 
+        "lname": "hogehoge", 
+        "report_time": "2013-08-27T11:38:54Z", 
+        "timestamp": 1377603534.2760894
+    }, 
+    "Xfrout": {
+        "axfr_running": 0, 
+        "ixfr_running": 0, 
+        "socket": {
+            "unixdomain": {
+                "accept": 0, 
+                "acceptfail": 0, 
+                "bindfail": 0, 
+                "close": 0, 
+                "open": 1, 
+                "openfail": 0, 
+                "recverr": 0, 
+                "senderr": 0
+            }
+        }, 
+        "zones": {
+            "_SERVER_": {
+                "notifyoutv4": 0, 
+                "notifyoutv6": 0, 
+                "xfrrej": 0, 
+                "xfrreqdone": 0
+            }
+        }
+    }
+}
+&gt; 
+</code></pre>
+
+<h3 id="b10-stats-httpdを利用する:b95a6d6c552b327a457238e0c871076e">b10-stats-httpdを利用する</h3>
+
+<p>　b10-stats-httpdを利用することで、Stats showの出力結果をHTTPで確認することができます。なお、bindctlからb10-stats-httpdを起動させる方法がわからなかったので、b10-stats-httpdを直接実行して起動させました。</p>
+
+<pre><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;?xml-stylesheet type="text/xsl" href="/bind10/statistics.xsl"?&gt;
+&lt;bind10:statistics xmlns:bind10="http://bind10.isc.org/bind10" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bind10.isc.org/bind10 /bind10/statistics.xsd"&gt;
+  &lt;item description="Zone statistics items. Items for all zones are stored in '_SERVER_'." identifier="Auth/zones" name="zones" optional="false" owner="Auth" title="Zone statistics" type="named_set" uri="/bind10/statistics/xml/Auth/zones"/&gt;
+  &lt;item identifier="Auth/zones/_SERVER_" name="zone" optional="false" owner="Auth" type="map" uri="/bind10/statistics/xml/Auth/zones/_SERVER_"/&gt;
+  &lt;item default="0" description="Number of authoritative queries rejected by the b10-auth server." identifier="Auth/zones/_SERVER_/authqryrej" name="authqryrej" optional="false" owner="Auth" title="authqryrej" type="integer" uri="/bind10/statistics/xml/Auth/zones/_SERVER_/authqryrej" value="4"/&gt;
+  &lt;item description="OpCode statistics" identifier="Auth/zones/_SERVER_/opcode" name="opcode" optional="false" owner="Auth" title="opcode" type="map" uri="/bind10/statistics/xml/Auth/zones/_SERVER_/opcode"/&gt;
+  &lt;item default="0" description="Number of OpCode=IQuery requests received by the b10-auth server." identifier="Auth/zones/_SERVER_/opcode/iquery" name="iquery" optional="false" owner="Auth" title="opcode.iquery" type="integer" uri="/bind10/statistics/xml/Auth/zones/_SERVER_/opcode/iquery" value="1"/&gt;
+  &lt;item default="0" description="Number of OpCode=Notify requests received by the b10-auth server." identifier="Auth/zones/_SERVER_/opcode/notify" name="notify" optional="false" owner="Auth" title="opcode.notify" type="integer" uri="/bind10/statistics/xml/Auth/zones/_SERVER_/opcode/notify" value="65"/&gt;
+  &lt;item default="0" description="Number of requests in other OpCode received by the b10-auth server." identifier="Auth/zones/_SERVER_/opcode/other" name="other" optional="false" owner="Auth" title="opcode.other" type="integer" uri="/bind10/statistics/xml/Auth/zones/_SERVER_/opcode/other" value="3"/&gt;
+  &lt;item default="0" description="Number of OpCode=Query requests received by the b10-auth server." identifier="Auth/zones/_SERVER_/opcode/query" name="query" optional="false" owner="Auth" title="opcode.query" type="integer" uri="/bind10/statistics/xml/Auth/zones/_SERVER_/opcode/query" value="45126"/&gt;
+  &lt;item default="0" description="Number of OpCode=Status requests received by the b10-auth server." identifier="Auth/zones/_SERVER_/opcode/status" name="status" optional="false" owner="Auth" title="opcode.status" type="integer" uri="/bind10/statistics/xml/Auth/zones/_SERVER_/opcode/status" value="0"/&gt;
+  &lt;item default="0" description="Number of OpCode=Update requests received by the b10-auth server." identifier="Auth/zones/_SERVER_/opcode/update" name="update" optional="false" owner="Auth" title="opcode.update" type="integer" uri="/bind10/statistics/xml/Auth/zones/_SERVER_/opcode/update" value="0"/&gt;
+  &lt;item default="0" description="Number of queries received by the b10-auth server resulted in authoritative answer." identifier="Auth/zones/_SERVER_/qryauthans" name="qryauthans" optional="false" owner="Auth" title="qryauthans" type="integer" uri="/bind10/statistics/xml/Auth/zones/_SERVER_/qryauthans" value="44685"/&gt;
+  &lt;item default="0" description="Number of queries received by the b10-auth server resulted in non-authoritative answer." identifier="Auth/zones/_SERVER_/qrynoauthans" name="qrynoauthans" optional="false" owner="Auth" title="qrynoauthans" type="integer" uri="/bind10/statistics/xml/Auth/zones/_SERVER_/qrynoauthans" value="441"/&gt;
+  &lt;item default="0" description="Number of queries received by the b10-auth server resulted in NoError and AA bit is set in the response, but the number of answer RR == 0." identifier="Auth/zones/_SERVER_/qrynxrrset" name="qrynxrrset" optional="false" owner="Auth" title="qrynxrrset" type="integer" uri="/bind10/statistics/xml/Auth/zones/_SERVER_/qrynxrrset" value="1698"/&gt;
+  &lt;item default="0" description="Number of queries received by the b10-auth server resulted in referral answer." identifier="Auth/zones/_SERVER_/qryreferral" name="qryreferral" optional="false" owner="Auth" title="qryreferral" type="integer" uri="/bind10/statistics/xml/Auth/zones/_SERVER_/qryreferral" value="0"/&gt;
+  &lt;item default="0" description="Number of queries received by the b10-auth server resulted in rcode = NoError and the number of answer RR &gt;= 1." identifier="Auth/zones/_SERVER_/qrysuccess" name="qrysuccess" optional="false" owner="Auth" title="qrysuccess" type="integer" uri="/bind10/statistics/xml/Auth/zones/_SERVER_/qrysuccess" value="42282"/&gt;
+  &lt;item description="Rcode statistics" identifier="Auth/zones/_SERVER_/rcode" name="rcode" optional="false" owner="Auth" title="rcode" type="map" uri="/bind10/statistics/xml/Auth/zones/_SERVER_/rcode"/&gt;
+  &lt;item default="0" description="Number of requests received by the b10-auth server resulted in RCODE = 16 (BADVERS)." identifier="Auth/zones/_SERVER_/rcode/badvers" name="badvers" optional="false" owner="Auth" title="rcode.badvers" type="integer" uri="/bind10/statistics/xml/Auth/zones/_SERVER_/rcode/badvers" value="0"/&gt;
+  &lt;item default="0" description="Number of requests received by the b10-auth server resulted in RCODE = 1 (FormErr)." identifier="Auth/zones/_SERVER_/rcode/formerr" name="formerr" optional="false" owner="Auth" title="rcode.formerr" type="integer" uri="/bind10/statistics/xml/Auth/zones/_SERVER_/rcode/formerr" value="4"/&gt;
+  &lt;item default="0" description="Number of requests received by the b10-auth server resulted in RCODE = 0 (NoError)." identifier="Auth/zones/_SERVER_/rcode/noerror" name="noerror" optional="false" owner="Auth" title="rcode.noerror" type="integer" uri="/bind10/statistics/xml/Auth/zones/_SERVER_/rcode/noerror" value="44040"/&gt;
+  &lt;item default="0" description="Number of requests received by the b10-auth server resulted in RCODE = 9 (NotAuth)." identifier="Auth/zones/_SERVER_/rcode/notauth" name="notauth" optional="false" owner="Auth" title="rcode.notauth" type="integer" uri="/bind10/statistics/xml/Auth/zones/_SERVER_/rcode/notauth" value="0"/&gt;
+  &lt;item default="0" description="Number of requests received by the b10-auth server resulted in RCODE = 4 (NotImp)." identifier="Auth/zones/_SERVER_/rcode/notimp" name="notimp" optional="false" owner="Auth" title="rcode.notimp" type="integer" uri="/bind10/statistics/xml/Auth/zones/_SERVER_/rcode/notimp" value="1"/&gt;
+  &lt;item default="0" description="Number of requests received by the b10-auth server resulted in RCODE = 10 (NotZone)." identifier="Auth/zones/_SERVER_/rcode/notzone" name="notzone" optional="false" owner="Auth" title="rcode.notzone" type="integer" uri="/bind10/statistics/xml/Auth/zones/_SERVER_/rcode/notzone" value="0"/&gt;
+  &lt;item default="0" description="Number of requests received by the b10-auth server resulted in RCODE = 3 (NXDomain)." identifier="Auth/zones/_SERVER_/rcode/nxdomain" name="nxdomain" optional="false" owner="Auth" title="rcode.nxdomain" type="integer" uri="/bind10/statistics/xml/Auth/zones/_SERVER_/rcode/nxdomain" value="705"/&gt;
+  &lt;item default="0" description="Number of requests received by the b10-auth server resulted in RCODE = 8 (NXRRSet)." identifier="Auth/zones/_SERVER_/rcode/nxrrset" name="nxrrset" optional="false" owner="Auth" title="rcode.nxrrset" type="integer" uri="/bind10/statistics/xml/Auth/zones/_SERVER_/rcode/nxrrset" value="0"/&gt;
+  &lt;item default="0" description="Number of requests received by the b10-auth server resulted in other RCODEs." identifier="Auth/zones/_SERVER_/rcode/other" name="other" optional="false" owner="Auth" title="rcode.other" type="integer" uri="/bind10/statistics/xml/Auth/zones/_SERVER_/rcode/other" value="0"/&gt;
+  &lt;item default="0" description="Number of requests received by the b10-auth server resulted in RCODE = 5 (Refused)." identifier="Auth/zones/_SERVER_/rcode/refused" name="refused" optional="false" owner="Auth" title="rcode.refused" type="integer" uri="/bind10/statistics/xml/Auth/zones/_SERVER_/rcode/refused" value="441"/&gt;
+  &lt;item default="0" description="Number of requests received by the b10-auth server resulted in RCODE = 2 (ServFail)." identifier="Auth/zones/_SERVER_/rcode/servfail" name="servfail" optional="false" owner="Auth" title="rcode.servfail" type="integer" uri="/bind10/statistics/xml/Auth/zones/_SERVER_/rcode/servfail" value="0"/&gt;
+  &lt;item default="0" description="Number of requests received by the b10-auth server resulted in RCODE = 6 (YXDomain)." identifier="Auth/zones/_SERVER_/rcode/yxdomain" name="yxdomain" optional="false" owner="Auth" title="rcode.yxdomain" type="integer" uri="/bind10/statistics/xml/Auth/zones/_SERVER_/rcode/yxdomain" value="0"/&gt;
+  &lt;item default="0" description="Number of requests received by the b10-auth server resulted in RCODE = 7 (YXRRSet)." identifier="Auth/zones/_SERVER_/rcode/yxrrset" name="yxrrset" optional="false" owner="Auth" title="rcode.yxrrset" type="integer" uri="/bind10/statistics/xml/Auth/zones/_SERVER_/rcode/yxrrset" value="0"/&gt;
+  &lt;item description="Request statistics" identifier="Auth/zones/_SERVER_/request" name="request" optional="false" owner="Auth" title="request" type="map" uri="/bind10/statistics/xml/Auth/zones/_SERVER_/request"/&gt;
+  &lt;item default="0" description="Number of requests with unsupported EDNS version received by the b10-auth server." identifier="Auth/zones/_SERVER_/request/badednsver" name="badednsver" optional="false" owner="Auth" title="request.badednsver" type="integer" uri="/bind10/statistics/xml/Auth/zones/_SERVER_/request/badednsver" value="0"/&gt;
+  &lt;item default="0" description="Number of requests with invalid TSIG or SIG(0) signature received by the b10-auth server." identifier="Auth/zones/_SERVER_/request/badsig" name="badsig" optional="false" owner="Auth" title="request.badsig" type="integer" uri="/bind10/statistics/xml/Auth/zones/_SERVER_/request/badsig" value="0"/&gt;
+  &lt;item default="0" description="Number of requests with &quot;DNSSEC OK&quot; (DO) bit was set received by the b10-auth server." identifier="Auth/zones/_SERVER_/request/dnssec_ok" name="dnssec_ok" optional="false" owner="Auth" title="request.dnssec_ok" type="integer" uri="/bind10/statistics/xml/Auth/zones/_SERVER_/request/dnssec_ok" value="36391"/&gt;
+  &lt;item default="0" description="Number of requests with EDNS0 received by the b10-auth server." identifier="Auth/zones/_SERVER_/request/edns0" name="edns0" optional="false" owner="Auth" title="request.edns0" type="integer" uri="/bind10/statistics/xml/Auth/zones/_SERVER_/request/edns0" value="37154"/&gt;
+  &lt;item default="0" description="Number of requests with SIG(0) received by the b10-auth server; currently not implemented in BIND 10." identifier="Auth/zones/_SERVER_/request/sig0" name="sig0" optional="false" owner="Auth" title="request.sig0" type="integer" uri="/bind10/statistics/xml/Auth/zones/_SERVER_/request/sig0" value="0"/&gt;
+  &lt;item default="0" description="Number of TCP requests received by the b10-auth server." identifier="Auth/zones/_SERVER_/request/tcp" name="tcp" optional="false" owner="Auth" title="request.tcp" type="integer" uri="/bind10/statistics/xml/Auth/zones/_SERVER_/request/tcp" value="85"/&gt;
+  &lt;item default="0" description="Number of requests with TSIG received by the b10-auth server." identifier="Auth/zones/_SERVER_/request/tsig" name="tsig" optional="false" owner="Auth" title="request.tsig" type="integer" uri="/bind10/statistics/xml/Auth/zones/_SERVER_/request/tsig" value="0"/&gt;
+  &lt;item default="0" description="Number of UDP requests received by the b10-auth server." identifier="Auth/zones/_SERVER_/request/udp" name="udp" optional="false" owner="Auth" title="request.udp" type="integer" uri="/bind10/statistics/xml/Auth/zones/_SERVER_/request/udp" value="45110"/&gt;
+  &lt;item default="0" description="Number of IPv4 requests received by the b10-auth server." identifier="Auth/zones/_SERVER_/request/v4" name="v4" optional="false" owner="Auth" title="request.v4" type="integer" uri="/bind10/statistics/xml/Auth/zones/_SERVER_/request/v4" value="37433"/&gt;
+  &lt;item default="0" description="Number of IPv6 requests received by the b10-auth server." identifier="Auth/zones/_SERVER_/request/v6" name="v6" optional="false" owner="Auth" title="request.v6" type="integer" uri="/bind10/statistics/xml/Auth/zones/_SERVER_/request/v6" value="7762"/&gt;
+  &lt;item description="Response statistics" identifier="Auth/zones/_SERVER_/response" name="response" optional="false" owner="Auth" title="response" type="map" uri="/bind10/statistics/xml/Auth/zones/_SERVER_/response"/&gt;
+  &lt;item default="0" description="Number of responses with EDNS0 sent by the b10-auth server." identifier="Auth/zones/_SERVER_/response/edns0" name="edns0" optional="false" owner="Auth" title="response.edns0" type="integer" uri="/bind10/statistics/xml/Auth/zones/_SERVER_/response/edns0" value="37154"/&gt;
+  &lt;item default="0" description="Number of responses with SIG(0) sent by the b10-auth server; currently not implemented in BIND 10." identifier="Auth/zones/_SERVER_/response/sig0" name="sig0" optional="false" owner="Auth" title="response.sig0" type="integer" uri="/bind10/statistics/xml/Auth/zones/_SERVER_/response/sig0" value="0"/&gt;
+  &lt;item default="0" description="Number of truncated responses sent by the b10-auth server." identifier="Auth/zones/_SERVER_/response/truncated" name="truncated" optional="false" owner="Auth" title="response.truncated" type="integer" uri="/bind10/statistics/xml/Auth/zones/_SERVER_/response/truncated" value="770"/&gt;
+  &lt;item default="0" description="Number of responses with TSIG sent by the b10-auth server." identifier="Auth/zones/_SERVER_/response/tsig" name="tsig" optional="false" owner="Auth" title="response.tsig" type="integer" uri="/bind10/statistics/xml/Auth/zones/_SERVER_/response/tsig" value="0"/&gt;
+  &lt;item default="0" description="Number of responses sent by the b10-auth server." identifier="Auth/zones/_SERVER_/responses" name="responses" optional="false" owner="Auth" title="responses" type="integer" uri="/bind10/statistics/xml/Auth/zones/_SERVER_/responses" value="45191"/&gt;
+  &lt;item default="1970-01-01T00:00:00Z" description="A date time when bind10 process starts initially" format="date-time" identifier="Init/boot_time" name="boot_time" optional="false" owner="Init" title="Boot time" type="string" uri="/bind10/statistics/xml/Init/boot_time" value="2013-06-29T11:22:04Z"/&gt;
+  &lt;item default="1970-01-01T00:00:00Z" description="A date time when the stats module starts initially or when the stats module restarts" format="date-time" identifier="Stats/boot_time" name="boot_time" optional="false" owner="Stats" title="Boot time" type="string" uri="/bind10/statistics/xml/Stats/boot_time" value="2013-06-30T16:04:01Z"/&gt;
+  &lt;item default="1970-01-01T00:00:00Z" description="The latest date time when the stats module receives from other modules like auth server or b10-init process and so on" format="date-time" identifier="Stats/last_update_time" name="last_update_time" optional="false" owner="Stats" title="Last update time" type="string" uri="/bind10/statistics/xml/Stats/last_update_time" value="2013-08-27T11:47:10Z"/&gt;
+  &lt;item default="" description="A localname of stats module given via CC protocol" identifier="Stats/lname" name="lname" optional="false" owner="Stats" title="Local Name" type="string" uri="/bind10/statistics/xml/Stats/lname" value="hogehoge"/&gt;
+  &lt;item default="1970-01-01T00:00:00Z" description="A date time when stats module reports" format="date-time" identifier="Stats/report_time" name="report_time" optional="false" owner="Stats" title="Report time" type="string" uri="/bind10/statistics/xml/Stats/report_time" value="2013-08-27T11:47:10Z"/&gt;
+  &lt;item default="0.0" description="A current time stamp since epoch time (1970-01-01T00:00:00Z)" identifier="Stats/timestamp" name="timestamp" optional="false" owner="Stats" title="Timestamp" type="real" uri="/bind10/statistics/xml/Stats/timestamp" value="1377604030.9478726"/&gt;
+  &lt;item default="0" description="Number of AXFRs in progress" identifier="Xfrout/axfr_running" name="axfr_running" optional="false" owner="Xfrout" title="AXFR running" type="integer" uri="/bind10/statistics/xml/Xfrout/axfr_running" value="0"/&gt;
+  &lt;item default="0" description="Number of IXFRs in progress" identifier="Xfrout/ixfr_running" name="ixfr_running" optional="false" owner="Xfrout" title="IXFR running" type="integer" uri="/bind10/statistics/xml/Xfrout/ixfr_running" value="0"/&gt;
+  &lt;item description="A directory name of socket statistics" identifier="Xfrout/socket" name="socket" optional="false" owner="Xfrout" title="Socket" type="map" uri="/bind10/statistics/xml/Xfrout/socket"/&gt;
+  &lt;item description="A directory name of UNIX domain statistics" identifier="Xfrout/socket/unixdomain" name="unixdomain" optional="false" owner="Xfrout" title="UNIX domain" type="map" uri="/bind10/statistics/xml/Xfrout/socket/unixdomain"/&gt;
+  &lt;item default="0" description="UNIX domain sockets incoming connections successfully accepted" identifier="Xfrout/socket/unixdomain/accept" name="accept" optional="false" owner="Xfrout" title="Accept" type="integer" uri="/bind10/statistics/xml/Xfrout/socket/unixdomain/accept" value="0"/&gt;
+  &lt;item default="0" description="UNIX domain sockets incoming accept failures" identifier="Xfrout/socket/unixdomain/acceptfail" name="acceptfail" optional="false" owner="Xfrout" title="Accept failures" type="integer" uri="/bind10/statistics/xml/Xfrout/socket/unixdomain/acceptfail" value="0"/&gt;
+  &lt;item default="0" description="UNIX domain sockets bind failures" identifier="Xfrout/socket/unixdomain/bindfail" name="bindfail" optional="false" owner="Xfrout" title="Bind failures" type="integer" uri="/bind10/statistics/xml/Xfrout/socket/unixdomain/bindfail" value="0"/&gt;
+  &lt;item default="0" description="UNIX domain sockets closed" identifier="Xfrout/socket/unixdomain/close" name="close" optional="false" owner="Xfrout" title="Close" type="integer" uri="/bind10/statistics/xml/Xfrout/socket/unixdomain/close" value="0"/&gt;
+  &lt;item default="0" description="UNIX domain sockets opened successfully" identifier="Xfrout/socket/unixdomain/open" name="open" optional="false" owner="Xfrout" title="Open" type="integer" uri="/bind10/statistics/xml/Xfrout/socket/unixdomain/open" value="1"/&gt;
+  &lt;item default="0" description="UNIX domain sockets open failures" identifier="Xfrout/socket/unixdomain/openfail" name="openfail" optional="false" owner="Xfrout" title="Open failures" type="integer" uri="/bind10/statistics/xml/Xfrout/socket/unixdomain/openfail" value="0"/&gt;
+  &lt;item default="0" description="UNIX domain sockets receive errors" identifier="Xfrout/socket/unixdomain/recverr" name="recverr" optional="false" owner="Xfrout" title="Receive errors" type="integer" uri="/bind10/statistics/xml/Xfrout/socket/unixdomain/recverr" value="0"/&gt;
+  &lt;item default="0" description="UNIX domain sockets send errors" identifier="Xfrout/socket/unixdomain/senderr" name="senderr" optional="false" owner="Xfrout" title="Send errors" type="integer" uri="/bind10/statistics/xml/Xfrout/socket/unixdomain/senderr" value="0"/&gt;
+  &lt;item description="A directory name of per-zone statistics" identifier="Xfrout/zones" name="zones" optional="false" owner="Xfrout" title="Zone names" type="named_set" uri="/bind10/statistics/xml/Xfrout/zones"/&gt;
+  &lt;item description="A actual zone name or special zone name _SERVER_ representing an entire server" identifier="Xfrout/zones/_SERVER_" name="zonename" optional="false" owner="Xfrout" title="Zone name" type="map" uri="/bind10/statistics/xml/Xfrout/zones/_SERVER_"/&gt;
+  &lt;item default="0" description="Number of IPv4 notifies per zone name sent out from Xfrout" identifier="Xfrout/zones/_SERVER_/notifyoutv4" name="notifyoutv4" optional="false" owner="Xfrout" title="IPv4 notifies" type="integer" uri="/bind10/statistics/xml/Xfrout/zones/_SERVER_/notifyoutv4" value="0"/&gt;
+  &lt;item default="0" description="Number of IPv6 notifies per zone name sent out from Xfrout" identifier="Xfrout/zones/_SERVER_/notifyoutv6" name="notifyoutv6" optional="false" owner="Xfrout" title="IPv6 notifies" type="integer" uri="/bind10/statistics/xml/Xfrout/zones/_SERVER_/notifyoutv6" value="0"/&gt;
+  &lt;item default="0" description="Number of XFR requests per zone name rejected by Xfrout" identifier="Xfrout/zones/_SERVER_/xfrrej" name="xfrrej" optional="false" owner="Xfrout" title="XFR rejected requests" type="integer" uri="/bind10/statistics/xml/Xfrout/zones/_SERVER_/xfrrej" value="0"/&gt;
+  &lt;item default="0" description="Number of requested zone transfers completed per zone name" identifier="Xfrout/zones/_SERVER_/xfrreqdone" name="xfrreqdone" optional="false" owner="Xfrout" title="Requested zone transfers" type="integer" uri="/bind10/statistics/xml/Xfrout/zones/_SERVER_/xfrreqdone" value="0"/&gt;
+&lt;/bind10:statistics&gt;
+</code></pre>
+
+    </article>
+    
+ <aside><div id="disqus_thread"></div></aside> 
+
+<script type="text/javascript">
+     
+    var disqus_shortname = 'aimlessjpblog';
+
+     
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+  </main>
+
+
+  
+  <footer role="contentinfo">
+    <div style="text-align:center;">
+      
+      Written by kongou_ae
+    </div>
+  </footer>
+
+
+</div>
+
+<script src="/js/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+</body>
+</html>
+

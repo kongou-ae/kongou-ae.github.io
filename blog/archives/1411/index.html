@@ -1,0 +1,236 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+
+  
+  <meta charset="UTF-8">
+  <title>
+    BIND10で権威DNSを試してみた | Aimless
+  </title>
+
+
+  
+  <meta name="viewport" content="width=device-width,user-scalable=no,maximum-scale=1,initial-scale=1">
+
+
+  
+  <link rel="stylesheet" href="/css/sanitize.css">
+  <link rel="stylesheet" href="/css/responsive.css">
+  <link rel="stylesheet" href="/css/highlight_monokai.css">
+  <link rel="stylesheet/less" href="/css/theme.less">
+  <link rel="stylesheet" href="/css/custom.css">
+
+
+  
+  <script src="/js/less.js" type="text/javascript"></script>
+
+
+</head>
+
+
+
+<body>
+<div class="container">
+
+  
+  <header role="banner">
+    <div class="row gutters">
+      <div id="site-title" class="col span_6">
+        <h1><a href="/">Aimless</a></h1>
+        <h2>Powered by aimless emotion</h2>
+      </div>
+      <div id="social" class="col span_6">
+        <ul>
+          <li><a href="https://twitter.com/kongou_ae" target="_blank">Twitter</a></li>
+          
+          <li><a href="https://github.com/kongou-ae" target="_blank">GitHub</a></li>
+        </ul>
+      </div>
+    </div>
+  </header>
+
+
+  
+  <main id="single" role="main">
+    <div class="article-header">
+      <h1>BIND10で権威DNSを試してみた</h1>
+      <div class="meta">
+        Oct 14, 2012 &nbsp;
+        
+          #<a href="/categories/dns">DNS</a>&nbsp;
+        
+      </div>
+    </div>
+    <article>
+      
+
+<p><a href="http://aimless.jp/blog/blog/archives/1383" title="BIND10を起動してみた" target="_blank">前回にて</a>BIND10のインストールが上手く行ったので、権威DNSの設定（<a href="http://bind10.isc.org/docs/bind10-guide.html#authserver" title="Chapter 9. Authoritative Server" target="_blank">Chapter 9. Authoritative Server</a>）を試してみました。</p>
+
+<h3 id="b10-authを自動起動させる:ce7d797d588d83e194d594be1f16f2d0">b10-authを自動起動させる</h3>
+
+<p>　デフォルトではb10-auth（権威DNS用プロセス）が自動起動しないので、自動起動するように設定変更します。</p>
+
+<pre><code>[root@centos6 ~]# bindctl
+&gt; config add Boss/components b10-auth
+&gt; config set Boss/components/b10-auth/special auth
+&gt; config set Boss/components/b10-auth/kind needed
+&gt; config set Boss/components/b10-auth/priority 10
+&gt; config commit
+2012-10-14 16:18:12.502 INFO  [b10-boss.boss] BIND10_CONFIGURATOR_RECONFIGURE reconfiguring running components
+2012-10-14 16:18:12.503 INFO  [b10-boss.boss] BIND10_COMPONENT_START component b10-auth is starting
+2012-10-14 16:18:12.503 INFO  [b10-boss.boss] BIND10_STARTING_PROCESS starting process b10-auth
+&gt; 2012-10-14 16:18:12.515 INFO  [b10-auth.auth] AUTH_SERVER_CREATED server created
+2012-10-14 16:18:12.528 INFO  [b10-auth.auth] AUTH_SERVER_STARTED server started
+</code></pre>
+
+<h3 id="ゾーンファイルを読み込ませる:ce7d797d588d83e194d594be1f16f2d0">ゾーンファイルを読み込ませる</h3>
+
+<p>　BIND10開発版だとsqlite方式と従来のゾーンファイル形式がサポートされているようで、デフォルトで両パターンの設定例が乗っています。</p>
+
+<pre><code>[root@centos6 ~]# bindctl
+&gt; config show all
+（中略）
+data_sources/classes/IN[0]/type "sqlite3"       string  (default)
+data_sources/classes/IN[0]/params       {"database_file": "/usr/local/var/bind10-devel/zone.sqlite3"}      any     (default)
+data_sources/classes/IN[0]/cache-enable false   boolean (default)
+data_sources/classes/IN[0]/cache-zones  []      list    
+data_sources/classes/CH[0]/type "static"        string  (default)
+data_sources/classes/CH[0]/params       "/usr/local/share/bind10-devel/static.zone"     any     (default)
+data_sources/classes/CH[0]/cache-enable false   boolean (default)
+data_sources/classes/CH[0]/cache-zones  []      list    
+</code></pre>
+
+<p>　とりあえずゾーンファイル方式を試します。sqliteはデータベースファイルの作り方が分らなくて。。。まずはデフォルトで読み込まれているstatic.zoneを削除します。</p>
+
+<pre><code>[root@centos6 ~]# bindctl
+&gt; config remove data_sources/classes CH
+&gt; config commit
+&gt; config show all
+（中略）
+data_sources/classes/IN[0]/type "sqlite3"       string  
+data_sources/classes/IN[0]/params       {"database_file": "/usr/local/var/bind10-devel/zone.sqlite3"}      any     
+data_sources/classes/IN[0]/cache-enable false   boolean (default)
+data_sources/classes/IN[0]/cache-zones  []      list   
+</code></pre>
+
+<p>　そして、ソースファイルに含まれているexample.net用のゾーンファイルを読み込ませます。</p>
+
+<pre><code>[root@centos6 ~]# bindctl 
+["login success "] login as root
+&gt; config add data_sources/classes/IN
+&gt; config set data_sources/classes/IN[1]/type MasterFiles
+&gt; config set data_sources/classes/IN[1]/cache-enable true
+&gt; config set data_sources/classes/IN[1]/params { "example.net": "/usr/local/var/bind10-devel/example.net" }
+&gt; config commit
+&gt; config show all
+（中略）
+data_sources/classes/IN[0]/type "sqlite3"       string  
+data_sources/classes/IN[0]/params       {"database_file": "/usr/local/var/bind10-devel/zone.sqlite3"}      any     
+data_sources/classes/IN[0]/cache-enable false   boolean (default)
+data_sources/classes/IN[0]/cache-zones  []      list    
+data_sources/classes/IN[1]/type "MasterFiles"   string  
+data_sources/classes/IN[1]/params       {"example.net": "/usr/local/var/bind10-devel/example.net"}any      
+data_sources/classes/IN[1]/cache-enable true    boolean 
+data_sources/classes/IN[1]/cache-zones  []      list    
+</code></pre>
+
+<p>　ゾーンファイルに記載されているa.dns.example.netを問い合わせるとちゃんと答えました。同一セグメントのwindowsPCからBIND10を指定してa.dns.example.netをnslookupしてみましたが、こちらもちゃんと答えました。</p>
+
+<pre><code>[root@centos6 ~]# dig @localhost a.dns.example.net
+; &lt;&lt;&gt;&gt; DiG 9.8.2rc1-RedHat-9.8.2-0.10.rc1.el6_3.5 &lt;&lt;&gt;&gt; @localhost a.dns.example.net
+; (2 servers found)
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 38474
+;; flags: qr aa rd; QUERY: 1, ANSWER: 1, AUTHORITY: 3, ADDITIONAL: 7
+;; WARNING: recursion requested but not available
+
+;; QUESTION SECTION:
+;a.dns.example.net.             IN      A
+
+;; ANSWER SECTION:
+a.dns.example.net.      1000    IN      A       1.1.1.1
+
+;; AUTHORITY SECTION:
+example.net.            1000    IN      NS      a.dns.example.net.
+example.net.            1000    IN      NS      b.dns.example.net.
+example.net.            1000    IN      NS      c.dns.example.net.
+
+;; ADDITIONAL SECTION:
+a.dns.example.net.      1000    IN      AAAA    2:2::2:2
+b.dns.example.net.      1000    IN      AAAA    4:4::4:4
+b.dns.example.net.      1000    IN      AAAA    5:5::5:5
+b.dns.example.net.      1000    IN      A       3.3.3.3
+c.dns.example.net.      1000    IN      AAAA    8:8::8:8
+c.dns.example.net.      1000    IN      A       6.6.6.6
+c.dns.example.net.      1000    IN      A       7.7.7.7
+
+;; Query time: 0 msec
+;; SERVER: ::1#53(::1)
+;; WHEN: Sun Oct 14 17:01:33 2012
+;; MSG SIZE  rcvd: 257
+</code></pre>
+
+<p>　逆に、設定を削除したstatic.zoneに記載されていたauthors.bindには答えません。</p>
+
+<pre><code>[root@centos6 bind10-devel]# dig @127.0.0.1 -c CH -t TXT authors.bind
+
+; &lt;&lt;&gt;&gt; DiG 9.8.2rc1-RedHat-9.8.2-0.10.rc1.el6_3.5 &lt;&lt;&gt;&gt; @127.0.0.1 -c CH -t TXT authors.bind
+; (1 server found)
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: REFUSED, id: 30891
+;; flags: qr rd; QUERY: 1, ANSWER: 0, AUTHORITY: 0, ADDITIONAL: 0
+;; WARNING: recursion requested but not available
+
+;; QUESTION SECTION:
+;authors.bind.                  CH      TXT
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1)
+;; WHEN: Sun Oct 14 19:21:50 2012
+;; MSG SIZE  rcvd: 30
+</code></pre>
+
+<p>　細かい部分はさておき、権威DNSとしての基本的な設定が出来ました。従来のnamed.confを編集する方法ではなく、bindctlで作業していく方式の様です。後はゾーン転送とDNSSECですね。dnssec-signzoneなどのコマンドが見当たらないので、どうしたものかと悩んでいます。</p>
+
+    </article>
+    
+ <aside><div id="disqus_thread"></div></aside> 
+
+<script type="text/javascript">
+     
+    var disqus_shortname = 'aimlessjpblog';
+
+     
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+  </main>
+
+
+  
+  <footer role="contentinfo">
+    <div style="text-align:center;">
+      
+      Written by kongou_ae
+    </div>
+  </footer>
+
+
+</div>
+
+<script src="/js/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+</body>
+</html>
+

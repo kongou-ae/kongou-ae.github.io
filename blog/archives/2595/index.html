@@ -1,0 +1,168 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+
+  
+  <meta charset="UTF-8">
+  <title>
+    PrometheusでAmazon Linuxのメトリクスを収集する | Aimless
+  </title>
+
+
+  
+  <meta name="viewport" content="width=device-width,user-scalable=no,maximum-scale=1,initial-scale=1">
+
+
+  
+  <link rel="stylesheet" href="/css/sanitize.css">
+  <link rel="stylesheet" href="/css/responsive.css">
+  <link rel="stylesheet" href="/css/highlight_monokai.css">
+  <link rel="stylesheet/less" href="/css/theme.less">
+  <link rel="stylesheet" href="/css/custom.css">
+
+
+  
+  <script src="/js/less.js" type="text/javascript"></script>
+
+
+</head>
+
+
+
+<body>
+<div class="container">
+
+  
+  <header role="banner">
+    <div class="row gutters">
+      <div id="site-title" class="col span_6">
+        <h1><a href="/">Aimless</a></h1>
+        <h2>Powered by aimless emotion</h2>
+      </div>
+      <div id="social" class="col span_6">
+        <ul>
+          <li><a href="https://twitter.com/kongou_ae" target="_blank">Twitter</a></li>
+          
+          <li><a href="https://github.com/kongou-ae" target="_blank">GitHub</a></li>
+        </ul>
+      </div>
+    </div>
+  </header>
+
+
+  
+  <main id="single" role="main">
+    <div class="article-header">
+      <h1>PrometheusでAmazon Linuxのメトリクスを収集する</h1>
+      <div class="meta">
+        May 10, 2015 &nbsp;
+        
+          #<a href="/categories/server">Server</a>&nbsp;
+        
+      </div>
+    </div>
+    <article>
+      
+
+<p><a href="http://aimless.jp/blog/blog/archives/2586">Amazon LinuxでPrometheusを動かしてみた</a>で動いたPrometheusを利用して、サーバのメトリクスを収集します。今回はPrometheusが稼働しているAmazon Linuxのメトリクスを収集します。</p>
+
+<h2 id="node-exporterを稼働させる:e67d1193b4ff96687e3431437834ddb9">node_exporterを稼働させる</h2>
+
+<p>　メトリクスを収集したいサーバでnode_exporterというバイナリを起動します。</p>
+
+<pre><code>yum install git hg gcc golang
+git clone https://github.com/prometheus/node_exporter.git
+make
+./node_exporter &
+</code></pre>
+
+<p>　node_exporterは、Prometheusサーバが読み取れるデータを生成し9100ポートで公開してくれます。</p>
+
+<pre><code>[ec2-user@ip-10-175-10-126 ~]$  wget http://localhost:9100/metrics
+[ec2-user@ip-10-175-10-126 ~]$ more metrics 
+# HELP go_gc_duration_seconds A summary of the GC invocation durations.
+# TYPE go_gc_duration_seconds summary
+go_gc_duration_seconds{quantile="0"} 8.5685e-05
+go_gc_duration_seconds{quantile="0.25"} 0.0006615610000000001
+go_gc_duration_seconds{quantile="0.5"} 0.00068378
+go_gc_duration_seconds{quantile="0.75"} 0.000708493
+go_gc_duration_seconds{quantile="1"} 0.017944932
+go_gc_duration_seconds_sum 0.155032352
+go_gc_duration_seconds_count 205
+</code></pre>
+
+<p>　なお、node_exporterはWindowsをサポートしないようです。（<a href="https://github.com/prometheus/node_exporter/issues/65">Windows support</a>）</p>
+
+<p>　node_exporterと同じように、定期的に自サーバのメトリクスを取得し、ファイルに書き込み、httpで公開できる仕組みを作れば、windowsでもメトリクスを収集できる気がします。</p>
+
+<h2 id="prometheusにnodeを登録する:e67d1193b4ff96687e3431437834ddb9">Prometheusにnodeを登録する</h2>
+
+<p>　Prometheusサーバに、node_exporterが生成するデータを登録します。</p>
+
+<pre><code>[ec2-user@ip-10-175-10-126 ~]$ cat prometheus.conf  
+（中略）
+job: {
+  name: "node"
+  scrape_interval: "5s"
+  target_group: {
+    target: "http://localhost:9100/metrics"
+  }
+}
+</code></pre>
+
+<h2 id="prometheusでメトリクスを確認する:e67d1193b4ff96687e3431437834ddb9">Prometheusでメトリクスを確認する</h2>
+
+<p>　Prometheusサーバを再起動すると、コンソールにNodeが追加され、メトリクスを収集している対象の一覧が表示されます。</p>
+
+<p><img src="http://aimless.jp/blog/wp-content/uploads/2015/05/primetheus_node_summary.png" alt="primetheus_node_summary" /></p>
+
+<p>　対象のノードをクリックすると、CPUとメモリ、ディスクのグラフが描画されています。</p>
+
+<p><img src="http://aimless.jp/blog/wp-content/uploads/2015/05/prometheus_node_detail.png" alt="prometheus_node_detail" /></p>
+
+<p>　Graphタブを利用することで、取得したメトリクスのグラフを描画することが可能です。データの抽出は<a href="http://prometheus.io/docs/querying/basics/#querying-prometheus">QUERY LANGUAGE</a>を利用する必要があります。</p>
+
+<p>![prometheus_node_metric_graph][6]</p>
+
+<p>[6]: <a href="http://aimless.jp/blog/wp-content/uploads/2015/05/prometheus_node_metric_graph.png">http://aimless.jp/blog/wp-content/uploads/2015/05/prometheus_node_metric_graph.png</a></p>
+
+    </article>
+    
+ <aside><div id="disqus_thread"></div></aside> 
+
+<script type="text/javascript">
+     
+    var disqus_shortname = 'aimlessjpblog';
+
+     
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+  </main>
+
+
+  
+  <footer role="contentinfo">
+    <div style="text-align:center;">
+      
+      Written by kongou_ae
+    </div>
+  </footer>
+
+
+</div>
+
+<script src="/js/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+</body>
+</html>
+

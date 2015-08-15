@@ -1,0 +1,167 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+
+  
+  <meta charset="UTF-8">
+  <title>
+    Let’s Chatでhubotを動かす | Aimless
+  </title>
+
+
+  
+  <meta name="viewport" content="width=device-width,user-scalable=no,maximum-scale=1,initial-scale=1">
+
+
+  
+  <link rel="stylesheet" href="/css/sanitize.css">
+  <link rel="stylesheet" href="/css/responsive.css">
+  <link rel="stylesheet" href="/css/highlight_monokai.css">
+  <link rel="stylesheet/less" href="/css/theme.less">
+  <link rel="stylesheet" href="/css/custom.css">
+
+
+  
+  <script src="/js/less.js" type="text/javascript"></script>
+
+
+</head>
+
+
+
+<body>
+<div class="container">
+
+  
+  <header role="banner">
+    <div class="row gutters">
+      <div id="site-title" class="col span_6">
+        <h1><a href="/">Aimless</a></h1>
+        <h2>Powered by aimless emotion</h2>
+      </div>
+      <div id="social" class="col span_6">
+        <ul>
+          <li><a href="https://twitter.com/kongou_ae" target="_blank">Twitter</a></li>
+          
+          <li><a href="https://github.com/kongou-ae" target="_blank">GitHub</a></li>
+        </ul>
+      </div>
+    </div>
+  </header>
+
+
+  
+  <main id="single" role="main">
+    <div class="article-header">
+      <h1>Let’s Chatでhubotを動かす</h1>
+      <div class="meta">
+        May 2, 2015 &nbsp;
+        
+          #<a href="/categories/server">Server</a>&nbsp;
+        
+      </div>
+    </div>
+    <article>
+      
+
+<p><a href="http://sdelements.github.io/lets-chat/">Let&#8217;s Chat</a>でhubotを動かしてみました。</p>
+
+<h2 id="let-8217-s-chatのインストール:cfa74896d771b319eb38f92c098ab1f2">Let&#8217;s Chatのインストール</h2>
+
+<p>　nodejsとpythonはインストール済みなので、mongodbのみyumでインストールします。</p>
+
+<pre><code>sudo yum install mongodb
+sudo yum install mongodb-server.x86_64
+sudo systemctl start mongod.service
+git clone https://github.com/sdelements/lets-chat.git
+cd lets-chat
+npm install
+npm start
+</code></pre>
+
+<p>　デフォルトだと5000番でリッスンします。FQDNやポート番号を含む各種パラメータは<code>settings.yml</code>で変更可能です。今回は、Let&#8217;s Chatはデフォルト設定のままとし、前段のnginxでバーチャルホスト+80番のアクセスを受けて、Let&#8217;s Chatの5000番にProxyPassしています。</p>
+
+<h2 id="hubot用アカウントの作成:cfa74896d771b319eb38f92c098ab1f2">hubot用アカウントの作成</h2>
+
+<p>　Let&#8217;s Chatにhubot用のアカウントを作成します。また作成したアカウントのAuth Tokenを取得します。</p>
+
+<p><img src="http://aimless.jp/blog/wp-content/uploads/2015/05/SnapCrab_NoName_2015-5-2_23-16-54_No-00.png" alt="Token" /></p>
+
+<h2 id="hubotのインストール:cfa74896d771b319eb38f92c098ab1f2">hubotのインストール</h2>
+
+<pre><code>sudo  npm install -g yo generator-hubot
+mkdir myhubot
+cd myhubot
+yo hubot
+npm install hubot-lets-chat --save
+</code></pre>
+
+<h2 id="hubot起動スクリプトの作成:cfa74896d771b319eb38f92c098ab1f2">hubot起動スクリプトの作成</h2>
+
+<p>　<code>HUBOT_LCB_TOKEN</code>の項目に、Let&#8217;s Chat上で取得したhubotアカウントのAuth Tokenを記載します。また<code>HUBOT_LCB_ROOMS</code>にはhubotを常駐させたいRoomの識別子（URLに含まれる値）を入力します。</p>
+
+<pre><code>myhubot]$ cat run_hubot.sh
+export HUBOT_LCB_TOKEN=TOKEN_OF_YOUR_HUBOT_ACCOUNT
+export HUBOT_LCB_ROOMS=553db2dcf62762863672ea19
+bin/hubot -a lets-chat
+</code></pre>
+
+<h2 id="hubotの起動-動作確認:cfa74896d771b319eb38f92c098ab1f2">hubotの起動＋動作確認</h2>
+
+<pre><code>myhubot]$ ./run_hubot.sh                                 
+connected
+[Sun May 03 2015 00:01:55 GMT+0900 (JST)] ERROR hubot-heroku-alive included, but missing HUBOT_HEROKU_KEEPALIVE_URL. `heroku config:set HUBOT_HEROKU_KEEPALIVE_URL=$(heroku apps:info -s  | grep web_url | cut -d= -f2)`
+[Sun May 03 2015 00:01:55 GMT+0900 (JST)] INFO Using default redis on localhost:6379
+Joined test
+</code></pre>
+
+<p>　<code>test</code>というルームにhubotがログインしました。hubotを停止すると退室します。</p>
+
+<p><img src="http://aimless.jp/blog/wp-content/uploads/2015/05/SnapCrab_NoName_2015-5-2_23-11-30_No-00.png" alt="add room" /></p>
+
+<p>@つきでhubotに<code>ping</code>や<code>date</code>すると、ちゃんと答えます。</p>
+
+<p>![hubot response][4]</p>
+
+<p>[4]: <a href="http://aimless.jp/blog/wp-content/uploads/2015/05/SnapCrab_NoName_2015-5-2_23-12-0_No-00.png">http://aimless.jp/blog/wp-content/uploads/2015/05/SnapCrab_NoName_2015-5-2_23-12-0_No-00.png</a></p>
+
+    </article>
+    
+ <aside><div id="disqus_thread"></div></aside> 
+
+<script type="text/javascript">
+     
+    var disqus_shortname = 'aimlessjpblog';
+
+     
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+  </main>
+
+
+  
+  <footer role="contentinfo">
+    <div style="text-align:center;">
+      
+      Written by kongou_ae
+    </div>
+  </footer>
+
+
+</div>
+
+<script src="/js/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+</body>
+</html>
+

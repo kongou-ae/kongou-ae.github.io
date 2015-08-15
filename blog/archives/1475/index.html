@@ -1,0 +1,181 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+
+  
+  <meta charset="UTF-8">
+  <title>
+    BIND10でキャッシュDNSサーバをやってみた | Aimless
+  </title>
+
+
+  
+  <meta name="viewport" content="width=device-width,user-scalable=no,maximum-scale=1,initial-scale=1">
+
+
+  
+  <link rel="stylesheet" href="/css/sanitize.css">
+  <link rel="stylesheet" href="/css/responsive.css">
+  <link rel="stylesheet" href="/css/highlight_monokai.css">
+  <link rel="stylesheet/less" href="/css/theme.less">
+  <link rel="stylesheet" href="/css/custom.css">
+
+
+  
+  <script src="/js/less.js" type="text/javascript"></script>
+
+
+</head>
+
+
+
+<body>
+<div class="container">
+
+  
+  <header role="banner">
+    <div class="row gutters">
+      <div id="site-title" class="col span_6">
+        <h1><a href="/">Aimless</a></h1>
+        <h2>Powered by aimless emotion</h2>
+      </div>
+      <div id="social" class="col span_6">
+        <ul>
+          <li><a href="https://twitter.com/kongou_ae" target="_blank">Twitter</a></li>
+          
+          <li><a href="https://github.com/kongou-ae" target="_blank">GitHub</a></li>
+        </ul>
+      </div>
+    </div>
+  </header>
+
+
+  
+  <main id="single" role="main">
+    <div class="article-header">
+      <h1>BIND10でキャッシュDNSサーバをやってみた</h1>
+      <div class="meta">
+        Jan 2, 2013 &nbsp;
+        
+          #<a href="/categories/dns">DNS</a>&nbsp;
+        
+      </div>
+    </div>
+    <article>
+      <p>Rubyのresolvで遊ぶタイミングで、自PCのIPv6キャッシュDNSをunboundからBIND10に切り替えたのでメモ。</p>
+
+<p>　デフォルトだと権威DNSが全てのアドレスの53番でListenしてしまうので、権威DNSがListenするアドレスを公開アドレスに限定します。</p>
+
+<pre><code># netstat -an | grep 53
+tcp        0      0 0.0.0.0:53                  0.0.0.0:*                   LISTEN
+tcp        0      0 :::53                       :::*                        LISTEN
+udp        0      0 0.0.0.0:53                  0.0.0.0:*                               
+udp        0      0 :::53                       :::*    
+
+&gt; config show all
+...
+Auth/listen_on[0]/address       "::"    string  (default)
+Auth/listen_on[1]/address       "0.0.0.0"       string  (default)
+
+&gt; config set Auth/listen_on[0]/address 157.7.135.191
+&gt; config set Auth/listen_on[1]/address 2001:470:23:756::2
+&gt; config commit
+
+# netstat -an | grep 53
+tcp        0      0 157.7.135.191:53            0.0.0.0:*                   LISTEN
+tcp        0      0 2001:470:23:756::2:53       :::*                        LISTEN
+udp        0      0 157.7.135.191:53            0.0.0.0:*                               
+udp        0      0 2001:470:23:756::2:53       :::*  
+</code></pre>
+
+<p>　キャッシュDNS機能であるb10-resolverを有効にします。デフォルトでは127.0.0.1:53と::1:53でキャッシュDNSが起動します。</p>
+
+<pre><code>&gt; config add Boss/components b10-resolver
+&gt; config set Boss/components/b10-resolver/special resolver
+&gt; config set Boss/components/b10-resolver/kind needed                           
+&gt; config set Boss/components/b10-resolver/priority 10                           
+&gt; config commit
+
+&gt; config show all
+...
+Resolver/listen_on[0]/address   "::1"   string  (default)
+Resolver/listen_on[0]/port      53      integer (default)
+Resolver/listen_on[1]/address   "127.0.0.1"     string  (default)
+Resolver/listen_on[1]/port      53      integer (default)
+Resolver/query_acl[0]   {"action": "ACCEPT", "from": "127.0.0.1"}       any    (default)
+Resolver/query_acl[1]   {"action": "ACCEPT", "from": "::1"}     any     (default)
+</code></pre>
+
+<p>　外部から参照するために、キャッシュDNSとしてListenするIPアドレスを追加します。IPv4だと簡単にはできませんが、IPv6は/48のPrefixでグローバルユニキャストアドレスをもらっているので簡単です</p>
+
+<pre><code>&gt; config add Resolver/listen_on 
+&gt; config set Resolver/listen_on[2]/address 2001:470:fde1:xx::xx/64
+&gt; config set Resolver/listen_on[2]/port 53                                                                     
+&gt; config commit  
+&gt; config show all
+...
+Resolver/listen_on[0]/address   "::1"   string  
+Resolver/listen_on[0]/port      53      integer 
+Resolver/listen_on[1]/address   "127.0.0.1"     string  
+Resolver/listen_on[1]/port      53      integer 
+Resolver/listen_on[2]/address   "2001:470:fde1:xx::xx"  string  
+Resolver/listen_on[2]/port      53      integer 
+
+# netstat -anp | grep 53 | grep 2001:470:fde1:xx::xx                              
+tcp        0      0 2001:470:fde1:xx::xx:53     :::*                        LISTEN      26141/b10-resolver  
+udp        0      0 2001:470:fde1:xx::xx:53     :::*                                    26141/b10-resolver
+</code></pre>
+
+<p>　問い合わせを許可するPrefixをACLに追加します。</p>
+
+<pre><code>&gt; config set Resolver/query_acl[2] {"from": ["2610:d0:3211:xx::/64", "2001:e41:31d4:3648::1/128"], "action": "ACCEPT"}
+&gt; config commit
+&gt; config show all
+...
+Resolver/query_acl[0]   {"from": "127.0.0.1", "action": "ACCEPT"}       any     
+Resolver/query_acl[1]   {"from": "::1", "action": "ACCEPT"}     any     
+Resolver/query_acl[2]   {"from": ["2610:d0:3211:xx::/64", "2001:e41:31d4:3648::1/128"], "action": "ACCEPT"}    any  
+</code></pre>
+
+<p>　確認の為2001:e41:31d4:3648::1からキャッシュDNSにwww.google.comを問い合わせみると、ちゃんと応答が返ってきました。多分動いていると思います。</p>
+
+    </article>
+    
+ <aside><div id="disqus_thread"></div></aside> 
+
+<script type="text/javascript">
+     
+    var disqus_shortname = 'aimlessjpblog';
+
+     
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+  </main>
+
+
+  
+  <footer role="contentinfo">
+    <div style="text-align:center;">
+      
+      Written by kongou_ae
+    </div>
+  </footer>
+
+
+</div>
+
+<script src="/js/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+</body>
+</html>
+

@@ -1,0 +1,159 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+
+  
+  <meta charset="UTF-8">
+  <title>
+    API Gateway &#43; Lambdaを使って、マルチクラウド管理APIを作る | Aimless
+  </title>
+
+
+  
+  <meta name="viewport" content="width=device-width,user-scalable=no,maximum-scale=1,initial-scale=1">
+
+
+  
+  <link rel="stylesheet" href="/css/sanitize.css">
+  <link rel="stylesheet" href="/css/responsive.css">
+  <link rel="stylesheet" href="/css/highlight_monokai.css">
+  <link rel="stylesheet/less" href="/css/theme.less">
+  <link rel="stylesheet" href="/css/custom.css">
+
+
+  
+  <script src="/js/less.js" type="text/javascript"></script>
+
+
+</head>
+
+
+
+<body>
+<div class="container">
+
+  
+  <header role="banner">
+    <div class="row gutters">
+      <div id="site-title" class="col span_6">
+        <h1><a href="/">Aimless</a></h1>
+        <h2>Powered by aimless emotion</h2>
+      </div>
+      <div id="social" class="col span_6">
+        <ul>
+          <li><a href="https://twitter.com/kongou_ae" target="_blank">Twitter</a></li>
+          
+          <li><a href="https://github.com/kongou-ae" target="_blank">GitHub</a></li>
+        </ul>
+      </div>
+    </div>
+  </header>
+
+
+  
+  <main id="single" role="main">
+    <div class="article-header">
+      <h1>API Gateway &#43; Lambdaを使って、マルチクラウド管理APIを作る</h1>
+      <div class="meta">
+        Jul 18, 2015 &nbsp;
+        
+          #<a href="/categories/aws">AWS</a>&nbsp;
+        
+      </div>
+    </div>
+    <article>
+      <p>「単一のREST APIで複数のクラウドを操作できたら便利だろうなー」と思い調べてみたところ、以下のようなライブラリを見つけました。</p>
+
+<table>
+<thead>
+<tr>
+<th>言語</th>
+<th>ライブラリ</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>Ruby</td>
+<td>DeltaCloud</td>
+</tr>
+
+<tr>
+<td>Python</td>
+<td>libcloud</td>
+</tr>
+
+<tr>
+<td>Node.js</td>
+<td>pkgcloud</td>
+</tr>
+
+<tr>
+<td>Golang</td>
+<td>Gophercloud</td>
+</tr>
+</tbody>
+</table>
+
+<p>　ライブラリによってサポートするクラウドプロバイダーが異なり、さらに管理できるサービスと管理できないサービスがあります。どれか一つのライブラリと心中するのは、少々リスクだと思いました。</p>
+
+<p>　「何か他にいい方法はないかなー」と調べていたところに、Amazon API Gatewayがリリースされました。API Gatewayを利用すると、API Gateway経由でLambdaを実行することができます。LambdaではNode.jsとjavaが動きます。主要なクラウドにはNode.jsやjavaのSDKが存在します。つまり、API Gatewayを利用すれば、自分のやりたいことができる、マルチクラウド管理APIを作れそうな気がしました。</p>
+
+<p>　というわけで実践。AzureとAWSのインスタンス情報をまとめて返すAPIを作ってみます。</p>
+
+<p>　API Gatewayでは、/computeがGETされた場合にLambdaファンクションを発火するようにします。</p>
+
+<p><img src="http://aimless.jp/blog/wp-content/uploads/2015/07/api_gateway_setting.png" alt="" /></p>
+
+<p>　そして、対応するLambdaファンクションでは以下のコードを動かします。SDKを利用して各クラウドのインスタンス情報を取得し配列に格納し、その配列を返すスクリプトです。</p>
+
+<p>　とりあえずということで、認証情報の扱いは適当です。AWSの認証情報はコード内にベタ書きします。Azureの証明書は、lambdaファンクションのZIPに含めます。実際のところは、API Gatewayにアクセスする際のHTTPヘッダに認証情報を含め、Lambdaファンクションに渡す方法がカッコいいと思います。</p>
+
+<script src="https://gist.github.com/kongou-ae/ad0b1366da2ee5efbbaa.js"></script>
+
+<p>　ブラウザでAPI Gatewayの/computeにアクセスすると、以下のJSONが返ってきます。AzureとAWSのインスタンス情報が一つのJSONのレスポンスになっています。いい感じですね。このレスポンスをJavascriptでいい感じに表示するHTMLを作ってS3に配置すれば、サーバレスのマルチクラウド管理ポータルが作れるかも？</p>
+
+<script src="https://gist.github.com/kongou-ae/825a49a087311e0814ad.js"></script>
+
+<p><img src="http://aimless.jp/blog/wp-content/uploads/2015/07/result_of_api.png" alt="" /></p>
+
+    </article>
+    
+ <aside><div id="disqus_thread"></div></aside> 
+
+<script type="text/javascript">
+     
+    var disqus_shortname = 'aimlessjpblog';
+
+     
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+  </main>
+
+
+  
+  <footer role="contentinfo">
+    <div style="text-align:center;">
+      
+      Written by kongou_ae
+    </div>
+  </footer>
+
+
+</div>
+
+<script src="/js/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+</body>
+</html>
+

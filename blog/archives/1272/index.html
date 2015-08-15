@@ -1,0 +1,140 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+
+  
+  <meta charset="UTF-8">
+  <title>
+    FortigateのSSL-VPNで2要素認証してみた | Aimless
+  </title>
+
+
+  
+  <meta name="viewport" content="width=device-width,user-scalable=no,maximum-scale=1,initial-scale=1">
+
+
+  
+  <link rel="stylesheet" href="/css/sanitize.css">
+  <link rel="stylesheet" href="/css/responsive.css">
+  <link rel="stylesheet" href="/css/highlight_monokai.css">
+  <link rel="stylesheet/less" href="/css/theme.less">
+  <link rel="stylesheet" href="/css/custom.css">
+
+
+  
+  <script src="/js/less.js" type="text/javascript"></script>
+
+
+</head>
+
+
+
+<body>
+<div class="container">
+
+  
+  <header role="banner">
+    <div class="row gutters">
+      <div id="site-title" class="col span_6">
+        <h1><a href="/">Aimless</a></h1>
+        <h2>Powered by aimless emotion</h2>
+      </div>
+      <div id="social" class="col span_6">
+        <ul>
+          <li><a href="https://twitter.com/kongou_ae" target="_blank">Twitter</a></li>
+          
+          <li><a href="https://github.com/kongou-ae" target="_blank">GitHub</a></li>
+        </ul>
+      </div>
+    </div>
+  </header>
+
+
+  
+  <main id="single" role="main">
+    <div class="article-header">
+      <h1>FortigateのSSL-VPNで2要素認証してみた</h1>
+      <div class="meta">
+        Sep 11, 2012 &nbsp;
+        
+          #<a href="/categories/fortigate">Fortigate</a>&nbsp;
+        
+          #<a href="/categories/network">network</a>&nbsp;
+        
+      </div>
+    </div>
+    <article>
+      
+
+<p></p></p>
+
+<p>　いつか仕事でやることもあるだろうという事で、FortigateのSSL-VPNでの二要素認証のやり方をメモします。FortiOSはv4 MR3 Patch 6です。仕組みとしてはハードウェアトークン（FortiToken）、Email、SMSの3種類ありますが、今回はEmailになります。</p>
+
+<h3 id="mtaの登録:6bb5d555ef829444fa722170bec6b738">MTAの登録</h3>
+
+<p>　Fortigateが利用するMTAを登録します。送信元メールアドレスを指定したい場合は、合わせて設定します。私の環境はVDOMを利用しているので、MTAの設定はグローバル側に、送信元メールアドレスの設定はVDOM側に存在していました。</p>
+
+<p><img src="http://aimless.jp/images/forti-ssl01.png" alt="MTAの設定" /></p>
+
+<p><img src="http://aimless.jp/images/forti-ssl01a.png" alt="送信元メアドの設定" /></p>
+
+<h3 id="二要素認証の追加:6bb5d555ef829444fa722170bec6b738">二要素認証の追加</h3>
+
+<p>二要素認証を実施したいユーザの設定画面で、二要素認証を追加します。Emailの項目に記載したアドレスに、認証コードが送信されます。</p>
+
+<p><img src="http://aimless.jp/images/forti-ssl02.png" alt="二要素認証の有効化" /></p>
+
+<h3 id="ssl-vpnでアクセスする:6bb5d555ef829444fa722170bec6b738">SSL-VPNでアクセスする</h3>
+
+<p>　二要素認証を有効にしたユーザでSSL-VPNのログイン画面にアクセスします。IDとPassの認証を通過すると、Tokenの入力を求められます。</p>
+
+<p><img src="http://aimless.jp/images/forti-ssl04.png" alt="TokenCodeの要求" /></p>
+
+<p>　二要素認証を設定した際に入力したEmailアドレスにTokenCodeが送信されていますので、これを入力するといつものWEBポータルにつながります。</p>
+
+<p>![EmailでのTokenCode][5]</p>
+
+<p>　携帯のメアドにTokenCodeを送るようにすれば、かなり簡単に二要素認証を実現できますね。</p>
+
+<p>[5]: <a href="http://aimless.jp/images/forti-ssl03.png">http://aimless.jp/images/forti-ssl03.png</a></p>
+
+    </article>
+    
+ <aside><div id="disqus_thread"></div></aside> 
+
+<script type="text/javascript">
+     
+    var disqus_shortname = 'aimlessjpblog';
+
+     
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+  </main>
+
+
+  
+  <footer role="contentinfo">
+    <div style="text-align:center;">
+      
+      Written by kongou_ae
+    </div>
+  </footer>
+
+
+</div>
+
+<script src="/js/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+</body>
+</html>
+

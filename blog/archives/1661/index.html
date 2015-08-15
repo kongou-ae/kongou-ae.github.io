@@ -1,0 +1,215 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+
+  
+  <meta charset="UTF-8">
+  <title>
+    IPv6の逆引きを設定してみた | Aimless
+  </title>
+
+
+  
+  <meta name="viewport" content="width=device-width,user-scalable=no,maximum-scale=1,initial-scale=1">
+
+
+  
+  <link rel="stylesheet" href="/css/sanitize.css">
+  <link rel="stylesheet" href="/css/responsive.css">
+  <link rel="stylesheet" href="/css/highlight_monokai.css">
+  <link rel="stylesheet/less" href="/css/theme.less">
+  <link rel="stylesheet" href="/css/custom.css">
+
+
+  
+  <script src="/js/less.js" type="text/javascript"></script>
+
+
+</head>
+
+
+
+<body>
+<div class="container">
+
+  
+  <header role="banner">
+    <div class="row gutters">
+      <div id="site-title" class="col span_6">
+        <h1><a href="/">Aimless</a></h1>
+        <h2>Powered by aimless emotion</h2>
+      </div>
+      <div id="social" class="col span_6">
+        <ul>
+          <li><a href="https://twitter.com/kongou_ae" target="_blank">Twitter</a></li>
+          
+          <li><a href="https://github.com/kongou-ae" target="_blank">GitHub</a></li>
+        </ul>
+      </div>
+    </div>
+  </header>
+
+
+  
+  <main id="single" role="main">
+    <div class="article-header">
+      <h1>IPv6の逆引きを設定してみた</h1>
+      <div class="meta">
+        Aug 31, 2013 &nbsp;
+        
+          #<a href="/categories/dns">DNS</a>&nbsp;
+        
+          #<a href="/categories/network">network</a>&nbsp;
+        
+      </div>
+    </div>
+    <article>
+      
+
+<p>ZABBIXが発報するエラーメールの通知先にGmailを設定したところ、ZABBIXが利用するMTAのIPv6逆引きが存在しなかったため、以下のメッセージとともにメールを拒否されました。</p>
+
+<blockquote>
+<p>The sender does not meet basic ipv6 550-5.7.1 sen</p>
+
+<p>ding guidelines of authentication and rdns resolution of sending 550-5.7.1 ip. Please review 550 5.7.1 <a href="https://support.goog">https://support.goog</a></p>
+
+<p>le.com/mail/answer/81126for more information.</p>
+</blockquote>
+
+<p>　利用しているIPv6アドレスはHEのTunnel Brokerで割り当ててもらっているものです。HEはIPv6の逆引きを権限委譲してくれるので、Gmailにメールを送信する為に逆引きを設定してみました。</p>
+
+<h3 id="heに逆引きゾーンを委譲してもらう:257ab340aabbd3110eab36a4c8d84da0">　HEに逆引きゾーンを委譲してもらう</h3>
+
+<p>　Tunnel Broker管理画面の『rDNS Delegations』欄に、権限移譲してほしいDNSサーバのホスト名を入力します。BIND9のプライマリと、BIND10のセカンダリDNSを登録しました。</p>
+
+<p>![HE&rsquo;s rDNS][1]</p>
+
+<h3 id="プライマリ-bind9-を設定する:257ab340aabbd3110eab36a4c8d84da0">　プライマリ（BIND9）を設定する</h3>
+
+<p>　プライマリ側にゾーンファイルを作成します。HEの管理画面では移譲されるゾーン名が不明なので、dig +trace [逆引きしたいIPv6アドレス]などで委譲されるゾーン名を確認します。私の場合（/48でもらっているIPv6）は1.e.d.f.0.7.4.0.1.0.0.2.ip6.arpaでした。ゾーンファイル内に記載するPTRレコードはかなり長くなります。。。</p>
+
+<pre><code>x.x.0.0.0.0.0.0.0.0.0.0.0.0.0.0.3.5.0.0 IN PTR xxxx.aimless.jp.
+</code></pre>
+
+<p>　ゾーンファイル作成後、named.confに1.e.d.f.0.7.4.0.1.0.0.2.ip6.arpaをゾーンとして登録します。</p>
+
+<h3 id="セカンダリdns-bind10-を設定する:257ab340aabbd3110eab36a4c8d84da0">　セカンダリDNS(BIND10）を設定する</h3>
+
+<p>　BIND10を1.e.d.f.0.7.4.0.1.0.0.2.ip6.arpaのセカンダリDNSとして設定します。Zonemgrにゾーンを登録し、Xfrinにゾーン転送を受け付けるドメインとして登録します。登録後にプライマリからゾーンを転送してもらいます。</p>
+
+<pre><code>&gt; config add Zonemgr/secondary_zones
+&gt; config set Zonemgr/secondary_zones[1]/name 1.e.d.f.0.7.4.0.1.0.0.2.ip6.arpa
+&gt; config add Xfrin/zones
+&gt; config set Xfrin/zones[1]/name 1.e.d.f.0.7.4.0.1.0.0.2.ip6.arpa
+&gt; config set Xfrin/zones[1]/master_addr xxx.xxx.xxx.xxx
+&gt; config commit
+&gt; Xfrin retransfer zone_name = 1.e.d.f.0.7.4.0.1.0.0.2.ip6.arpa
+2013-08-31 01:24:46.110 WARN  [b10-xfrin.xfrin/4658] XFRIN_ZONE_CREATED Zone 1.e.d.f.0.7.4.0.1.0.0.2.ip6.arpa/IN not found in the given data source, newly created
+2013-08-31 01:24:46.111 INFO  [b10-xfrin.xfrin/4658] XFRIN_ZONE_NO_SOA Zone 1.e.d.f.0.7.4.0.1.0.0.2.ip6.arpa/IN does not have SOA
+2013-08-31 01:24:46.146 INFO  [b10-xfrin.xfrin/4658] XFRIN_XFR_TRANSFER_STARTED AXFR transfer of zone 1.e.d.f.0.7.4.0.1.0.0.2.ip6.arpa/IN started
+2013-08-31 01:24:46.853 INFO  [b10-xfrin.xfrin/4658] XFRIN_TRANSFER_SUCCESS full AXFR transfer of zone 1.e.d.f.0.7.4.0.1.0.0.2.ip6.arpa/IN succeeded (messages: 1, records: 4, bytes: 237, run time: 0.727 seconds, 326 bytes/second)
+</code></pre>
+
+<h3 id="動作確認:257ab340aabbd3110eab36a4c8d84da0">動作確認</h3>
+
+<p>　プライマリDNSに問い合わせてみる。ANSWER SECTIONで設定したPTRが返ってきています。</p>
+
+<pre><code># dig @dns1.aimless.jp +norec -x 2001:470:fde1:53::xx
+
+; &lt;&lt;&gt;&gt; DiG 9.9.3-P2 &lt;&lt;&gt;&gt; @dns1.aimless.jp +norec -x 2001:470:fde1:53::xx
+; (2 servers found)
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 65045
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 2, ADDITIONAL: 5
+
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags:; udp: 4096
+;; QUESTION SECTION:
+;x.x.0.0.0.0.0.0.0.0.0.0.0.0.0.0.3.5.0.0.1.e.d.f.0.7.4.0.1.0.0.2.ip6.arpa. IN PTR
+
+;; ANSWER SECTION:
+x.x.0.0.0.0.0.0.0.0.0.0.0.0.0.0.3.5.0.0.1.e.d.f.0.7.4.0.1.0.0.2.ip6.arpa. 3600 IN PTR xxxx.aimless.jp.
+
+;; AUTHORITY SECTION:
+1.e.d.f.0.7.4.0.1.0.0.2.ip6.arpa. 3600 IN NS    dns1.aimless.jp.
+1.e.d.f.0.7.4.0.1.0.0.2.ip6.arpa. 3600 IN NS    dns4.aimless.jp.
+
+;; ADDITIONAL SECTION:
+dns1.aimless.jp.        3600    IN      A       49.212.54.72
+dns1.aimless.jp.        3600    IN      AAAA    2001:e41:31d4:3648::1
+dns4.aimless.jp.        3600    IN      A       157.7.135.191
+dns4.aimless.jp.        3600    IN      AAAA    2001:470:23:756::2
+
+;; Query time: 0 msec
+;; SERVER: 2001:e41:31d4:3648::1#53(2001:e41:31d4:3648::1)
+;; WHEN: Sat Aug 31 11:50:45 JST 2013
+;; MSG SIZE  rcvd: 257
+</code></pre>
+
+<p>　セカンダリDNSに問い合わせてみる。ANSWER SECTIONで設定したPTRが返ってきています。ただし、BIND9とは異なりADDITIONAL SECTIONが返ってこない。設定ミスか実装の違いかお勉強します。。。</p>
+
+<pre><code># dig @dns4.aimless.jp +norec -x 2001:470:fde1:53::xx
+
+; &lt;&lt;&gt;&gt; DiG 9.9.3-P2 &lt;&lt;&gt;&gt; @dns4.aimless.jp +norec -x 2001:470:fde1:53::xx
+; (2 servers found)
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 55580
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 2, ADDITIONAL: 1
+
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags:; udp: 4096
+;; QUESTION SECTION:
+;x.x.0.0.0.0.0.0.0.0.0.0.0.0.0.0.3.5.0.0.1.e.d.f.0.7.4.0.1.0.0.2.ip6.arpa. IN PTR
+
+;; ANSWER SECTION:
+x.x.0.0.0.0.0.0.0.0.0.0.0.0.0.0.3.5.0.0.1.e.d.f.0.7.4.0.1.0.0.2.ip6.arpa. 3600 IN PTR xxxx.aimless.jp.
+
+;; AUTHORITY SECTION:
+1.e.d.f.0.7.4.0.1.0.0.2.ip6.arpa. 3600 IN NS    dns1.aimless.jp.
+1.e.d.f.0.7.4.0.1.0.0.2.ip6.arpa. 3600 IN NS    dns4.aimless.jp.
+</code></pre>
+
+<p>[1]: <a href="http://aimless.jp/images/rDNS_of_HE.png">http://aimless.jp/images/rDNS_of_HE.png</a></p>
+
+    </article>
+    
+ <aside><div id="disqus_thread"></div></aside> 
+
+<script type="text/javascript">
+     
+    var disqus_shortname = 'aimlessjpblog';
+
+     
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+  </main>
+
+
+  
+  <footer role="contentinfo">
+    <div style="text-align:center;">
+      
+      Written by kongou_ae
+    </div>
+  </footer>
+
+
+</div>
+
+<script src="/js/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+</body>
+</html>
+

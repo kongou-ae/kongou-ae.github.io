@@ -1,0 +1,220 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+
+  
+  <meta charset="UTF-8">
+  <title>
+    自宅ISPを冗長化した | Aimless
+  </title>
+
+
+  
+  <meta name="viewport" content="width=device-width,user-scalable=no,maximum-scale=1,initial-scale=1">
+
+
+  
+  <link rel="stylesheet" href="/css/sanitize.css">
+  <link rel="stylesheet" href="/css/responsive.css">
+  <link rel="stylesheet" href="/css/highlight_monokai.css">
+  <link rel="stylesheet/less" href="/css/theme.less">
+  <link rel="stylesheet" href="/css/custom.css">
+
+
+  
+  <script src="/js/less.js" type="text/javascript"></script>
+
+
+</head>
+
+
+
+<body>
+<div class="container">
+
+  
+  <header role="banner">
+    <div class="row gutters">
+      <div id="site-title" class="col span_6">
+        <h1><a href="/">Aimless</a></h1>
+        <h2>Powered by aimless emotion</h2>
+      </div>
+      <div id="social" class="col span_6">
+        <ul>
+          <li><a href="https://twitter.com/kongou_ae" target="_blank">Twitter</a></li>
+          
+          <li><a href="https://github.com/kongou-ae" target="_blank">GitHub</a></li>
+        </ul>
+      </div>
+    </div>
+  </header>
+
+
+  
+  <main id="single" role="main">
+    <div class="article-header">
+      <h1>自宅ISPを冗長化した</h1>
+      <div class="meta">
+        May 6, 2012 &nbsp;
+        
+          #<a href="/categories/network">network</a>&nbsp;
+        
+      </div>
+    </div>
+    <article>
+      
+
+<p></p></p>
+
+<p>　GWの課題ということで、自宅のISP回線を冗長化しました。GMOの固定IPを契約した際にOCNを解約していなかったので、それを有効活用します。また、お仕事で「メインDCとDRサイト間でのISP冗長」ってのを提案しないといけない事もあり、その技術検証も兼ねてます。機器が足りないので縮小構成ですが・・</p>
+
+<h3 id="論理構成図:35d6442d401d4b2408b49f2a76e1173c">論理構成図</h3>
+
+<p><img src="http://aimless.jp/images/dr.png" alt="nw-topology" /></p>
+
+<p>　通常時はGMOの固定IPを利用し、GMO経由でインターネットへ接続できなくなった場合、OCNの非固定IP経由に切り替えます。</p>
+
+<p>　実際の所、物理構成的には1本のフレッツをマルチセッションで使っているので、全く冗長化されていません。さらにモデムの配下を二つに分解するSWとしてCisco892Jを利用しているので、Cisco892Jが死ぬと全てが終わります。。。。</p>
+
+<h3 id="インターネットに接続できない-を具体化する:35d6442d401d4b2408b49f2a76e1173c">「インターネットに接続できない」を具体化する</h3>
+
+<p>　インターネットへ接続できないと一言で言っても、実際のNWでは色々な状態が考えられます。ISPの網内トラブル、ゲートウェイになっているFWが壊れた、デフォルトルートを広告している機器が壊れた等々。</p>
+
+<p>　今回の構成では「インターネットに接続できない」を「メインルータのデフォルトルートで8.8.8.8にPingが飛ばなくなった」とし、それをルータ自身で検知して経路を切り替えます。自分に設定されたデフォルトルートの到達性に責任を持ってもらう形です。</p>
+
+<p>　こうすると、コアSWがOSPFにデフォルトルートを広告しているような構成の場合に、ISP網内のインターネット接続性が死んでいる事をコアSWで検知して広告を止める⇒別DCのコアL3SWが広告するメトリックが高いデフォルトルートに切り替わる、みたいな事も出来ます。</p>
+
+<h3 id="ip-sla-object-tracking:35d6442d401d4b2408b49f2a76e1173c">IP SLA &amp; Object Tracking</h3>
+
+<p>　メイン回線のデフォルトルートが正常かどうかを調べる為に、IP SLAを利用を利用して、ルータのDialer1（GMOのPPPoEインターフェース）から10秒に1回icmp-echoを送信します。</p>
+
+<pre><code>ip sla 20
+ icmp-echo 8.8.8.8 source-interface Dialer1
+ frequency 10
+ip sla schedule 20 life forever start-time now
+
+Router#show ip sla summary
+IPSLAs Latest Operation Summary
+ID          Type       Destination       Stats   Return      Last
+                                          (ms)    Code        Run
+----------- ---------- ---------------  ------ ---------- ----------------- 
+*20         icmp-echo  8.8.8.8          RTT=8    OK         1 second ago    
+</code></pre>
+
+<p>　そして、8.8.8.8へのICMP-echoが通らなくなった事を検知するためにオブジェクトトラッキングを利用します。先ほど設定したIP SLAの到達性をトラッキングするよう設定し、それを依存したデフォルトルートを設定します。こうすると、Pingが通る時はルーティングが有効に、通らない場合はルーティングテーブルに乗らないようになります。</p>
+
+<pre><code>track 20 ip sla 20 reachability
+ip route 0.0.0.0 0.0.0.0 Dialer1 track 20
+
+Router#show track 
+Track 20
+  IP SLA 20 reachability
+  Reachability is Up
+    5 changes, last change 23:30:13
+  Latest operation return code: OK
+  Latest RTT (millisecs) 7
+  Tracked by:
+    STATIC-IP-ROUTING 0
+</code></pre>
+
+<p><a href="http://www.cisco.com/en/US/docs/ios/ipapp/configuration/guide/ipapp_eot.html" title="Configuring Enhanced Object Tracking" target="_blank">Object Trackingの設定例：Configuring Enhanced Object Tracking</a></p>
+
+<h3 id="バックアップルートの設定:35d6442d401d4b2408b49f2a76e1173c">バックアップルートの設定</h3>
+
+<p>　OCNに接続しているFortigateから、OSPFでデフォルトルートを広告します。こうする事で、Cisco892Jのルーティングテーブルは、通常時はAD値1のStaticが利用されてGMO経由に、StaticがObject Trackingで消えたあとはOSPFで受信しているAD値110のOCN経由に切り替わります。</p>
+
+<p>　ただし、このままだと、Dialer1がUpしている状態で8.8.8.8への到達性がなくなるような障害が発生した場合、デフォルトルートがフラッピングしそうな気がします。（8.8.8.8への到達性がなくなる⇒デフォルトルートがOCNに切り替わる⇒Dialer1からのPingがOCN経由のデフォルトに乗って到達する⇒GMOに切り替わる⇒8.8.8.8への到達性がなくなる（初めに戻る））。</p>
+
+<p>　そこで、8.8.8.8だけはいつでもGMO経由で抜けるように/32のホストルートを設定します。障害時に8.8.8.8が利用不可になりますが、使ってないのでOKということで。。。</p>
+
+<pre><code>ip route 8.8.8.8 255.255.255.255 Dialer1
+</code></pre>
+
+<h3 id="動作確認:35d6442d401d4b2408b49f2a76e1173c">動作確認</h3>
+
+<p>　疑似的に障害を発生させるために、8.8.8.8をnull0に落とします。PPPoEをしゃべるIFのケーブルを抜いてもいいのですが、そうするとDialer1が落ちてデフォルトルートが消えてしまいます。PPPoEは生きてるけど網内が死んでる、つまりコアSWのネクストホップは生きてるけどその先が死んでる、という状況にも対応できるのがこの構成の良さなので、疑似的に8.8.8.8へPingが飛ばないようにします。</p>
+
+<p>　すると、IP SLAで設定したICMPが到達性を失い、それをオブジェクトトラッキングが検知します。そして、Staticのデフォルトルートが消失し、OSPFで受信した経路に切り替わります。</p>
+
+<pre><code>Router(config)#ip route 8.8.8.8 255.255.255.255 null 0
+Router(config)#end
+May  6 21:12:42.188 JST: %TRACKING-5-STATE: 20 ip sla 20 reachability Up-&gt;Down
+Router#
+Router#show ip sla summary 
+ID          Type       Destination       Stats   Return      Last
+                                          (ms)    Code        Run
+----------- ---------- ---------------  ------ ---------- ----------------- 
+*20         icmp-echo  8.8.8.8          -        Timeout    8 seconds ago      
+Router#
+Router#show ip route
+Gateway of last resort is 192.168.4.200 to network 0.0.0.0
+
+O*E2  0.0.0.0/0 [110/10] via 192.168.4.200, 00:00:15, Vlan4
+</code></pre>
+
+<p>　障害を復旧させる為に、null0に落としていた8.8.8.8を正常に戻します。するとIP SLAで設定したICMPの到達性が復旧したことをオブジェクトトラッキングが検知し、Staticのデフォルトルートが復旧します。</p>
+
+<pre><code>Router(config)#no ip route 8.8.8.8 255.255.255.255 Null0
+Router(config)#end
+Router#
+May  6 21:15:07.293 JST: %TRACKING-5-STATE: 20 ip sla 20 reachability Down-&gt;Up
+Router#
+Router#show ip sla summary        
+IPSLAs Latest Operation Summary
+ID          Type       Destination       Stats   Return      Last
+                                          (ms)    Code        Run
+----------- ---------- ---------------  ------ ---------- ----------------- 
+*20         icmp-echo  8.8.8.8          RTT=8    OK         9 seconds ago  
+Router#
+Router#show ip route 
+S*    0.0.0.0/0 is directly connected, Dialer1
+</code></pre>
+
+<h3 id="今後の野望:35d6442d401d4b2408b49f2a76e1173c">今後の野望</h3>
+
+<p>　IP SLA &amp; Object Trackingでデフォルトルートを消すのは問題なく動きそうなので、エンタープライズにありがちな下記のような構成でもちゃんとISP冗長できることを確認したいです。動きそうな気はするのですが、検証するための機器が足りない・・・。</p>
+
+<p>![enterprise-nw][2]</p>
+
+<p>[2]: <a href="http://aimless.jp/images/enterprise.png">http://aimless.jp/images/enterprise.png</a></p>
+
+    </article>
+    
+ <aside><div id="disqus_thread"></div></aside> 
+
+<script type="text/javascript">
+     
+    var disqus_shortname = 'aimlessjpblog';
+
+     
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+  </main>
+
+
+  
+  <footer role="contentinfo">
+    <div style="text-align:center;">
+      
+      Written by kongou_ae
+    </div>
+  </footer>
+
+
+</div>
+
+<script src="/js/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+</body>
+</html>
+

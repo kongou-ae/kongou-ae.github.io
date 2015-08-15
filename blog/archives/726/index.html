@@ -1,0 +1,147 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+
+  
+  <meta charset="UTF-8">
+  <title>
+    自宅をLISPでIPv6化してみた | Aimless
+  </title>
+
+
+  
+  <meta name="viewport" content="width=device-width,user-scalable=no,maximum-scale=1,initial-scale=1">
+
+
+  
+  <link rel="stylesheet" href="/css/sanitize.css">
+  <link rel="stylesheet" href="/css/responsive.css">
+  <link rel="stylesheet" href="/css/highlight_monokai.css">
+  <link rel="stylesheet/less" href="/css/theme.less">
+  <link rel="stylesheet" href="/css/custom.css">
+
+
+  
+  <script src="/js/less.js" type="text/javascript"></script>
+
+
+</head>
+
+
+
+<body>
+<div class="container">
+
+  
+  <header role="banner">
+    <div class="row gutters">
+      <div id="site-title" class="col span_6">
+        <h1><a href="/">Aimless</a></h1>
+        <h2>Powered by aimless emotion</h2>
+      </div>
+      <div id="social" class="col span_6">
+        <ul>
+          <li><a href="https://twitter.com/kongou_ae" target="_blank">Twitter</a></li>
+          
+          <li><a href="https://github.com/kongou-ae" target="_blank">GitHub</a></li>
+        </ul>
+      </div>
+    </div>
+  </header>
+
+
+  
+  <main id="single" role="main">
+    <div class="article-header">
+      <h1>自宅をLISPでIPv6化してみた</h1>
+      <div class="meta">
+        Mar 18, 2012 &nbsp;
+        
+          #<a href="/categories/network">network</a>&nbsp;
+        
+      </div>
+    </div>
+    <article>
+      <p>これまでHurricane ElectricのTunnelBrokerでIPv6化していた自宅を、LISP Beta Networkを利用したIPv6に切り替えました。LISP Beta Networkに個人で接続できるとは思っていませんでしたが、思い切ってCiscoに英語でメールした甲斐がありました。</p>
+
+<p>　cisco892JにはIPv6のデフォルトルートを書いていないので、www.iij.ad.jp（2001:240:BB42:B000::1:80）向けの経路は存在しません。</p>
+
+<pre><code>Router#show ipv6 route 2001:240:BB42:B000::1:80
+Load for five secs: 3%/0%; one minute: 3%; five minutes: 3%
+Time source is NTP, 22:34:15.588 JST Sun Mar 18 2012
+
+% Route not found
+</code></pre>
+
+<p>　にも関わらず、ルータからwww.iij.ad.jpへPingが飛びます。</p>
+
+<pre><code>Router#ping www.iij.ad.jp source loopback 0           
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 2001:240:BB42:B000::1:80, timeout is 2 seconds:
+Packet sent with a source address of 2610:D0:3211:0::xxxx
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 24/28/32 ms
+</code></pre>
+
+<p>　LISPのマップキャッシュを見ると、Map-Resolverから「2001::/22の経路はPeTRに送って」と言われているっぽいので、PETR経由でwww.iij.ad.jpと通信しているのでしょう。</p>
+
+<pre><code>Router#show ipv6 lisp map-cache 
+Load for five secs: 3%/0%; one minute: 3%; five minutes: 3%
+Time source is NTP, 22:37:44.010 JST Sun Mar 18 2012
+
+LISP IPv6 Mapping Cache for EID-table default (IID 0), 4 entries
+
+::/0, uptime: 4d01h, expires: never, via static send map-request
+  Negative cache entry, action: send-map-request
+2001::/22, uptime: 00:01:03, expires: 00:13:49, via map-reply, forward-native
+  Encapsulating to proxy ETR
+</code></pre>
+
+<p>　自siteのRLOCはIPv4しか登録していないので、LISP網内はIPv4で通信します。そのため、通信フローは下図のようになっているはずです。（ちょっと自信ない）</p>
+
+<p>![LISP][1]</p>
+
+<p>　我が家のxTRがIPv6パケットをLISPでカプセル化してIPv4でPeTRに送信します。そしてPeTRがLISPのカプセルを外して、IPv6パケットをIIJに送信する流れです。戻りはその逆です。せっかく接続させて頂いたLISP Beta Networkなので、色々遊んでみようと思います。</p>
+
+<p>[1]: <a href="http://aimless.jp/images/LISP.png">http://aimless.jp/images/LISP.png</a></p>
+
+    </article>
+    
+ <aside><div id="disqus_thread"></div></aside> 
+
+<script type="text/javascript">
+     
+    var disqus_shortname = 'aimlessjpblog';
+
+     
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+  </main>
+
+
+  
+  <footer role="contentinfo">
+    <div style="text-align:center;">
+      
+      Written by kongou_ae
+    </div>
+  </footer>
+
+
+</div>
+
+<script src="/js/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+</body>
+</html>
+
