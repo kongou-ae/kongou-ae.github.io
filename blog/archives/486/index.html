@@ -1,0 +1,168 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+
+  
+  <meta charset="UTF-8">
+  <title>
+    ZabbixでDNSSECの有効期間を監視してみた | Aimless
+  </title>
+
+
+  
+  <meta name="viewport" content="width=device-width,user-scalable=no,maximum-scale=1,initial-scale=1">
+
+
+  
+  <link rel="stylesheet" href="/css/sanitize.css">
+  <link rel="stylesheet" href="/css/responsive.css">
+  <link rel="stylesheet" href="/css/highlight_monokai.css">
+  <link rel="stylesheet/less" href="/css/theme.less">
+  <link rel="stylesheet" href="/css/custom.css">
+
+
+  
+  <script src="/js/less.js" type="text/javascript"></script>
+
+
+</head>
+
+
+
+<body>
+<div class="container">
+
+  
+  <header role="banner">
+    <div class="row gutters">
+      <div id="site-title" class="col span_6">
+        <h1><a href="/">Aimless</a></h1>
+        <h2>Powered by aimless emotion</h2>
+      </div>
+      <div id="social" class="col span_6">
+        <ul>
+          <li><a href="https://twitter.com/kongou_ae" target="_blank">Twitter</a></li>
+          
+          <li><a href="https://github.com/kongou-ae" target="_blank">GitHub</a></li>
+        </ul>
+      </div>
+    </div>
+  </header>
+
+
+  
+  <main id="single" role="main">
+    <div class="article-header">
+      <h1>ZabbixでDNSSECの有効期間を監視してみた</h1>
+      <div class="meta">
+        Nov 5, 2011 &nbsp;
+        
+          #<a href="/categories/dns">DNS</a>&nbsp;
+        
+      </div>
+    </div>
+    <article>
+      
+
+<p>DNSSECを導入してから4か月が過ぎました。スマート署名や全自動ゾーン署名といったDNSSECの運用を簡単にする仕組みがあるようなのですが、へっぽこDNS運用担当な私は手動更新です。</p>
+
+<p>　当然、有効期間内に再署名しないといけないのですが、過去に再署名を忘れて自ドメインを検証失敗にしてしまった実績があるので、Zabbixで有効期間を監視する事にしました。今後は、有効期間の最終週になるとメール通知されるはずです。以下メモ。</p>
+
+<p>　※注意　：　スクリプト内でdig +dnssecコマンドを利用しているため、zabbixサーバがdig　+dnssecを実行出来る必要があります。私はセカンダリDNS上でzabbixを動かしています</p>
+
+<h3 id="1-外部チェック用のシェルを作る:9c8dc63895eefb768e129ebf3ce8ee02">1．外部チェック用のシェルを作る。</h3>
+
+<p>　見よう見まねでスクリプトを書きました。スクリプトでは、Zabbixから渡されるドメイン名と権威DNS名を利用して、監視したいゾーンの権威DNSにdigを行います。そして、その結果からRRSIGの有効期間最終日を取得します。最後に、最終日と今日との差分を計算し、標準出力としてZabbixに値を返します。スクリプトの格納先は/etc/zabbix/externalscriptsです。</p>
+
+<p>　差分の求め方は<a href="http://twitter.com/kleinsbottle/status/132289786995163137" target="_blank">@kleinsbottleに頂いたアドバイス</a>が参考になりました。ありがとうございました。</p>
+
+<pre><code>#!/bin/sh
+domain=$1
+dns=$2
+
+response=`dig @$dns $domain +dnssec`
+
+rrsig_end=`echo $response | sed -e "s/^.*RRSIG.*8 [0-9] [0-9]\+ \([0-9]\+\) [0-9]\+.*$/\1/g"`
+
+now=`date +"%Y%m%d"`
+
+rrsig_yy=`echo $rrsig_end | awk '{print substr($0,1,4);}'`
+rrsig_mm=`echo $rrsig_end | awk '{print substr($0,5,2);}'`
+rrsig_dd=`echo $rrsig_end | awk '{print substr($0,7,2);}'`
+rrsig_hh=`echo $rrsig_end | awk '{print substr($0,9,2);}'`
+rrsig_mmm=`echo $rrsig_end | awk '{print substr($0,11,2);}'`
+
+rrsig_end=`date +%s --date "$rrsig_yy-$rrsig_mm-$rrsig_dd $rrsig_hh:$rrsig_mmm"`
+now=`date +%s --date "$now"`
+
+diff=`expr $rrsig_end - $now`
+diff=`expr $diff / 86400`
+echo $diff
+</code></pre>
+
+<h3 id="2-監視したいゾーンをホストとして登録:9c8dc63895eefb768e129ebf3ce8ee02">2．監視したいゾーンをホストとして登録</h3>
+
+<p>　外部チェック用シェルの第一引数としてホスト名を利用している都合上、監視したいゾーン名でホストを登録します。DNS名もホスト名と同一にし、接続方法をDNSにします。</p>
+
+<h3 id="3-アイテムの作成:9c8dc63895eefb768e129ebf3ce8ee02">3．アイテムの作成</h3>
+
+<p>登録したホストに対して、先ほどのスクリプトを利用したアイテムを追加します。キーの箇所にはパラメータとしてスクリプトの第二引数である権威DNS名を追加します。こうすると、スクリプトでは「dig @dns1.aimless.jp aimless.jp +dnssec」が実行されます。</p>
+
+<p><img src="http://aimless.jp/images/dnssec_item.png" alt="dnssec_item" />
+</p>
+
+<h3 id="3-トリガーの設定:9c8dc63895eefb768e129ebf3ce8ee02">3．トリガーの設定</h3>
+
+<p>　アイテムの戻り値（有効期間の最終日と現在との差分）が8未満だった場合に、致命的な障害としてイベントを生成するトリガーを作成します。</p>
+
+<p><img src="http://aimless.jp/images/dnssec_triger.png" alt="dnssec_triger" />
+</p>
+
+<h3 id="4-アクションの追加-p:9c8dc63895eefb768e129ebf3ce8ee02">4．アクションの追加</p></h3>
+
+<p>　トリガーが生成したイベントが障害な時に、メールを飛ばすアクションを定義します。私の環境ではadminのメールアドレスが携帯のメアドになっているので、adminユーザ宛にメールを飛ばすようにしました。</p>
+
+<h3 id="5-確認-p:9c8dc63895eefb768e129ebf3ce8ee02">5．確認</p></h3>
+
+<p>　上記設定後、現在の差分がグラフに描画されている事を確認しています。したがって、情報収集に関するスクリプトの作りとZabbixの設定は問題ないと思います。あとは、再署名を放置し続けてメールが飛んでくるかを確認したいと思います。Zabbixがメールを送信してくれないと、有効期間切れの悪夢が再び訪れるかもしれません。。。</p>
+
+    </article>
+    
+ <aside><div id="disqus_thread"></div></aside> 
+
+<script type="text/javascript">
+     
+    var disqus_shortname = 'aimlessjpblog';
+
+     
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+  </main>
+
+
+  
+  <footer role="contentinfo">
+    <div style="text-align:center;">
+      
+      Written by kongou_ae
+    </div>
+  </footer>
+
+
+</div>
+
+<script src="/js/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+</body>
+</html>
+

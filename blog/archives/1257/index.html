@@ -1,0 +1,158 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+
+  
+  <meta charset="UTF-8">
+  <title>
+    IOSでdiff | Aimless
+  </title>
+
+
+  
+  <meta name="viewport" content="width=device-width,user-scalable=no,maximum-scale=1,initial-scale=1">
+
+
+  
+  <link rel="stylesheet" href="/css/sanitize.css">
+  <link rel="stylesheet" href="/css/responsive.css">
+  <link rel="stylesheet" href="/css/highlight_monokai.css">
+  <link rel="stylesheet/less" href="/css/theme.less">
+  <link rel="stylesheet" href="/css/custom.css">
+
+
+  
+  <script src="/js/less.js" type="text/javascript"></script>
+
+
+</head>
+
+
+
+<body>
+<div class="container">
+
+  
+  <header role="banner">
+    <div class="row gutters">
+      <div id="site-title" class="col span_6">
+        <h1><a href="/">Aimless</a></h1>
+        <h2>Powered by aimless emotion</h2>
+      </div>
+      <div id="social" class="col span_6">
+        <ul>
+          <li><a href="https://twitter.com/kongou_ae" target="_blank">Twitter</a></li>
+          
+          <li><a href="https://github.com/kongou-ae" target="_blank">GitHub</a></li>
+        </ul>
+      </div>
+    </div>
+  </header>
+
+
+  
+  <main id="single" role="main">
+    <div class="article-header">
+      <h1>IOSでdiff</h1>
+      <div class="meta">
+        Aug 19, 2012 &nbsp;
+        
+          #<a href="/categories/cisco">cisco</a>&nbsp;
+        
+          #<a href="/categories/network">network</a>&nbsp;
+        
+      </div>
+    </div>
+    <article>
+      
+
+<p></p></p>
+
+<h3 id="configの差分チェック:f8b24a0fca95119e055fd404d089f422">configの差分チェック</h3>
+
+<p>　運用において変更前のconfigと変更後のconfigを比較する作業は欠かせません。私の周りだと「diff」か「WinMerge」でやってる人が多いです。これがIOS単体で出来るというので試してみました。</p>
+
+<h3 id="参考ドキュメント:f8b24a0fca95119e055fd404d089f422">参考ドキュメント</h3>
+
+<p><a href="http://www.cisco.com/web/JP/solution/netsol/videolib/pdf/VoD_ikuta4.pdf" title="現場で役立つ運用管理機能 IOS Operation Tips." target="_blank">現場で役立つ運用管理機能 IOS Operation Tips.</a></p>
+
+<h3 id="作業ログ:f8b24a0fca95119e055fd404d089f422">作業ログ</h3>
+
+<p>　まずは変更作業を実施します。easyVPN用に設定してあったVPNプールの設定を削除し、NTPの送信元IFを別のVLANに変更します。</p>
+
+<pre><code>Router#conf terminal 
+Router(config)#no ip local pool VPN-Pool 172.16.255.1 172.16.255.254
+Router(config)#ntp source vlan 500
+Router(config)#end     
+</code></pre>
+
+<p>　そしてrunning-configとstartup-configを比較します。「differences A B」で、Bにあると「＋」、Aにあると「-」が付きます。なんとなくのイメージで「differences run start」にしましたが、可読性を考えると「differences start run」にした方がよさそう。</p>
+
+<pre><code>Router#show archive config differences system:running-config nvram:startup-config
+!Contextual Config Diffs:
++ip local pool VPN-Pool 172.16.255.1 172.16.255.254
++ntp source Vlan1
+-ntp source Vlan500
+</code></pre>
+
+<p>　ただしこの機能、cisco892Jにはちょっと大変な処理らしくCPU使用率がぐっと上がります。ただし、100%貼りつきではないので気にするほどではないかもしれません。</p>
+
+<pre><code>55555                                                     
+      772222244444555554444477777555555555544444444444444444444444
+  100                                                             
+   90                                                             
+   80                                                             
+   70                                                             
+   60                                                             
+   50   *****                                                     
+   40   *****                                                     
+   30   *****                                                     
+   20   *****                                                     
+   10 *******     *****     ***************                       
+     0....5....1....1....2....2....3....3....4....4....5....5....6
+               0    5    0    5    0    5    0    5    0    5    0
+               CPU% per second (last 60 seconds)
+</code></pre>
+
+<p>　次はWarm Upgradeを試したいです。早く出ろ次のIOS!!15.2(4)T !!</p>
+
+    </article>
+    
+ <aside><div id="disqus_thread"></div></aside> 
+
+<script type="text/javascript">
+     
+    var disqus_shortname = 'aimlessjpblog';
+
+     
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+  </main>
+
+
+  
+  <footer role="contentinfo">
+    <div style="text-align:center;">
+      
+      Written by kongou_ae
+    </div>
+  </footer>
+
+
+</div>
+
+<script src="/js/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+</body>
+</html>
+

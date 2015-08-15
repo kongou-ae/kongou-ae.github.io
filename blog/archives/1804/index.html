@@ -1,0 +1,126 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+
+  
+  <meta charset="UTF-8">
+  <title>
+    IOS XRvにコンソール接続する | Aimless
+  </title>
+
+
+  
+  <meta name="viewport" content="width=device-width,user-scalable=no,maximum-scale=1,initial-scale=1">
+
+
+  
+  <link rel="stylesheet" href="/css/sanitize.css">
+  <link rel="stylesheet" href="/css/responsive.css">
+  <link rel="stylesheet" href="/css/highlight_monokai.css">
+  <link rel="stylesheet/less" href="/css/theme.less">
+  <link rel="stylesheet" href="/css/custom.css">
+
+
+  
+  <script src="/js/less.js" type="text/javascript"></script>
+
+
+</head>
+
+
+
+<body>
+<div class="container">
+
+  
+  <header role="banner">
+    <div class="row gutters">
+      <div id="site-title" class="col span_6">
+        <h1><a href="/">Aimless</a></h1>
+        <h2>Powered by aimless emotion</h2>
+      </div>
+      <div id="social" class="col span_6">
+        <ul>
+          <li><a href="https://twitter.com/kongou_ae" target="_blank">Twitter</a></li>
+          
+          <li><a href="https://github.com/kongou-ae" target="_blank">GitHub</a></li>
+        </ul>
+      </div>
+    </div>
+  </header>
+
+
+  
+  <main id="single" role="main">
+    <div class="article-header">
+      <h1>IOS XRvにコンソール接続する</h1>
+      <div class="meta">
+        Apr 2, 2014 &nbsp;
+        
+          #<a href="/categories/cisco">cisco</a>&nbsp;
+        
+      </div>
+    </div>
+    <article>
+      
+
+<p><a href="http://aimless.jp/blog/blog/archives/1796">IOS XRv</a>の続きです。我が家のESXiではCiscoのドキュメントに記載された方法（ネットワーク越しの仮想コンソール接続）でIOS XRvのコンソールに接続することができないようなので、名前付きパイプを利用したコンソール接続を行いました。</p>
+
+<h2 id="ios-xrvの設定:a47b7d9c46ee1c93b25a8346c48dd9c8">IOS XRvの設定</h2>
+
+<p>　下記の様に、IOS XRvが稼働している仮想マシンに、名前付きパイプを使用したシリアルポートを追加します。</p>
+
+<p><img src="http://aimless.jp/blog/wp-content/uploads/2014/04/named-pipe_xrv.png" alt="IOS XRv sirial setting" />
+</p>
+
+<h2 id="コンソールサーバの設定:a47b7d9c46ee1c93b25a8346c48dd9c8">コンソールサーバの設定</h2>
+
+<p>　IOS XRvが稼働しているESXi上にシリアルポートを利用可能なサーバをデプロイし、IOS XRvと同様、名前付きパイプを使用したシリアルポートを追加します。パイプ名はIOS XRvの設定と同一にしてください。今回は元々vmdkが配置されていたCentos6.2を利用しました。</p>
+
+<p><img src="http://aimless.jp/blog/wp-content/uploads/2014/04/named-pipe_centos.png" alt="centos sirial setting" />
+</p>
+
+<h2 id="接続:a47b7d9c46ee1c93b25a8346c48dd9c8">接続</h2>
+
+<p>　コンソールサーバからscreenを利用してIOS XRvに接続します。IDの作成を求められたので適当なユーザを作ったところ、無事繋がりましたー。</p>
+
+    </article>
+    
+ <aside><div id="disqus_thread"></div></aside> 
+
+<script type="text/javascript">
+     
+    var disqus_shortname = 'aimlessjpblog';
+
+     
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+  </main>
+
+
+  
+  <footer role="contentinfo">
+    <div style="text-align:center;">
+      
+      Written by kongou_ae
+    </div>
+  </footer>
+
+
+</div>
+
+<script src="/js/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+</body>
+</html>
+

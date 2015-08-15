@@ -1,0 +1,144 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+
+  
+  <meta charset="UTF-8">
+  <title>
+    Cisco ISR G2メモ | Aimless
+  </title>
+
+
+  
+  <meta name="viewport" content="width=device-width,user-scalable=no,maximum-scale=1,initial-scale=1">
+
+
+  
+  <link rel="stylesheet" href="/css/sanitize.css">
+  <link rel="stylesheet" href="/css/responsive.css">
+  <link rel="stylesheet" href="/css/highlight_monokai.css">
+  <link rel="stylesheet/less" href="/css/theme.less">
+  <link rel="stylesheet" href="/css/custom.css">
+
+
+  
+  <script src="/js/less.js" type="text/javascript"></script>
+
+
+</head>
+
+
+
+<body>
+<div class="container">
+
+  
+  <header role="banner">
+    <div class="row gutters">
+      <div id="site-title" class="col span_6">
+        <h1><a href="/">Aimless</a></h1>
+        <h2>Powered by aimless emotion</h2>
+      </div>
+      <div id="social" class="col span_6">
+        <ul>
+          <li><a href="https://twitter.com/kongou_ae" target="_blank">Twitter</a></li>
+          
+          <li><a href="https://github.com/kongou-ae" target="_blank">GitHub</a></li>
+        </ul>
+      </div>
+    </div>
+  </header>
+
+
+  
+  <main id="single" role="main">
+    <div class="article-header">
+      <h1>Cisco ISR G2メモ</h1>
+      <div class="meta">
+        May 1, 2012 &nbsp;
+        
+          #<a href="/categories/cisco">cisco</a>&nbsp;
+        
+          #<a href="/categories/network">network</a>&nbsp;
+        
+      </div>
+    </div>
+    <article>
+      
+
+<p></p></p>
+
+<p>　DC事業に関わる様になってからLANばかりで、久々にISR G2シリーズと向き合ったのでメモ。Ciscoのサイトは必要な情報を探すのに苦労するので、ある程度の情報を確認したら製品担当に聞いてしまうクセがついてしまっています。良くないですね。</p>
+
+<h3 id="基本:f30548e2986efdc8778f1e9732deb984">基本</h3>
+
+<p><a href="http://www.cisco.com/web/JP/product/hs/routers/c1900isr/prodlit/qa_c67_553891.html" title="http://www.cisco.com/web/JP/product/hs/routers/c1900isr/prodlit/qa_c67_553891.html" target="_blank">シスコ第 2 世代サービス統合型ルータ</a></p>
+
+<p><a href="http://www.cisco.com/web/JP/product/hs/routers/c1900isr/prod_series_comparison.html" title="シリーズの比較" target="_blank">シリーズの比較</a></p>
+
+<p><a href="http://www.cisco.com/web/JP/solution/mid_business/tools/pdf/SMB_Catalog_1201_LS.pdf" title="中小規模ネットワーク製品総合カタログ" target="_blank">中小規模ネットワーク製品総合カタログ</a></p>
+
+<h3 id="拡張モジュールのq-a:f30548e2986efdc8778f1e9732deb984">拡張モジュールのQ&amp;A</h3>
+
+<p><a href="http://www.cisco.com/web/JP/product/hs/ifmodule/hwic/prodlit/qa_c67-612908.html" title="Cisco ギガビット イーサネット拡張高速 WAN インターフェイス カード" target="_blank">Cisco ギガビット イーサネット拡張高速 WAN インターフェイス カード</a></p>
+
+<h3 id="1ポート拡張モジュールの解説:f30548e2986efdc8778f1e9732deb984">1ポート拡張モジュールの解説</h3>
+
+<p><a href="http://www.cisco.com/web/JP/product/hs/routers/c1900isr/prodlit/data_sheet_c78-660124.html" title="Cisco 拡張高速 WAN インターフェイス カード" target="_blank">Cisco 拡張高速 WAN インターフェイス カード</a></p>
+
+<blockquote>
+<p>注：EHWIC はギガビット イーサネット接続を提供しますが、スループットはプラットフォームにより制限されるため、ライン レートはサポートしません。最大スループットは双方向とも 800 Mbps です。</p>
+
+<p>実際にルーティングされるポート カードなので、EHWIC-1GE-SFP-CU インターフェイス上で IP アドレスを直接設定でき、Switched Virtual Interface（SVI; スイッチ仮想インターフェイス）の設定のように、VLAN トランキング用にポートを設定する必要がありません。</p>
+</blockquote>
+
+<h3 id="4ポート-8ポート拡張モジュールの解説:f30548e2986efdc8778f1e9732deb984">4ポート/8ポート拡張モジュールの解説</h3>
+
+<p><a href="http://www.cisco.com/web/JP/product/hs/routers/c3900isr/prodlit/data_sheet_c78-612808.html" title="Cisco 4/8 ポート ギガビット イーサネット拡張高速 WAN インターフェイス カード" target="_blank">Cisco <sup>4</sup>&frasl;<sub>8</sub> ポート ギガビット イーサネット拡張高速 WAN インターフェイス カード</a></p>
+
+<blockquote>
+<p>EHWIC スイッチはルーテッド ポートをサポートしていません。</p>
+
+<p>すべての外部ポートから MGF への総スループットは 1 Gbps です</p>
+</blockquote>
+
+    </article>
+    
+ <aside><div id="disqus_thread"></div></aside> 
+
+<script type="text/javascript">
+     
+    var disqus_shortname = 'aimlessjpblog';
+
+     
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+  </main>
+
+
+  
+  <footer role="contentinfo">
+    <div style="text-align:center;">
+      
+      Written by kongou_ae
+    </div>
+  </footer>
+
+
+</div>
+
+<script src="/js/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+</body>
+</html>
+

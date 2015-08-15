@@ -1,0 +1,202 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+
+  
+  <meta charset="UTF-8">
+  <title>
+    AWS上のオンデマンドなUTM製品を比較する | Aimless
+  </title>
+
+
+  
+  <meta name="viewport" content="width=device-width,user-scalable=no,maximum-scale=1,initial-scale=1">
+
+
+  
+  <link rel="stylesheet" href="/css/sanitize.css">
+  <link rel="stylesheet" href="/css/responsive.css">
+  <link rel="stylesheet" href="/css/highlight_monokai.css">
+  <link rel="stylesheet/less" href="/css/theme.less">
+  <link rel="stylesheet" href="/css/custom.css">
+
+
+  
+  <script src="/js/less.js" type="text/javascript"></script>
+
+
+</head>
+
+
+
+<body>
+<div class="container">
+
+  
+  <header role="banner">
+    <div class="row gutters">
+      <div id="site-title" class="col span_6">
+        <h1><a href="/">Aimless</a></h1>
+        <h2>Powered by aimless emotion</h2>
+      </div>
+      <div id="social" class="col span_6">
+        <ul>
+          <li><a href="https://twitter.com/kongou_ae" target="_blank">Twitter</a></li>
+          
+          <li><a href="https://github.com/kongou-ae" target="_blank">GitHub</a></li>
+        </ul>
+      </div>
+    </div>
+  </header>
+
+
+  
+  <main id="single" role="main">
+    <div class="article-header">
+      <h1>AWS上のオンデマンドなUTM製品を比較する</h1>
+      <div class="meta">
+        Feb 16, 2015 &nbsp;
+        
+          #<a href="/categories/aws">AWS</a>&nbsp;
+        
+          #<a href="/categories/fortigate">Fortigate</a>&nbsp;
+        
+          #<a href="/categories/network">network</a>&nbsp;
+        
+      </div>
+    </div>
+    <article>
+      <p>イマイチ使いどころが見つけられないAWS上のUTM製品について、オンデマンド版（ライセンスこみで使えるAMI）の費用を比較しました。</p>
+
+<p>　なお、AWS上には、Barracuda NG FirewallやPaloalto VM-Seriesもあるのですが、これらはオンデマンド版が存在せずBYOL版のみのため、記載していません。オンデマンド版があれば、評価しやすいのに。。。</p>
+
+<table>
+<thead>
+<tr>
+<th>インスタンスタイプ</th>
+<th>FortiGate-VM</th>
+<th>CheckPoint VA</th>
+<th>sophos-UTM 9</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>t1.micro</td>
+<td>&#8211;</td>
+<td>&#8211;</td>
+<td>$0.02/hr</td>
+</tr>
+
+<tr>
+<td>t1.small</td>
+<td>&#8211;</td>
+<td>&#8211;</td>
+<td>$0.264/hr</td>
+</tr>
+
+<tr>
+<td>m3.medium</td>
+<td>$0.37/hr</td>
+<td>–</td>
+<td>$0.42/hr</td>
+</tr>
+
+<tr>
+<td>m3.large</td>
+<td>$0.95/hr</td>
+<td>–</td>
+<td>$0.84/hr</td>
+</tr>
+
+<tr>
+<td>m3.xlarge</td>
+<td>$2.13/hr</td>
+<td>–</td>
+<td>$1.68/hr</td>
+</tr>
+
+<tr>
+<td>m3.2xlarge</td>
+<td>$4.49/hr</td>
+<td>–</td>
+<td>$3.36/hr</td>
+</tr>
+
+<tr>
+<td>c3.large</td>
+<td>$0.835/hr</td>
+<td>$1.815/hr</td>
+<td>$0.525/hr</td>
+</tr>
+
+<tr>
+<td>c3.xlarge</td>
+<td>$1.87/hr</td>
+<td>$2.80/hr</td>
+<td>$1.05/hr</td>
+</tr>
+
+<tr>
+<td>c3.2xlarge</td>
+<td>$3.95/hr</td>
+<td>$4.86/hr</td>
+<td>$2.10/hr</td>
+</tr>
+
+<tr>
+<td>c3.4xlarge</td>
+<td>–</td>
+<td>$6.483/hr</td>
+<td>$4.20/hr</td>
+</tr>
+
+<tr>
+<td>c3.8xlarge</td>
+<td>–</td>
+<td>$8.688/hr</td>
+<td>$8.40/hr</td>
+</tr>
+</tbody>
+</table>
+
+    </article>
+    
+ <aside><div id="disqus_thread"></div></aside> 
+
+<script type="text/javascript">
+     
+    var disqus_shortname = 'aimlessjpblog';
+
+     
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+  </main>
+
+
+  
+  <footer role="contentinfo">
+    <div style="text-align:center;">
+      
+      Written by kongou_ae
+    </div>
+  </footer>
+
+
+</div>
+
+<script src="/js/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+</body>
+</html>
+

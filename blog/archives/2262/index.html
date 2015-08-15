@@ -1,0 +1,262 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+
+  
+  <meta charset="UTF-8">
+  <title>
+    オンプレのファイアウォールポリシーをAWSに移行する | Aimless
+  </title>
+
+
+  
+  <meta name="viewport" content="width=device-width,user-scalable=no,maximum-scale=1,initial-scale=1">
+
+
+  
+  <link rel="stylesheet" href="/css/sanitize.css">
+  <link rel="stylesheet" href="/css/responsive.css">
+  <link rel="stylesheet" href="/css/highlight_monokai.css">
+  <link rel="stylesheet/less" href="/css/theme.less">
+  <link rel="stylesheet" href="/css/custom.css">
+
+
+  
+  <script src="/js/less.js" type="text/javascript"></script>
+
+
+</head>
+
+
+
+<body>
+<div class="container">
+
+  
+  <header role="banner">
+    <div class="row gutters">
+      <div id="site-title" class="col span_6">
+        <h1><a href="/">Aimless</a></h1>
+        <h2>Powered by aimless emotion</h2>
+      </div>
+      <div id="social" class="col span_6">
+        <ul>
+          <li><a href="https://twitter.com/kongou_ae" target="_blank">Twitter</a></li>
+          
+          <li><a href="https://github.com/kongou-ae" target="_blank">GitHub</a></li>
+        </ul>
+      </div>
+    </div>
+  </header>
+
+
+  
+  <main id="single" role="main">
+    <div class="article-header">
+      <h1>オンプレのファイアウォールポリシーをAWSに移行する</h1>
+      <div class="meta">
+        Jan 18, 2015 &nbsp;
+        
+          #<a href="/categories/aws">AWS</a>&nbsp;
+        
+          #<a href="/categories/network">network</a>&nbsp;
+        
+      </div>
+    </div>
+    <article>
+      
+
+<p>オンプレミスに設置されているサーバをAWSに移行する場合、サーバの通信経路上の存在するファイアウォールのポリシーもAWSへ移行する必要があります。多くの場合、ポリシーの移行先はセキュリティグループになると思います。セキュリティグループはオンプレのFWと実装方法が違いますので、そのまま移行するのは難しいです。</p>
+
+<p>　自分の備忘の含めて、これまで見つけたいい感じの移行方式をまとめます。</p>
+
+<h2 id="移行方式その１:408d74faa089a41a4f7a8379e456ab27">移行方式その１</h2>
+
+<h3 id="オンプレミスのファイアウォールポリシー:408d74faa089a41a4f7a8379e456ab27">オンプレミスのファイアウォールポリシー</h3>
+
+<p>　同一システムのWEBサーバ群から、同一システムのDBサーバ群へのDBアクセスの通信を一括で許可するポリシーです。よく見る設定方法だと信じたい。</p>
+
+<p>| ID | Source         | Dest        | Service | Action |
+| &ndash; | &mdash;&mdash;&mdash;&mdash;&ndash; | &mdash;&mdash;&mdash;&ndash; | &mdash;&mdash;- | &mdash;&mdash; |
+| n  | WEB1 WEB2 WEB3 | DB1 DB2 DB3 | MySql   | Permit |</p>
+
+<h3 id="セキュリティグループの実装方法:408d74faa089a41a4f7a8379e456ab27">セキュリティグループの実装方法</h3>
+
+<p>　以下の二つのセキュリティグループを作成します。そして、AWS上に移行したWEB1とWEB2、WEB3に「sg-web-server」を、DB1とDB2、DB3に「sg-db-server」を適用します。</p>
+
+<p><strong>sg-web-server</strong></p>
+
+<table>
+<thead>
+<tr>
+<th>Direction</th>
+<th>Type</th>
+<th>Protocol</th>
+<th>Port Range</th>
+<th>Destination</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>outbound</td>
+<td>MySQL</td>
+<td>TCP (6)</td>
+<td>3306</td>
+<td>sg-db-server</td>
+</tr>
+</tbody>
+</table>
+
+<p><strong>sg-db-server</strong></p>
+
+<table>
+<thead>
+<tr>
+<th>Direction</th>
+<th>Type</th>
+<th>Protocol</th>
+<th>Port Range</th>
+<th>Source</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>inbound</td>
+<td>MySQL</td>
+<td>TCP (6)</td>
+<td>3306</td>
+<td>sg-web-server</td>
+</tr>
+</tbody>
+</table>
+
+<p>　セキュリティグループの「Source/Destination」には、IPアドレスだけではなく、セキュリティグループを選択することができます。この設定を行った場合、「Source/Destination」は、選択したセキュリティグループが適用されているEC2のIPアドレスが利用されます。</p>
+
+<p>　上記の例ですと、sg-db-serverはDB1とDB2、DB3に適用されていますので、sg-web-serverで許可されるMySQLの宛先アドレスはDB1とDB2、DB3になります。</p>
+
+<p>　この便利な機能は、オンプレのファイアウォールにおける「グルーピング」の機能だと考えることが出来ます。この機能を利用することで、サーバごとに設定を行う必要があるセキュリティグループを効率的に設定することができます。</p>
+
+<h2 id="移行方式その２:408d74faa089a41a4f7a8379e456ab27">移行方式その２</h2>
+
+<h3 id="オンプレミスのファイアウォールポリシー-1:408d74faa089a41a4f7a8379e456ab27">オンプレミスのファイアウォールポリシー</h3>
+
+<p>　とあるセグメント内の端末が共通で利用するシステムを許可するポリシーです。これもよく見る設定方法だと信じたい。</p>
+
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Source</th>
+<th>Dest</th>
+<th>Service</th>
+<th>Action</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>n</td>
+<td></td>
+<td>ANY</td>
+<td>DNS resolver</td>
+<td>DNS</td>
+</tr>
+
+<tr>
+<td>n+1</td>
+<td>ANY</td>
+<td>NTP server</td>
+<td>NTP</td>
+<td>Permit</td>
+</tr>
+</tbody>
+</table>
+
+<h3 id="セキュリティグループの実装方法-1:408d74faa089a41a4f7a8379e456ab27">セキュリティグループの実装方法</h3>
+
+<p>　以下のセキュリティグループを作成し、セグメント内に配置するサーバに適用します。</p>
+
+<p><strong>Name:network-service</strong></p>
+
+<table>
+<thead>
+<tr>
+<th>Direction</th>
+<th>Type</th>
+<th>Protocol</th>
+<th>Port Range</th>
+<th>Destination</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>outbound</td>
+<td>DNS (53)</td>
+<td>UDP (17)</td>
+<td>53</td>
+<td>DNS resolver</td>
+</tr>
+
+<tr>
+<td>outbound</td>
+<td>CUstom UDP Rule</td>
+<td>UDP (17)</td>
+<td>123</td>
+<td>NTP server</td>
+</tr>
+</tbody>
+</table>
+
+<p>　セキュリティグループは、1つのサーバに複数個適用することができます。そこで、サーバ共通の設定を一つのセキュリティグループに集約することで、メンテナンス性を向上することができます。</p>
+
+<p>　たとえば、DNS resolverをリプレースしIPアドレスが変更となった場合、上記のセキュリティグループがあれば、このセキュリティグループのDNS resolverのIPアドレスだけを変更するだけでOKです。</p>
+
+<p>　もし、サーバごとに一つのセキュリティグループを設定しており、そのセキュリティグループでDNS resolverへのDNSを許可していたとしたら、すべてのサーバに適用されているセキュリティグループを変更しなければなりません。</p>
+
+<h2 id="最後に:408d74faa089a41a4f7a8379e456ab27">最後に</h2>
+
+<p>　セキュリティグループの仕様を利用した移行方式をまとめました。なお、移行にあたって一番大変な作業は通信要件の精査です。俺「このポリシー何？いるの？いらないの？」サーバ担当「昔のことは知らん」みたいなやり取りを繰り返すのはこりごりです。</p>
+
+    </article>
+    
+ <aside><div id="disqus_thread"></div></aside> 
+
+<script type="text/javascript">
+     
+    var disqus_shortname = 'aimlessjpblog';
+
+     
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+  </main>
+
+
+  
+  <footer role="contentinfo">
+    <div style="text-align:center;">
+      
+      Written by kongou_ae
+    </div>
+  </footer>
+
+
+</div>
+
+<script src="/js/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+</body>
+</html>
+

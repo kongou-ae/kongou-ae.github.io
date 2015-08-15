@@ -1,0 +1,143 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+
+  
+  <meta charset="UTF-8">
+  <title>
+    送信元アドレス検証について調べた | Aimless
+  </title>
+
+
+  
+  <meta name="viewport" content="width=device-width,user-scalable=no,maximum-scale=1,initial-scale=1">
+
+
+  
+  <link rel="stylesheet" href="/css/sanitize.css">
+  <link rel="stylesheet" href="/css/responsive.css">
+  <link rel="stylesheet" href="/css/highlight_monokai.css">
+  <link rel="stylesheet/less" href="/css/theme.less">
+  <link rel="stylesheet" href="/css/custom.css">
+
+
+  
+  <script src="/js/less.js" type="text/javascript"></script>
+
+
+</head>
+
+
+
+<body>
+<div class="container">
+
+  
+  <header role="banner">
+    <div class="row gutters">
+      <div id="site-title" class="col span_6">
+        <h1><a href="/">Aimless</a></h1>
+        <h2>Powered by aimless emotion</h2>
+      </div>
+      <div id="social" class="col span_6">
+        <ul>
+          <li><a href="https://twitter.com/kongou_ae" target="_blank">Twitter</a></li>
+          
+          <li><a href="https://github.com/kongou-ae" target="_blank">GitHub</a></li>
+        </ul>
+      </div>
+    </div>
+  </header>
+
+
+  
+  <main id="single" role="main">
+    <div class="article-header">
+      <h1>送信元アドレス検証について調べた</h1>
+      <div class="meta">
+        May 4, 2014 &nbsp;
+        
+          #<a href="/categories/network">network</a>&nbsp;
+        
+      </div>
+    </div>
+    <article>
+      
+
+<p>上司と同僚に送信元アドレス検証の必要性を説明するための下調べです。</p>
+
+<h2 id="送信元アドレス検証とは:b2c768efbc01dc147b6982f01549d6ef">送信元アドレス検証とは</h2>
+
+<p>　非トランジットASな弊社においては、インターネット接続サービスを利用している顧客から転送されるパケットが、適切なものかを検証すること。</p>
+
+<p>　適切なパケットとは、弊社が顧客に割り当てたグローバルIPアドレスが送信元IPアドレスになっているパケットである。これに該当しない不適切なパケットは、DoS攻撃を意図するものや顧客インフラの設定不備によるものであり、他ASに転送してはならない。</p>
+
+<p>　送信元アドレス検証を実施することで、自ASがDoS攻撃の加害者となるリスクを大幅に軽減することができる。<a href="http://www.ipa.go.jp/security/rfc/RFC2827JA.html">RFC2827</a>に「are urged to」「should」って書かれているんだから今すぐやれ。</p>
+
+<blockquote>
+<p>All providers of Internet connectivity are urged to implement filtering described in this document to prohibit attackers from using forged source addresses which do not reside within a range of legitimately advertised prefixes.</p>
+
+<p>Corporate network administrators should implement filtering to ensure their corporate networks are not the source of such problems.</p>
+</blockquote>
+
+<p>　技術的な実装方法としては、アクセスリストとuRPF（unicast reverse path forwarding）がある。運用性を考えると、顧客収容インターフェースにおけるコンフィグが「ip verify unicast source reachable-via rx」の一行ですむuRPFでの実装が望ましい。アクセスリスト方式の場合、顧客収容インターフェースにかけるアクセスリストを大量に設定しなければならない。</p>
+
+<p>　ただし、別の用途（e.g. 帯域制御）で顧客に割り当てたグローバルIPアドレスのACLを定義済みなのであり、送信元アドレス検証に流用可能であれば、そのACLを顧客収容インターフェースにin方向でかけてしまえばいいので、運用性での差異はない。</p>
+
+<h2 id="関連するrfc:b2c768efbc01dc147b6982f01549d6ef">関連するRFC</h2>
+
+<ul>
+<li>RFC2827（BCP38）</li>
+<li>RFC3704（BCP84）</li>
+</ul>
+
+<h2 id="実施を表明しているisp:b2c768efbc01dc147b6982f01549d6ef">実施を表明しているISP</h2>
+
+<ul>
+<li><a href="http://japan.cnet.com/news/sec/20098110/">IIJ（2006/03/08～）</a></li>
+<li><a href="http://www.ocn.ne.jp/business/bocn/gijyutsu/urpf.html">OCN（2006/04/05～）</a></li>
+<li><a href="http://www.fttx.co.jp/information/2007/detail/070205.html">アルテリア（旧UCOM）　2007/02/05～</a></li>
+<li><a href="http://biz.freebit.com/support/manuals/sav/index.html">フリービット（2007/08/28～）</a></li>
+<li><a href="http://dream.jp/support/techinfo/security/sav.html">DYI（2007/08/28～）</a></li>
+</ul>
+
+    </article>
+    
+ <aside><div id="disqus_thread"></div></aside> 
+
+<script type="text/javascript">
+     
+    var disqus_shortname = 'aimlessjpblog';
+
+     
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+  </main>
+
+
+  
+  <footer role="contentinfo">
+    <div style="text-align:center;">
+      
+      Written by kongou_ae
+    </div>
+  </footer>
+
+
+</div>
+
+<script src="/js/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+</body>
+</html>
+

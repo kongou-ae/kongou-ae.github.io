@@ -1,0 +1,148 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+
+  
+  <meta charset="UTF-8">
+  <title>
+    自宅でVMware ESXi | Aimless
+  </title>
+
+
+  
+  <meta name="viewport" content="width=device-width,user-scalable=no,maximum-scale=1,initial-scale=1">
+
+
+  
+  <link rel="stylesheet" href="/css/sanitize.css">
+  <link rel="stylesheet" href="/css/responsive.css">
+  <link rel="stylesheet" href="/css/highlight_monokai.css">
+  <link rel="stylesheet/less" href="/css/theme.less">
+  <link rel="stylesheet" href="/css/custom.css">
+
+
+  
+  <script src="/js/less.js" type="text/javascript"></script>
+
+
+</head>
+
+
+
+<body>
+<div class="container">
+
+  
+  <header role="banner">
+    <div class="row gutters">
+      <div id="site-title" class="col span_6">
+        <h1><a href="/">Aimless</a></h1>
+        <h2>Powered by aimless emotion</h2>
+      </div>
+      <div id="social" class="col span_6">
+        <ul>
+          <li><a href="https://twitter.com/kongou_ae" target="_blank">Twitter</a></li>
+          
+          <li><a href="https://github.com/kongou-ae" target="_blank">GitHub</a></li>
+        </ul>
+      </div>
+    </div>
+  </header>
+
+
+  
+  <main id="single" role="main">
+    <div class="article-header">
+      <h1>自宅でVMware ESXi</h1>
+      <div class="meta">
+        Aug 11, 2011 &nbsp;
+        
+          #<a href="/categories/network">network</a>&nbsp;
+        
+      </div>
+    </div>
+    <article>
+      
+
+<p>自宅にある機材を利用して、VMware ESXiな仮想環境を作成しました。仕事でやる機会がない以上、自宅でやるしかない！という趣旨です。ありあわせの機器だけで環境が作れたことに感動しました。完成した構成は下記の通り。</p>
+
+<p><img src="http://aimless.jp/images/homeESXi.png" alt="ESXi" />
+</p>
+
+<p><img src="http://aimless.jp/images/ESXisummary.png" alt="sum" />
+</p>
+
+<h3 id="esxi用pc:e1088b34c0d0853ab232cfe61127d2aa">ESXi用PC</h3>
+
+<p>　嫁と共用の<a href="http://dynabook.com/pc/catalog/dynabook/090702tx/index_j.htm" title="Dynabook TX/66JSBL" target="_blank">Dynabook TX/66J2BL</a>をUSBブートさせました。搭載しているNICはRealtekでしたが、oem.tgzを変更したら見事に起動しました。嫁共用PCをつぶすわけにはいかないので、USBブート出来るのは本当にありがたい。</p>
+
+<h3 id="nfs用pc:e1088b34c0d0853ab232cfe61127d2aa">NFS用PC</h3>
+
+<p>　Dynabookを買うまで使っていた<a href="http://pc-support.jp.onkyo.com/upfile/HARDWARE/SPECSHEET/A4170CB-L5J_SPEC.htm" title="PC STATION A4170CB" target="_blank">PC STATION A4170CB</a>に頑張ってもらいました。もともと入っていたWindowsXPにCygwinを入れて試してみたがうまくいかなかったので、DドライブにCentOSを入れてNFSを構築したら見事にマウントできました。古い機種＋Dドライブのみなので、ストレージ領域は奇跡の27Gbyteです。。。</p>
+
+<h3 id="vsphere-client用pc:e1088b34c0d0853ab232cfe61127d2aa">vSphere Client用PC</h3>
+
+<p>　勉強会用としてヤフオクで落札した<a href="http://www.asus.co.jp/Eee/Eee_PC/Eee_PC_1000HE/" title="EeePC 1000HE" target="_blank">EeePC 1000HE</a>を利用しました。</p>
+
+<h3 id="スイッチ:e1088b34c0d0853ab232cfe61127d2aa">スイッチ</h3>
+
+<p>　ネットワークエンジニアとしてはあるまじき事なのかもしれませんが、我が家には純粋なスイッチが存在しません。スイッチとして動く装置は、PLANEXの無線ルータ<a href="http://www.planex.co.jp/product/router/mzk-wnh/" title="MZK-WHN" target="_blank">MZK-WHN</a>とFortigate60しかないので、MZK-WHNに頑張ってもらいました。</p>
+
+<h3 id="動作確認:e1088b34c0d0853ab232cfe61127d2aa">動作確認</h3>
+
+<p>　ESXi上に仮想Altorを起動させて、ｖSphireClient用端末からWebGUIにアクセスしたところ、問題なくアクセス可能でした。こんなしょうもない環境でもしっかり動いているみたいですね。VMwareすごい。</p>
+
+<h3 id="今後やりたいこと:e1088b34c0d0853ab232cfe61127d2aa">今後やりたいこと</h3>
+
+<p>　今後は、無料or評価版で出来る範囲で下記にも挑戦したいのですが、機材を買うのが難しい（嫁的な意味で）ので断念しています。。。やるとなると、Gigaな端末×2とGigaなスイッチが必要でしょうか。</p>
+
+<p>・TagVLANをしゃべってみる</p>
+
+<p>・別のホストを作ってみる</p>
+
+<p>・2台のホストをクラスタリングしてみる</p>
+
+<p>・自宅でｖMotionしてみる</p>
+
+<p>・ストレージ容量を増やす＆iSCSIにしてみる</p>
+
+    </article>
+    
+ <aside><div id="disqus_thread"></div></aside> 
+
+<script type="text/javascript">
+     
+    var disqus_shortname = 'aimlessjpblog';
+
+     
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+  </main>
+
+
+  
+  <footer role="contentinfo">
+    <div style="text-align:center;">
+      
+      Written by kongou_ae
+    </div>
+  </footer>
+
+
+</div>
+
+<script src="/js/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+</body>
+</html>
+

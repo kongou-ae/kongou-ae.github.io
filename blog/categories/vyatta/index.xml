@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Vyatta on Aimless</title>
+    <link>http://aimless.jp/categories/vyatta/</link>
+    <description>Recent content in Vyatta on Aimless</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ja</language>
+    <lastBuildDate>Tue, 05 Jul 2011 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://aimless.jp/categories/vyatta/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Vyattaで経路制御②(local preferenceで経路選択)</title>
+      <link>http://aimless.jp/blog/archives/236</link>
+      <pubDate>Tue, 05 Jul 2011 00:00:00 +0000</pubDate>
+      
+      <guid>http://aimless.jp/blog/archives/236</guid>
+      <description>
+
+&lt;p&gt;「いずれIHANetにもIHANet内のフルルートを提供するトランジットが出るはずだ！」という事で、トランジットから広告された経路ではなく、Peerから直接広告してもらっている経路を優先する設定を事前にしておきたいと思います。&lt;/p&gt;
+
+&lt;p&gt;インターネットの経済学みたいな話になりますが、トランジットはフルルートを貰えるだけあって利用料金が高い。そこで下図の様に、InternetExchange経由で別ASと直接Peeringを行い、経路情報をやりとりします。そして、トランジットとPeerから同じ経路を受け取った場合に、Peerの経路を優先する様に設定します。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://aimless.jp/images/bgp.png&#34; alt=&#34;bgp&#34; /&gt;
+&lt;/p&gt;
+
+&lt;p&gt;InternetExchange経由でトラフィックをやりとりするのにも当然費用がかかりますが、大概トランジットを利用するよりも安くなります。こうする事でデータセンタの通信コストを下げます。データセンタ事業者からすれば、大量の通信が発生するコンテンツプロバイダとは、是非IX経由でpeeringしたいところです。&lt;/p&gt;
+
+&lt;h3 id=&#34;作業前の経路情報:79e487abc6c7162c445d8f19e1134e09&#34;&gt;作業前の経路情報&lt;/h3&gt;
+
+&lt;p&gt;設定前にpeerから受け取った経路2001:**:**:2a20::/64のLocPrfは空欄です。IPv6だと表示が崩れてしまうのが残念。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ show ipv6 bgp
+BGP table version is 0, local router ID is 49.212.54.72
+Status codes: s suppressed, d damped, h history, * valid, &amp;gt; best, i - internal,
+              r RIB-failure, S Stale, R Removed
+Origin codes: i - IGP, e - EGP, ? - incomplete
+
+   Network          Next Hop            Metric LocPrf Weight Path
+*&amp;gt; 2001:**:**:2a20::/64
+                    2001:**:**:fc::6
+                                                           0 645** 645** 645** ?
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;local-preference値を付与するroute-mapを作成する:79e487abc6c7162c445d8f19e1134e09&#34;&gt;local preference値を付与するroute-mapを作成する&lt;/h3&gt;
+
+&lt;p&gt;Peerからの経路は全てLocal preference値を付与するので、matchによるprefixの指定は行いません。LPというroute-mapを作成し、local-preference値400を付与します。line5-6の部分です。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;route-map LP {
+     description set-Local-Preference
+     rule 100 {
+         action permit
+         set {
+             local-preference 400
+         }
+     }
+ }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;route-mapをpeerと関連付ける:79e487abc6c7162c445d8f19e1134e09&#34;&gt;route-mapをpeerと関連付ける&lt;/h3&gt;
+
+&lt;p&gt;peerとの関連付けは、その①で作成したpeer-groupで行います。peer-group IHAnet に先程作成したroute-mapを関連付けます。line19-20の部分です。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;protocols {
+    bgp 64585 {
+        address-family {
+            ipv6-unicast {
+                network 2001:e41:31d4:3648::/64 {
+                }
+            }
+        }
+        peer-group IHAnet {
+            address-family {
+                ipv6-unicast {
+                    filter-list {
+                        import peer-path
+                    }
+                    prefix-list {
+                        export this-network
+                        import Special-Use-prefix
+                    }
+                    route-map {
+                        import LP
+                    }
+                    soft-reconfiguration {
+                        inbound
+                    }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;設定後の確認:79e487abc6c7162c445d8f19e1134e09&#34;&gt;設定後の確認&lt;/h3&gt;
+
+&lt;p&gt;peerから受け取った経路2001:**:**:2a20::/64のLocPrfに400が付与されています。この状態でトランジットから同じ経路を広告されたとしても、トランジット側のLocal Preference値は何もしていない＝デフォルトの100なので、Peer側の経路がベストパスとして選択されます。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# show ipv6 bgp
+BGP table version is 0, local router ID is 49.212.54.72
+Status codes: s suppressed, d damped, h history, * valid, &amp;gt; best, i - internal,
+              r RIB-failure, S Stale, R Removed
+Origin codes: i - IGP, e - EGP, ? - incomplete
+
+   Network          Next Hop            Metric LocPrf Weight Path
+*&amp;gt; 2001:**:**:2a20::/64
+                    2001:**:**:fc::6
+                                                  400      0 645** 645** 645** ?
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Vyattaで経路制御①(Prefix-listで経路フィルタ)</title>
+      <link>http://aimless.jp/blog/archives/163</link>
+      <pubDate>Mon, 04 Jul 2011 00:00:00 +0000</pubDate>
+      
+      <guid>http://aimless.jp/blog/archives/163</guid>
+      <description>
+
+&lt;p&gt;IHAnet関連で、Vyattaの経路制御を試しているので少しずつメモ書きします。多分あってるんじゃないかなー。BGPでの経路制御は一つの目的でも色々なやり方があるので、これが正しいとは限りません。&lt;/p&gt;
+
+&lt;h3 id=&#34;フィルタしたい経路用のprefix-listを作成する-p:703902c26acee1f3cd67c342d0b615b5&#34;&gt;フィルタしたい経路用のPrefix-listを作成する&lt;/p&gt;&lt;/h3&gt;
+
+&lt;p&gt;PeerとのBGPがestablishになると、ルーティングテーブル上にPeerが広告した経路が載ってきます。なんでも載せられてしまうと自身のルーティングテーブルがおかしくなってしまうので、広告されるはずのない経路は受け取らないようにします。&lt;/p&gt;
+
+&lt;p&gt;まずは、受け取りたくない経路をdenyする為のprefix-listを作成し、ルール番号をずらしながら登録していきます。Prefix-listは暗黙のDenyが存在するので、Rule999のようにpermitしたい物を明示します。Ciscoと比べると縦長で一覧性が悪いです。。。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;policy{
+    prefix-list6 Special-Use-prefix {
+        rule 10 {
+            action deny
+            prefix ::/0
+        }
+        rule 20 {
+            action deny
+            le 128
+            prefix ::/8
+        }
+        rule 30 {
+            action deny
+            le 128
+            prefix fe80::/10
+        }
+        rule 40 {
+            action deny
+            le 128
+            prefix fec0::/10
+        }
+        rule 50 {
+            action deny
+            le 128
+            prefix fc00::/7
+        }
+        rule 60 {
+            action deny
+            prefix ff00::/8
+        }
+        rule 70 {
+            action deny
+            prefix 2001:db8::/32
+        }
+        rule 80 {
+            action deny
+            le 128
+            prefix 2001:e41:31d4:3648::/64
+        }
+        rule 999 {
+            action permit
+            le 128
+            prefix ::/0
+        }
+    }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Rule10：デフォルトルート&lt;/li&gt;
+&lt;li&gt;Rule20：ループバック、未指定、予約等を一括指定&lt;/li&gt;
+&lt;li&gt;Rule30：リンクローカル&lt;/li&gt;
+&lt;li&gt;Rule40：元サイトローカル&lt;/li&gt;
+&lt;li&gt;Rule50：ユニークローカル&lt;/li&gt;
+&lt;li&gt;Rule60：マルチキャスト&lt;/li&gt;
+&lt;li&gt;Rule70：文章用空間&lt;/li&gt;
+&lt;li&gt;Rule80：自ASが広告している経路&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Rule999：上記Ruleにmatchしなかった経路&lt;/p&gt;
+
+&lt;h3 id=&#34;作成したprefix-listをpeerに関連付ける:703902c26acee1f3cd67c342d0b615b5&#34;&gt;作成したprefix-listをPeerに関連付ける&lt;/h3&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;下記の様に各Peerごとにprefix-listを関連付けてもいいのですが、Peerが増えるたびに同じ設定しなければなりません。今はinのprefix-listだけなので簡単ですが、一つのpeerに対して、outのprefix-listやas-path-list、route-mapなど様々な経路制御を設定するようになると、設定作業が煩雑になります。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;bgp 64585 {
+     address-family {
+         ipv6-unicast {
+             network 2001:e41:31d4:3648::/64 {
+             }
+         }
+     }
+     neighbor 2001:**:**:**::6 {
+         address-family {
+             ipv6-unicast {
+                 prefix-list {
+                      import Special-Use-prefix
+                  }
+             }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;これは運用的にイマイチなので、peer-groupの設定を利用します。peer-groupを利用すると、フィルタが設定されたpeer-groupにpeerを追加だけで、そのpeerに全経路フィルタが適応されるようになります。下記の例は、IHAnetというpeer-groupを作り、先程作成した「Special-Use-prefix」を関連づけています。line25の部分です。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;protocols {
+    bgp 64585 {
+        address-family {
+            ipv6-unicast {
+                network 2001:e41:31d4:3648::/64 {
+                }
+            }
+        }
+        neighbor 2001:**:**:**::6 {
+            address-family {
+                ipv6-unicast {
+                }
+            }
+            remote-as 64***
+            update-source 2001:**:**:**::5
+        }
+        peer-group IHAnet {
+            address-family {
+                ipv6-unicast {
+                    filter-list {
+                        import peer-path
+                    }
+                    prefix-list {
+                        export this-network
+                        import Special-Use-prefix
+                    }
+                    soft-reconfiguration {
+                        inbound
+                    }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;このpeer-groupに、各Peerを追加すれば設定終了なのですが、どうもうちのVyattaでは設定出来ないらしい。下記の通り、Peerの設定項目にPeer-groupが出てこない。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# set protocols bgp 64585 neighbor 2001:**:**:**::6 address-family ipv6-unicast
+allowas-in              distribute-list         prefix-list             soft-reconfiguration
+attribute-unchanged     filter-list             remove-private-as       unsuppress-map
+capability              maximum-prefix          route-map
+default-originate       nexthop-local           route-reflector-client
+disable-send-community  nexthop-self            route-server-client
+[edit]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;下記のコマンドでpeerとpeer-groupを関連づけると、IPv4のBGPにpeer-groupの設定が反映されてしまって意味がありませんでした。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;root@v6-Gateway# set protocols bgp 64585 neighbor 2001:**:**:**::6 peer-group IHAnet
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;仕方がないので、Vyatta経由ではなくQuaggaで直接peerを追加します。Ciscoのままなので簡単です。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# vts ysh
+#configure terminal 
+(config)# router bgp 
+(config)# router bgp 64585 
+(config-router)# address-family ipv6 unicast         
+(config-router-af)# neighbor 2001:**:**:**::6 peer-group IHAnet
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;動作確認:703902c26acee1f3cd67c342d0b615b5&#34;&gt;動作確認&lt;/h3&gt;
+
+&lt;p&gt;こうする事で、IPv6でpeer-groupが利用可能になります。実際にSpecial-Use-prefixが適応されている事がline11で確認できます。試しにSpecial-Use-prefixのrule90に、peerが広告するprefixを追加してみた所、peerから経路を受け取れなくなりましたので、ちゃんと動いているようです。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ show ipv6 bgp neighbors
+BGP neighbor is 2001:**:**:**::6, remote AS 64***, local AS 64585, external link
+ Member of peer-group IHAnet for session parameters
+ （中略）
+ For address family: IPv6 Unicast
+  IHAnet peer-group member
+  Inbound soft reconfiguration allowed
+  Community attribute sent to this neighbor(both)
+  Inbound path policy configured
+  Outbound path policy configured
+  Incoming update prefix filter list is *Special-Use-prefix
+  Outgoing update prefix filter list is *this-network
+  Incoming update AS path filter list is *peer-path
+  85 accepted prefixes
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

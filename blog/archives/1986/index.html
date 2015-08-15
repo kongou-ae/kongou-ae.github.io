@@ -1,0 +1,171 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+
+  
+  <meta charset="UTF-8">
+  <title>
+    IOS XRvでEmacsを使う | Aimless
+  </title>
+
+
+  
+  <meta name="viewport" content="width=device-width,user-scalable=no,maximum-scale=1,initial-scale=1">
+
+
+  
+  <link rel="stylesheet" href="/css/sanitize.css">
+  <link rel="stylesheet" href="/css/responsive.css">
+  <link rel="stylesheet" href="/css/highlight_monokai.css">
+  <link rel="stylesheet/less" href="/css/theme.less">
+  <link rel="stylesheet" href="/css/custom.css">
+
+
+  
+  <script src="/js/less.js" type="text/javascript"></script>
+
+
+</head>
+
+
+
+<body>
+<div class="container">
+
+  
+  <header role="banner">
+    <div class="row gutters">
+      <div id="site-title" class="col span_6">
+        <h1><a href="/">Aimless</a></h1>
+        <h2>Powered by aimless emotion</h2>
+      </div>
+      <div id="social" class="col span_6">
+        <ul>
+          <li><a href="https://twitter.com/kongou_ae" target="_blank">Twitter</a></li>
+          
+          <li><a href="https://github.com/kongou-ae" target="_blank">GitHub</a></li>
+        </ul>
+      </div>
+    </div>
+  </header>
+
+
+  
+  <main id="single" role="main">
+    <div class="article-header">
+      <h1>IOS XRvでEmacsを使う</h1>
+      <div class="meta">
+        May 31, 2014 &nbsp;
+        
+          #<a href="/categories/cisco">cisco</a>&nbsp;
+        
+      </div>
+    </div>
+    <article>
+      <p>IOS XRでは、Routing Policy Language（RPL）というルーティングポリシーを定義する言語が実装されています。IOSでいう、prefix-listとas-path-list、community-list、route-mapあたりをひっくるめてRPLと呼んでいるイメージです。</p>
+
+<p>　RPLを編集する方法として、従来通りのコンフィグレーションモードだけでなく、テキストエディタが導入されています。</p>
+
+<ul>
+<li><a href="http://www.cisco.com/cisco/web/support/JP/docs/RT/ServProviderEdgeRT/ASR9000AggregationServsRT/CG/014/b_routing_cg42asr9k_chapter_0111.html">Cisco ASR 9000 シリーズ ルータへのルーティング ポリシーの実装</a></li>
+<li><a href="http://www.cisco.com/c/en/us/td/docs/routers/xr12000/software/xr12k_r4-0/routing/configuration/guide/rc40xr12k_chapter7.html">Implementing Routing Policy on Cisco IOS XR Software</a></li>
+</ul>
+
+<p>　prefix-set ALL-DENY　が設定されています。</p>
+
+<pre><code>RP/0/0/CPU0:aimless-XRv#show running-config prefix-set ALL-DENY 
+Sat May 31 13:26:01.932 UTC
+prefix-set ALL-DENY
+  192.168.5.0/24,
+  192.168.3.0/24,
+  192.168.1.0/24,
+  192.168.2.0/24
+end-set
+!
+</code></pre>
+
+<p>　editコマンドで設定項目を編集できます。</p>
+
+<pre><code>RP/0/0/CPU0:aimless-XRv#
+RP/0/0/CPU0:aimless-XRv#edit ?
+  as-path-set       edit an as-path-set
+  community-set     edit a community-set
+  extcommunity-set  edit an extended-community-set
+  policy-global     edit policy-global definitions
+  prefix-set        edit a prefix-set
+  rd-set            edit a rd-set
+  route-policy      edit a route-policy
+  tag-set           edit a tag-set
+</code></pre>
+
+<p>　複数のテキストエディタを選択できます。今回はEmacsにします。私の環境ではnanoとvimが正常に動作しませんでした。inlineはまた次回。</p>
+
+<pre><code>RP/0/0/CPU0:aimless-XRv#edit prefix-set ALL-DEN ?               
+  emacs   to use Emacs editor
+  inline  to use command line
+  nano    to use nano editor
+  vim     to use Vim editor
+  &lt;cr&gt;    
+</code></pre>
+
+<p>　ちゃんとEmacsが起動します。私はvim派なので使いませんけど。</p>
+
+<pre><code>RP/0/0/CPU0:aimless-XRv#edit prefix-set ALL-DENY emacs 
+
+F10 key ==&gt; File   Edit   Search   Buffers   Windows   Help                                        
+prefix-set A+------------------------+
+  192.168.5.| Open               ^X^F|
+  192.168.3.| Close                  |
+  192.168.1.| Save               ^X^S|
+  192.168.2.| Save As            ^X^W|
+end-set     | Save Buffers       ^XS |
+!           | Insert File        ^XI |
+            | ---------------------- |
+            | Cancel Operation   ^G  |
+            | Exit               ^X^C|
+            +------------------------+
+
+
+-------+(Jed 0.99.18) Emacs: rpl_edit.7352589    (Text)  1/8   1:23pm------------------------------
+</code></pre>
+
+    </article>
+    
+ <aside><div id="disqus_thread"></div></aside> 
+
+<script type="text/javascript">
+     
+    var disqus_shortname = 'aimlessjpblog';
+
+     
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+  </main>
+
+
+  
+  <footer role="contentinfo">
+    <div style="text-align:center;">
+      
+      Written by kongou_ae
+    </div>
+  </footer>
+
+
+</div>
+
+<script src="/js/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+</body>
+</html>
+

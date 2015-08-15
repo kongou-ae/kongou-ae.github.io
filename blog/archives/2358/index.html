@@ -1,0 +1,316 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+
+  
+  <meta charset="UTF-8">
+  <title>
+    AWSにFortiGateをデプロイしてみた（NATとFWポリシー編） | Aimless
+  </title>
+
+
+  
+  <meta name="viewport" content="width=device-width,user-scalable=no,maximum-scale=1,initial-scale=1">
+
+
+  
+  <link rel="stylesheet" href="/css/sanitize.css">
+  <link rel="stylesheet" href="/css/responsive.css">
+  <link rel="stylesheet" href="/css/highlight_monokai.css">
+  <link rel="stylesheet/less" href="/css/theme.less">
+  <link rel="stylesheet" href="/css/custom.css">
+
+
+  
+  <script src="/js/less.js" type="text/javascript"></script>
+
+
+</head>
+
+
+
+<body>
+<div class="container">
+
+  
+  <header role="banner">
+    <div class="row gutters">
+      <div id="site-title" class="col span_6">
+        <h1><a href="/">Aimless</a></h1>
+        <h2>Powered by aimless emotion</h2>
+      </div>
+      <div id="social" class="col span_6">
+        <ul>
+          <li><a href="https://twitter.com/kongou_ae" target="_blank">Twitter</a></li>
+          
+          <li><a href="https://github.com/kongou-ae" target="_blank">GitHub</a></li>
+        </ul>
+      </div>
+    </div>
+  </header>
+
+
+  
+  <main id="single" role="main">
+    <div class="article-header">
+      <h1>AWSにFortiGateをデプロイしてみた（NATとFWポリシー編）</h1>
+      <div class="meta">
+        Jan 24, 2015 &nbsp;
+        
+          #<a href="/categories/aws">AWS</a>&nbsp;
+        
+          #<a href="/categories/fortigate">Fortigate</a>&nbsp;
+        
+      </div>
+    </div>
+    <article>
+      
+
+<p><a href="http://aimless.jp/blog/blog/archives/2317">AWSにFortiGateをデプロイしてみた（ネットワーク設定編）</a>の続きです。AWS上に設置したFortiGateでNATとFWポリシーを試します。</p>
+
+<h2 id="vpc環境:ec17bdc7c38ff198df2edaa2953430eb">VPC環境</h2>
+
+<p><strong>FortiGate-VM</strong></p>
+
+<table>
+<thead>
+<tr>
+<th>項目</th>
+<th>ID</th>
+<th>プライベートIP</th>
+<th>EIP</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>ENI(Exernal)</td>
+<td>eni-921a6ecb</td>
+<td>10&#46;175.1.195</td>
+<td>54&#46;65.151.103</td>
+</tr>
+
+<tr>
+<td>ENI(internal)</td>
+<td>eni-6304703a</td>
+<td>10&#46;175.2.195</td>
+<td>&#8211;</td>
+</tr>
+</tbody>
+</table>
+
+<p><strong>CIDR</strong></p>
+
+<table>
+<thead>
+<tr>
+<th>項目</th>
+<th>値</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>VPC CIDR</td>
+<td>10&#46;175.0.0/16</td>
+</tr>
+
+<tr>
+<td>external_subnet</td>
+<td>10&#46;175.1.0/24</td>
+</tr>
+
+<tr>
+<td>internal_subnet</td>
+<td>10&#46;175.2.0/24</td>
+</tr>
+</tbody>
+</table>
+
+<p><strong>external_subnetのroute-table</strong></p>
+
+<table>
+<thead>
+<tr>
+<th>Destination</th>
+<th>Target</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>10&#46;175.0.0/16</td>
+<td>local</td>
+</tr>
+
+<tr>
+<td>0&#46;0.0.0</td>
+<td>IGW</td>
+</tr>
+</tbody>
+</table>
+
+<p><strong>internal_subnetのroute-table</strong></p>
+
+<table>
+<thead>
+<tr>
+<th>Destination</th>
+<th>Target</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>10&#46;175.0.0/16</td>
+<td>local</td>
+</tr>
+
+<tr>
+<td>0&#46;0.0.0/0</td>
+<td>eni-6304703a</td>
+</tr>
+</tbody>
+</table>
+
+<p>　internal_subnetに配置されたインスタンスとインターネットとの通信が、FortiGate-VMを経由するよう、デフォルトルートをFortiGate-VMのinternal側ENIに向けます。</p>
+
+<p><strong>動作確認用インスタンス</strong></p>
+
+<p>　internal_subnetにAmazon_linuxを設置します。IPアドレスは10.175.2.152です。</p>
+
+<h2 id="事前準備:ec17bdc7c38ff198df2edaa2953430eb">事前準備</h2>
+
+<p>　FortiGate-VMの2つのENIで「Source/dest. check」をfalseにします。なお、インスタンスを右クリックしてSource/dest. checkをfalseにしても、2本目のENIはenableのままでした。Source/dest. checkは、インスタンスではなくENIに対して実施しましょう。</p>
+
+<h2 id="ポートフォワード:ec17bdc7c38ff198df2edaa2953430eb">ポートフォワード</h2>
+
+<p>　まずはポートフォワードからです。internalに設置されているEC2:10.175.2.152のSSHを、EIP:54.65.151.103の11022で外部公開します。</p>
+
+<p>　クライアントとサーバだけに注目した通信要件は、「54.65.151.103の11022」を「10.175.2.152の22」にポートフォワードするになりますので、以下の様に設定したのですが、通信できずドツボにはまりました。</p>
+
+<p><img src="http://aimless.jp/blog/wp-content/uploads/2015/01/aws-fg-1.png" alt="enter image description here" />
+</p>
+
+<p>　正しい通信要件は、「EIP:54.65.151.103の11022」をAWSが変換した「10.175.1.195の11022」を、ForiGateが「10.175.2.152の22」にポートフォワードするになりますので、以下の様に設定する必要があります。</p>
+
+<p><img src="http://aimless.jp/blog/wp-content/uploads/2015/01/aws-fg-2.png" alt="enter image description here" />
+</p>
+
+<h2 id="スタティックnat:ec17bdc7c38ff198df2edaa2953430eb">スタティックNAT</h2>
+
+<p>　次はスタティックNATです。FortiGate-VMとは異なるグローバルIPアドレスでEC2を外部公開します。</p>
+
+<p>　external側のENIに10.175.1.0/24のIPアドレス（10.175.1.194）を追加します。そしてEIPをもう一つ取得し、10.175.1.194に割り当てます。</p>
+
+<p><img src="http://aimless.jp/blog/wp-content/uploads/2015/01/aws-fg-3.png" alt="enter image description here" />
+</p>
+
+<p>これにより、FortiGate-VMのパラメータは以下になります。</p>
+
+<p><strong>FortiGate-VM</strong></p>
+
+<table>
+<thead>
+<tr>
+<th>項目</th>
+<th>ID</th>
+<th>プライベートIP</th>
+<th>EIP</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>ENI(Exernal)</td>
+<td>eni-921a6ecb</td>
+<td>10&#46;175.1.195</td>
+<td>54&#46;65.151.103</td>
+</tr>
+
+<tr>
+<td>ENI(Exernal)</td>
+<td>eni-921a6ecb</td>
+<td>10&#46;175.1.194</td>
+<td>54&#46;64.192.17</td>
+</tr>
+
+<tr>
+<td>ENI(internal)</td>
+<td>eni-6304703a</td>
+<td>10&#46;175.2.195</td>
+<td>&#8211;</td>
+</tr>
+</tbody>
+</table>
+
+<p>　そして、新規取得した54.64.192.17を割り当てた10.175.1.194を利用して、バーチャルIPアドレスを作成します。</p>
+
+<p><img src="http://aimless.jp/blog/wp-content/uploads/2015/01/aws-fg-2.png" alt="enter image description here" />
+</p>
+
+<h2 id="ポリシー:ec17bdc7c38ff198df2edaa2953430eb">ポリシー</h2>
+
+<p>　ネットワークやNATの設定はAWSの仕様を意識する必要がありますが、ポリシーの設定はFortiGate-VM単体の設定ですので、普通のFortiGateと同じです。</p>
+
+<p><strong>サンプル</strong>　 　<img src="http://aimless.jp/blog/wp-content/uploads/2015/01/aws-fg-4.png" alt="enter image description here" />
+</p>
+
+<p>このように設定すると、以下の動作になります。</p>
+
+<ul>
+<li>外部から54.64.192.17へのすべての通信が、AWSによって10.175.1.194にNATされ、さらにFortiGate-VMでNATされてEC2：10.175.2.152に到達する</li>
+<li>EC2：10.175.2.152から外部へのアクセスは、FortiGateによって10.175.1.194でNATされ、さらにAWSによって54.64.192.17にNATされて外部に到達する。</li>
+<li>internal_subnetから外部へのアクセスは、FortiGateによって10.175.1.195でNATされ、さらにAWSによって54.65.151.103にNATされて外部に到達する。</li>
+<li>それ以外の通信はすべて拒否する。</li>
+</ul>
+
+<h2 id="ipアドレスの制限:ec17bdc7c38ff198df2edaa2953430eb">IPアドレスの制限</h2>
+
+<p>　バーチャルIP用のアドレスを確保するためには、ENIにIPアドレスを追加割り当てする必要があります。ただし、ENIに割り当てられるIPアドレスはインスタンスタイプによって上限があります。（<a href="http://docs.aws.amazon.com/ja_jp/AWSEC2/latest/UserGuide/using-eni.html#AvailableIpPerENI">参考：インスタンスタイプあたりの ENI ごとのプライベート IP アドレス</a>）</p>
+
+<p>　今回利用しているt3.mediumは最大6個になります。EIPはENIのプライベートアドレスに割り当てる必要がありますので、取得できるEIPの数も最大6個になってしまいます。つまり、このt3.mediumのFortiGate-VMを利用すると、最大6個のIPアドレスしか外部公開できなくなります&#8230;インスタンスタイプを上げても最大30個です。これは微妙&#8230;</p>
+
+<p><img src="http://aimless.jp/blog/wp-content/uploads/2015/01/aws-fg-5.png" alt="enter image description here" />
+</p>
+
+    </article>
+    
+ <aside><div id="disqus_thread"></div></aside> 
+
+<script type="text/javascript">
+     
+    var disqus_shortname = 'aimlessjpblog';
+
+     
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+  </main>
+
+
+  
+  <footer role="contentinfo">
+    <div style="text-align:center;">
+      
+      Written by kongou_ae
+    </div>
+  </footer>
+
+
+</div>
+
+<script src="/js/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+</body>
+</html>
+

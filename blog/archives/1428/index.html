@@ -1,0 +1,138 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+
+  
+  <meta charset="UTF-8">
+  <title>
+    Gehirn DNSを試してみた。 | Aimless
+  </title>
+
+
+  
+  <meta name="viewport" content="width=device-width,user-scalable=no,maximum-scale=1,initial-scale=1">
+
+
+  
+  <link rel="stylesheet" href="/css/sanitize.css">
+  <link rel="stylesheet" href="/css/responsive.css">
+  <link rel="stylesheet" href="/css/highlight_monokai.css">
+  <link rel="stylesheet/less" href="/css/theme.less">
+  <link rel="stylesheet" href="/css/custom.css">
+
+
+  
+  <script src="/js/less.js" type="text/javascript"></script>
+
+
+</head>
+
+
+
+<body>
+<div class="container">
+
+  
+  <header role="banner">
+    <div class="row gutters">
+      <div id="site-title" class="col span_6">
+        <h1><a href="/">Aimless</a></h1>
+        <h2>Powered by aimless emotion</h2>
+      </div>
+      <div id="social" class="col span_6">
+        <ul>
+          <li><a href="https://twitter.com/kongou_ae" target="_blank">Twitter</a></li>
+          
+          <li><a href="https://github.com/kongou-ae" target="_blank">GitHub</a></li>
+        </ul>
+      </div>
+    </div>
+  </header>
+
+
+  
+  <main id="single" role="main">
+    <div class="article-header">
+      <h1>Gehirn DNSを試してみた。</h1>
+      <div class="meta">
+        Nov 12, 2012 &nbsp;
+        
+          #<a href="/categories/dns">DNS</a>&nbsp;
+        
+      </div>
+    </div>
+    <article>
+      
+
+<p>TLでGehirnDNSなるサービスが流れて来たので早速試してみました。なぜ試そうかと思ったかというと、名前が中二病心をくすぐったからです。</p>
+
+<h3 id="ドメイン所有権の確認:c7ba77dd01a5da1e7cd6427b246d95d1">ドメイン所有権の確認</h3>
+
+<p><img src="http://aimless.jp/images/gehirn1.png" alt="dns-verification" />
+</p>
+
+<p>　アカウントを取得してドメインを登録しようとすると、所有権の確認が行われます。ちょっと前に色々ありましたからね。「新規であればレジストラのDNSにGehirn DNSと検証用のコードを登録してから来い。所有者なら出来るだろ！」「移転なら、ドメインのTXTレコードに検証用のコードを示せ。所有者なら出来るだろ！」って事だと思います。とりあえず移転扱いと言う事で、自ドメインのTXTに検証用コードを追加しました。</p>
+
+<h3 id="登録画面:c7ba77dd01a5da1e7cd6427b246d95d1">登録画面</h3>
+
+<p><img src="http://aimless.jp/images/gehirn2.png" alt="gehirn-console" />
+</p>
+
+<p>　GUIでぽちぽちする形で登録できます。登録出来る内容は、NS、A、AAAA、MX、CNAME、TXT、SRVです。ただし、GehirnDNSのDNSサーバがIPv4にしか対応していないので、AAAAは実質無駄かなと思います。また、RRSIGとDNSKEYに対応していないのでDNSSECは未対応です。なお、ゾーン転送に関する設定画面が存在しないため、セカンダリとしての使い方は出来ないと思います。</p>
+
+<h3 id="api利用:c7ba77dd01a5da1e7cd6427b246d95d1">API利用</h3>
+
+<p>　ARIを利用する事で、DNSを操作する事が出来ます。ここらへん疎いので試せていません。。。<a href="http://support.gehirn.jp/manual/dns/api" title="Gehirn DNS APIリファレンス" target="_blank">Gehirn DNS APIリファレンス</a></p>
+
+<h3 id="インポート-エクスポート:c7ba77dd01a5da1e7cd6427b246d95d1">インポート/エクスポート</h3>
+
+<p>　Bindのゾーンファイル形式でのインポート/エクスポートが出来ます。現在の設定をバックアップする意味でエクスポートが便利かなと思います。また、大量に追加したいけどGUIだとめんどくさい時に、インポートを使うこともできますね。</p>
+
+<h3 id="サブドメインをgehirndnsで管理する:c7ba77dd01a5da1e7cd6427b246d95d1">サブドメインをGehirnDNSで管理する</h3>
+
+<p>　GehirnDNSで管理しているドメインのサブドメインを、GehirnDNSへ権限委譲する事はできません。aimless.jpを登録している状態で、gehirn.aimless.jpを登録しようとした際に、「409: Conflict: すでにドメインが存在しています」というメッセージが出て拒否されました。</p>
+
+<h3 id="勝手なまとめ:c7ba77dd01a5da1e7cd6427b246d95d1">勝手なまとめ</h3>
+
+<p>　APIでアクセスできるDNSって珍しいような気がします。そういった利用をしたい方にはお勧めかもしれません。</p>
+
+    </article>
+    
+ <aside><div id="disqus_thread"></div></aside> 
+
+<script type="text/javascript">
+     
+    var disqus_shortname = 'aimlessjpblog';
+
+     
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+  </main>
+
+
+  
+  <footer role="contentinfo">
+    <div style="text-align:center;">
+      
+      Written by kongou_ae
+    </div>
+  </footer>
+
+
+</div>
+
+<script src="/js/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+</body>
+</html>
+

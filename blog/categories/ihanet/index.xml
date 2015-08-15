@@ -1,0 +1,365 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Ihanet on Aimless</title>
+    <link>http://aimless.jp/categories/ihanet/</link>
+    <description>Recent content in Ihanet on Aimless</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ja</language>
+    <lastBuildDate>Thu, 24 May 2012 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://aimless.jp/categories/ihanet/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>CactiでBGPの経路数を監視してみた</title>
+      <link>http://aimless.jp/blog/archives/1058</link>
+      <pubDate>Thu, 24 May 2012 00:00:00 +0000</pubDate>
+      
+      <guid>http://aimless.jp/blog/archives/1058</guid>
+      <description>&lt;p&gt;&lt;/p&gt;&lt;/p&gt;
+
+&lt;p&gt;　「LookingGrassを作ったし、あとは経路数のモニタリングだよなー」という事で、Cactiを使ってモニタリングを始めました。ゆくゆくはブログのサイドバーに仕込みたいです。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://dns3.aimless.jp/images/bgproute2.png&#34; alt=&#34;bgproute&#34; /&gt;
+&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://dns3.aimless.jp/images/bgproute3.png&#34; alt=&#34;bgproute&#34; /&gt;
+&lt;/p&gt;
+
+&lt;p&gt;　Cisco892Jのshow ipv6 route summryで出力されるBGPのネットワーク数をグラフにしています。IPv6のBGP経路数を直接取得できるOIDが見つからなかったため、下記のスクリプトを利用して経路数をCactiに渡しています。ルータにtelnetしてコマンド直打ち⇒必要な部分だけ正規表現で抽出という感じです。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!/usr/local/bin/ruby
+
+require &#39;net/telnet&#39;
+
+@router = &#34;IPAddress&#34;
+@user = &#34;Username&#34;
+@password = &#34;password&#34;
+@prompt = &#34;Router&amp;gt;&#34;
+
+tn  = Net::Telnet::new(&#34;Host&#34; =&amp;gt; @router, &#34;Timeout&#34; =&amp;gt; 5)
+tn.cmd(&#34;String&#34; =&amp;gt; &#34;#{@user}&#34;,&#34;Match&#34;=&amp;gt;/^Password/) 
+tn.cmd(&#34;String&#34; =&amp;gt; &#34;#{@password}&#34;,&#34;Match&#34;=&amp;gt;/^#{@prompt}/) 
+tn.cmd(&#34;String&#34; =&amp;gt; &#34;ter len 0&#34;,&#34;Match&#34;=&amp;gt;/^#{@prompt}/) 
+@result = tn.cmd(&#34;String&#34; =&amp;gt; &#34;show ipv6 route summary | inc bgp&#34;,&#34;Match&#34;=&amp;gt;/^#{@prompt}/)
+tn.puts(&#34;exit&#34;) 
+tn.close
+
+/64585 +[0-9]+ / =~ @result
+@result = $&amp;.gsub(/64585 +/,&#34;&#34;)
+@result = @result.gsub(/ /,&#34;&#34;)
+print @result
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>BGPとLISPのLookingGrassを作った</title>
+      <link>http://aimless.jp/blog/archives/1039</link>
+      <pubDate>Sat, 19 May 2012 00:00:00 +0000</pubDate>
+      
+      <guid>http://aimless.jp/blog/archives/1039</guid>
+      <description>&lt;p&gt;&lt;/p&gt;&lt;/p&gt;
+
+&lt;p&gt;　ruby on rails + apache2 + passengerで、AS64585のLookingGrassを作りました。&lt;a href=&#34;http://lg.aimless.jp/&#34; title=&#34;LookingGrass（AS64585）&#34; target=&#34;_blank&#34;&gt;LookingGrass（AS64585）&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;　当初は他ASさんが運営しているLookingGrassと同様、インターネット上に全公開する予定でした。しかし、neighborさんのIPアドレスを全公開するのもあれだなと思い、eBGPルータが受け取っている経路とLISP-Betaで利用されている経路でアクセス制御を掛けました。現在106経路ほどBGPテーブルに乗っているので、IHANet上の方々であればみられるのかなと思います。&lt;/p&gt;
+
+&lt;p&gt;　なお、BGPだけだと面白くないので、LISPについても見れるようにしてあります。「LISPを利用しているIPv6の通信がそれほどない」＆「基本的にはすべてのマップキャッシュはPETR向け」という事で、それほど面白くないのが残念ですが・・・&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Cisco892Jを15.2(3)Tにアップデートした</title>
+      <link>http://aimless.jp/blog/archives/814</link>
+      <pubDate>Fri, 06 Apr 2012 00:00:00 +0000</pubDate>
+      
+      <guid>http://aimless.jp/blog/archives/814</guid>
+      <description>&lt;p&gt;IOS15.2のリリースノートを見ていたら、「BGP Route Server」や「LISP Virtualization」、「mGRE Tunnel Support over IPv6」などなど面白そうな機能が追加されていたので、15.1(4)XB7から最新の15.2(3)Tにアップデートしました。自宅ルータだからこそEarly Deployment (ED) を積極的に採用します。&lt;/p&gt;
+
+&lt;p&gt;　CiscoのサイトからIOSをダウンロードして、TFTPでPCからフラッシュにコピーします。そういえば、エンタイトルメントの強化によって、アカウントに紐づくサポート対象の機器に関するIOSしかダウンロードできなくなっていました。試しに1812JのIOSをダウンロードしようとしたら怒られました。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Router#copy tftp: flash:
+Address or name of remote host []? 192.168.1.20
+Source filename []? c890-universalk9-mz.152-3.T.bin
+Destination filename [c890-universalk9-mz.152-3.T.bin]? 
+Accessing tftp://192.168.1.20/c890-universalk9-mz.152-3.T.bin...
+!!!!!!!!!!!!!!!!!!!!!!!!!!
+[OK - 45161124 bytes]
+
+45161124 bytes copied in 292.368 secs (154467 bytes/sec)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;　boot systemコマンドで新しいIOSを設定してリロードします。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Router(config)#no boot system flash c890-universalk9-mz.151-4.XB7.bin
+Router(config)#boot system flash  c890-universalk9-mz.152-3.T.bin
+Router#reload 
+Proceed with reload? [confirm]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;　IOSのバージョンが上がったことを確認します。ルートサーバのコマンドも追加されています。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Router#show version 
+Cisco IOS Software, C890 Software (C890-UNIVERSALK9-M), Version 15.2(3)T, RELEASE SOFTWARE (fc1)
+
+Router(config-router-af)#          neighbor 2001:470:24:xxx::xxx route-server-client
+Router(config-router)#route-server-context ?
+  WORD  Name of route server context 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;　Ciscoルータで接続できるL2VPNを作って、そこにIHAnetのルートサーバを建てたいですね。&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>CiscoのBGP4-MIBはIPv6未対応？？</title>
+      <link>http://aimless.jp/blog/archives/738</link>
+      <pubDate>Sun, 25 Mar 2012 00:00:00 +0000</pubDate>
+      
+      <guid>http://aimless.jp/blog/archives/738</guid>
+      <description>
+
+&lt;p&gt;「HEのBGP Toolkitで見れるAS接続図を自分のASでもやってみよう」と思いgrahpvizで作ってみました。&lt;a href=&#34;http://dns3.aimless.jp/asgraph.gif&#34; title=&#34;AS64585接続図&#34; target=&#34;_blank&#34;&gt;AS64585接続図&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;　元となるAS-PATHの情報は「show bgp ipv6 unicast paths」から引っ張ってきました。ルータの出力をいちいちコピペ&amp;amp;手作業で整形するのが面倒なので、SMNPで取れた情報を自動成型できたら素敵だなとsnmpwalkで探してみたのですが、肝心のAS-Path関連はnot-accessibleだったので諦めました。&lt;/p&gt;
+
+&lt;p&gt;　そんなことより、IHANetのIPv6ネイバーがSNMPで取得できなかったのですが、CiscoのBGP4-MIBはIPv6未対応なのでしょうか。&lt;/p&gt;
+
+&lt;h3 id=&#34;ipv6のネイバしかいない場合:62a6820cfa83bdbfdf8d00ae010de588&#34;&gt;IPv6のネイバしかいない場合&lt;/h3&gt;
+
+&lt;p&gt;　bgpPeerTable（1.3.6.1.2.1.15.3.1）の中身が存在しません。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# snmpwalk -v 2c -c public xxx.aimless.jp .1.3.6.1.2.1.15
+SNMPv2-SMI::mib-2.15.1.0 = Hex-STRING: 10 
+SNMPv2-SMI::mib-2.15.2.0 = INTEGER: 64585
+SNMPv2-SMI::mib-2.15.4.0 = IpAddress: 36.2.xxx.xxx
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;ipv4のネイバがいる場合:62a6820cfa83bdbfdf8d00ae010de588&#34;&gt;IPv4のネイバがいる場合&lt;/h3&gt;
+
+&lt;p&gt;　bgpPeerTable（1.3.6.1.2.1.15.3.1）の中身が存在します。ただしIPv4だけ。。。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# snmpwalk -v 2c -c public xxx.aimless.jp .1.3.6.1.2.1.15
+SNMPv2-SMI::mib-2.15.1.0 = Hex-STRING: 10 
+SNMPv2-SMI::mib-2.15.2.0 = INTEGER: 64585
+SNMPv2-SMI::mib-2.15.3.1.1.10.10.10.10 = IpAddress: 0.0.0.0
+SNMPv2-SMI::mib-2.15.3.1.2.10.10.10.10 = INTEGER: 1
+SNMPv2-SMI::mib-2.15.3.1.3.10.10.10.10 = INTEGER: 2
+SNMPv2-SMI::mib-2.15.3.1.4.10.10.10.10 = INTEGER: 4
+SNMPv2-SMI::mib-2.15.3.1.5.10.10.10.10 = IpAddress: 0.0.0.0
+SNMPv2-SMI::mib-2.15.3.1.6.10.10.10.10 = INTEGER: 0
+SNMPv2-SMI::mib-2.15.3.1.7.10.10.10.10 = IpAddress: 10.10.10.10
+SNMPv2-SMI::mib-2.15.3.1.8.10.10.10.10 = INTEGER: 0
+SNMPv2-SMI::mib-2.15.3.1.9.10.10.10.10 = INTEGER: 1111
+SNMPv2-SMI::mib-2.15.3.1.10.10.10.10.10 = Counter32: 0
+SNMPv2-SMI::mib-2.15.3.1.11.10.10.10.10 = Counter32: 0
+SNMPv2-SMI::mib-2.15.3.1.12.10.10.10.10 = Counter32: 0
+SNMPv2-SMI::mib-2.15.3.1.13.10.10.10.10 = Counter32: 0
+SNMPv2-SMI::mib-2.15.3.1.14.10.10.10.10 = Hex-STRING: 00 00 
+SNMPv2-SMI::mib-2.15.3.1.15.10.10.10.10 = Counter32: 0
+SNMPv2-SMI::mib-2.15.3.1.16.10.10.10.10 = Gauge32: 0
+SNMPv2-SMI::mib-2.15.3.1.17.10.10.10.10 = INTEGER: 60
+SNMPv2-SMI::mib-2.15.3.1.18.10.10.10.10 = INTEGER: 0
+SNMPv2-SMI::mib-2.15.3.1.19.10.10.10.10 = INTEGER: 0
+SNMPv2-SMI::mib-2.15.3.1.20.10.10.10.10 = INTEGER: 180
+SNMPv2-SMI::mib-2.15.3.1.21.10.10.10.10 = INTEGER: 60
+SNMPv2-SMI::mib-2.15.3.1.22.10.10.10.10 = INTEGER: 30
+SNMPv2-SMI::mib-2.15.3.1.23.10.10.10.10 = INTEGER: 30
+SNMPv2-SMI::mib-2.15.3.1.24.10.10.10.10 = Gauge32: 0
+SNMPv2-SMI::mib-2.15.4.0 = IpAddress: 36.2.xxx.xxx
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>exabgpでフルルートを注入してみた</title>
+      <link>http://aimless.jp/blog/archives/713</link>
+      <pubDate>Sat, 17 Mar 2012 00:00:00 +0000</pubDate>
+      
+      <guid>http://aimless.jp/blog/archives/713</guid>
+      <description>
+
+&lt;p&gt;@stereocatさんのエントリーを見て自分もルータにフルルートを注入したくなったので、RouteViews+bgpdump+exabgpで試してみました。&lt;/p&gt;
+
+&lt;h3 id=&#34;経路情報の準備:f1ff86de82d9f4089c5525dc9e58f1c5&#34;&gt;経路情報の準備&lt;/h3&gt;
+
+&lt;p&gt;　&lt;a href=&#34;http://archive.routeviews.org/route-views6/bgpdata/&#34;&gt;route-views6.oregon-ix.net&lt;/a&gt;が公開しているIPv6のMRTデータを利用します。&lt;/p&gt;
+
+&lt;h3 id=&#34;bgpdumpのインストール:f1ff86de82d9f4089c5525dc9e58f1c5&#34;&gt;bgpdumpのインストール&lt;/h3&gt;
+
+&lt;p&gt;　&lt;a href=&#34;http://d.hatena.ne.jp/stereocat/20120311/1331451000&#34; target=&#34;_blank&#34;&gt;@stereocatさんのエントリー&lt;/a&gt;を見ながら粛々と実施します。&lt;/p&gt;
+
+&lt;h3 id=&#34;exabgpの準備:f1ff86de82d9f4089c5525dc9e58f1c5&#34;&gt;exabgpの準備&lt;/h3&gt;
+
+&lt;p&gt;　これも&lt;a href=&#34;http://d.hatena.ne.jp/stereocat/20120311/1331450868&#34; target=&#34;_blank&#34;&gt;@stereocatさんのエントリー&lt;/a&gt;を見ながら粛々と実施します。なおCentOS5.8のyumでインストールされるpython2.4だとエラーが出て動かなかった為、別途2.6をソースからインストールしました。&lt;/p&gt;
+
+&lt;h3 id=&#34;コンフィグ作成スクリプトの実施:f1ff86de82d9f4089c5525dc9e58f1c5&#34;&gt;コンフィグ作成スクリプトの実施&lt;/h3&gt;
+
+&lt;p&gt;　MRT形式のデータをbgpdumpで変換しただけではexabgpのコンフィグに必要な構文になりません。そこで、スクリプトでbgpdumpの変換結果をexabgpのコンフィグにそった形に修正します。イケてないスクリプトなのはご了承ください。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!/bin/sh
+
+#Parameter
+FILENAME=$1
+NEXTHOP=&#34;2001:470:24:571::11&#34;
+AS=&#34;64606&#34;
+
+/usr/local/bin/bgpdump -m ${FILENAME} &amp;gt; /tmp/bgproute/route.txt
+
+#initialize
+echo &#34;&#34; &amp;gt; /tmp/bgproute/config.txt
+
+#make configuration
+while read LINE; do
+
+        PREFIX=`echo $LINE | awk -F&#39;|&#39; &#39;{print $6}&#39;`
+        LP=`echo $LINE | awk -F&#39;|&#39; &#39;{print $10}&#39;`
+        ASPATH=`echo $LINE | awk -F&#39;|&#39; &#39;{print $7}&#39;`
+
+        ASPATH=`echo ${ASPATH} | sed -e &#34;s/{//&#34;`
+        ASPATH=`echo ${ASPATH} | sed -e &#34;s/}//&#34;`
+        ASPATH=`echo ${ASPATH} | sed -e &#34;s/,/ /&#34;`
+
+        echo &#34;route ${PREFIX} next-hop ${NEXTHOP} local-preference ${LP} as-path [${AS} ${ASPATH}];&#34; &amp;gt;&amp;gt; /tmp/bgproute/config.txt
+
+done &amp;lt; /tmp/bgproute/route.txt
+
+cat /tmp/bgproute/neighbor /tmp/bgproute/config.txt &amp;gt; /tmp/bgproute/exabgpconf
+echo } &amp;gt;&amp;gt;/tmp/bgproute/exabgpconf
+echo } &amp;gt;&amp;gt;/tmp/bgproute/exabgpconf
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;　neighborファイルの中にネイバーに関する設定（Static部分はスクリプトが自動生成します）を準備してから、変換したいRMT形式のデータを引数にしてシェルを実行すると、static部分が追記されたexabgpconfというコンフィグファイルが出来上がります。（cloudcore上で実施したら凄い時間がかかりました・・・）　&lt;/p&gt;
+
+&lt;h3 id=&#34;ルータへ経路を注入する:f1ff86de82d9f4089c5525dc9e58f1c5&#34;&gt;ルータへ経路を注入する&lt;/h3&gt;
+
+&lt;p&gt;　Cisco892J側にexabgpをネイバーとして追加して、いざ経路注入。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# exabgp exabgpconf                                            
+Sat, 17 Mar 2012 15:55:10 INFO     20069  configuration Performing reload of exabgp 2.0.6
+Sat, 17 Mar 2012 15:56:19 INFO     20069  supervisor    New Peer 2001:470:24:571::12
+Sat, 17 Mar 2012 15:56:19 INFO     20069  configuration Loaded new configuration successfully
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;Router#show bgp ipv6 unicast summary 
+Load for five secs: 4%/0%; one minute: 7%; five minutes: 8%
+Time source is NTP, 17:04:13.072 JST Sat Mar 17 2012
+BGP router identifier xxx.xxx.xxx.xxx, local AS number 64585
+BGP table version is 167513, main routing table version 167513
+8358 network entries using 1337280 bytes of memory
+8360 path entries using 668800 bytes of memory
+8220/7531 BGP path/bestpath attribute entries using 1052160 bytes of memory
+8215 BGP AS-PATH entries using 326932 bytes of memory
+1 BGP community entries using 24 bytes of memory
+0 BGP route-map cache entries using 0 bytes of memory
+0 BGP filter-list cache entries using 0 bytes of memory
+BGP using 3385196 total bytes of memory
+BGP activity 20178/11820 prefixes, 20484/12124 paths, scan interval 60 secs
+
+Neighbor        V           AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
+exabgp
+                4        64606    4411      41   167313    0    0 00:03:14     8268
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;　それっぽい数の経路をexabgpから受信している事が分ります。Cisco892JでもIPv6のフルルートは喰えるみたいですね。どこかのトランジット業者様で、個人向けにIPIPトンネル越しでIPv6のフルルートをくれる方がいらっしゃいましたらご連絡ください。。。&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Vyattaで経路制御②(local preferenceで経路選択)</title>
+      <link>http://aimless.jp/blog/archives/236</link>
+      <pubDate>Tue, 05 Jul 2011 00:00:00 +0000</pubDate>
+      
+      <guid>http://aimless.jp/blog/archives/236</guid>
+      <description>
+
+&lt;p&gt;「いずれIHANetにもIHANet内のフルルートを提供するトランジットが出るはずだ！」という事で、トランジットから広告された経路ではなく、Peerから直接広告してもらっている経路を優先する設定を事前にしておきたいと思います。&lt;/p&gt;
+
+&lt;p&gt;インターネットの経済学みたいな話になりますが、トランジットはフルルートを貰えるだけあって利用料金が高い。そこで下図の様に、InternetExchange経由で別ASと直接Peeringを行い、経路情報をやりとりします。そして、トランジットとPeerから同じ経路を受け取った場合に、Peerの経路を優先する様に設定します。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://aimless.jp/images/bgp.png&#34; alt=&#34;bgp&#34; /&gt;
+&lt;/p&gt;
+
+&lt;p&gt;InternetExchange経由でトラフィックをやりとりするのにも当然費用がかかりますが、大概トランジットを利用するよりも安くなります。こうする事でデータセンタの通信コストを下げます。データセンタ事業者からすれば、大量の通信が発生するコンテンツプロバイダとは、是非IX経由でpeeringしたいところです。&lt;/p&gt;
+
+&lt;h3 id=&#34;作業前の経路情報:79e487abc6c7162c445d8f19e1134e09&#34;&gt;作業前の経路情報&lt;/h3&gt;
+
+&lt;p&gt;設定前にpeerから受け取った経路2001:**:**:2a20::/64のLocPrfは空欄です。IPv6だと表示が崩れてしまうのが残念。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ show ipv6 bgp
+BGP table version is 0, local router ID is 49.212.54.72
+Status codes: s suppressed, d damped, h history, * valid, &amp;gt; best, i - internal,
+              r RIB-failure, S Stale, R Removed
+Origin codes: i - IGP, e - EGP, ? - incomplete
+
+   Network          Next Hop            Metric LocPrf Weight Path
+*&amp;gt; 2001:**:**:2a20::/64
+                    2001:**:**:fc::6
+                                                           0 645** 645** 645** ?
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;local-preference値を付与するroute-mapを作成する:79e487abc6c7162c445d8f19e1134e09&#34;&gt;local preference値を付与するroute-mapを作成する&lt;/h3&gt;
+
+&lt;p&gt;Peerからの経路は全てLocal preference値を付与するので、matchによるprefixの指定は行いません。LPというroute-mapを作成し、local-preference値400を付与します。line5-6の部分です。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;route-map LP {
+     description set-Local-Preference
+     rule 100 {
+         action permit
+         set {
+             local-preference 400
+         }
+     }
+ }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;route-mapをpeerと関連付ける:79e487abc6c7162c445d8f19e1134e09&#34;&gt;route-mapをpeerと関連付ける&lt;/h3&gt;
+
+&lt;p&gt;peerとの関連付けは、その①で作成したpeer-groupで行います。peer-group IHAnet に先程作成したroute-mapを関連付けます。line19-20の部分です。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;protocols {
+    bgp 64585 {
+        address-family {
+            ipv6-unicast {
+                network 2001:e41:31d4:3648::/64 {
+                }
+            }
+        }
+        peer-group IHAnet {
+            address-family {
+                ipv6-unicast {
+                    filter-list {
+                        import peer-path
+                    }
+                    prefix-list {
+                        export this-network
+                        import Special-Use-prefix
+                    }
+                    route-map {
+                        import LP
+                    }
+                    soft-reconfiguration {
+                        inbound
+                    }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;設定後の確認:79e487abc6c7162c445d8f19e1134e09&#34;&gt;設定後の確認&lt;/h3&gt;
+
+&lt;p&gt;peerから受け取った経路2001:**:**:2a20::/64のLocPrfに400が付与されています。この状態でトランジットから同じ経路を広告されたとしても、トランジット側のLocal Preference値は何もしていない＝デフォルトの100なので、Peer側の経路がベストパスとして選択されます。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# show ipv6 bgp
+BGP table version is 0, local router ID is 49.212.54.72
+Status codes: s suppressed, d damped, h history, * valid, &amp;gt; best, i - internal,
+              r RIB-failure, S Stale, R Removed
+Origin codes: i - IGP, e - EGP, ? - incomplete
+
+   Network          Next Hop            Metric LocPrf Weight Path
+*&amp;gt; 2001:**:**:2a20::/64
+                    2001:**:**:fc::6
+                                                  400      0 645** 645** 645** ?
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

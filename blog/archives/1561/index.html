@@ -1,0 +1,166 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+
+  
+  <meta charset="UTF-8">
+  <title>
+    LogAnalyzerを動かしてみた | Aimless
+  </title>
+
+
+  
+  <meta name="viewport" content="width=device-width,user-scalable=no,maximum-scale=1,initial-scale=1">
+
+
+  
+  <link rel="stylesheet" href="/css/sanitize.css">
+  <link rel="stylesheet" href="/css/responsive.css">
+  <link rel="stylesheet" href="/css/highlight_monokai.css">
+  <link rel="stylesheet/less" href="/css/theme.less">
+  <link rel="stylesheet" href="/css/custom.css">
+
+
+  
+  <script src="/js/less.js" type="text/javascript"></script>
+
+
+</head>
+
+
+
+<body>
+<div class="container">
+
+  
+  <header role="banner">
+    <div class="row gutters">
+      <div id="site-title" class="col span_6">
+        <h1><a href="/">Aimless</a></h1>
+        <h2>Powered by aimless emotion</h2>
+      </div>
+      <div id="social" class="col span_6">
+        <ul>
+          <li><a href="https://twitter.com/kongou_ae" target="_blank">Twitter</a></li>
+          
+          <li><a href="https://github.com/kongou-ae" target="_blank">GitHub</a></li>
+        </ul>
+      </div>
+    </div>
+  </header>
+
+
+  
+  <main id="single" role="main">
+    <div class="article-header">
+      <h1>LogAnalyzerを動かしてみた</h1>
+      <div class="meta">
+        Mar 1, 2013 &nbsp;
+        
+          #<a href="/categories/network">network</a>&nbsp;
+        
+      </div>
+    </div>
+    <article>
+      
+
+<h3 id="事の発端:e6b66ea7b6e81941f4e69d2576af25cc">事の発端</h3>
+
+<p>[tweet <a href="https://twitter.com/ttkzw/status/306913213272977408">https://twitter.com/ttkzw/status/306913213272977408</a> lang=&#8217;ja&#8217;]</p>
+
+<h3 id="とりあえずやってみた:e6b66ea7b6e81941f4e69d2576af25cc">とりあえずやってみた</h3>
+
+<p>　何事もやってみるのが大事。</p>
+
+<p>　ソースをダウンロードして、適当なディレクトリに展開します。INSTALLというファイルにインストール方法が記載されています。インストール方法を流し読みして、いざインストール！</p>
+
+<p>　contribディレクトリ配下のconfigure.shに実行権限を付与して実行します。config.phpが出来上がるので、そのファイルをsrcディレクトリに移動します。そして、srcディレクトリを外部公開するために、apacheの設定を追加します。</p>
+
+<p>　ブラウザでアクセスしてみるとError画面が表示されますので、「here」をクリックします。</p>
+
+<p><img src="http://aimless.jp/images/logAna1.png" alt="LogAnalyzar_1" />
+</p>
+
+<p>　ディレクトリの権限等々をチェックしてくれるそうです。Nextをクリック。</p>
+
+<p><img src="http://aimless.jp/images/logAna2.png" alt="LogAnalyzar_2" />
+</p>
+
+<p>　config.phpに書き込めないと怒られました。config.phpの所有者をapacheに変更してNextを押します。</p>
+
+<p><img src="http://aimless.jp/images/logAna3.png" alt="LogAnalyzar_3" />
+</p>
+
+<p>　step3～6はとりあえずデフォ値でそのままNextを押します。どのログをWEBで閲覧するかを決めるのがstep7です。[Name of the source]に分りやすい名前を、[syslog file]は閲覧したいログファイルのパスを入力します。その他はとりあえずデフォルトのままにし、Nextをクリック。</p>
+
+<p><img src="http://aimless.jp/images/logAna4.png" alt="LogAnalyzar_4" />
+</p>
+
+<p>　できました！rsyslogで収集しているCisco892Jのログを閲覧しています。</p>
+
+<p><img src="http://aimless.jp/images/logAna6.png" alt="LogAnalyzar_6" />
+</p>
+
+<p>　複数のログファイルを閲覧する事も可能です。config.phpに先ほどGUIで設定した内容がSource1として記載されているので、これをコピペして別ファイルの設定を追記します。下記はmessagesを対象にしています。</p>
+
+<pre><code>$CFG['Sources']['Source1']['ID'] = 'Source1';
+$CFG['Sources']['Source1']['Name'] = 'xx.xx.xx.xx_local3.log';
+$CFG['Sources']['Source1']['ViewID'] = 'SYSLOG';
+$CFG['Sources']['Source1']['SourceType'] = SOURCE_DISK;
+$CFG['Sources']['Source1']['LogLineType'] = 'syslog';
+$CFG['Sources']['Source1']['DiskFile'] = '/var/log/syslog/xx.xx.xx.xx_local3.log';
+
+$CFG['Sources']['Source2']['ID'] = 'Source2';
+$CFG['Sources']['Source2']['Name'] = 'messages';
+$CFG['Sources']['Source2']['ViewID'] = 'SYSLOG';
+$CFG['Sources']['Source2']['SourceType'] = SOURCE_DISK;
+$CFG['Sources']['Source2']['LogLineType'] = 'syslog';
+$CFG['Sources']['Source2']['DiskFile'] = '/var/log/messages';
+</code></pre>
+
+<p>閲覧するログの切り替えはGUIの右上「select Source」で可能です。</p>
+
+<h3 id="感想:e6b66ea7b6e81941f4e69d2576af25cc">感想</h3>
+
+<p>　rsyslogで収集しているログをWEBで見せたいというニッチな用途に最適だと思います。インストールは簡単で、操作も分りやすいです。@ttkzw、要件にあったツールを教えて下さりありがとうございました。</p>
+
+    </article>
+    
+ <aside><div id="disqus_thread"></div></aside> 
+
+<script type="text/javascript">
+     
+    var disqus_shortname = 'aimlessjpblog';
+
+     
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+  </main>
+
+
+  
+  <footer role="contentinfo">
+    <div style="text-align:center;">
+      
+      Written by kongou_ae
+    </div>
+  </footer>
+
+
+</div>
+
+<script src="/js/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+</body>
+</html>
+

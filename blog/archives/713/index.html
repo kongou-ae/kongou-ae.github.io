@@ -1,0 +1,192 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+
+  
+  <meta charset="UTF-8">
+  <title>
+    exabgpでフルルートを注入してみた | Aimless
+  </title>
+
+
+  
+  <meta name="viewport" content="width=device-width,user-scalable=no,maximum-scale=1,initial-scale=1">
+
+
+  
+  <link rel="stylesheet" href="/css/sanitize.css">
+  <link rel="stylesheet" href="/css/responsive.css">
+  <link rel="stylesheet" href="/css/highlight_monokai.css">
+  <link rel="stylesheet/less" href="/css/theme.less">
+  <link rel="stylesheet" href="/css/custom.css">
+
+
+  
+  <script src="/js/less.js" type="text/javascript"></script>
+
+
+</head>
+
+
+
+<body>
+<div class="container">
+
+  
+  <header role="banner">
+    <div class="row gutters">
+      <div id="site-title" class="col span_6">
+        <h1><a href="/">Aimless</a></h1>
+        <h2>Powered by aimless emotion</h2>
+      </div>
+      <div id="social" class="col span_6">
+        <ul>
+          <li><a href="https://twitter.com/kongou_ae" target="_blank">Twitter</a></li>
+          
+          <li><a href="https://github.com/kongou-ae" target="_blank">GitHub</a></li>
+        </ul>
+      </div>
+    </div>
+  </header>
+
+
+  
+  <main id="single" role="main">
+    <div class="article-header">
+      <h1>exabgpでフルルートを注入してみた</h1>
+      <div class="meta">
+        Mar 17, 2012 &nbsp;
+        
+          #<a href="/categories/ihanet">IHANet</a>&nbsp;
+        
+          #<a href="/categories/network">network</a>&nbsp;
+        
+      </div>
+    </div>
+    <article>
+      
+
+<p>@stereocatさんのエントリーを見て自分もルータにフルルートを注入したくなったので、RouteViews+bgpdump+exabgpで試してみました。</p>
+
+<h3 id="経路情報の準備:f1ff86de82d9f4089c5525dc9e58f1c5">経路情報の準備</h3>
+
+<p>　<a href="http://archive.routeviews.org/route-views6/bgpdata/">route-views6.oregon-ix.net</a>が公開しているIPv6のMRTデータを利用します。</p>
+
+<h3 id="bgpdumpのインストール:f1ff86de82d9f4089c5525dc9e58f1c5">bgpdumpのインストール</h3>
+
+<p>　<a href="http://d.hatena.ne.jp/stereocat/20120311/1331451000" target="_blank">@stereocatさんのエントリー</a>を見ながら粛々と実施します。</p>
+
+<h3 id="exabgpの準備:f1ff86de82d9f4089c5525dc9e58f1c5">exabgpの準備</h3>
+
+<p>　これも<a href="http://d.hatena.ne.jp/stereocat/20120311/1331450868" target="_blank">@stereocatさんのエントリー</a>を見ながら粛々と実施します。なおCentOS5.8のyumでインストールされるpython2.4だとエラーが出て動かなかった為、別途2.6をソースからインストールしました。</p>
+
+<h3 id="コンフィグ作成スクリプトの実施:f1ff86de82d9f4089c5525dc9e58f1c5">コンフィグ作成スクリプトの実施</h3>
+
+<p>　MRT形式のデータをbgpdumpで変換しただけではexabgpのコンフィグに必要な構文になりません。そこで、スクリプトでbgpdumpの変換結果をexabgpのコンフィグにそった形に修正します。イケてないスクリプトなのはご了承ください。</p>
+
+<pre><code>#!/bin/sh
+
+#Parameter
+FILENAME=$1
+NEXTHOP="2001:470:24:571::11"
+AS="64606"
+
+/usr/local/bin/bgpdump -m ${FILENAME} &gt; /tmp/bgproute/route.txt
+
+#initialize
+echo "" &gt; /tmp/bgproute/config.txt
+
+#make configuration
+while read LINE; do
+
+        PREFIX=`echo $LINE | awk -F'|' '{print $6}'`
+        LP=`echo $LINE | awk -F'|' '{print $10}'`
+        ASPATH=`echo $LINE | awk -F'|' '{print $7}'`
+
+        ASPATH=`echo ${ASPATH} | sed -e "s/{//"`
+        ASPATH=`echo ${ASPATH} | sed -e "s/}//"`
+        ASPATH=`echo ${ASPATH} | sed -e "s/,/ /"`
+
+        echo "route ${PREFIX} next-hop ${NEXTHOP} local-preference ${LP} as-path [${AS} ${ASPATH}];" &gt;&gt; /tmp/bgproute/config.txt
+
+done &lt; /tmp/bgproute/route.txt
+
+cat /tmp/bgproute/neighbor /tmp/bgproute/config.txt &gt; /tmp/bgproute/exabgpconf
+echo } &gt;&gt;/tmp/bgproute/exabgpconf
+echo } &gt;&gt;/tmp/bgproute/exabgpconf
+</code></pre>
+
+<p>　neighborファイルの中にネイバーに関する設定（Static部分はスクリプトが自動生成します）を準備してから、変換したいRMT形式のデータを引数にしてシェルを実行すると、static部分が追記されたexabgpconfというコンフィグファイルが出来上がります。（cloudcore上で実施したら凄い時間がかかりました・・・）　</p>
+
+<h3 id="ルータへ経路を注入する:f1ff86de82d9f4089c5525dc9e58f1c5">ルータへ経路を注入する</h3>
+
+<p>　Cisco892J側にexabgpをネイバーとして追加して、いざ経路注入。</p>
+
+<pre><code># exabgp exabgpconf                                            
+Sat, 17 Mar 2012 15:55:10 INFO     20069  configuration Performing reload of exabgp 2.0.6
+Sat, 17 Mar 2012 15:56:19 INFO     20069  supervisor    New Peer 2001:470:24:571::12
+Sat, 17 Mar 2012 15:56:19 INFO     20069  configuration Loaded new configuration successfully
+</code></pre>
+
+<pre><code>Router#show bgp ipv6 unicast summary 
+Load for five secs: 4%/0%; one minute: 7%; five minutes: 8%
+Time source is NTP, 17:04:13.072 JST Sat Mar 17 2012
+BGP router identifier xxx.xxx.xxx.xxx, local AS number 64585
+BGP table version is 167513, main routing table version 167513
+8358 network entries using 1337280 bytes of memory
+8360 path entries using 668800 bytes of memory
+8220/7531 BGP path/bestpath attribute entries using 1052160 bytes of memory
+8215 BGP AS-PATH entries using 326932 bytes of memory
+1 BGP community entries using 24 bytes of memory
+0 BGP route-map cache entries using 0 bytes of memory
+0 BGP filter-list cache entries using 0 bytes of memory
+BGP using 3385196 total bytes of memory
+BGP activity 20178/11820 prefixes, 20484/12124 paths, scan interval 60 secs
+
+Neighbor        V           AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
+exabgp
+                4        64606    4411      41   167313    0    0 00:03:14     8268
+</code></pre>
+
+<p>　それっぽい数の経路をexabgpから受信している事が分ります。Cisco892JでもIPv6のフルルートは喰えるみたいですね。どこかのトランジット業者様で、個人向けにIPIPトンネル越しでIPv6のフルルートをくれる方がいらっしゃいましたらご連絡ください。。。</p>
+
+    </article>
+    
+ <aside><div id="disqus_thread"></div></aside> 
+
+<script type="text/javascript">
+     
+    var disqus_shortname = 'aimlessjpblog';
+
+     
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+  </main>
+
+
+  
+  <footer role="contentinfo">
+    <div style="text-align:center;">
+      
+      Written by kongou_ae
+    </div>
+  </footer>
+
+
+</div>
+
+<script src="/js/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+</body>
+</html>
+

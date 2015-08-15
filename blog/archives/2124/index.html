@@ -1,0 +1,119 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+
+  
+  <meta charset="UTF-8">
+  <title>
+    Fedora20にしたらgraphiteが動かなくなった。 | Aimless
+  </title>
+
+
+  
+  <meta name="viewport" content="width=device-width,user-scalable=no,maximum-scale=1,initial-scale=1">
+
+
+  
+  <link rel="stylesheet" href="/css/sanitize.css">
+  <link rel="stylesheet" href="/css/responsive.css">
+  <link rel="stylesheet" href="/css/highlight_monokai.css">
+  <link rel="stylesheet/less" href="/css/theme.less">
+  <link rel="stylesheet" href="/css/custom.css">
+
+
+  
+  <script src="/js/less.js" type="text/javascript"></script>
+
+
+</head>
+
+
+
+<body>
+<div class="container">
+
+  
+  <header role="banner">
+    <div class="row gutters">
+      <div id="site-title" class="col span_6">
+        <h1><a href="/">Aimless</a></h1>
+        <h2>Powered by aimless emotion</h2>
+      </div>
+      <div id="social" class="col span_6">
+        <ul>
+          <li><a href="https://twitter.com/kongou_ae" target="_blank">Twitter</a></li>
+          
+          <li><a href="https://github.com/kongou-ae" target="_blank">GitHub</a></li>
+        </ul>
+      </div>
+    </div>
+  </header>
+
+
+  
+  <main id="single" role="main">
+    <div class="article-header">
+      <h1>Fedora20にしたらgraphiteが動かなくなった。</h1>
+      <div class="meta">
+        Aug 5, 2014 &nbsp;
+        
+          #<a href="/categories/python">python</a>&nbsp;
+        
+          #<a href="/categories/server">Server</a>&nbsp;
+        
+      </div>
+    </div>
+    <article>
+      <p>Fedora19にyumでインストールしたgraphiteが、Fedora20にアップグレードした時から動かなくなりました。具体的な症状は、WEBでアクセスすると以下のメッセージとともにInternal Server errorになります。</p>
+
+<p>　モジュールがimport errorになる理由は、<a href="http://stackoverflow.com/questions/19962736/django-import-error-no-module-named-django-conf-urls-defaults">Django import error &#8211; no module named django.conf.urls.defaults</a>に記載のある通り、Django1.6からdefaultモジュールが廃止されているためのようです。確かに、Fedora19のpython-djangoは1.5.8、Fedora20のpytho-djangoは1.6.5です。</p>
+
+<p>　Fedora20のyumでインストールできるgraphite-webパッケージはこの変更に追随していないようなので、githubのコミットを元に自分でパッチを当てました。なお、作業中のvimでは以下の2点を手修正しています。</p>
+
+<ol>
+<li>manage.pyへのパッチが失敗したので、コメントアウト</li>
+<li>ファイルのパスが本番環境と異なるので、正しいパスに置換</li>
+</ol>
+
+<p>　パッチ適応後、Internal server errorは解消され、正常にgraphiteの管理画面が表示されるようになりました。</p>
+
+    </article>
+    
+ <aside><div id="disqus_thread"></div></aside> 
+
+<script type="text/javascript">
+     
+    var disqus_shortname = 'aimlessjpblog';
+
+     
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+  </main>
+
+
+  
+  <footer role="contentinfo">
+    <div style="text-align:center;">
+      
+      Written by kongou_ae
+    </div>
+  </footer>
+
+
+</div>
+
+<script src="/js/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+</body>
+</html>
+

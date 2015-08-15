@@ -1,0 +1,146 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+
+  
+  <meta charset="UTF-8">
+  <title>
+    129.250.35.250/251はPublic DNSではありません。 | Aimless
+  </title>
+
+
+  
+  <meta name="viewport" content="width=device-width,user-scalable=no,maximum-scale=1,initial-scale=1">
+
+
+  
+  <link rel="stylesheet" href="/css/sanitize.css">
+  <link rel="stylesheet" href="/css/responsive.css">
+  <link rel="stylesheet" href="/css/highlight_monokai.css">
+  <link rel="stylesheet/less" href="/css/theme.less">
+  <link rel="stylesheet" href="/css/custom.css">
+
+
+  
+  <script src="/js/less.js" type="text/javascript"></script>
+
+
+</head>
+
+
+
+<body>
+<div class="container">
+
+  
+  <header role="banner">
+    <div class="row gutters">
+      <div id="site-title" class="col span_6">
+        <h1><a href="/">Aimless</a></h1>
+        <h2>Powered by aimless emotion</h2>
+      </div>
+      <div id="social" class="col span_6">
+        <ul>
+          <li><a href="https://twitter.com/kongou_ae" target="_blank">Twitter</a></li>
+          
+          <li><a href="https://github.com/kongou-ae" target="_blank">GitHub</a></li>
+        </ul>
+      </div>
+    </div>
+  </header>
+
+
+  
+  <main id="single" role="main">
+    <div class="article-header">
+      <h1>129.250.35.250/251はPublic DNSではありません。</h1>
+      <div class="meta">
+        Jul 14, 2014 &nbsp;
+        
+          #<a href="/categories/dns">DNS</a>&nbsp;
+        
+      </div>
+    </div>
+    <article>
+      
+
+<h1 id="public-dnsって何:4d30cb603464b0a78539f8b4a271cd21">Public DNSって何？</h1>
+
+<p>　このエントリーでは、以下の2つの条件を見たすDNSサーバをPublic DNSと呼びます。 代表的なPublic DNSは、Public DNSという名称を広めたGoogle Public DNSです。</p>
+
+<ul>
+<li>ネットワーク的な制限がかかっておらず、誰からのアクセスも受け入れるキャッシュDNSサーバ</li>
+<li>サービス提供者が、誰でもアクセスしてよいと謳っているキャッシュDNSサーバ</li>
+</ul>
+
+<h1 id="129-46-250-35-250-251はpublic-dnsなのか:4d30cb603464b0a78539f8b4a271cd21">129&#46;250.35.250/251はPublic DNSなのか？</h1>
+
+<p>　以下のように、NTT Americaが有している129.250.35.250/251をPublic DNSと記載するエントリーが散見されます。</p>
+
+<ul>
+<li><a href="http://ichitaso.com/web-service/public-dns-8-8-8-8-129-250-35-250/">Public DNS 「8.8.8.8」「129.250.35.250」は本当に速いのか？</a></li>
+<li><a href="http://blog.halpas.com/blog/archives/2938">無料で安全なDNSサービスの一覧</a></li>
+</ul>
+
+<p>　また、以下のようなWebアクセスが早くなるという話を信じて、自ネットワークのDNSを129.250.35.250/251に変更された方もいると思います。</p>
+
+<ul>
+<li><a href="http://cosmonote.blogspot.com/2014/01/dns-1292503525112925035250.html">DNS Serverの変更で高速化 [129.250.35.251,129.250.35.250]</a></li>
+<li><a href="http://staku.designbits.jp/public-dns/">Public DNSを設定したらやっぱり速くなりました</a></li>
+</ul>
+
+<p>　NTT Americaの公開連絡先に「129.250.35.250/251はPublic DNSですかー？」という失礼な質問をメールで行った結果、NOCの中の人から「These are resolvers for NTT customers only.」との回答を受領しました。つまりこれらのDNSサーバは、NTTのお客様限定のキャッシュDNSサーバであり、Public DNSではありません。</p>
+
+<p>　「問い合わせに応答するから使ってもいい」という理論は間違っています。これらのキャッシュDNSサーバは、設定上あなたの問い合わせに応答しているだけです。通信経路上の装置がPingに応答するのと同じレベルです。</p>
+
+<p>　129.250.35.250/251はNTTのお客様向けのキャッシュDNSサーバでありPublic DNSではありません。このキャッシュDNSサーバを利用する事は、ただ乗りと同じです。無賃乗車です。</p>
+
+<p>　キャッシュDNSサーバが原因で名前解決ができず困った時に真摯に対応してくれるのは、お金を払っているISPだけです。Public DNSはあなたを守ってくれません。ですから、キャッシュDNSサーバは原則ISPから提供されるものを利用すべきです。</p>
+
+<p>　ISPのキャッシュDNSサーバが腐っており困っている場合は、以下のいずれかにしましょう。くれぐれもインターネット上の書き込みを信じて、無賃乗車しないようお気を付けください。</p>
+
+<ul>
+<li>サービス提供者がPublic DNSだと宣言しているキャッシュDNSサーバ</li>
+<li>自分でキャッシュDNSサーバを建てる。</li>
+</ul>
+
+    </article>
+    
+ <aside><div id="disqus_thread"></div></aside> 
+
+<script type="text/javascript">
+     
+    var disqus_shortname = 'aimlessjpblog';
+
+     
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+  </main>
+
+
+  
+  <footer role="contentinfo">
+    <div style="text-align:center;">
+      
+      Written by kongou_ae
+    </div>
+  </footer>
+
+
+</div>
+
+<script src="/js/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+</body>
+</html>
+
