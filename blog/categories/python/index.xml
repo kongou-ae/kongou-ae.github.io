@@ -17,7 +17,7 @@
       <guid>http://aimless.jp/blog/archives/2124</guid>
       <description>&lt;p&gt;Fedora19にyumでインストールしたgraphiteが、Fedora20にアップグレードした時から動かなくなりました。具体的な症状は、WEBでアクセスすると以下のメッセージとともにInternal Server errorになります。&lt;/p&gt;
 
-&lt;p&gt;　モジュールがimport errorになる理由は、&lt;a href=&#34;http://stackoverflow.com/questions/19962736/django-import-error-no-module-named-django-conf-urls-defaults&#34;&gt;Django import error &amp;#8211; no module named django.conf.urls.defaults&lt;/a&gt;に記載のある通り、Django1.6からdefaultモジュールが廃止されているためのようです。確かに、Fedora19のpython-djangoは1.5.8、Fedora20のpytho-djangoは1.6.5です。&lt;/p&gt;
+&lt;p&gt;　モジュールがimport errorになる理由は、[Django import error &amp;#8211; no module named django.conf.urls.defaults][1]に記載のある通り、Django1.6からdefaultモジュールが廃止されているためのようです。確かに、Fedora19のpython-djangoは1.5.8、Fedora20のpytho-djangoは1.6.5です。&lt;/p&gt;
 
 &lt;p&gt;　Fedora20のyumでインストールできるgraphite-webパッケージはこの変更に追随していないようなので、githubのコミットを元に自分でパッチを当てました。なお、作業中のvimでは以下の2点を手修正しています。&lt;/p&gt;
 
@@ -27,6 +27,8 @@
 &lt;/ol&gt;
 
 &lt;p&gt;　パッチ適応後、Internal server errorは解消され、正常にgraphiteの管理画面が表示されるようになりました。&lt;/p&gt;
+
+&lt;p&gt;[1]: &lt;a href=&#34;http://stackoverflow.com/questions/19962736/django-import-error-no-module-named-django-conf-urls-defaults&#34;&gt;http://stackoverflow.com/questions/19962736/django-import-error-no-module-named-django-conf-urls-defaults&lt;/a&gt;&lt;/p&gt;
 </description>
     </item>
     
@@ -46,8 +48,7 @@
 
 &lt;p&gt;　&amp;#8230;Wordでいいじゃね？とは思いますが、気のせいだと思います。&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;http://aimless.jp/images/doc-diag.jpg&#34; alt=&#34;doc-diag&#34; /&gt;
-&lt;/p&gt;
+&lt;p&gt;![doc-diag][1]&lt;/p&gt;
 
 &lt;h1 id=&#34;sphinxを使って-文書の内容と見た目を分離する:a272f9313b7feb55abc66d4c9811e04e&#34;&gt;Sphinxを使って、文書の内容と見た目を分離する&lt;/h1&gt;
 
@@ -82,6 +83,8 @@
 &lt;p&gt;　というわけで、Doeckerを利用してこの仕組みをコンテナにしました。Dockerfileにしたので、Dockerさえ動けば、どの端末でも直ぐにこの仕組みを利用できます。windowsにもboot2dockerがあるので、Docker環境の準備は簡単です。気軽。&lt;/p&gt;
 
 &lt;p&gt;以上、気軽さを求めて試行錯誤した結果でした。&lt;/p&gt;
+
+&lt;p&gt;[1]: &lt;a href=&#34;http://aimless.jp/images/doc-diag.jpg&#34;&gt;http://aimless.jp/images/doc-diag.jpg&lt;/a&gt;&lt;/p&gt;
 </description>
     </item>
     
@@ -130,7 +133,9 @@
 
 &lt;p&gt;　オレオレ認証局の設定は、&lt;a href=&#34;http://l-w-i.net/t/openssl/cert_001.txt&#34;&gt;プライベート認証局(CA)を構築して証明書の発行を行なう&lt;/a&gt;が参考になります。&lt;/p&gt;
 
-&lt;p&gt;　Ciscoルータ側の設定は、&lt;a href=&#34;http://www.cisco.com/cisco/web/support/JP/100/1004/1004783_sslm-csr.html&#34;&gt;コピー アンド ペーストによる SSL サービス モジュールでの証明書署名要求の作成&lt;/a&gt;と&lt;a href=&#34;http://www.cisco.com/cisco/web/support/JP/docs/CIAN/IOS/IOS15_1M_T/CG/002/sec_cert_enroll_pki.html&#34;&gt;PKI の証明書登録の設定&lt;/a&gt;が参考になります。ルータへのオレオレRoot証明書とオレオレサーバ証明書のインストールは、コピーアンドペースト方式でやりました。&lt;/p&gt;
+&lt;p&gt;　Ciscoルータ側の設定は、&lt;a href=&#34;http://www.cisco.com/cisco/web/support/JP/100/1004/1004783_sslm-csr.html&#34;&gt;コピー アンド ペーストによる SSL サービス モジュールでの証明書署名要求の作成&lt;/a&gt;と[PKI の証明書登録の設定][5]が参考になります。ルータへのオレオレRoot証明書とオレオレサーバ証明書のインストールは、コピーアンドペースト方式でやりました。&lt;/p&gt;
+
+&lt;p&gt;[5]: &lt;a href=&#34;http://www.cisco.com/cisco/web/support/JP/docs/CIAN/IOS/IOS15_1M_T/CG/002/sec_cert_enroll_pki.html&#34;&gt;http://www.cisco.com/cisco/web/support/JP/docs/CIAN/IOS/IOS15_1M_T/CG/002/sec_cert_enroll_pki.html&lt;/a&gt;&lt;/p&gt;
 </description>
     </item>
     
@@ -153,13 +158,15 @@
 &lt;h3 id=&#34;メモ:6e2abe9be2e5eb47329c287eceefb687&#34;&gt;メモ&lt;/h3&gt;
 
 &lt;ul&gt;
-&lt;li&gt;ルータでonepkを有効にする。設定はGetting Staredに書いてある通り。&lt;a href=&#34;https://developer.cisco.com/media/onepk_getting_started_guide/GUID-03D9D7BB-B201-45FD-B0DE-B928C9D70692.html&#34;&gt;Using a Cisco Router with a Self-Signed Certificate&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;ルータでonepkを有効にする。設定はGetting Staredに書いてある通り。[Using a Cisco Router with a Self-Signed Certificate][1]&lt;/li&gt;
 &lt;li&gt;対象機器は、NetworkElementオブジェクトで定義する&lt;/li&gt;
 &lt;li&gt;対象機器への接続方式は、SessionConfigオブジェクトで定義する。&lt;/li&gt;
 &lt;li&gt;SessionConfigを利用してNetworkElement.connectすることで、実機にアクセスする。&lt;/li&gt;
 &lt;li&gt;connect後のNetworkElementから必要な情報を入手する。&lt;/li&gt;
 &lt;li&gt;明示的にdisconnectしないと、対象機器とのコネクションは切れない。&lt;/li&gt;
 &lt;/ul&gt;
+
+&lt;p&gt;[1]: &lt;a href=&#34;https://developer.cisco.com/media/onepk_getting_started_guide/GUID-03D9D7BB-B201-45FD-B0DE-B928C9D70692.html&#34;&gt;https://developer.cisco.com/media/onepk_getting_started_guide/GUID-03D9D7BB-B201-45FD-B0DE-B928C9D70692.html&lt;/a&gt;&lt;/p&gt;
 </description>
     </item>
     

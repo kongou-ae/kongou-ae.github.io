@@ -23,7 +23,7 @@
 
 &lt;h2 id=&#34;実現方法:273ca993f084584514ef76dff312aa4b&#34;&gt;実現方法&lt;/h2&gt;
 
-&lt;p&gt;　&lt;a href=&#34;https://github.com/mavimo/redmine_cors&#34;&gt;Redmine CORS&lt;/a&gt;を使い、RedmineをCORSに対応させる&lt;/p&gt;
+&lt;p&gt;　[Redmine CORS][1]を使い、RedmineをCORSに対応させる&lt;/p&gt;
 
 &lt;h2 id=&#34;やってみたこと:273ca993f084584514ef76dff312aa4b&#34;&gt;やってみたこと&lt;/h2&gt;
 
@@ -101,6 +101,8 @@ end
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;　なお、書き換えた後に気が付いたのですが、Redmine CORSをRedmine3.0で動作させるためのプルリクエストが出てますね。。。&lt;/p&gt;
+
+&lt;p&gt;[1]: &lt;a href=&#34;https://github.com/mavimo/redmine_cors&#34;&gt;https://github.com/mavimo/redmine_cors&lt;/a&gt;&lt;/p&gt;
 </description>
     </item>
     

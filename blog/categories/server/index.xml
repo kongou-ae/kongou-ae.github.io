@@ -67,18 +67,17 @@ job: {
 
 &lt;p&gt;　Prometheusサーバを再起動すると、コンソールにNodeが追加され、メトリクスを収集している対象の一覧が表示されます。&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/wp-content/uploads/2015/05/primetheus_node_summary.png&#34; alt=&#34;primetheus_node_summary&#34; /&gt;
-&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/wp-content/uploads/2015/05/primetheus_node_summary.png&#34; alt=&#34;primetheus_node_summary&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;　対象のノードをクリックすると、CPUとメモリ、ディスクのグラフが描画されています。&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/wp-content/uploads/2015/05/prometheus_node_detail.png&#34; alt=&#34;prometheus_node_detail&#34; /&gt;
-&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/wp-content/uploads/2015/05/prometheus_node_detail.png&#34; alt=&#34;prometheus_node_detail&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;　Graphタブを利用することで、取得したメトリクスのグラフを描画することが可能です。データの抽出は&lt;a href=&#34;http://prometheus.io/docs/querying/basics/#querying-prometheus&#34;&gt;QUERY LANGUAGE&lt;/a&gt;を利用する必要があります。&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/wp-content/uploads/2015/05/prometheus_node_metric_graph.png&#34; alt=&#34;prometheus_node_metric_graph&#34; /&gt;
-&lt;/p&gt;
+&lt;p&gt;![prometheus_node_metric_graph][6]&lt;/p&gt;
+
+&lt;p&gt;[6]: &lt;a href=&#34;http://aimless.jp/blog/wp-content/uploads/2015/05/prometheus_node_metric_graph.png&#34;&gt;http://aimless.jp/blog/wp-content/uploads/2015/05/prometheus_node_metric_graph.png&lt;/a&gt;&lt;/p&gt;
 </description>
     </item>
     
@@ -151,8 +150,9 @@ prometheus, version 0.13.2 (branch: HEAD, revision: f4d90a1)
   go version:       1.4.2
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/wp-content/uploads/2015/05/Prometheus_GUI.png&#34; alt=&#34;GUI&#34; /&gt;
-&lt;/p&gt;
+&lt;p&gt;![GUI][2]&lt;/p&gt;
+
+&lt;p&gt;[2]: &lt;a href=&#34;http://aimless.jp/blog/wp-content/uploads/2015/05/Prometheus_GUI.png&#34;&gt;http://aimless.jp/blog/wp-content/uploads/2015/05/Prometheus_GUI.png&lt;/a&gt;&lt;/p&gt;
 </description>
     </item>
     
@@ -185,8 +185,7 @@ npm start
 
 &lt;p&gt;　Let&amp;#8217;s Chatにhubot用のアカウントを作成します。また作成したアカウントのAuth Tokenを取得します。&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/wp-content/uploads/2015/05/SnapCrab_NoName_2015-5-2_23-16-54_No-00.png&#34; alt=&#34;Token&#34; /&gt;
-&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/wp-content/uploads/2015/05/SnapCrab_NoName_2015-5-2_23-16-54_No-00.png&#34; alt=&#34;Token&#34; /&gt;&lt;/p&gt;
 
 &lt;h2 id=&#34;hubotのインストール:cfa74896d771b319eb38f92c098ab1f2&#34;&gt;hubotのインストール&lt;/h2&gt;
 
@@ -218,13 +217,13 @@ Joined test
 
 &lt;p&gt;　&lt;code&gt;test&lt;/code&gt;というルームにhubotがログインしました。hubotを停止すると退室します。&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/wp-content/uploads/2015/05/SnapCrab_NoName_2015-5-2_23-11-30_No-00.png&#34; alt=&#34;add room&#34; /&gt;
-&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/wp-content/uploads/2015/05/SnapCrab_NoName_2015-5-2_23-11-30_No-00.png&#34; alt=&#34;add room&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;@つきでhubotに&lt;code&gt;ping&lt;/code&gt;や&lt;code&gt;date&lt;/code&gt;すると、ちゃんと答えます。&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/wp-content/uploads/2015/05/SnapCrab_NoName_2015-5-2_23-12-0_No-00.png&#34; alt=&#34;hubot response&#34; /&gt;
-&lt;/p&gt;
+&lt;p&gt;![hubot response][4]&lt;/p&gt;
+
+&lt;p&gt;[4]: &lt;a href=&#34;http://aimless.jp/blog/wp-content/uploads/2015/05/SnapCrab_NoName_2015-5-2_23-12-0_No-00.png&#34;&gt;http://aimless.jp/blog/wp-content/uploads/2015/05/SnapCrab_NoName_2015-5-2_23-12-0_No-00.png&lt;/a&gt;&lt;/p&gt;
 </description>
     </item>
     
@@ -260,7 +259,7 @@ Joined test
       <guid>http://aimless.jp/blog/archives/2124</guid>
       <description>&lt;p&gt;Fedora19にyumでインストールしたgraphiteが、Fedora20にアップグレードした時から動かなくなりました。具体的な症状は、WEBでアクセスすると以下のメッセージとともにInternal Server errorになります。&lt;/p&gt;
 
-&lt;p&gt;　モジュールがimport errorになる理由は、&lt;a href=&#34;http://stackoverflow.com/questions/19962736/django-import-error-no-module-named-django-conf-urls-defaults&#34;&gt;Django import error &amp;#8211; no module named django.conf.urls.defaults&lt;/a&gt;に記載のある通り、Django1.6からdefaultモジュールが廃止されているためのようです。確かに、Fedora19のpython-djangoは1.5.8、Fedora20のpytho-djangoは1.6.5です。&lt;/p&gt;
+&lt;p&gt;　モジュールがimport errorになる理由は、[Django import error &amp;#8211; no module named django.conf.urls.defaults][1]に記載のある通り、Django1.6からdefaultモジュールが廃止されているためのようです。確かに、Fedora19のpython-djangoは1.5.8、Fedora20のpytho-djangoは1.6.5です。&lt;/p&gt;
 
 &lt;p&gt;　Fedora20のyumでインストールできるgraphite-webパッケージはこの変更に追随していないようなので、githubのコミットを元に自分でパッチを当てました。なお、作業中のvimでは以下の2点を手修正しています。&lt;/p&gt;
 
@@ -270,6 +269,8 @@ Joined test
 &lt;/ol&gt;
 
 &lt;p&gt;　パッチ適応後、Internal server errorは解消され、正常にgraphiteの管理画面が表示されるようになりました。&lt;/p&gt;
+
+&lt;p&gt;[1]: &lt;a href=&#34;http://stackoverflow.com/questions/19962736/django-import-error-no-module-named-django-conf-urls-defaults&#34;&gt;http://stackoverflow.com/questions/19962736/django-import-error-no-module-named-django-conf-urls-defaults&lt;/a&gt;&lt;/p&gt;
 </description>
     </item>
     

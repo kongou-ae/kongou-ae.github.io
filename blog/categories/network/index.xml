@@ -451,8 +451,10 @@
 &lt;li&gt;&lt;a href=&#34;http://e-publishing.jp/contents/koutantech/aidd02_01.pdf&#34;&gt;暗号化、認証、証明&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;http://www.tama200x.com/blog/?p=565&#34;&gt;[SSL] SSLサーバ証明書について考える&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;http://itpro.nikkeibp.co.jp/article/COLUMN/20071002/283518/?ST=selfup&#34;&gt;図解で学ぶネットワークの基礎：SSL編&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://www.ipa.go.jp/security/rfc/RFC2459JA.html#041&#34;&gt;インターネットX.509 PKI &amp;#8211; 証明書と CRL のプロファイル&lt;/a&gt; &lt;a href=&#34;http://www.trustss.co.jp/smnDataFormat410.html&#34;&gt;電子証明書のデータ形式 &amp;#8211; RFC3289 X.509 Public Key Infrastructure Certificate and CRL Profile&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.ipa.go.jp/security/rfc/RFC2459JA.html#041&#34;&gt;インターネットX.509 PKI &amp;#8211; 証明書と CRL のプロファイル&lt;/a&gt; [電子証明書のデータ形式 &amp;#8211; RFC3289 X.509 Public Key Infrastructure Certificate and CRL Profile][7]&lt;/li&gt;
 &lt;/ul&gt;
+
+&lt;p&gt;[7]: &lt;a href=&#34;http://www.trustss.co.jp/smnDataFormat410.html&#34;&gt;http://www.trustss.co.jp/smnDataFormat410.html&lt;/a&gt;&lt;/p&gt;
 </description>
     </item>
     
@@ -479,14 +481,15 @@
 
 &lt;p&gt;　graphiteに入れた情報を、grafanaでカッコいいグラフにします。&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/wp-content/uploads/2014/07/20140729_grafana_graph.png&#34; alt=&#34;grafana-graph&#34; /&gt;
-&lt;/p&gt;
+&lt;p&gt;![grafana-graph][2]&lt;/p&gt;
 
 &lt;p&gt;　注釈が「Interface receive rate in bytes per second」なので、トラフィック量にするためにはbyteをbitにする（＝8倍する）必要があると思っていましたが、onePKで取得した値そのままで作成したグラフとMRTGのグラフと比較すると、ほぼ同じ値になっていました。「Interface receive rate in bits per second」の間違いでしょうか。&lt;/p&gt;
 
 &lt;p&gt;　一般的なトラフィック量の取得方法は、前回取得したオクテット総数と今回取得したオクテット総数の差分を求めて、それを時間で割る形だと思います。今回のやり方は、取得した値そのものがトラフィック量であり加工する必要がないので、他ツールとの連携が容易かもしれません。&lt;/p&gt;
 
 &lt;p&gt;　BGP Service setの実装が待ち遠しいです。&lt;/p&gt;
+
+&lt;p&gt;[2]: &lt;a href=&#34;http://aimless.jp/blog/wp-content/uploads/2014/07/20140729_grafana_graph.png&#34;&gt;http://aimless.jp/blog/wp-content/uploads/2014/07/20140729_grafana_graph.png&lt;/a&gt;&lt;/p&gt;
 </description>
     </item>
     
@@ -1122,7 +1125,9 @@
 
 &lt;h1 id=&#34;cisco:3197b1351379e2f9e723d5ccc5720427&#34;&gt;Cisco&lt;/h1&gt;
 
-&lt;p&gt;　絶賛調査中のようです。&lt;a href=&#34;http://tools.cisco.com/security/center/content/CiscoSecurityAdvisory/cisco-sa-20140605-openssl&#34;&gt;Multiple Vulnerabilities in OpenSSL Affecting Cisco Products&lt;/a&gt; 　HeartBleedの影響を受けた製品と、今回の脆弱性の内容を踏まえると、ASA,Aironetあたりが対象になるのかも。&lt;/p&gt;
+&lt;p&gt;　絶賛調査中のようです。[Multiple Vulnerabilities in OpenSSL Affecting Cisco Products][5] 　HeartBleedの影響を受けた製品と、今回の脆弱性の内容を踏まえると、ASA,Aironetあたりが対象になるのかも。&lt;/p&gt;
+
+&lt;p&gt;[5]: &lt;a href=&#34;http://tools.cisco.com/security/center/content/CiscoSecurityAdvisory/cisco-sa-20140605-openssl&#34;&gt;http://tools.cisco.com/security/center/content/CiscoSecurityAdvisory/cisco-sa-20140605-openssl&lt;/a&gt;&lt;/p&gt;
 </description>
     </item>
     
@@ -1251,10 +1256,12 @@
 
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;https://tools.cisco.com/bugsearch/bug/CSCsr28008&#34;&gt;PAT src port allocation policy negates effect of host port alloc. policy&lt;/a&gt;（要CCOアカウント）&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://tools.cisco.com/bugsearch/bug/CSCsr29691&#34;&gt;PAT src port allocation policy negates effect of host port alloc. policy&lt;/a&gt;（要CCOアカウント）&lt;/li&gt;
+&lt;li&gt;[PAT src port allocation policy negates effect of host port alloc. policy][10]（要CCOアカウント）&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;p&gt;　比較的最近導入した機器、または適切にバージョンアップを行っている機器であればバグFIX済みのOSで稼働していると思います。バグに該当するバージョンで稼働している場合は、バグがFIXされたOSにバージョンアップしましょう。&lt;/p&gt;
+
+&lt;p&gt;[10]: &lt;a href=&#34;https://tools.cisco.com/bugsearch/bug/CSCsr29691&#34;&gt;https://tools.cisco.com/bugsearch/bug/CSCsr29691&lt;/a&gt;&lt;/p&gt;
 </description>
     </item>
     
@@ -1300,8 +1307,10 @@
 &lt;li&gt;&lt;a href=&#34;http://www.ocn.ne.jp/business/bocn/gijyutsu/urpf.html&#34;&gt;OCN（2006/04/05～）&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;http://www.fttx.co.jp/information/2007/detail/070205.html&#34;&gt;アルテリア（旧UCOM）　2007/02/05～&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;http://biz.freebit.com/support/manuals/sav/index.html&#34;&gt;フリービット（2007/08/28～）&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://dream.jp/support/techinfo/security/sav.html&#34;&gt;DYI（2007/08/28～）&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;[DYI（2007/08/28～）][6]&lt;/li&gt;
 &lt;/ul&gt;
+
+&lt;p&gt;[6]: &lt;a href=&#34;http://dream.jp/support/techinfo/security/sav.html&#34;&gt;http://dream.jp/support/techinfo/security/sav.html&lt;/a&gt;&lt;/p&gt;
 </description>
     </item>
     
@@ -1413,8 +1422,7 @@
 
 &lt;h3 id=&#34;検証環境:8a801d7caae5205bbd472b545f0f0c21&#34;&gt;検証環境&lt;/h3&gt;
 
-&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/wp-content/uploads/2014/03/vpc-diag.png&#34; alt=&#34;enter image description here&#34; /&gt;
-&lt;/p&gt;
+&lt;p&gt;![enter image description here][2]&lt;/p&gt;
 
 &lt;p&gt;　VPCのVGWに対して、2つのVPN Connectionを張ります。設定と動作確認が煩雑になるため、1つのVPN装置が張るVPN Connectionは1つのグローバルIPアドレスのみにします。VPN装置（cisco892JとFortiGate50B）からは、同一経路（192.168.2.0/24）をVPCに対して広報します。&lt;/p&gt;
 
@@ -1540,6 +1548,8 @@ end
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;　公式のドキュメントにはMEDの記載がありませんでしたが、MEDによる経路制御も効くようですね。個人的にはAS-PATHがわかりやすくて好きなので、AS-PATHを利用します。&lt;/p&gt;
+
+&lt;p&gt;[2]: &lt;a href=&#34;http://aimless.jp/blog/wp-content/uploads/2014/03/vpc-diag.png&#34;&gt;http://aimless.jp/blog/wp-content/uploads/2014/03/vpc-diag.png&lt;/a&gt;&lt;/p&gt;
 </description>
     </item>
     
@@ -1555,15 +1565,15 @@ end
 
 &lt;p&gt;　このプラグインでFortiGateのsyslogファイルをインプットして、elasticsearchへアウトプットすると、下図のような形で格納されます。&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;http://aimless.jp/images/es-forti.png&#34; alt=&#34;elasticsearch-fortigate&#34; /&gt;
-&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://aimless.jp/images/es-forti.png&#34; alt=&#34;elasticsearch-fortigate&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;　kibana3を利用すると下図のようなログビュアーが作れます。非管理者に通信ログを見せたい場合などに使えるかも？通信内容を集計したグラフなんかも作れるのでしょうか？（elasticsearchとkibana3は現在勉強中なので、実現可否は不明瞭。）&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;http://aimless.jp/images/kibana3-fortigate.png&#34; alt=&#34;kibana3-fortigate.png&#34; /&gt;
-&lt;/p&gt;
+&lt;p&gt;![kibana3-fortigate.png][2]&lt;/p&gt;
 
 &lt;p&gt;　現在の実装ではsyslogで飛んできたログをなんでも処理しますので、fluent-plugin-fortigate-traffic-logという名前にも関わらずeventログやUTMログも処理されてしまいます。type=trafficの時のみ処理する形にすればいいと思うので、そのうち直したいです。&lt;/p&gt;
+
+&lt;p&gt;[2]: &lt;a href=&#34;http://aimless.jp/images/kibana3-fortigate.png&#34;&gt;http://aimless.jp/images/kibana3-fortigate.png&lt;/a&gt;&lt;/p&gt;
 </description>
     </item>
     
@@ -1591,8 +1601,7 @@ end
 
 &lt;p&gt;　Tunnel Broker管理画面の『rDNS Delegations』欄に、権限移譲してほしいDNSサーバのホスト名を入力します。BIND9のプライマリと、BIND10のセカンダリDNSを登録しました。&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;http://aimless.jp/images/rDNS_of_HE.png&#34; alt=&#34;HE&#39;s rDNS&#34; /&gt;
-&lt;/p&gt;
+&lt;p&gt;![HE&amp;rsquo;s rDNS][1]&lt;/p&gt;
 
 &lt;h3 id=&#34;プライマリ-bind9-を設定する:257ab340aabbd3110eab36a4c8d84da0&#34;&gt;　プライマリ（BIND9）を設定する&lt;/h3&gt;
 
@@ -1680,6 +1689,8 @@ x.x.0.0.0.0.0.0.0.0.0.0.0.0.0.0.3.5.0.0.1.e.d.f.0.7.4.0.1.0.0.2.ip6.arpa. 3600 I
 1.e.d.f.0.7.4.0.1.0.0.2.ip6.arpa. 3600 IN NS    dns1.aimless.jp.
 1.e.d.f.0.7.4.0.1.0.0.2.ip6.arpa. 3600 IN NS    dns4.aimless.jp.
 &lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;[1]: &lt;a href=&#34;http://aimless.jp/images/rDNS_of_HE.png&#34;&gt;http://aimless.jp/images/rDNS_of_HE.png&lt;/a&gt;&lt;/p&gt;
 </description>
     </item>
     
@@ -1743,28 +1754,23 @@ Router#
 
 &lt;p&gt;　ブラウザでアクセスしてみるとError画面が表示されますので、「here」をクリックします。&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;http://aimless.jp/images/logAna1.png&#34; alt=&#34;LogAnalyzar_1&#34; /&gt;
-&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://aimless.jp/images/logAna1.png&#34; alt=&#34;LogAnalyzar_1&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;　ディレクトリの権限等々をチェックしてくれるそうです。Nextをクリック。&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;http://aimless.jp/images/logAna2.png&#34; alt=&#34;LogAnalyzar_2&#34; /&gt;
-&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://aimless.jp/images/logAna2.png&#34; alt=&#34;LogAnalyzar_2&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;　config.phpに書き込めないと怒られました。config.phpの所有者をapacheに変更してNextを押します。&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;http://aimless.jp/images/logAna3.png&#34; alt=&#34;LogAnalyzar_3&#34; /&gt;
-&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://aimless.jp/images/logAna3.png&#34; alt=&#34;LogAnalyzar_3&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;　step3～6はとりあえずデフォ値でそのままNextを押します。どのログをWEBで閲覧するかを決めるのがstep7です。[Name of the source]に分りやすい名前を、[syslog file]は閲覧したいログファイルのパスを入力します。その他はとりあえずデフォルトのままにし、Nextをクリック。&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;http://aimless.jp/images/logAna4.png&#34; alt=&#34;LogAnalyzar_4&#34; /&gt;
-&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://aimless.jp/images/logAna4.png&#34; alt=&#34;LogAnalyzar_4&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;　できました！rsyslogで収集しているCisco892Jのログを閲覧しています。&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;http://aimless.jp/images/logAna6.png&#34; alt=&#34;LogAnalyzar_6&#34; /&gt;
-&lt;/p&gt;
+&lt;p&gt;![LogAnalyzar_6][5]&lt;/p&gt;
 
 &lt;p&gt;　複数のログファイルを閲覧する事も可能です。config.phpに先ほどGUIで設定した内容がSource1として記載されているので、これをコピペして別ファイルの設定を追記します。下記はmessagesを対象にしています。&lt;/p&gt;
 
@@ -1788,6 +1794,8 @@ $CFG[&#39;Sources&#39;][&#39;Source2&#39;][&#39;DiskFile&#39;] = &#39;/var/log/m
 &lt;h3 id=&#34;感想:e6b66ea7b6e81941f4e69d2576af25cc&#34;&gt;感想&lt;/h3&gt;
 
 &lt;p&gt;　rsyslogで収集しているログをWEBで見せたいというニッチな用途に最適だと思います。インストールは簡単で、操作も分りやすいです。@ttkzw、要件にあったツールを教えて下さりありがとうございました。&lt;/p&gt;
+
+&lt;p&gt;[5]: &lt;a href=&#34;http://aimless.jp/images/logAna6.png&#34;&gt;http://aimless.jp/images/logAna6.png&lt;/a&gt;&lt;/p&gt;
 </description>
     </item>
     
@@ -1805,8 +1813,7 @@ $CFG[&#39;Sources&#39;][&#39;Source2&#39;][&#39;DiskFile&#39;] = &#39;/var/log/m
 
 &lt;p&gt;　Ciscoルータと世代管理システムの間に、rsyslogとlogsurfer、RANSIDを挟みます。設定変更を示すログがsyslogで飛んできたら、RANSIDが対象機器のリポジトリを自動更新します。あとは、ViewVCでリポジトリにアクセスして作業による差分を確認するだけ！&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;http://aimless.jp/images/diagram.png&#34; alt=&#34;rancid diagram&#34; /&gt;
-&lt;/p&gt;
+&lt;p&gt;![rancid diagram][1]&lt;/p&gt;
 
 &lt;h3 id=&#34;rsyslog:44f15c9e6fba689af041d66dd834bfd8&#34;&gt;rsyslog&lt;/h3&gt;
 
@@ -1839,6 +1846,8 @@ if ( $FROMHOST-IP == &#39;xxx.xxx.xxx.xxx&#39; ) and ($syslogfacility-text == &#
 &lt;p&gt;　この仕組みは、rsyslogとlogsurfer、RANSIDが同一マシン上で稼働している必要があります。その為、既存環境に追加するには少々自由度が低いです。また、管理対象が増えた際にスケールさせるのが大変です。この仕組みで複数台を管理しようとすると、その分のログファイルとlogsurferのプロセスが必要になります。ちゃんと動くのか不安です。。。&lt;/p&gt;
 
 &lt;p&gt;　そうはいっても、RANCIDを利用すると色々と楽ができそうなので、もう少し触ってみようと思います。&lt;/p&gt;
+
+&lt;p&gt;[1]: &lt;a href=&#34;http://aimless.jp/images/diagram.png&#34;&gt;http://aimless.jp/images/diagram.png&lt;/a&gt;&lt;/p&gt;
 </description>
     </item>
     

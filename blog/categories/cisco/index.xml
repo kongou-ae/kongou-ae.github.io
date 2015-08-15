@@ -91,7 +91,7 @@
       <guid>http://aimless.jp/blog/archives/2143</guid>
       <description>&lt;p&gt;気になったのでメモ。把握したうえで適切な設定にしないと、ある日突然PeerがAdmin Dowmしてお祭りになりそう。。。フルルートをやり取りするpeerに対しては、明示的にmaximum-prefixを設定しておいた方がよさそうです。&lt;/p&gt;
 
-&lt;p&gt;&lt;a href=&#34;http://www.cisco.com/cisco/web/support/JP/docs/RT/ServProviderEdgeRT/ASR9000AggregationServsRT/CG/024/b_routing_cg43xasr9k_chapter_010.html?bid=0900e4b183069caa#con_1088375&#34;&gt;Cisco ASR 9000 シリーズ ルータへの BGP の実装&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;[Cisco ASR 9000 シリーズ ルータへの BGP の実装][1]&lt;/p&gt;
 
 &lt;blockquote&gt;
 &lt;p&gt;アドバタイズメントによりピアが BGP をフラッディングしないようにするために、サポートされているアドレス ファミリごとに、1 つのピアから受け入れるプレフィックスの数に対する制限が課されます。 デフォルトの制限値は、該当するアドレス ファミリのピアに対して maximum-prefix limit コマンドを設定することにより、上書きできます。 ユーザがそのアドレス ファミリに対するプレフィックスの最大数を設定していない場合は、次のデフォルト制限値が使用されます。&lt;/p&gt;
@@ -106,6 +106,8 @@
 &lt;li&gt;&lt;p&gt;VPNv4 ユニキャストに対する 512K（524,288）のプレフィックス&lt;/p&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/blockquote&gt;
+
+&lt;p&gt;[1]: &lt;a href=&#34;http://www.cisco.com/cisco/web/support/JP/docs/RT/ServProviderEdgeRT/ASR9000AggregationServsRT/CG/024/b_routing_cg43xasr9k_chapter_010.html?bid=0900e4b183069caa#con_1088375&#34;&gt;http://www.cisco.com/cisco/web/support/JP/docs/RT/ServProviderEdgeRT/ASR9000AggregationServsRT/CG/024/b_routing_cg43xasr9k_chapter_010.html?bid=0900e4b183069caa#con_1088375&lt;/a&gt;&lt;/p&gt;
 </description>
     </item>
     
@@ -135,7 +137,7 @@
 
 &lt;p&gt;　2年前は、MRTデータをbgpdumpでテキストに吐き出してから、お手製スクリプトを通してexabgpのコンフィグに書き換えました。大変でした。&lt;/p&gt;
 
-&lt;p&gt;　IPv4のフルルートを扱うにあたって、改めて実現方法を模索したところ、githubにて&lt;a href=&#34;https://github.com/YoshiyukiYamauchi/mrtparse&#34;&gt;mrtparse&lt;/a&gt;というツールを見つけました。&lt;/p&gt;
+&lt;p&gt;　IPv4のフルルートを扱うにあたって、改めて実現方法を模索したところ、githubにて[mrtparse][2]というツールを見つけました。&lt;/p&gt;
 
 &lt;p&gt;　このツールに含まれている「exabgp_conf.py」を利用すると、特定のMRTデータを利用してexabgpのコンフィグを標準出力してくれます。neighborの設定と経路のNext-hopは「exabgp_conf.py」内にベタ書きされていますので、必要に応じて事前に「exabgp_conf.py」を変更しておく必要があります。&lt;/p&gt;
 
@@ -189,6 +191,8 @@ Neighbor        Spk    AS MsgRcvd MsgSent   TblVer  InQ OutQ  Up/Down  St/PfxRcd
 
 RP/0/0/CPU0:aimless-XRv#
 &lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;[2]: &lt;a href=&#34;https://github.com/YoshiyukiYamauchi/mrtparse&#34;&gt;https://github.com/YoshiyukiYamauchi/mrtparse&lt;/a&gt;&lt;/p&gt;
 </description>
     </item>
     
@@ -204,7 +208,7 @@ RP/0/0/CPU0:aimless-XRv#
 
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;http://www.cisco.com/cisco/web/support/JP/docs/RT/ServProviderEdgeRT/ASR9000AggregationServsRT/CG/014/b_routing_cg42asr9k_chapter_0111.html&#34;&gt;Cisco ASR 9000 シリーズ ルータへのルーティング ポリシーの実装&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://www.cisco.com/c/en/us/td/docs/routers/xr12000/software/xr12k_r4-0/routing/configuration/guide/rc40xr12k_chapter7.html&#34;&gt;Implementing Routing Policy on Cisco IOS XR Software&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;[Implementing Routing Policy on Cisco IOS XR Software][2]&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;p&gt;　prefix-set ALL-DENY　が設定されています。&lt;/p&gt;
@@ -264,6 +268,8 @@ end-set     | Save Buffers       ^XS |
 
 -------+(Jed 0.99.18) Emacs: rpl_edit.7352589    (Text)  1/8   1:23pm------------------------------
 &lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;[2]: &lt;a href=&#34;http://www.cisco.com/c/en/us/td/docs/routers/xr12000/software/xr12k_r4-0/routing/configuration/guide/rc40xr12k_chapter7.html&#34;&gt;http://www.cisco.com/c/en/us/td/docs/routers/xr12000/software/xr12k_r4-0/routing/configuration/guide/rc40xr12k_chapter7.html&lt;/a&gt;&lt;/p&gt;
 </description>
     </item>
     
@@ -579,7 +585,9 @@ end
 
 &lt;p&gt;　オレオレ認証局の設定は、&lt;a href=&#34;http://l-w-i.net/t/openssl/cert_001.txt&#34;&gt;プライベート認証局(CA)を構築して証明書の発行を行なう&lt;/a&gt;が参考になります。&lt;/p&gt;
 
-&lt;p&gt;　Ciscoルータ側の設定は、&lt;a href=&#34;http://www.cisco.com/cisco/web/support/JP/100/1004/1004783_sslm-csr.html&#34;&gt;コピー アンド ペーストによる SSL サービス モジュールでの証明書署名要求の作成&lt;/a&gt;と&lt;a href=&#34;http://www.cisco.com/cisco/web/support/JP/docs/CIAN/IOS/IOS15_1M_T/CG/002/sec_cert_enroll_pki.html&#34;&gt;PKI の証明書登録の設定&lt;/a&gt;が参考になります。ルータへのオレオレRoot証明書とオレオレサーバ証明書のインストールは、コピーアンドペースト方式でやりました。&lt;/p&gt;
+&lt;p&gt;　Ciscoルータ側の設定は、&lt;a href=&#34;http://www.cisco.com/cisco/web/support/JP/100/1004/1004783_sslm-csr.html&#34;&gt;コピー アンド ペーストによる SSL サービス モジュールでの証明書署名要求の作成&lt;/a&gt;と[PKI の証明書登録の設定][5]が参考になります。ルータへのオレオレRoot証明書とオレオレサーバ証明書のインストールは、コピーアンドペースト方式でやりました。&lt;/p&gt;
+
+&lt;p&gt;[5]: &lt;a href=&#34;http://www.cisco.com/cisco/web/support/JP/docs/CIAN/IOS/IOS15_1M_T/CG/002/sec_cert_enroll_pki.html&#34;&gt;http://www.cisco.com/cisco/web/support/JP/docs/CIAN/IOS/IOS15_1M_T/CG/002/sec_cert_enroll_pki.html&lt;/a&gt;&lt;/p&gt;
 </description>
     </item>
     
@@ -602,13 +610,15 @@ end
 &lt;h3 id=&#34;メモ:6e2abe9be2e5eb47329c287eceefb687&#34;&gt;メモ&lt;/h3&gt;
 
 &lt;ul&gt;
-&lt;li&gt;ルータでonepkを有効にする。設定はGetting Staredに書いてある通り。&lt;a href=&#34;https://developer.cisco.com/media/onepk_getting_started_guide/GUID-03D9D7BB-B201-45FD-B0DE-B928C9D70692.html&#34;&gt;Using a Cisco Router with a Self-Signed Certificate&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;ルータでonepkを有効にする。設定はGetting Staredに書いてある通り。[Using a Cisco Router with a Self-Signed Certificate][1]&lt;/li&gt;
 &lt;li&gt;対象機器は、NetworkElementオブジェクトで定義する&lt;/li&gt;
 &lt;li&gt;対象機器への接続方式は、SessionConfigオブジェクトで定義する。&lt;/li&gt;
 &lt;li&gt;SessionConfigを利用してNetworkElement.connectすることで、実機にアクセスする。&lt;/li&gt;
 &lt;li&gt;connect後のNetworkElementから必要な情報を入手する。&lt;/li&gt;
 &lt;li&gt;明示的にdisconnectしないと、対象機器とのコネクションは切れない。&lt;/li&gt;
 &lt;/ul&gt;
+
+&lt;p&gt;[1]: &lt;a href=&#34;https://developer.cisco.com/media/onepk_getting_started_guide/GUID-03D9D7BB-B201-45FD-B0DE-B928C9D70692.html&#34;&gt;https://developer.cisco.com/media/onepk_getting_started_guide/GUID-03D9D7BB-B201-45FD-B0DE-B928C9D70692.html&lt;/a&gt;&lt;/p&gt;
 </description>
     </item>
     
@@ -622,17 +632,17 @@ end
 
 &lt;p&gt;　ESXi上へのデプロイは成功したのですが、vSPhere Clientのコンソールでは操作できません。&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/wp-content/uploads/2014/04/esxi-console.png&#34; alt=&#34;enter image description here&#34; /&gt;
-&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/wp-content/uploads/2014/04/esxi-console.png&#34; alt=&#34;enter image description here&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;　マニュアルを見るとネットワーク経由でのシリアルポートを有効化する必要があるようなのですが、以下のエラーが出てしまい有効化できません。&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/wp-content/uploads/2014/04/iosxrv-esxi-errror.png&#34; alt=&#34;enter image description here&#34; /&gt;
-&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/wp-content/uploads/2014/04/iosxrv-esxi-errror.png&#34; alt=&#34;enter image description here&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;　エラー文を素直に読むと、無償版ESXiではダメなような。。。起動しているであろうIOS XRvに接続できない。。。IOS XRvは KVM-QEMUもサポートしているのでIOS XRv on KVM on ESXiにするか検討中です。&lt;/p&gt;
 
-&lt;p&gt;　続きを書きました。→&lt;a href=&#34;http://aimless.jp/blog/blog/archives/1804&#34;&gt;IOS XRVにコンソール接続する&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;　続きを書きました。→[IOS XRVにコンソール接続する][4]&lt;/p&gt;
+
+&lt;p&gt;[4]: &lt;a href=&#34;http://aimless.jp/blog/blog/archives/1804&#34;&gt;http://aimless.jp/blog/blog/archives/1804&lt;/a&gt;&lt;/p&gt;
 </description>
     </item>
     
@@ -650,19 +660,19 @@ end
 
 &lt;p&gt;　下記の様に、IOS XRvが稼働している仮想マシンに、名前付きパイプを使用したシリアルポートを追加します。&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/wp-content/uploads/2014/04/named-pipe_xrv.png&#34; alt=&#34;IOS XRv sirial setting&#34; /&gt;
-&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/wp-content/uploads/2014/04/named-pipe_xrv.png&#34; alt=&#34;IOS XRv sirial setting&#34; /&gt;&lt;/p&gt;
 
 &lt;h2 id=&#34;コンソールサーバの設定:a47b7d9c46ee1c93b25a8346c48dd9c8&#34;&gt;コンソールサーバの設定&lt;/h2&gt;
 
 &lt;p&gt;　IOS XRvが稼働しているESXi上にシリアルポートを利用可能なサーバをデプロイし、IOS XRvと同様、名前付きパイプを使用したシリアルポートを追加します。パイプ名はIOS XRvの設定と同一にしてください。今回は元々vmdkが配置されていたCentos6.2を利用しました。&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/wp-content/uploads/2014/04/named-pipe_centos.png&#34; alt=&#34;centos sirial setting&#34; /&gt;
-&lt;/p&gt;
+&lt;p&gt;![centos sirial setting][3]&lt;/p&gt;
 
 &lt;h2 id=&#34;接続:a47b7d9c46ee1c93b25a8346c48dd9c8&#34;&gt;接続&lt;/h2&gt;
 
 &lt;p&gt;　コンソールサーバからscreenを利用してIOS XRvに接続します。IDの作成を求められたので適当なユーザを作ったところ、無事繋がりましたー。&lt;/p&gt;
+
+&lt;p&gt;[3]: &lt;a href=&#34;http://aimless.jp/blog/wp-content/uploads/2014/04/named-pipe_centos.png&#34;&gt;http://aimless.jp/blog/wp-content/uploads/2014/04/named-pipe_centos.png&lt;/a&gt;&lt;/p&gt;
 </description>
     </item>
     
@@ -702,7 +712,9 @@ end
 
 &lt;h3 id=&#34;コミュニティ:bb0dca5de7c128a969ca5a7464d74623&#34;&gt;コミュニティ&lt;/h3&gt;
 
-&lt;p&gt;　Ciscoのコミュニティサイトに、onePKのカテゴリがあります。 いざという時に役に立つはずです。 &lt;a href=&#34;https://communities.cisco.com/community/developer/networking/cisco-one/onepk&#34;&gt;Space: onePK | Cisco Communities&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;　Ciscoのコミュニティサイトに、onePKのカテゴリがあります。 いざという時に役に立つはずです。 [Space: onePK | Cisco Communities][7]&lt;/p&gt;
+
+&lt;p&gt;[7]: &lt;a href=&#34;https://communities.cisco.com/community/developer/networking/cisco-one/onepk&#34;&gt;https://communities.cisco.com/community/developer/networking/cisco-one/onepk&lt;/a&gt;&lt;/p&gt;
 </description>
     </item>
     
@@ -731,8 +743,7 @@ end
 
 &lt;h3 id=&#34;検証環境:8a801d7caae5205bbd472b545f0f0c21&#34;&gt;検証環境&lt;/h3&gt;
 
-&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/wp-content/uploads/2014/03/vpc-diag.png&#34; alt=&#34;enter image description here&#34; /&gt;
-&lt;/p&gt;
+&lt;p&gt;![enter image description here][2]&lt;/p&gt;
 
 &lt;p&gt;　VPCのVGWに対して、2つのVPN Connectionを張ります。設定と動作確認が煩雑になるため、1つのVPN装置が張るVPN Connectionは1つのグローバルIPアドレスのみにします。VPN装置（cisco892JとFortiGate50B）からは、同一経路（192.168.2.0/24）をVPCに対して広報します。&lt;/p&gt;
 
@@ -858,6 +869,8 @@ end
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;　公式のドキュメントにはMEDの記載がありませんでしたが、MEDによる経路制御も効くようですね。個人的にはAS-PATHがわかりやすくて好きなので、AS-PATHを利用します。&lt;/p&gt;
+
+&lt;p&gt;[2]: &lt;a href=&#34;http://aimless.jp/blog/wp-content/uploads/2014/03/vpc-diag.png&#34;&gt;http://aimless.jp/blog/wp-content/uploads/2014/03/vpc-diag.png&lt;/a&gt;&lt;/p&gt;
 </description>
     </item>
     

@@ -102,8 +102,7 @@ v1.0, 2014-01-01
 
 &lt;p&gt;このようにフッターにページ番号が表示されます。今回はフッターにページ番号を付与しましたが、ヘッダーに付与することも可能です。&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/wp-content/uploads/2015/07/asciidoctor_page_number.png&#34; alt=&#34;フッタ&#34; /&gt;
-&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/wp-content/uploads/2015/07/asciidoctor_page_number.png&#34; alt=&#34;フッタ&#34; /&gt;&lt;/p&gt;
 
 &lt;h2 id=&#34;ヘッダーやフッターに画像を追加する:0276447e54b8cc1adc3ebe7f7301ea42&#34;&gt;ヘッダーやフッターに画像を追加する&lt;/h2&gt;
 
@@ -143,8 +142,7 @@ v1.0, 2014-01-01
 
 &lt;p&gt;ヘッダの右に画像が表示されました。ただしverso_content_rightにはimageを指定していないので、右ページには画像が出ますが、左ページには画像が出ません。&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/wp-content/uploads/2015/07/asciidoctor_header_image.png&#34; alt=&#34;ヘッダーに画像&#34; /&gt;
-&lt;/p&gt;
+&lt;p&gt;![ヘッダーに画像][8]&lt;/p&gt;
 
 &lt;h2 id=&#34;フォントを指定する:0276447e54b8cc1adc3ebe7f7301ea42&#34;&gt;フォントを指定する&lt;/h2&gt;
 
@@ -219,6 +217,8 @@ base:
 &lt;/ul&gt;&lt;/li&gt;
 &lt;li&gt;必要最低限に装飾したPDFを作る分にはもってこいかも&lt;/li&gt;
 &lt;/ul&gt;
+
+&lt;p&gt;[8]: &lt;a href=&#34;http://aimless.jp/blog/wp-content/uploads/2015/07/asciidoctor_header_image.png&#34;&gt;http://aimless.jp/blog/wp-content/uploads/2015/07/asciidoctor_header_image.png&lt;/a&gt;&lt;/p&gt;
 </description>
     </item>
     
@@ -307,7 +307,7 @@ base:
 
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;https://github.com/kongou-ae/md-kumihan&#34;&gt;md-kumihan&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://raw.githubusercontent.com/kongou-ae/md-kumihan/master/src/test.md&#34;&gt;このMarkdown&lt;/a&gt;が、コマンド一つで&lt;a href=&#34;https://github.com/kongou-ae/md-kumihan/blob/master/pdf/test.pdf&#34;&gt;このPDF&lt;/a&gt;になります。&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://raw.githubusercontent.com/kongou-ae/md-kumihan/master/src/test.md&#34;&gt;このMarkdown&lt;/a&gt;が、コマンド一つで[このPDF][5]になります。&lt;/li&gt;
 &lt;li&gt;md-kumihanをGialabのリポジトリ上に配置し、ローカルでMarkdownを編集してPushすると、gitlab上のgit-hookやCIツールでPDFを自動ビルド、さらにリポジトリのwikiページにpdfへのリンクを作成とかもできます。&lt;/li&gt;
 &lt;/ul&gt;&lt;/li&gt;
 &lt;/ul&gt;
@@ -325,6 +325,8 @@ base:
 &lt;p&gt;　運用の仕組み＝ドキュメントですから、運用の問題点はドキュメントの問題、運用改善のゴールはドキュメントの改定です。運用の問題点は、随時ドキュメントのIssueとして起票し、対応方法を検討し実践していく。問題点の改善が完了したら、改善点を反映させるためのWIP Marge Requestを作り、ドキュメントの改定作業を実施する。運用改善のタスクが、対応するドキュメントのリポジトリを中心にして回っていく。これが「ドキュメントを中心とした運用改善」です。&lt;/p&gt;
 
 &lt;p&gt;　こんな世界も悪くないんじゃないかなと考え、仮説を検証中です。「気軽にドキュメントを書く」と「ドキュメントを中心とした運用改善」を実現するためのmd-kumihanというツールはできたので、次は自分のチームで勝手に実践だ。&lt;/p&gt;
+
+&lt;p&gt;[5]: &lt;a href=&#34;https://github.com/kongou-ae/md-kumihan/blob/master/pdf/test.pdf&#34;&gt;https://github.com/kongou-ae/md-kumihan/blob/master/pdf/test.pdf&lt;/a&gt;&lt;/p&gt;
 </description>
     </item>
     

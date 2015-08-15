@@ -121,8 +121,7 @@
 
 &lt;p&gt;この方式で注意しないといけない点が、吸排気の向きです。何も考えず「ラックの向きは同じ方がいいよねー」くらいな勢いでラックを設置すると、下図の様に前列のブレードサーバの排気を、後列のブレードサーバが吸気する悲惨なエアフローが出来上がります。これではラック内に直接冷気を送り込んだ意味がありません。&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;http://aimless.jp/images/butflow.png&#34; alt=&#34;ButFlow&#34; /&gt;
-&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://aimless.jp/images/butflow.png&#34; alt=&#34;ButFlow&#34; /&gt;&lt;/p&gt;
 
 &lt;h3 id=&#34;空調その3-コールドアイル-ホットアイル方式:e04a2cc12ff9ccc3b7942f211f9413c9&#34;&gt;空調その3：コールドアイル/ホットアイル方式&lt;/h3&gt;
 
@@ -130,8 +129,7 @@
 
 &lt;p&gt;こうする事で、冷気を確実に機器に吸気させ、機器の排気が別の機器に吸気される状況を防ぎます。また冷気と排熱が混ざってしまう可能性を減らす事が出来ます。&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;http://aimless.jp/images/coldaisle-hotaisle.png&#34; alt=&#34;ColdAisle-HotAisle&#34; /&gt;
-&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://aimless.jp/images/coldaisle-hotaisle.png&#34; alt=&#34;ColdAisle-HotAisle&#34; /&gt;&lt;/p&gt;
 
 &lt;h3 id=&#34;空調その4-コールドアイルチャンバー方式:e04a2cc12ff9ccc3b7942f211f9413c9&#34;&gt;空調その4：コールドアイルチャンバー方式&lt;/h3&gt;
 
@@ -139,8 +137,7 @@
 
 &lt;p&gt;そこでコールドアイルを可能な限り密閉し、部屋に冷気が漏れないようにします。具体的には、通路の横にドアを設置し、上部に蓋をします。こうする事で、空調機の冷気が確実に機器に吸気されるようにします。&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;http://aimless.jp/images/coldaisle-chamber.png&#34; alt=&#34;ColdAisle-Chamber.png&#34; /&gt;
-&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://aimless.jp/images/coldaisle-chamber.png&#34; alt=&#34;ColdAisle-Chamber.png&#34; /&gt;&lt;/p&gt;
 
 &lt;h3 id=&#34;空調その5-ホットアイルチャンバー方式:e04a2cc12ff9ccc3b7942f211f9413c9&#34;&gt;空調その5：ホットアイルチャンバー方式&lt;/h3&gt;
 
@@ -152,8 +149,7 @@
 
 &lt;p&gt;まずは、コールドアイル/ホットアイル方式と同様にラックを整列させます。そしてコールドアイルチャンバーとは逆に、ホットアイルを密閉します。その際に、ラックの間に細長い縦長の空調装置を設置します。パチンコ屋の台間玉貸機みたいな感じです。ホットアイルが密閉されているので、サーバの排気は、部屋に広がることなくラック間の空調装置に吸気されます。そして冷却されコールドアイル側に送られます。この冷やしたての冷気を、機器が吸気します。&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;http://aimless.jp/images/hotaisle-chamber.png&#34; alt=&#34;Hotaisle-Chamber.png&#34; /&gt;
-&lt;/p&gt;
+&lt;p&gt;![Hotaisle-Chamber.png][5]&lt;/p&gt;
 
 &lt;p&gt;こうする事で大規模な空調装置は不要になります。装置の目の前に冷気が送られますから、ロス（部屋を冷やしちゃう）も減ります。また、ホットアイルが密閉されており部屋全体に熱が回る事がない為、部屋自体を冷やす必要もありません。送風する為の床下スペースを必要も事もありません。ケーブルを全て床上配線にすれば、必要なスペースは電源ケーブル用だけ済みます。&lt;/p&gt;
 
@@ -166,6 +162,8 @@
 &lt;p&gt;これら以外にも、外気を潤沢に使ったり、ミストを使ったり、自然水を使ったり、雪を使ったり、コンテナにしてみたり、「そもそも冷やさなくてもいいんじゃね？」と逆転の発想をしてみたりなどなど、さまざまな空調方式があります。&lt;/p&gt;
 
 &lt;p&gt;とはいえ、これらの方式は、一からデータセンタを作れるだけの規模を持ったIT企業や、自社サービス用に同じスペック/大きさのサーバを大量に設置するWebサービス/クラウドの企業がやる事です。ラック貸しが精一杯で、さまざまな形の機器が設置される可能性のある勤め先だと、これらの方式はなかなか手が出せません。今の設備をいかに効率化していくかという観点で考えると、ホットアイルチャンバーが一番いいかなと思います。&lt;/p&gt;
+
+&lt;p&gt;[5]: &lt;a href=&#34;http://aimless.jp/images/hotaisle-chamber.png&#34;&gt;http://aimless.jp/images/hotaisle-chamber.png&lt;/a&gt;&lt;/p&gt;
 </description>
     </item>
     

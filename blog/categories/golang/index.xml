@@ -17,7 +17,7 @@
       <guid>http://aimless.jp/blog/archives/2418</guid>
       <description>&lt;p&gt;セキュリティグループにルールを追加すればするほどマネジメントコンソールでの一覧性が下がるので、全てのルールをCSV形式でエクスポートするコマンドを作ってみました。aws-to-csvです。&lt;/p&gt;
 
-&lt;p&gt;&lt;a href=&#34;https://github.com/kongou-ae/aws-to-csv&#34;&gt;kongou-ae/aws-to-csv&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;[kongou-ae/aws-to-csv][1]&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;$ ./a2csv securityGroups -r ap-northeast-1 -p private
 GroupID,Direction,Type,Protocol,Port Range,IP Range
@@ -39,6 +39,8 @@ sg-b10aecd4,outbound,ALL Traffic,ALL,ALL,0.0.0.0/0
 &lt;p&gt;　セキュリティグループは、APIのレスポンスをそのままCSV形式でエクスポートすると、出力内容がマネジメントコンソールの表示と大きく異なってしまい可読性が低くなります。そこで、APIのレスポンスをあの手この手で細工してからCSV形式で出力するようにしています。&lt;/p&gt;
 
 &lt;p&gt;　今までpythonで遊んでいましたが、今回は、クロスコンパイルにあこがれてgolangを使ってみました。これはすごいですね。VPSでwindows用にコンパイルしたa2csv.exeが、会社のwindows端末でそのまま動く。pythonで書いたコードを使うために、会社のPCにpythonをインストールしていたのが馬鹿みたいです。。。&lt;/p&gt;
+
+&lt;p&gt;[1]: &lt;a href=&#34;https://github.com/kongou-ae/aws-to-csv&#34;&gt;https://github.com/kongou-ae/aws-to-csv&lt;/a&gt;&lt;/p&gt;
 </description>
     </item>
     

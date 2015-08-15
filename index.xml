@@ -56,8 +56,7 @@
 
 &lt;p&gt;　API Gatewayでは、/computeがGETされた場合にLambdaファンクションを発火するようにします。&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/wp-content/uploads/2015/07/api_gateway_setting.png&#34; alt=&#34;&#34; /&gt;
-&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/wp-content/uploads/2015/07/api_gateway_setting.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;　そして、対応するLambdaファンクションでは以下のコードを動かします。SDKを利用して各クラウドのインスタンス情報を取得し配列に格納し、その配列を返すスクリプトです。&lt;/p&gt;
 
@@ -69,8 +68,7 @@
 
 &lt;script src=&#34;https://gist.github.com/kongou-ae/825a49a087311e0814ad.js&#34;&gt;&lt;/script&gt;
 
-&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/wp-content/uploads/2015/07/result_of_api.png&#34; alt=&#34;&#34; /&gt;
-&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/wp-content/uploads/2015/07/result_of_api.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
 </description>
     </item>
     
@@ -88,7 +86,7 @@
 
 &lt;h2 id=&#34;実現方法:273ca993f084584514ef76dff312aa4b&#34;&gt;実現方法&lt;/h2&gt;
 
-&lt;p&gt;　&lt;a href=&#34;https://github.com/mavimo/redmine_cors&#34;&gt;Redmine CORS&lt;/a&gt;を使い、RedmineをCORSに対応させる&lt;/p&gt;
+&lt;p&gt;　[Redmine CORS][1]を使い、RedmineをCORSに対応させる&lt;/p&gt;
 
 &lt;h2 id=&#34;やってみたこと:273ca993f084584514ef76dff312aa4b&#34;&gt;やってみたこと&lt;/h2&gt;
 
@@ -166,6 +164,8 @@ end
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;　なお、書き換えた後に気が付いたのですが、Redmine CORSをRedmine3.0で動作させるためのプルリクエストが出てますね。。。&lt;/p&gt;
+
+&lt;p&gt;[1]: &lt;a href=&#34;https://github.com/mavimo/redmine_cors&#34;&gt;https://github.com/mavimo/redmine_cors&lt;/a&gt;&lt;/p&gt;
 </description>
     </item>
     
@@ -262,8 +262,7 @@ v1.0, 2014-01-01
 
 &lt;p&gt;このようにフッターにページ番号が表示されます。今回はフッターにページ番号を付与しましたが、ヘッダーに付与することも可能です。&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/wp-content/uploads/2015/07/asciidoctor_page_number.png&#34; alt=&#34;フッタ&#34; /&gt;
-&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/wp-content/uploads/2015/07/asciidoctor_page_number.png&#34; alt=&#34;フッタ&#34; /&gt;&lt;/p&gt;
 
 &lt;h2 id=&#34;ヘッダーやフッターに画像を追加する:0276447e54b8cc1adc3ebe7f7301ea42&#34;&gt;ヘッダーやフッターに画像を追加する&lt;/h2&gt;
 
@@ -303,8 +302,7 @@ v1.0, 2014-01-01
 
 &lt;p&gt;ヘッダの右に画像が表示されました。ただしverso_content_rightにはimageを指定していないので、右ページには画像が出ますが、左ページには画像が出ません。&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/wp-content/uploads/2015/07/asciidoctor_header_image.png&#34; alt=&#34;ヘッダーに画像&#34; /&gt;
-&lt;/p&gt;
+&lt;p&gt;![ヘッダーに画像][8]&lt;/p&gt;
 
 &lt;h2 id=&#34;フォントを指定する:0276447e54b8cc1adc3ebe7f7301ea42&#34;&gt;フォントを指定する&lt;/h2&gt;
 
@@ -379,6 +377,8 @@ base:
 &lt;/ul&gt;&lt;/li&gt;
 &lt;li&gt;必要最低限に装飾したPDFを作る分にはもってこいかも&lt;/li&gt;
 &lt;/ul&gt;
+
+&lt;p&gt;[8]: &lt;a href=&#34;http://aimless.jp/blog/wp-content/uploads/2015/07/asciidoctor_header_image.png&#34;&gt;http://aimless.jp/blog/wp-content/uploads/2015/07/asciidoctor_header_image.png&lt;/a&gt;&lt;/p&gt;
 </description>
     </item>
     
@@ -494,8 +494,7 @@ write_token(resp.next_forward_token)
 
 &lt;p&gt;　ElasticSearchに投入済みのデータは以下の通りです。19:25:47までのログが格納されています。&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/wp-content/uploads/2015/06/001.png&#34; alt=&#34;投入済みデータ&#34; /&gt;
-&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/wp-content/uploads/2015/06/001.png&#34; alt=&#34;投入済みデータ&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;　&lt;code&gt;next_token&lt;/code&gt;をつけて&lt;code&gt;get_log_events&lt;/code&gt;したデータをElasticSearchに投入します。投入時のログは以下の通りです。19:28:40のデータ以降がElasticSearchに投入されていることがわかります。&lt;/p&gt;
 
@@ -518,8 +517,7 @@ write_token(resp.next_forward_token)
 
 &lt;p&gt;　投入後のデータ一覧は以下の通りです。19:25:47以前のログが重複登録されることなく、19:25:47以降のログが増えました！！！&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/wp-content/uploads/2015/06/002.png&#34; alt=&#34;投入済みデータ&#34; /&gt;
-&lt;/p&gt;
+&lt;p&gt;![投入済みデータ][4]&lt;/p&gt;
 
 &lt;p&gt;　それっぽく動いたスクリプトは以下の通りです。cronで回してみてみようと思います。&lt;/p&gt;
 
@@ -606,6 +604,8 @@ resp.events.each {|event|
     end
 }
 &lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;[4]: &lt;a href=&#34;http://aimless.jp/blog/wp-content/uploads/2015/06/002.png&#34;&gt;http://aimless.jp/blog/wp-content/uploads/2015/06/002.png&lt;/a&gt;&lt;/p&gt;
 </description>
     </item>
     
@@ -667,18 +667,17 @@ job: {
 
 &lt;p&gt;　Prometheusサーバを再起動すると、コンソールにNodeが追加され、メトリクスを収集している対象の一覧が表示されます。&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/wp-content/uploads/2015/05/primetheus_node_summary.png&#34; alt=&#34;primetheus_node_summary&#34; /&gt;
-&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/wp-content/uploads/2015/05/primetheus_node_summary.png&#34; alt=&#34;primetheus_node_summary&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;　対象のノードをクリックすると、CPUとメモリ、ディスクのグラフが描画されています。&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/wp-content/uploads/2015/05/prometheus_node_detail.png&#34; alt=&#34;prometheus_node_detail&#34; /&gt;
-&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/wp-content/uploads/2015/05/prometheus_node_detail.png&#34; alt=&#34;prometheus_node_detail&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;　Graphタブを利用することで、取得したメトリクスのグラフを描画することが可能です。データの抽出は&lt;a href=&#34;http://prometheus.io/docs/querying/basics/#querying-prometheus&#34;&gt;QUERY LANGUAGE&lt;/a&gt;を利用する必要があります。&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/wp-content/uploads/2015/05/prometheus_node_metric_graph.png&#34; alt=&#34;prometheus_node_metric_graph&#34; /&gt;
-&lt;/p&gt;
+&lt;p&gt;![prometheus_node_metric_graph][6]&lt;/p&gt;
+
+&lt;p&gt;[6]: &lt;a href=&#34;http://aimless.jp/blog/wp-content/uploads/2015/05/prometheus_node_metric_graph.png&#34;&gt;http://aimless.jp/blog/wp-content/uploads/2015/05/prometheus_node_metric_graph.png&lt;/a&gt;&lt;/p&gt;
 </description>
     </item>
     
@@ -751,8 +750,9 @@ prometheus, version 0.13.2 (branch: HEAD, revision: f4d90a1)
   go version:       1.4.2
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/wp-content/uploads/2015/05/Prometheus_GUI.png&#34; alt=&#34;GUI&#34; /&gt;
-&lt;/p&gt;
+&lt;p&gt;![GUI][2]&lt;/p&gt;
+
+&lt;p&gt;[2]: &lt;a href=&#34;http://aimless.jp/blog/wp-content/uploads/2015/05/Prometheus_GUI.png&#34;&gt;http://aimless.jp/blog/wp-content/uploads/2015/05/Prometheus_GUI.png&lt;/a&gt;&lt;/p&gt;
 </description>
     </item>
     
@@ -785,8 +785,7 @@ npm start
 
 &lt;p&gt;　Let&amp;#8217;s Chatにhubot用のアカウントを作成します。また作成したアカウントのAuth Tokenを取得します。&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/wp-content/uploads/2015/05/SnapCrab_NoName_2015-5-2_23-16-54_No-00.png&#34; alt=&#34;Token&#34; /&gt;
-&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/wp-content/uploads/2015/05/SnapCrab_NoName_2015-5-2_23-16-54_No-00.png&#34; alt=&#34;Token&#34; /&gt;&lt;/p&gt;
 
 &lt;h2 id=&#34;hubotのインストール:cfa74896d771b319eb38f92c098ab1f2&#34;&gt;hubotのインストール&lt;/h2&gt;
 
@@ -818,13 +817,13 @@ Joined test
 
 &lt;p&gt;　&lt;code&gt;test&lt;/code&gt;というルームにhubotがログインしました。hubotを停止すると退室します。&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/wp-content/uploads/2015/05/SnapCrab_NoName_2015-5-2_23-11-30_No-00.png&#34; alt=&#34;add room&#34; /&gt;
-&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/wp-content/uploads/2015/05/SnapCrab_NoName_2015-5-2_23-11-30_No-00.png&#34; alt=&#34;add room&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;@つきでhubotに&lt;code&gt;ping&lt;/code&gt;や&lt;code&gt;date&lt;/code&gt;すると、ちゃんと答えます。&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/wp-content/uploads/2015/05/SnapCrab_NoName_2015-5-2_23-12-0_No-00.png&#34; alt=&#34;hubot response&#34; /&gt;
-&lt;/p&gt;
+&lt;p&gt;![hubot response][4]&lt;/p&gt;
+
+&lt;p&gt;[4]: &lt;a href=&#34;http://aimless.jp/blog/wp-content/uploads/2015/05/SnapCrab_NoName_2015-5-2_23-12-0_No-00.png&#34;&gt;http://aimless.jp/blog/wp-content/uploads/2015/05/SnapCrab_NoName_2015-5-2_23-12-0_No-00.png&lt;/a&gt;&lt;/p&gt;
 </description>
     </item>
     
@@ -977,7 +976,7 @@ i-xxxxxxxx:OutOfService,i-xxxxxxxx:OutOfService
 
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;https://github.com/kongou-ae/md-kumihan&#34;&gt;md-kumihan&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://raw.githubusercontent.com/kongou-ae/md-kumihan/master/src/test.md&#34;&gt;このMarkdown&lt;/a&gt;が、コマンド一つで&lt;a href=&#34;https://github.com/kongou-ae/md-kumihan/blob/master/pdf/test.pdf&#34;&gt;このPDF&lt;/a&gt;になります。&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://raw.githubusercontent.com/kongou-ae/md-kumihan/master/src/test.md&#34;&gt;このMarkdown&lt;/a&gt;が、コマンド一つで[このPDF][5]になります。&lt;/li&gt;
 &lt;li&gt;md-kumihanをGialabのリポジトリ上に配置し、ローカルでMarkdownを編集してPushすると、gitlab上のgit-hookやCIツールでPDFを自動ビルド、さらにリポジトリのwikiページにpdfへのリンクを作成とかもできます。&lt;/li&gt;
 &lt;/ul&gt;&lt;/li&gt;
 &lt;/ul&gt;
@@ -995,6 +994,8 @@ i-xxxxxxxx:OutOfService,i-xxxxxxxx:OutOfService
 &lt;p&gt;　運用の仕組み＝ドキュメントですから、運用の問題点はドキュメントの問題、運用改善のゴールはドキュメントの改定です。運用の問題点は、随時ドキュメントのIssueとして起票し、対応方法を検討し実践していく。問題点の改善が完了したら、改善点を反映させるためのWIP Marge Requestを作り、ドキュメントの改定作業を実施する。運用改善のタスクが、対応するドキュメントのリポジトリを中心にして回っていく。これが「ドキュメントを中心とした運用改善」です。&lt;/p&gt;
 
 &lt;p&gt;　こんな世界も悪くないんじゃないかなと考え、仮説を検証中です。「気軽にドキュメントを書く」と「ドキュメントを中心とした運用改善」を実現するためのmd-kumihanというツールはできたので、次は自分のチームで勝手に実践だ。&lt;/p&gt;
+
+&lt;p&gt;[5]: &lt;a href=&#34;https://github.com/kongou-ae/md-kumihan/blob/master/pdf/test.pdf&#34;&gt;https://github.com/kongou-ae/md-kumihan/blob/master/pdf/test.pdf&lt;/a&gt;&lt;/p&gt;
 </description>
     </item>
     
@@ -1189,8 +1190,7 @@ aws_security_group.web-server:
 
 &lt;p&gt;　マネジメントコンソールでも、Terraformの指示通りのセキュリティグループが作成されたことが確認できます。&lt;/p&gt;
 
-&lt;p&gt;　&lt;img src=&#34;http://aimless.jp/blog/wp-content/uploads/2015/03/2015-03-22-01.png&#34; alt=&#34;&#34; /&gt;
-&lt;/p&gt;
+&lt;p&gt;　&lt;img src=&#34;http://aimless.jp/blog/wp-content/uploads/2015/03/2015-03-22-01.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
 
 &lt;h2 id=&#34;ルールの追加-inbound:29a47d36f0cb88ad8f2feca5cd4e2d83&#34;&gt;ルールの追加（Inbound）&lt;/h2&gt;
 
@@ -1328,8 +1328,7 @@ aws_security_group.web-server:
 
 &lt;p&gt;　&lt;code&gt;1 changed&lt;/code&gt;となっています。既存のリソースに変更が発生しました。マネジメントコンソール上で確認すると、inboundにHTTPSが増えています。&lt;/p&gt;
 
-&lt;p&gt;　&lt;img src=&#34;http://aimless.jp/blog/wp-content/uploads/2015/03/2015-03-22-02.png&#34; alt=&#34;&#34; /&gt;
-&lt;/p&gt;
+&lt;p&gt;　&lt;img src=&#34;http://aimless.jp/blog/wp-content/uploads/2015/03/2015-03-22-02.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
 
 &lt;h2 id=&#34;ルールの追加-outbound:29a47d36f0cb88ad8f2feca5cd4e2d83&#34;&gt;ルールの追加（Outbound）&lt;/h2&gt;
 
@@ -1457,8 +1456,9 @@ aws_security_group.web-server:
 
 &lt;p&gt;　1 changed　となっています。既存のリソースに変更が発生しています。マネジメントコンソール上で確認すると、outboundにsg-2da11148向けのALL Trafficが増えています。&lt;/p&gt;
 
-&lt;p&gt;　&lt;img src=&#34;http://aimless.jp/blog/wp-content/uploads/2015/03/2015-03-22-03.png&#34; alt=&#34;&#34; /&gt;
-&lt;/p&gt;
+&lt;p&gt;　![][3]&lt;/p&gt;
+
+&lt;p&gt;[3]: &lt;a href=&#34;http://aimless.jp/blog/wp-content/uploads/2015/03/2015-03-22-03.png&#34;&gt;http://aimless.jp/blog/wp-content/uploads/2015/03/2015-03-22-03.png&lt;/a&gt;&lt;/p&gt;
 </description>
     </item>
     
@@ -1480,13 +1480,23 @@ aws_security_group.web-server:
 
 &lt;p&gt;　クレデンシャルを記載したtfファイルを作成する&lt;/p&gt;
 
+&lt;script src=&#34;https://gist.github.com/kongou-ae/a993635d9521162fe6b4.js&#34;&gt;&lt;/script&gt;
+
 &lt;p&gt;　リソース作成の処理を記載したtfファイルを作成する&lt;/p&gt;
+
+&lt;script src=&#34;https://gist.github.com/kongou-ae/ccb5844778b3d1880f11.js&#34;&gt;&lt;/script&gt;
 
 &lt;p&gt;　処理で利用する変数ファイルをまとめて定義するtfファイルを作成する&lt;/p&gt;
 
+&lt;script src=&#34;https://gist.github.com/kongou-ae/effeb26ef16f22c18386.js&#34;&gt;&lt;/script&gt;
+
 &lt;p&gt;　terraform実行時に渡す変数をまとめたtfファイルを作成する&lt;/p&gt;
 
+&lt;script src=&#34;https://gist.github.com/kongou-ae/4bbc36de4c64ea1c4fe0.js&#34;&gt;&lt;/script&gt;
+
 &lt;p&gt;　terraformする。&lt;/p&gt;
+
+&lt;script src=&#34;https://gist.github.com/kongou-ae/4b8f40fe3a91b6a288c1.js&#34;&gt;&lt;/script&gt;
 
 &lt;h2 id=&#34;失敗談:bf37395249d323f0a481b0db49ec8488&#34;&gt;失敗談&lt;/h2&gt;
 
@@ -1499,6 +1509,8 @@ aws_security_group.web-server:
 &lt;h3 id=&#34;失敗の事例:bf37395249d323f0a481b0db49ec8488&#34;&gt;失敗の事例&lt;/h3&gt;
 
 &lt;p&gt;　ebs_root_device_nameを指定せずにterraformしたログは以下の通り。terraform plan ではルートデバイス1個、ブロックデバイス1個となっているが、terraform applyしてみると、block_device.# = 2になっている。&lt;/p&gt;
+
+&lt;script src=&#34;https://gist.github.com/kongou-ae/7ae35971fa5a2c8a17e0.js&#34;&gt;&lt;/script&gt;
 </description>
     </item>
     
@@ -1531,7 +1543,7 @@ aws_security_group.web-server:
       <guid>http://aimless.jp/blog/archives/2418</guid>
       <description>&lt;p&gt;セキュリティグループにルールを追加すればするほどマネジメントコンソールでの一覧性が下がるので、全てのルールをCSV形式でエクスポートするコマンドを作ってみました。aws-to-csvです。&lt;/p&gt;
 
-&lt;p&gt;&lt;a href=&#34;https://github.com/kongou-ae/aws-to-csv&#34;&gt;kongou-ae/aws-to-csv&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;[kongou-ae/aws-to-csv][1]&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;$ ./a2csv securityGroups -r ap-northeast-1 -p private
 GroupID,Direction,Type,Protocol,Port Range,IP Range
@@ -1553,6 +1565,8 @@ sg-b10aecd4,outbound,ALL Traffic,ALL,ALL,0.0.0.0/0
 &lt;p&gt;　セキュリティグループは、APIのレスポンスをそのままCSV形式でエクスポートすると、出力内容がマネジメントコンソールの表示と大きく異なってしまい可読性が低くなります。そこで、APIのレスポンスをあの手この手で細工してからCSV形式で出力するようにしています。&lt;/p&gt;
 
 &lt;p&gt;　今までpythonで遊んでいましたが、今回は、クロスコンパイルにあこがれてgolangを使ってみました。これはすごいですね。VPSでwindows用にコンパイルしたa2csv.exeが、会社のwindows端末でそのまま動く。pythonで書いたコードを使うために、会社のPCにpythonをインストールしていたのが馬鹿みたいです。。。&lt;/p&gt;
+
+&lt;p&gt;[1]: &lt;a href=&#34;https://github.com/kongou-ae/aws-to-csv&#34;&gt;https://github.com/kongou-ae/aws-to-csv&lt;/a&gt;&lt;/p&gt;
 </description>
     </item>
     

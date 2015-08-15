@@ -25,8 +25,7 @@
 
 &lt;p&gt;　&amp;#8230;Wordでいいじゃね？とは思いますが、気のせいだと思います。&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;http://aimless.jp/images/doc-diag.jpg&#34; alt=&#34;doc-diag&#34; /&gt;
-&lt;/p&gt;
+&lt;p&gt;![doc-diag][1]&lt;/p&gt;
 
 &lt;h1 id=&#34;sphinxを使って-文書の内容と見た目を分離する:a272f9313b7feb55abc66d4c9811e04e&#34;&gt;Sphinxを使って、文書の内容と見た目を分離する&lt;/h1&gt;
 
@@ -61,6 +60,8 @@
 &lt;p&gt;　というわけで、Doeckerを利用してこの仕組みをコンテナにしました。Dockerfileにしたので、Dockerさえ動けば、どの端末でも直ぐにこの仕組みを利用できます。windowsにもboot2dockerがあるので、Docker環境の準備は簡単です。気軽。&lt;/p&gt;
 
 &lt;p&gt;以上、気軽さを求めて試行錯誤した結果でした。&lt;/p&gt;
+
+&lt;p&gt;[1]: &lt;a href=&#34;http://aimless.jp/images/doc-diag.jpg&#34;&gt;http://aimless.jp/images/doc-diag.jpg&lt;/a&gt;&lt;/p&gt;
 </description>
     </item>
     
