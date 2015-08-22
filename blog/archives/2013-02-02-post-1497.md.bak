@@ -1,0 +1,20 @@
+---
+title: DNS Looking Glassを作ってみた。
+author: kongou_ae
+layout: post
+date: 2013-02-02
+url: /blog/archives/1497
+categories:
+  - DNS
+  - ruby
+---
+　ruby on Railsのお勉強という事で、<a href="http://dnslg.aimless.jp/" title="DNS Looking Glass" target="_blank">DNS Looking Glass</a>なるものを作ってみました。入力されたドメインを複数のISPキャッシュDNSに非再帰で問い合わせし、その結果を表示します。「Python3.3で<a href="https://github.com/bortzmeyer/dns-lg" title="https://github.com/bortzmeyer/dns-lg" target="_blank">dns-lg</a>が動かせない！ﾑｷｰ!!ｸﾔｼｲ!!」のモチベーションのみで作ったので、利用シーンがイマイチ思いつきません。あるとすれば、ドメインのお引っ越し確認や毒入りの状況調査等でしょうか。。。
+
+　最初はResolvで作っていましたが、Resolvで非再帰問い合わせをする方法が分らなかったので、<a href="https://github.com/bluemonk/net-dns" title="net-dns" target="_blank">net-dns</a>で書きなおしました。勢いで作ったのでまだまだ至らぬところばかりです。時間を見つけて下記を直したいと思います。
+
+  1. 検索対象のキャッシュDNSの台数を増やす。
+  2. キャッシュDNSの逆引き名を表示する。
+  3. 複数のレコードが返ってきた場合に全件を表示する。
+  4. TTLを表示する。
+  5. Viewに日本語を表示する。
+  6. 入力されたドメインがドメインかどうかをチェックする

@@ -1,0 +1,153 @@
+---
+title: IOS XRvで遊ぶ（設定変更編）
+author: kongou_ae
+layout: post
+date: 2014-05-24
+url: /blog/archives/1967
+categories:
+  - cisco
+---
+　ASR9001を運用する機会がありそうなので、IOS XRvで事前勉強中です。取りあえず、昔ながらのターミナルで設定を変更するにはどうすればいいかを調べました。
+
+# 設定を変更してみる
+
+    RP/0/0/CPU0:aimless-XRv#show running-config 
+    Sat May 24 10:40:28.924 UTC
+    !
+    router bgp 64585
+     bgp router-id 192.168.1.252
+     bgp graceful-restart
+     bgp log neighbor changes detail
+     address-family ipv6 unicast
+     !
+     neighbor 2610:d0:3211:xxx::beaf
+      remote-as 64585
+      graceful-restart
+     !
+    !
+    
+
+　BGPネイバーの2610:d0:3211:xxx::beafに「address-family ipv6 unicast」を追加します。
+
+    RP/0/0/CPU0:aimless-XRv#conf terminal 
+    Sat May 24 10:40:30.874 UTC
+    RP/0/0/CPU0:aimless-XRv(config)#router bgp 64585
+    RP/0/0/CPU0:aimless-XRv(config-bgp)#neighbor 2610:d0:3211:xxx::beaf
+    RP/0/0/CPU0:aimless-XRv(config-bgp-nbr)#address-family ipv6 unicast 
+    RP/0/0/CPU0:aimless-XRv(config-bgp-nbr-af)#exit  
+    RP/0/0/CPU0:aimless-XRv(config-bgp-nbr)#exit
+    RP/0/0/CPU0:aimless-XRv(config-bgp)#exit
+    
+
+　コンフィグレーションモードで[show configuration] コマンドを実行すると、変更した箇所だけを確認することができます。
+
+　また、[show configuration merge] コマンドを実行すると、変更した個所をマージした全てのコンフィグを確認することができます。
+
+    RP/0/0/CPU0:aimless-XRv(config)#show configuration 
+    Sat May 24 10:40:53.203 UTC
+    Building configuration...
+    !! IOS XR Configuration 5.1.1
+    router bgp 64585
+     neighbor 2610:d0:3211:xxx::beaf
+      address-family ipv6 unicast
+      !
+     !
+    !
+    end
+    
+    RP/0/0/CPU0:aimless-XRv(config)#show configuration merge 
+    Sat May 24 10:40:57.423 UTC
+    !
+    router bgp 64585
+     bgp router-id 192.168.1.252
+     bgp graceful-restart
+     bgp log neighbor changes detail
+     address-family ipv6 unicast
+     !
+     neighbor 2610:d0:3211:xxx::beaf
+      remote-as 64585
+      graceful-restart
+      address-family ipv6 unicast
+      !
+     !
+    !
+    end
+    
+
+　不要な設定は入っていませんのでコミットします。変更箇所がrunning-configに反映されます。
+
+    RP/0/0/CPU0:aimless-XRv(config)#commit comment ### added address-family ipv6 unicast 
+    Sat May 24 10:41:46.069 UTC
+    RP/0/0/CPU0:aimless-XRv(config)#end
+    RP/0/0/CPU0:aimless-XRv#show running-config 
+    Sat May 24 10:41:50.539 UTC
+    !
+    router bgp 64585
+     bgp router-id 192.168.1.252
+     bgp graceful-restart
+     bgp log neighbor changes detail
+     address-family ipv6 unicast
+     !
+     neighbor 2610:d0:3211:xxx::beaf
+      remote-as 64585
+      graceful-restart
+      address-family ipv6 unicast
+      !
+     !
+    !
+    end
+    
+
+　コミットについては複数のオプションがありますが、使いそうなのは[comment]です。これを利用すると、commitにコメントをつけることができます。変更の意図や変更管理のIDを入れると、ルータ上のコミット履歴が分かりやすくなると思います。
+
+    RP/0/0/CPU0:aimless-XRv#show configuration commit list detail 
+    Sat May 24 11:37:10.301 UTC
+    （中略）
+       3) CommitId: 1000000018                 Label: NONE
+          UserId:   aimless                    Line:  vty0:node0_0_CPU0
+          Client:   CLI                        Time:  Sat May 24 10:50:52 2014
+          Comment:   ### 140524-01 ### 
+    
+       4) CommitId: 1000000017                 Label: NONE
+          UserId:   aimless                    Line:  vty0:node0_0_CPU0
+          Client:   Rollback                   Time:  Sat May 24 10:48:14 2014
+          Comment:  NONE
+    
+       5) CommitId: 1000000016                 Label: NONE
+          UserId:   aimless                    Line:  vty0:node0_0_CPU0
+          Client:   CLI                        Time:  Sat May 24 10:41:46 2014
+          Comment:   ### added address-family ipv6 unicast  
+    
+
+# 設定をロールバックしてみる
+
+　「あ、やべ間違えた」という事で先ほどの設定をなかったことにします。[rollback]を利用します。[last 1]で直近のコミットを取り消します。
+
+    RP/0/0/CPU0:aimless-XRv#rollback configuration last 1
+    Sat May 24 10:48:13.373 UTC
+    Loading Rollback Changes.
+    Loaded Rollback Changes in 1 sec 
+    Committing.
+    5 items committed in 1 sec (4)items/sec
+    Updating.
+    Updated Commit database in 1 sec 
+    Configuration successfully rolled back 1 commits.
+    RP/0/0/CPU0:aimless-XRv#show running-config 
+    Sat May 24 10:48:21.942 UTC
+    (中略)
+    !
+    router bgp 64585
+     bgp router-id 192.168.1.252
+     bgp graceful-restart
+     bgp log neighbor changes detail
+     address-family ipv6 unicast
+     !
+     neighbor 2610:d0:3211:xxx::beaf
+      remote-as 64585
+      graceful-restart
+     !
+    !         
+    end
+    
+
+　ロールバックの機能は、作業ミスの切り戻しだけでなく、メンテナンスのために追加した設定を元に戻すといった用途でも利用できそうです。

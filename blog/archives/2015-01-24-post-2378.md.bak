@@ -1,0 +1,52 @@
+---
+title: AWSにFortiGateをデプロイしてみた（ログ出力編）
+author: kongou_ae
+layout: post
+date: 2015-01-24
+url: /blog/archives/2378
+categories:
+  - AWS
+  - Fortigate
+---
+　AWS上にデプロイしたForiGate-VMは、デフォルトではログが出力されなかったので、ログを出力するために必要な作業をメモします。
+
+## 初期状態
+
+　デプロイ直後の状況は以下の通りです。
+
+  * メモリログが無効になっている
+  * ディスクログは有効だが、そもそもディスクにパーティションが作られていない
+
+
+  
+　FortiGate-VMには、マーケットプレイスからポチポチデプロイしたときにデフォルトで選択されているEBSを搭載しているのですが、利用できていません。
+
+**EBS選択画面** ![enter image description here][1]
+
+**FortiGateの管理画面** ![enter image description here][2]
+
+## 対処方法
+
+　メモリログを有効にしたい場合はCLIから設定を変更します。ディスクログを有効にする場合は、CLIからディスクをフォーマットします。
+
+
+
+## 動作確認
+
+　管理画面上でもディスクを認識するようになりました。
+
+![enter image description here][3]
+
+　ログ確認画面の表示をディスクに切り替えます。
+
+![enter image description here][4]
+
+　無事、ディスクに保存されているログを確認出来るようになりました。
+
+![enter image description here][5]
+
+ [1]: http://aimless.jp/blog/wp-content/uploads/2015/01/aws-fg-6.png
+ [2]: http://aimless.jp/blog/wp-content/uploads/2015/01/aws-fg-8.png
+ [3]: http://aimless.jp/blog/wp-content/uploads/2015/01/aws-fg-9.png
+ [4]: http://aimless.jp/blog/wp-content/uploads/2015/01/aws-fg-10.png
+ [5]: http://aimless.jp/blog/wp-content/uploads/2015/01/aws-fg-11.png

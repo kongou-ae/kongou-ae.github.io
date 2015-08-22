@@ -1,0 +1,19 @@
+---
+title: IPv6のフルルートにデフォルトルートが混じってた
+author: kongou_ae
+layout: post
+date: 2012-04-22
+url: /blog/archives/873
+categories:
+  - network
+---
+　タイトルそのままです。BGPのメンテナンスで片方のトランジットに対して自社Prefixの広告を止めて、route-serverで世界への反映を眺めていたところ、<a href="http://cisconet.com/route-server/world_map.html" title="route-server_world_map" target="_blank">Oregon Route Views with Verizon UK</a>のBGPテーブルにデフォルトルートが乗っている事に気付きました。これはインターネットに広告しちゃだめなやつだと思うんだけどなぁ・・・
+
+<pre><code>Network          Next Hop            Metric LocPrf Weight Path
+*  ::/0             2001:7f8:4::32e6:1
+                                             1             0 13030 38082 55554 55511 i
+*                   2001:7f8:4::94c2:1
+                                                           0 34288 38082 55554 55511 i
+*&gt;                  2001:7f8:4:1::94c2:1
+                                             1             0 13030 38082 55554 55511 i
+</code></pre>

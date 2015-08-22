@@ -1,0 +1,30 @@
+---
+title: IOS XRvにコンソール接続する
+author: kongou_ae
+layout: post
+date: 2014-04-02
+url: /blog/archives/1804
+categories:
+  - cisco
+---
+　[IOS XRv][1]の続きです。我が家のESXiではCiscoのドキュメントに記載された方法（ネットワーク越しの仮想コンソール接続）でIOS XRvのコンソールに接続することができないようなので、名前付きパイプを利用したコンソール接続を行いました。
+
+## IOS XRvの設定
+
+　下記の様に、IOS XRvが稼働している仮想マシンに、名前付きパイプを使用したシリアルポートを追加します。
+
+![IOS XRv sirial setting][2]
+
+## コンソールサーバの設定
+
+　IOS XRvが稼働しているESXi上にシリアルポートを利用可能なサーバをデプロイし、IOS XRvと同様、名前付きパイプを使用したシリアルポートを追加します。パイプ名はIOS XRvの設定と同一にしてください。今回は元々vmdkが配置されていたCentos6.2を利用しました。
+
+![centos sirial setting][3]
+
+## 接続
+
+　コンソールサーバからscreenを利用してIOS XRvに接続します。IDの作成を求められたので適当なユーザを作ったところ、無事繋がりましたー。
+
+ [1]: http://aimless.jp/blog/blog/archives/1796
+ [2]: http://aimless.jp/blog/wp-content/uploads/2014/04/named-pipe_xrv.png
+ [3]: http://aimless.jp/blog/wp-content/uploads/2014/04/named-pipe_centos.png

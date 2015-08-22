@@ -1,0 +1,10 @@
+---
+title: 管理ポートの仕様
+author: kongou_ae
+layout: post
+date: 2013-06-11
+url: /blog/archives/1615
+categories:
+  - cisco
+---
+　2960Xや3750Xで実装された管理ポート（FastEthernet0）について、CCOのドキュメントを見つけたのでメモ。<a href="http://www.cisco.com/en/US/docs/switches/lan/catalyst3750x_3560x/software/release/12.2_53_se/configuration/guide/swint.html" title="Catalyst 3750-X and 3560-X Switch Software Configuration Guide, Release 12.2(53)SE2" target="_blank">Catalyst 3750-X and 3560-X Switch Software Configuration Guide, Release 12.2(53)SE2</a>のUsing the Ethernet Management Portの項目。

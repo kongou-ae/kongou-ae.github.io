@@ -1,0 +1,45 @@
+---
+title: FortigateのSSL-VPNで2要素認証してみた
+author: kongou_ae
+layout: post
+date: 2012-09-11
+url: /blog/archives/1272
+categories:
+  - Fortigate
+  - network
+---
+</p> 
+
+　いつか仕事でやることもあるだろうという事で、FortigateのSSL-VPNでの二要素認証のやり方をメモします。FortiOSはv4 MR3 Patch 6です。仕組みとしてはハードウェアトークン（FortiToken）、Email、SMSの3種類ありますが、今回はEmailになります。
+
+### MTAの登録
+
+　Fortigateが利用するMTAを登録します。送信元メールアドレスを指定したい場合は、合わせて設定します。私の環境はVDOMを利用しているので、MTAの設定はグローバル側に、送信元メールアドレスの設定はVDOM側に存在していました。
+
+![MTAの設定][1]
+  
+![送信元メアドの設定][2]
+
+### 二要素認証の追加
+
+二要素認証を実施したいユーザの設定画面で、二要素認証を追加します。Emailの項目に記載したアドレスに、認証コードが送信されます。
+
+![二要素認証の有効化][3]
+
+### SSL-VPNでアクセスする
+
+　二要素認証を有効にしたユーザでSSL-VPNのログイン画面にアクセスします。IDとPassの認証を通過すると、Tokenの入力を求められます。
+
+![TokenCodeの要求][4]
+
+　二要素認証を設定した際に入力したEmailアドレスにTokenCodeが送信されていますので、これを入力するといつものWEBポータルにつながります。
+
+![EmailでのTokenCode][5]
+
+　携帯のメアドにTokenCodeを送るようにすれば、かなり簡単に二要素認証を実現できますね。
+
+ [1]: http://aimless.jp/images/forti-ssl01.png
+ [2]: http://aimless.jp/images/forti-ssl01a.png
+ [3]: http://aimless.jp/images/forti-ssl02.png
+ [4]: http://aimless.jp/images/forti-ssl04.png
+ [5]: http://aimless.jp/images/forti-ssl03.png

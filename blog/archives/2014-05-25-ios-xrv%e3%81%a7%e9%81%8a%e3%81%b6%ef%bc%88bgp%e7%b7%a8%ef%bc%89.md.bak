@@ -1,0 +1,110 @@
+---
+title: IOS XRvで遊ぶ（BGP編）
+author: kongou_ae
+layout: post
+date: 2014-05-25
+url: /blog/archives/1975
+categories:
+  - cisco
+---
+　IOS XRvでBGPの設定を試したのでメモ。
+
+# 自ASの経路を広報する
+
+　お作法的な方法で、広報したい経路をNull0で設定し、Networkコマンドで広報します。追加後のコンフィグ（抜粋）は以下のような形になります。スタティックルートがIOSとは全く異なります。
+
+    !
+    router static
+     address-family ipv6 unicast
+      2610:d0:3211::/48 Null0
+     !
+    !         
+    router bgp 64585
+     bgp router-id 192.168.1.252
+     bgp graceful-restart
+     bgp log neighbor changes detail
+     address-family ipv6 unicast
+      network 2610:d0:3211::/48
+     !
+    !
+    
+
+# Inboundのソフトリセットを有効にする
+
+　IOS XRvでは[auto-policy-soft-reset]という機能がデフォルトで有効になっています。この機能が有効だとBGPのポリシー設定を変更した際、直後に自動的にsoft reset が実行されます。
+
+　私は意識的にsoft resetを行いたい人なので、disableにします。[clear bgp ipv4 unicast hogehoge soft [in|out]]をたたく瞬間こそがBGPぺレーション！disableにしたあと、ネイバーに対して明示的に[soft-reconfiguration inbound always]を追加します。
+
+    router bgp 64585
+     bgp router-id 192.168.1.252
+     bgp graceful-restart
+     bgp log neighbor changes detail
+     bgp auto-policy-soft-reset disable
+     address-family ipv6 unicast
+      network 2610:d0:3211::/48
+     !
+     neighbor 2610:d0:3211:100::beaf
+      remote-as 64585
+      graceful-restart
+      address-family ipv6 unicast
+       soft-reconfiguration inbound always
+    
+
+# 経路制御
+
+　IOSで言う所のprefix-list、filter-list、route-mapに代わりに、route-policyが実装されています。全ての経路の受信を止める場合は、条件に[drop]を使えばよさそうです。
+
+    !
+    route-policy IBGP-IN-DENY
+      drop
+    end-policy
+    !
+    router bgp 64585
+     !
+     neighbor 2610:d0:3211:100::beaf
+      remote-as 64585
+      graceful-restart
+      address-family ipv6 unicast
+       route-policy IBGP-IN-DENY in
+       soft-reconfiguration inbound always
+      !
+     !
+    !    
+    
+
+　特定の経路を利用した制御を行う場合、prefix-setを利用したroute-policyを設定します。以下のコンフィグに記載されている[IBGP-IN]のroute-policyをネイバーに適応すると、そのネイバーからは2001:200:xxx::/48の経路のみを受け取るようになります。
+
+　IOSでは同一名のroute-mapにおいてシーケンス番号で複数の処理を設定していましたが、IOS XRでは一つのroute-policy内でIF文を利用して複数の処理を設定します。
+
+    !
+    prefix-set IBGP-IN-FLITER
+      2001:200:xxx::/48
+    end-set
+    !
+    route-policy IBGP-IN
+      if destination in IBGP-IN-FLITER then
+        pass
+      else
+        drop
+      endif
+    end-policy
+    !
+    
+
+　AS番号を利用した制御を行う場合は、as-path-setを利用します。以下のコンフィグに記載されている[IBGP-IN]のroute-policyをネイバーに適応すると、そのネイバーからはAS-PATHが64525のみの経路のみを学習します。また、学習した経路にはLocal-Preference値が10000付与されます。
+
+    !
+    as-path-set 64525
+      ios-regex '^64525$'
+    end-set
+    !
+    route-policy IBGP-IN
+      if as-path in 64525 then
+        pass
+        set local-preference 10000
+      endif
+    end-policy
+    !
+    
+
+　prefix-setとas-path-setを使ってroute-policyを定義することで、IOSでやっていた経路制御と同じことができそうです。route-policy内のIF文の動作については、別途いろいろやってみようと思います。

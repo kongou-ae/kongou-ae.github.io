@@ -1,0 +1,50 @@
+---
+title: Terraformのroot_block_deviceを使う
+author: kongou_ae
+layout: post
+date: 2015-03-09
+url: /blog/archives/2439
+categories:
+  - AWS
+---
+　Terraformのroot\_block\_deviceで躓いたのでメモ。
+
+## やりたいこと
+
+　Terraformを利用して、10Gのルートデバイスと20Gのブロックデバイスを持ったt2.microのインスタンスを起動する
+
+## やったこと
+
+　クレデンシャルを記載したtfファイルを作成する
+
+<script src="https://gist.github.com/kongou-ae/a993635d9521162fe6b4.js"></script>
+
+　リソース作成の処理を記載したtfファイルを作成する
+
+<script src="https://gist.github.com/kongou-ae/ccb5844778b3d1880f11.js"></script>
+
+　処理で利用する変数ファイルをまとめて定義するtfファイルを作成する
+
+<script src="https://gist.github.com/kongou-ae/effeb26ef16f22c18386.js"></script>
+
+　terraform実行時に渡す変数をまとめたtfファイルを作成する
+
+<script src="https://gist.github.com/kongou-ae/4bbc36de4c64ea1c4fe0.js"></script>
+
+　terraformする。
+
+<script src="https://gist.github.com/kongou-ae/4b8f40fe3a91b6a288c1.js"></script>
+
+## 失敗談
+
+　ebs\_root\_device\_nameの値をAMIのルートデバイス名と異なる値にしたところ、root\_block_deviceのパラメータが追加のブロックデバイスとして判断されてしまった。
+
+　たとえば、Amazon Linuxに対してebs\_root\_device_nameを指定しないと、デフォルト値である/dev/sda1が利用されてしまい、ルートデバイスはAMIのデフォルト、そのほかにブロックデバイスが追加で2個EBSが作成されてしまう。
+
+　
+
+### 失敗の事例
+
+　ebs\_root\_device\_nameを指定せずにterraformしたログは以下の通り。terraform plan ではルートデバイス1個、ブロックデバイス1個となっているが、terraform applyしてみると、block\_device.# = 2になっている。
+
+<script src="https://gist.github.com/kongou-ae/7ae35971fa5a2c8a17e0.js"></script>

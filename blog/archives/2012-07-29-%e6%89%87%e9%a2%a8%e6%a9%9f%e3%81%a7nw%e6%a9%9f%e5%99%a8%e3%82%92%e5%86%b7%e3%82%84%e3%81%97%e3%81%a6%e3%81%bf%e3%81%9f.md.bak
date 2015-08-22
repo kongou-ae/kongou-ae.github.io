@@ -1,0 +1,22 @@
+---
+title: 扇風機でNW機器を冷やしてみた
+author: kongou_ae
+layout: post
+date: 2012-07-29
+url: /blog/archives/1226
+categories:
+  - cisco
+  - Fortigate
+  - network
+---
+</p> 
+
+　現在自宅では、Cisco892JとFortigate-50Bが24時間稼働しています。導入後初めての夏を迎え「エアコンなしの部屋でどうなるかなー」と思っていたのですが、Fortigateの表面がやや熱い。
+
+　冷やした方がいいんだろうなぁと思いつつも、この2台の為にエアコンを導入するくらいならサーバが欲しい。というわけで、USB扇風機で風を当ててみました。両機器とも温度を確認できない？ので数値的な比較はできないのですが、触ってみた感じですとちょっと冷たくなった気がします。今年の夏はこれで乗り切りたい。。。
+
+![usbfan][1]
+
+　USB扇風機はCisco892JのUSBポートで給電しています。Cisco892JのUSBポートマジ便利。
+
+ [1]: http://aimless.jp/images/usbfan.png

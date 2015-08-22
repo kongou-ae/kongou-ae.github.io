@@ -1,0 +1,16 @@
+---
+title: ブイロクマ（@IPv6kuma）、新機能追加のお知らせ
+author: kongou_ae
+layout: post
+date: 2011-07-27
+url: /blog/archives/341
+categories:
+  - IPv6kuma
+---
+　昨日、<a href="http://twitter.com/#!/IPv6kuma" title="IPv6kuma" target="_blank">@IPv6kuma</a>よりご連絡しております通り、ブイロクマに新機能を追加しました。今後は、毎日22:30に、IPv6の経路数をお伝えします。
+
+　お伝えする経路数は、Hurricane Electricが公開している<a href="http://ipv6.he.net/bgpview/bgp-table-snapshot.txt" title="HE snapshot" target="_blank">snapshot</a>を参考にしています。この中からベストバスのみをカウントし、昨日の差分と共にご連絡します。日本国内の割り振り状況だけではなく、全世界の経路数の増減もﾆﾖﾆﾖする事で、IPv6が普及していく様子をより詳しく監視していきたいと思います。
+
+　なお、botがしゃべらないのはつまらないので、今後もRubyを勉強しつつ新機能を追加する予定です。つぶやきの元ネタとなる「定期的に更新されるIPv6のデータ」をご存知の方がいらっしゃいましたら、教えて頂けると幸いです。prefixの割り振りと経路の広告状況は監視出来ているので、あとはドメインの対応状況（AAAA）を監視出来れば完璧かなと考えています。素人ゆえ開発はベストエフォートですが。。。
+
+　今後とも<a href="http://twitter.com/#!/IPv6kuma" title="IPv6kuma" target="_blank">@IPv6kuma</a>を宜しくお願いします。

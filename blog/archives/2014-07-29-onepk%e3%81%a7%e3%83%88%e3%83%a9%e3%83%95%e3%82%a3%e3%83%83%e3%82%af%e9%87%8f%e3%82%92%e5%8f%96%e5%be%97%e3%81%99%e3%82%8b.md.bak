@@ -1,0 +1,32 @@
+---
+title: onePKでトラフィック量を取得する
+author: kongou_ae
+layout: post
+date: 2014-07-29
+url: /blog/archives/2098
+categories:
+  - network
+---
+　onePKでトラフィック量を取得できたのでメモ。
+
+　onePKには、インターフェースの統計情報が格納されている[onep.interfaces.InterfaceStatistics.InterfaceStatistics][1]というクラスがあります。このクラスにはshow int の出力結果とほぼ同レベルの情報が格納されています。そこで、以下のクラス変数を利用してトラフィックのグラフを描画してみました。
+
+  * ONEP\_IF\_STAT\_RX\_BYTES\_PER\_SEC &#8211; Interface receive rate in bytes per second.
+  * ONEP\_IF\_STAT\_TX\_BYTES\_PER\_SEC &#8211; Interface transmit rate in bytes per second.
+
+## 実装
+
+　onePKで対象機器から情報を取得し、取得した情報をローカルで動作するgraphiteに入れます。 
+
+　graphiteに入れた情報を、grafanaでカッコいいグラフにします。
+
+![grafana-graph][2]
+
+　注釈が「Interface receive rate in bytes per second」なので、トラフィック量にするためにはbyteをbitにする（＝8倍する）必要があると思っていましたが、onePKで取得した値そのままで作成したグラフとMRTGのグラフと比較すると、ほぼ同じ値になっていました。「Interface receive rate in bits per second」の間違いでしょうか。
+
+　一般的なトラフィック量の取得方法は、前回取得したオクテット総数と今回取得したオクテット総数の差分を求めて、それを時間で割る形だと思います。今回のやり方は、取得した値そのものがトラフィック量であり加工する必要がないので、他ツールとの連携が容易かもしれません。
+
+　BGP Service setの実装が待ち遠しいです。
+
+ [1]: https://developer.cisco.com/media/onepk_python_api/onep.interfaces.InterfaceStatistics.InterfaceStatistics-class.html
+ [2]: http://aimless.jp/blog/wp-content/uploads/2014/07/20140729_grafana_graph.png

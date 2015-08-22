@@ -1,0 +1,42 @@
+---
+title: CiscoルータのBGPをSNMP監視する為のtips
+author: kongou_ae
+layout: post
+date: 2012-04-08
+url: /blog/archives/841
+categories:
+  - cisco
+  - network
+---
+　<a href="http://www.slideshare.net/imksoo/20120408-12313021" title="20120408 #自宅ラック勉強会 を監視してみたい" target="_blank">#自宅ラック勉強会を監視してみたい</a>を受けて色々調べました。多分あってるとおもいます。
+
+### 標準MIB：BGP4-MIB
+
+　bgp（1.3.6.1.2.1.15）です。これは<a href="http://aimless.jp/blog/blog/archives/738" title="BGP-4" target="_blank">以前のエントリー</a>でも紹介した通り、IPv6未対応です。IPv6のPeerが4つ、ipv4のPeerが2つあるCiscoルータに対してbgpPeerState（1.3.6.1.2.1.15.3.1.2）をゲットしても、2つしか返ってきません。
+
+<pre><code># snmpwalk -c xxxx -v 2c xx.aimless.jp 1.3.6.1.2.1.15.3.1.2
+SNMPv2-SMI::mib-2.15.3.1.2.10.12.16.2 = INTEGER: 6
+SNMPv2-SMI::mib-2.15.3.1.2.10.12.16.3 = INTEGER: 6
+</code></pre>
+
+### CiscoMIB：CISCO-BGP4-MIB
+
+　ciscoBgp4MIB（1.3.6.1.4.1.9.9.187）です。15.2(3)Tより前のIOSではIPv6未対応です。cbgpPeerPrevState（1.3.6.1.4.1.9.9.187.1.2.1.1.8）をゲットしてもIPv4の2つしか返ってきません。
+
+<pre><code># snmpwalk -c xxxx -v 2c xx.aimless.jp 1.3.6.1.4.1.9.9.187.1.2.1.1.8
+SNMPv2-SMI::enterprises.9.9.187.1.2.1.1.8.10.12.16.2 = INTEGER: 5
+SNMPv2-SMI::enterprises.9.9.187.1.2.1.1.8.10.12.16.3 = INTEGER: 5
+</code></pre>
+
+### CiscoMIB：CISCO-BGP4-MIBv2
+
+　<a href="http://www.cisco.com/en/US/docs/ios/15_2m_and_t/release/notes/152-3TNEWF.html#wp62358" title="Cisco-BGP-MIBv2" target="_blank">IOS15.2(3)T</a>で追加されたっぽいCisco-BGP-MIBv2です。ciscoBgp4MIB（1.3.6.1.4.1.9.9.187）の配下にある「2」ってついてるオブジェクトです。cbgpPeer2State(1.3.6.1.4.1.9.9.187.1.2.5.1.3)をゲットすると、IPv4が2つとIPv6が4つで合計6つ返ってきます。
+
+<pre><code># snmpwalk -c xxxx -v 2c xx.aimless.jp 1.3.6.1.4.1.9.9.187.1.2.5.1.3                           
+SNMPv2-SMI::enterprises.9.9.187.1.2.5.1.3.1.4.10.12.16.2 = INTEGER: 6
+SNMPv2-SMI::enterprises.9.9.187.1.2.5.1.3.1.4.10.12.16.3 = INTEGER: 6
+SNMPv2-SMI::enterprises.9.9.187.1.2.5.1.3.20.16.32.1.4.112.0.36.5.113.0.0.0.0.0.0.0.17 = INTEGER: 1
+SNMPv2-SMI::enterprises.9.9.187.1.2.5.1.3.20.16.32.1.14.65.49.212.54.72.0.0.0.0.0.0.0.17 = INTEGER: 6
+SNMPv2-SMI::enterprises.9.9.187.1.2.5.1.3.20.16.32.1.14.65.49.212.54.72.0.0.0.0.0.0.0.22 = INTEGER: 6
+SNMPv2-SMI::enterprises.9.9.187.1.2.5.1.3.20.16.32.1.14.65.49.212.54.72.0.0.0.0.0.0.0.26 = INTEGER: 6
+</code></pre>

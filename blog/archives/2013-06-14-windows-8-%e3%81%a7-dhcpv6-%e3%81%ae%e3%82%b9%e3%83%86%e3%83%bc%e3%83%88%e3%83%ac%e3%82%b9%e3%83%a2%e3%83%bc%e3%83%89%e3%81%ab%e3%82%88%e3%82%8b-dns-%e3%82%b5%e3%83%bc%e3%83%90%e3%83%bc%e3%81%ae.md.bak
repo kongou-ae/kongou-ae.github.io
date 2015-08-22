@@ -1,0 +1,12 @@
+---
+title: Windows 8 で DHCPv6 のステートレスモードによる DNS サーバーのアドレス取得ができない
+author: kongou_ae
+layout: post
+date: 2013-06-14
+url: /blog/archives/1620
+categories:
+  - DNS
+---
+　こんな不具合があるのですね⇒<a href="http://support.microsoft.com/kb/2772182/ja" title="Windows 8 で DHCPv6 のステートレスモードによる DNS サーバーのアドレス取得ができない" target="_blank">Windows 8 で DHCPv6 のステートレスモードによる DNS サーバーのアドレス取得ができない</a>
+
+　Path MTU Discoveryを今一度勉強するためにキャプチャしながらPingを打っていたところ、ステートレスDHCPv6でIPv6のDNSを受け取っているはずWin8が、IPv4のDNSに問い合わせを行っていることを発見しました。ipconfig /allでDNSを確認してみると、IPv4のDNSしか反映されていない。「なぜ？」と思いググってみたらこの不具合が見つかりました。パッチを当てたら見事に解決しました。よかったよかった。

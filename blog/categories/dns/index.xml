@@ -734,7 +734,7 @@ xvideos.com.    295     IN      A       141.0.174.34
 
 &lt;p&gt;　WEBページにアクセスすると一気に70000件のDNS問い合わせが行われることを期待したのですが、そんな馬鹿な実装をしているブラウザはありませんでした。DNSプリフェッチでNAT箱は殺せない模様。 　もしかしたら、Safariやoperaだと一気にDNSクエリを投げてくれるのかしら。&lt;/p&gt;
 
-&lt;p&gt;[1]: &lt;a href=&#34;http://aimless.jp/images/test_diagram.png&#34;&gt;http://aimless.jp/images/test_diagram.png&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;[1]: &lt;a href=&#34;http://aimless.jp/blog/images/test_diagram.png&#34;&gt;http://aimless.jp/blog/images/test_diagram.png&lt;/a&gt;&lt;/p&gt;
 </description>
     </item>
     
@@ -869,7 +869,7 @@ x.x.0.0.0.0.0.0.0.0.0.0.0.0.0.0.3.5.0.0.1.e.d.f.0.7.4.0.1.0.0.2.ip6.arpa. 3600 I
 1.e.d.f.0.7.4.0.1.0.0.2.ip6.arpa. 3600 IN NS    dns4.aimless.jp.
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;[1]: &lt;a href=&#34;http://aimless.jp/images/rDNS_of_HE.png&#34;&gt;http://aimless.jp/images/rDNS_of_HE.png&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;[1]: &lt;a href=&#34;http://aimless.jp/blog/images/rDNS_of_HE.png&#34;&gt;http://aimless.jp/blog/images/rDNS_of_HE.png&lt;/a&gt;&lt;/p&gt;
 </description>
     </item>
     
@@ -1290,7 +1290,7 @@ dns4.aimless.jp
 
 &lt;h3 id=&#34;ドメイン所有権の確認:c7ba77dd01a5da1e7cd6427b246d95d1&#34;&gt;ドメイン所有権の確認&lt;/h3&gt;
 
-&lt;p&gt;&lt;img src=&#34;http://aimless.jp/images/gehirn1.png&#34; alt=&#34;dns-verification&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/images/gehirn1.png&#34; alt=&#34;dns-verification&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;　アカウントを取得してドメインを登録しようとすると、所有権の確認が行われます。ちょっと前に色々ありましたからね。「新規であればレジストラのDNSにGehirn DNSと検証用のコードを登録してから来い。所有者なら出来るだろ！」「移転なら、ドメインのTXTレコードに検証用のコードを示せ。所有者なら出来るだろ！」って事だと思います。とりあえず移転扱いと言う事で、自ドメインのTXTに検証用コードを追加しました。&lt;/p&gt;
 
@@ -1316,7 +1316,7 @@ dns4.aimless.jp
 
 &lt;p&gt;　APIでアクセスできるDNSって珍しいような気がします。そういった利用をしたい方にはお勧めかもしれません。&lt;/p&gt;
 
-&lt;p&gt;[2]: &lt;a href=&#34;http://aimless.jp/images/gehirn2.png&#34;&gt;http://aimless.jp/images/gehirn2.png&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;[2]: &lt;a href=&#34;http://aimless.jp/blog/images/gehirn2.png&#34;&gt;http://aimless.jp/blog/images/gehirn2.png&lt;/a&gt;&lt;/p&gt;
 </description>
     </item>
     

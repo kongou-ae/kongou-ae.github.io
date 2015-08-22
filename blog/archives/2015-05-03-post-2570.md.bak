@@ -1,0 +1,72 @@
+---
+title: Let’s Chatでhubotを動かす
+author: kongou_ae
+layout: post
+date: 2015-05-02
+url: /blog/archives/2570
+categories:
+  - Server
+---
+[Let&#8217;s Chat][1]でhubotを動かしてみました。
+
+## Let&#8217;s Chatのインストール
+
+　nodejsとpythonはインストール済みなので、mongodbのみyumでインストールします。
+
+<pre><code>sudo yum install mongodb
+sudo yum install mongodb-server.x86_64
+sudo systemctl start mongod.service
+git clone https://github.com/sdelements/lets-chat.git
+cd lets-chat
+npm install
+npm start
+</code></pre>
+
+　デフォルトだと5000番でリッスンします。FQDNやポート番号を含む各種パラメータは`settings.yml`で変更可能です。今回は、Let&#8217;s Chatはデフォルト設定のままとし、前段のnginxでバーチャルホスト+80番のアクセスを受けて、Let&#8217;s Chatの5000番にProxyPassしています。
+
+## hubot用アカウントの作成
+
+　Let&#8217;s Chatにhubot用のアカウントを作成します。また作成したアカウントのAuth Tokenを取得します。
+
+![Token][2]
+
+## hubotのインストール
+
+<pre><code>sudo  npm install -g yo generator-hubot
+mkdir myhubot
+cd myhubot
+yo hubot
+npm install hubot-lets-chat --save
+</code></pre>
+
+## hubot起動スクリプトの作成
+
+　`HUBOT_LCB_TOKEN`の項目に、Let&#8217;s Chat上で取得したhubotアカウントのAuth Tokenを記載します。また`HUBOT_LCB_ROOMS`にはhubotを常駐させたいRoomの識別子（URLに含まれる値）を入力します。
+
+<pre><code>myhubot]$ cat run_hubot.sh
+export HUBOT_LCB_TOKEN=TOKEN_OF_YOUR_HUBOT_ACCOUNT
+export HUBOT_LCB_ROOMS=553db2dcf62762863672ea19
+bin/hubot -a lets-chat
+</code></pre>
+
+## hubotの起動＋動作確認
+
+<pre><code>myhubot]$ ./run_hubot.sh                                 
+connected
+[Sun May 03 2015 00:01:55 GMT+0900 (JST)] ERROR hubot-heroku-alive included, but missing HUBOT_HEROKU_KEEPALIVE_URL. `heroku config:set HUBOT_HEROKU_KEEPALIVE_URL=$(heroku apps:info -s  | grep web_url | cut -d= -f2)`
+[Sun May 03 2015 00:01:55 GMT+0900 (JST)] INFO Using default redis on localhost:6379
+Joined test
+</code></pre>
+
+　`test`というルームにhubotがログインしました。hubotを停止すると退室します。
+
+![add room][3]
+
+@つきでhubotに`ping`や`date`すると、ちゃんと答えます。
+
+![hubot response][4]
+
+ [1]: http://sdelements.github.io/lets-chat/
+ [2]: http://aimless.jp/blog/wp-content/uploads/2015/05/SnapCrab_NoName_2015-5-2_23-16-54_No-00.png
+ [3]: http://aimless.jp/blog/wp-content/uploads/2015/05/SnapCrab_NoName_2015-5-2_23-11-30_No-00.png
+ [4]: http://aimless.jp/blog/wp-content/uploads/2015/05/SnapCrab_NoName_2015-5-2_23-12-0_No-00.png

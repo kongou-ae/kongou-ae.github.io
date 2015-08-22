@@ -1,0 +1,18 @@
+---
+title: Amazon LinuxにLodgeをインストールした
+author: kongou_ae
+layout: post
+date: 2015-02-19
+url: /blog/archives/2408
+categories:
+  - AWS
+---
+　Amazon Linuxにナレッジ/ノウハウ情報共有サービスのOSS「Lodge」をインストールしたので手順をメモしておきます。取りあえず動かすことが目的です。
+
+
+
+　ブラウザから「ec2-xxx-xxx-xxx-xxx.ap-northeast-1.compute.amazonaws.com:3000」にアクセスしてログイン画面が出れば成功です。TCP/3000をセキュリティグループで許可することを忘れずに。
+  
+　
+  
+　また、TCP/3000でのアクセスは不便だったので、前段にNginx等のリバースプロキシを置いてTCP/80でアクセスできるようにしました。

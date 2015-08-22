@@ -1,0 +1,28 @@
+---
+title: AWS上のオンデマンドなUTM製品を比較する
+author: kongou_ae
+layout: post
+date: 2015-02-16
+url: /blog/archives/2399
+categories:
+  - AWS
+  - Fortigate
+  - network
+---
+　イマイチ使いどころが見つけられないAWS上のUTM製品について、オンデマンド版（ライセンスこみで使えるAMI）の費用を比較しました。
+  
+　なお、AWS上には、Barracuda NG FirewallやPaloalto VM-Seriesもあるのですが、これらはオンデマンド版が存在せずBYOL版のみのため、記載していません。オンデマンド版があれば、評価しやすいのに。。。
+
+| インスタンスタイプ  | FortiGate-VM | CheckPoint VA | sophos-UTM 9 |
+| ---------- | ------------ | ------------- | ------------ |
+| t1.micro   | &#8211;      | &#8211;       | $0.02/hr     |
+| t1.small   | &#8211;      | &#8211;       | $0.264/hr    |
+| m3.medium  | $0.37/hr     | –             | $0.42/hr     |
+| m3.large   | $0.95/hr     | –             | $0.84/hr     |
+| m3.xlarge  | $2.13/hr     | –             | $1.68/hr     |
+| m3.2xlarge | $4.49/hr     | –             | $3.36/hr     |
+| c3.large   | $0.835/hr    | $1.815/hr     | $0.525/hr    |
+| c3.xlarge  | $1.87/hr     | $2.80/hr      | $1.05/hr     |
+| c3.2xlarge | $3.95/hr     | $4.86/hr      | $2.10/hr     |
+| c3.4xlarge | –            | $6.483/hr     | $4.20/hr     |
+| c3.8xlarge | –            | $8.688/hr     | $8.40/hr     |

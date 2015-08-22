@@ -1,0 +1,32 @@
+---
+title: onePKで遊ぶ（ルーティング取得）
+author: kongou_ae
+layout: post
+date: 2014-04-06
+url: /blog/archives/1852
+categories:
+  - cisco
+  - python
+---
+　GAになったonePKで遊んでいます。見よう見まねでルーティング情報を取得するスクリプトを書いてみました。必要な情報を入手するために、SSHでログインして正規表現で抽出していた従来とは全く違います。
+
+　次はルーティングを追加するスクリプトを書いてみようと思います。
+
+## 実行結果
+
+
+
+### スクリプト
+
+
+
+### メモ
+
+  * ルータでonepkを有効にする。設定はGetting Staredに書いてある通り。[Using a Cisco Router with a Self-Signed Certificate][1] 
+  * 対象機器は、NetworkElementオブジェクトで定義する
+  * 対象機器への接続方式は、SessionConfigオブジェクトで定義する。
+  * SessionConfigを利用してNetworkElement.connectすることで、実機にアクセスする。
+  * connect後のNetworkElementから必要な情報を入手する。
+  * 明示的にdisconnectしないと、対象機器とのコネクションは切れない。
+
+ [1]: https://developer.cisco.com/media/onepk_getting_started_guide/GUID-03D9D7BB-B201-45FD-B0DE-B928C9D70692.html

@@ -1,0 +1,64 @@
+---
+title: aws-sdk-goでELB配下のインスタンスを取得する
+author: kongou_ae
+layout: post
+date: 2015-04-11
+url: /blog/archives/2546
+categories:
+  - AWS
+---
+　諸事情によりAWS製ツールをインストールできないWindows端末でAWSのAPIを叩く必要があり、手法を検討しました。あーだこーだと悩んだ結果、別の端末で作成したバイナリファイルを実行することを閃きました。こんな時のためのaws-sdk-goです。
+
+<pre><code>package main
+
+import (
+    "fmt"
+    "github.com/awslabs/aws-sdk-go/aws"
+    "github.com/awslabs/aws-sdk-go/service/elb"
+    "sort"
+    "strings"
+)
+
+func main() {
+    accessKey := "YOUR_ACCESS_KEY"
+    secretKey := "YOUR_AECRET_KEY"
+    region := "ap-northeast-1"
+    elbName := "YOUR_ELB_NAME"
+    var inserviceInstances []string
+
+    cred := aws.DetectCreds(accessKey, secretKey, "")
+    elbSvc := elb.New(&aws.Config{Credentials: cred, Region: region})
+
+    param := &elb.DescribeInstanceHealthInput{
+        LoadBalancerName: aws.String(elbName),
+    }
+
+    res, err := elbSvc.DescribeInstanceHealth(param)
+
+    if err != nil {
+        panic(err)
+    }
+
+    for i := range res.InstanceStates {
+        result := *res.InstanceStates[i].InstanceID + ":" + *res.InstanceStates[i].State
+        inserviceInstances = append(inserviceInstances, result)
+    }
+
+    sort.Strings(inserviceInstances)
+    fmt.Print(strings.Join(inserviceInstances, ","))
+}
+</code></pre>
+
+　このスクリプトを実行すると、対象ELB配下のインスタンスとその状態が表示されます。
+
+<pre><code>&gt;go run main.go
+i-xxxxxxxx:OutOfService,i-xxxxxxxx:OutOfService
+</code></pre>
+
+　コンパイルしたバイナリファイルを実行しても同じ結果になります。このバイナリを問題のWindows端末で実行すれば問題は解決です。
+
+<pre><code>&gt;go build main.go
+
+&gt;main.exe
+i-xxxxxxxx:OutOfService,i-xxxxxxxx:OutOfService
+</code></pre>

@@ -1,0 +1,447 @@
+---
+title: Terraformでセキュリティグループを管理する
+author: kongou_ae
+layout: post
+date: 2015-03-22
+url: /blog/archives/2481
+categories:
+  - AWS
+---
+　Terraformによるセキュリティグループ管理に関するメモ。
+
+　Terraformのバージョンアップにより、タグ付けやegressのルールが使えるようになったので、マネジメントコンソールと同じ事ができるようになっています。
+
+| version                   | IMPROVEMENTS                                                |
+| ------------------------- | ----------------------------------------------------------- |
+| 0.3.7 (February 19, 2015) | provider/aws: Security group support egress rules. [GH-856] |
+| 0.3.1 (October 21, 2014)  | providers/aws: Support tags for security groups.            |
+
+## ファイル構成
+
+<pre><code>$ ls                                               
+var.tf　　  　terraform.tfvars        web-sg.tf
+</code></pre>
+
+　tfファイルで利用する変数を定義するためのファイル
+
+<pre><code>$  cat var.tf                                      
+variable "access_key" {}
+variable "secret_key" {}
+variable "region" {}
+</code></pre>
+
+　tfファイルで利用する変数に値を代入するためのファイル
+
+<pre><code>$ cat terraform.tfvars 
+#-------------------------------------$
+# credential$
+#-------------------------------------$
+
+access_key = "YOUR_ACCESS_KEY"
+secret_key = "YOUR_SECRET_KEY"
+
+#-------------------------------------
+# region
+#-------------------------------------
+#
+region = "ap-northeast-1"
+</code></pre>
+
+　実際の処理を書いたファイル。WEBサーバ向けにHTTPを全許可するセキュリティグループを作ります。
+
+<pre><code>$ cat web-sg.tf 
+provider "aws" {
+    access_key = "${var.access_key}"
+    secret_key = "${var.secret_key}"
+    region = "${var.region}"
+}
+
+resource "aws_security_group" "web-server" {
+  name = "web-server-sg"
+  description = "Allow traffic of webserver"
+
+  ingress {
+      from_port = 80 
+      to_port = 80
+      protocol = "tcp"
+      cidr_blocks = ["0.0.0.0/0"]
+  }
+  vpc_id = "vpc-d01806b2"
+  tags {
+    Name = "web-server"
+    Made = "terraform"
+  }
+}
+</code></pre>
+
+## セキュリティグループの作成
+
+まずは`terraform plan`
+
+<pre><code>$ terraform plan
+Refreshing Terraform state prior to plan...
+
+
+The Terraform execution plan has been generated and is shown below.
+Resources are shown in alphabetical order for quick scanning. Green resources
+will be created (or destroyed and then created if an existing resource
+exists), yellow resources are being changed in-place, and red resources
+will be destroyed.
+
+Note: You didn&#039;t specify an "-out" parameter to save this plan, so when
+"apply" is called, Terraform can&#039;t guarantee this is what will execute.
+
++ aws_security_group.web-server
+    description:                          "" =&gt; "Allow traffic of webserver"
+    egress.#:                             "" =&gt; "&lt;computed&gt;"
+    ingress.#:                            "" =&gt; "1"
+    ingress.2603706321.cidr_blocks.#:     "" =&gt; "1"
+    ingress.2603706321.cidr_blocks.0:     "" =&gt; "0.0.0.0/0"
+    ingress.2603706321.from_port:         "" =&gt; "80"
+    ingress.2603706321.protocol:          "" =&gt; "tcp"
+    ingress.2603706321.security_groups.#: "" =&gt; "0"
+    ingress.2603706321.self:              "" =&gt; "0"
+    ingress.2603706321.to_port:           "" =&gt; "80"
+    name:                                 "" =&gt; "web-server-sg"
+    owner_id:                             "" =&gt; "&lt;computed&gt;"
+    tags.#:                               "" =&gt; "2"
+    tags.Made:                            "" =&gt; "terraform"
+    tags.Name:                            "" =&gt; "web-server"
+    vpc_id:                               "" =&gt; "vpc-d01806b2"
+</code></pre>
+
+　問題なさそうなので`terraform apply`
+
+<pre><code>$ terraform apply
+aws_security_group.web-server: Creating...
+  description:                          "" =&gt; "Allow traffic of webserver"
+  egress.#:                             "" =&gt; "&lt;computed&gt;"
+  ingress.#:                            "" =&gt; "1"
+  ingress.2603706321.cidr_blocks.#:     "" =&gt; "1"
+  ingress.2603706321.cidr_blocks.0:     "" =&gt; "0.0.0.0/0"
+  ingress.2603706321.from_port:         "" =&gt; "80"
+  ingress.2603706321.protocol:          "" =&gt; "tcp"
+  ingress.2603706321.security_groups.#: "" =&gt; "0"
+  ingress.2603706321.self:              "" =&gt; "0"
+  ingress.2603706321.to_port:           "" =&gt; "80"
+  name:                                 "" =&gt; "web-server-sg"
+  owner_id:                             "" =&gt; "&lt;computed&gt;"
+  tags.#:                               "" =&gt; "2"
+  tags.Made:                            "" =&gt; "terraform"
+  tags.Name:                            "" =&gt; "web-server"
+  vpc_id:                               "" =&gt; "vpc-d01806b2"
+aws_security_group.web-server: Creation complete
+
+Apply complete! Resources: 1 added, 0 changed, 0 destroyed.
+
+The state of your infrastructure has been saved to the path
+below. This state is required to modify and destroy your
+infrastructure, so keep it safe. To inspect the complete state
+use the `terraform show` command.
+
+State path: terraform.tfstate
+</code></pre>
+
+　`1 added`となっています。`terraform show`で今の状態を確認します。sg-8a53d6efができました。
+
+<pre><code>$ terraform show                                                                         
+aws_security_group.web-server:
+  id = sg-8a53d6ef
+  description = Allow traffic of webserver
+  egress.# = 1
+  egress.1965070075.cidr_blocks.# = 1
+  egress.1965070075.cidr_blocks.0 = 0.0.0.0/0
+  egress.1965070075.from_port = 0
+  egress.1965070075.protocol = -1
+  egress.1965070075.security_groups.# = 0
+  egress.1965070075.self = false
+  egress.1965070075.to_port = 0
+  ingress.# = 1
+  ingress.2603706321.cidr_blocks.# = 1
+  ingress.2603706321.cidr_blocks.0 = 0.0.0.0/0
+  ingress.2603706321.from_port = 80
+  ingress.2603706321.protocol = tcp
+  ingress.2603706321.security_groups.# = 0
+  ingress.2603706321.self = false
+  ingress.2603706321.to_port = 80
+  name = web-server-sg
+  owner_id = MY_AWS_ACCOUNT_NUMBER
+  tags.# = 2
+  tags.Made = terraform
+  tags.Name = web-server
+  vpc_id = vpc-d01806b2
+</code></pre>
+
+　マネジメントコンソールでも、Terraformの指示通りのセキュリティグループが作成されたことが確認できます。
+
+　![][1]
+
+## ルールの追加（Inbound）
+
+　inboundにHTTPSを追加してみましょう。
+
+<pre><code>$ cat web-sg.tf 
+provider "aws" {
+    access_key = "${var.access_key}"
+    secret_key = "${var.secret_key}"
+    region = "${var.region}"
+}
+
+resource "aws_security_group" "web-server" {
+  name = "web-server-sg"
+  description = "Allow traffic of webserver"
+
+  ingress {
+      from_port = 80 
+      to_port = 80
+      protocol = "tcp"
+      cidr_blocks = ["0.0.0.0/0"]
+  }
+  ingress {
+      from_port = 443
+      to_port = 443
+      protocol = "tcp"
+      cidr_blocks = ["0.0.0.0/0"]
+  }
+  vpc_id = "vpc-d01806b2"
+  tags {
+    Name = "web-server"
+    Made = "terraform"
+  }
+}
+</code></pre>
+
+　tfファイルを編集後、`terraform plan`からの`terraform apply`、`terraform show`
+
+<pre><code>$ terraform plan
+Refreshing Terraform state prior to plan...
+
+aws_security_group.web-server: Refreshing state... (ID: sg-8a53d6ef)
+
+The Terraform execution plan has been generated and is shown below.
+Resources are shown in alphabetical order for quick scanning. Green resources
+will be created (or destroyed and then created if an existing resource
+exists), yellow resources are being changed in-place, and red resources
+will be destroyed.
+
+Note: You didn&#039;t specify an "-out" parameter to save this plan, so when
+"apply" is called, Terraform can&#039;t guarantee this is what will execute.
+
+~ aws_security_group.web-server
+    ingress.#:                            "1" =&gt; "2"
+    ingress.2603706321.cidr_blocks.#:     "1" =&gt; "1"
+    ingress.2603706321.cidr_blocks.0:     "0.0.0.0/0" =&gt; "0.0.0.0/0"
+    ingress.2603706321.from_port:         "80" =&gt; "80"
+    ingress.2603706321.protocol:          "tcp" =&gt; "tcp"
+    ingress.2603706321.security_groups.#: "0" =&gt; "0"
+    ingress.2603706321.self:              "0" =&gt; "0"
+    ingress.2603706321.to_port:           "80" =&gt; "80"
+    ingress.4089093546.cidr_blocks.#:     "0" =&gt; "1"
+    ingress.4089093546.cidr_blocks.0:     "" =&gt; "0.0.0.0/0"
+    ingress.4089093546.from_port:         "" =&gt; "443"
+    ingress.4089093546.protocol:          "" =&gt; "tcp"
+    ingress.4089093546.security_groups.#: "0" =&gt; "0"
+    ingress.4089093546.self:              "" =&gt; "0"
+    ingress.4089093546.to_port:           "" =&gt; "443"
+
+
+$ 
+$ terraform apply
+aws_security_group.web-server: Refreshing state... (ID: sg-8a53d6ef)
+aws_security_group.web-server: Modifying...
+  ingress.#:                            "1" =&gt; "2"
+  ingress.2603706321.cidr_blocks.#:     "1" =&gt; "1"
+  ingress.2603706321.cidr_blocks.0:     "0.0.0.0/0" =&gt; "0.0.0.0/0"
+  ingress.2603706321.from_port:         "80" =&gt; "80"
+  ingress.2603706321.protocol:          "tcp" =&gt; "tcp"
+  ingress.2603706321.security_groups.#: "0" =&gt; "0"
+  ingress.2603706321.self:              "0" =&gt; "0"
+  ingress.2603706321.to_port:           "80" =&gt; "80"
+  ingress.4089093546.cidr_blocks.#:     "0" =&gt; "1"
+  ingress.4089093546.cidr_blocks.0:     "" =&gt; "0.0.0.0/0"
+  ingress.4089093546.from_port:         "" =&gt; "443"
+  ingress.4089093546.protocol:          "" =&gt; "tcp"
+  ingress.4089093546.security_groups.#: "0" =&gt; "0"
+  ingress.4089093546.self:              "" =&gt; "0"
+  ingress.4089093546.to_port:           "" =&gt; "443"
+aws_security_group.web-server: Modifications complete
+
+Apply complete! Resources: 0 added, 1 changed, 0 destroyed.
+
+The state of your infrastructure has been saved to the path
+below. This state is required to modify and destroy your
+infrastructure, so keep it safe. To inspect the complete state
+use the `terraform show` command.
+
+State path: terraform.tfstate
+$ 
+$ terraform show
+aws_security_group.web-server:
+  id = sg-8a53d6ef
+  description = Allow traffic of webserver
+  egress.# = 1
+  egress.1965070075.cidr_blocks.# = 1
+  egress.1965070075.cidr_blocks.0 = 0.0.0.0/0
+  egress.1965070075.from_port = 0
+  egress.1965070075.protocol = -1
+  egress.1965070075.security_groups.# = 0
+  egress.1965070075.self = false
+  egress.1965070075.to_port = 0
+  ingress.# = 2
+  ingress.2603706321.cidr_blocks.# = 1
+  ingress.2603706321.cidr_blocks.0 = 0.0.0.0/0
+  ingress.2603706321.from_port = 80
+  ingress.2603706321.protocol = tcp
+  ingress.2603706321.security_groups.# = 0
+  ingress.2603706321.self = false
+  ingress.2603706321.to_port = 80
+  ingress.4089093546.cidr_blocks.# = 1
+  ingress.4089093546.cidr_blocks.0 = 0.0.0.0/0
+  ingress.4089093546.from_port = 443
+  ingress.4089093546.protocol = tcp
+  ingress.4089093546.security_groups.# = 0
+  ingress.4089093546.self = false
+  ingress.4089093546.to_port = 443
+  name = web-server-sg
+  owner_id = MY_AWS_ACCOUNT_NUMBER
+  tags.# = 2
+  tags.Made = terraform
+  tags.Name = web-server
+  vpc_id = vpc-d01806b2
+</code></pre>
+
+　`1 changed`となっています。既存のリソースに変更が発生しました。マネジメントコンソール上で確認すると、inboundにHTTPSが増えています。
+
+　![][2]
+
+## ルールの追加（Outbound）
+
+　新たにサポートされたegressも使ってみます。sg-2da11148がNATインスタンスに適用されている体で、sg-2da11148向けのOutbound全通信を許可するルールを追加します。
+
+　許可対象にセキュリティグループを利用する時は、`cidr_blocks`ではなく`security_groups`を利用します。
+
+<pre><code>$ cat web-sg.tf 
+provider "aws" {
+    access_key = "${var.access_key}"
+    secret_key = "${var.secret_key}"
+    region = "${var.region}"
+}
+
+resource "aws_security_group" "web-server" {
+  name = "web-server-sg"
+  description = "Allow traffic of webserver"
+
+  ingress {
+      from_port = 80 
+      to_port = 80
+      protocol = "tcp"
+      cidr_blocks = ["0.0.0.0/0"]
+  }
+  ingress {
+      from_port = 443
+      to_port = 443
+      protocol = "tcp"
+      cidr_blocks = ["0.0.0.0/0"]
+  }
+  egress {
+      from_port = 0
+      to_port = 65535
+      protocol = "-1"
+      security_groups = ["sg-2da11148"]
+  }
+  vpc_id = "vpc-d01806b2"
+  tags {
+    Name = "web-server"
+    Made = "terraform"
+  }
+}
+</code></pre>
+
+　tfファイルを編集後、`terraform plan`からの`terraform apply`、`terraform show`
+
+<pre><code>$  terraform plan
+Refreshing Terraform state prior to plan...
+
+aws_security_group.web-server: Refreshing state... (ID: sg-8a53d6ef)
+
+The Terraform execution plan has been generated and is shown below.
+Resources are shown in alphabetical order for quick scanning. Green resources
+will be created (or destroyed and then created if an existing resource
+exists), yellow resources are being changed in-place, and red resources
+will be destroyed.
+
+Note: You didn&#039;t specify an "-out" parameter to save this plan, so when
+"apply" is called, Terraform can&#039;t guarantee this is what will execute.
+
+~ aws_security_group.web-server
+    egress.2221449193.cidr_blocks.#:              "0" =&gt; "0"
+    egress.2221449193.from_port:                  "" =&gt; "0"
+    egress.2221449193.protocol:                   "" =&gt; "-1"
+    egress.2221449193.security_groups.#:          "0" =&gt; "1"
+    egress.2221449193.security_groups.1429001686: "" =&gt; "sg-2da11148"
+    egress.2221449193.self:                       "" =&gt; "0"
+    egress.2221449193.to_port:                    "" =&gt; "65535"
+
+
+$ terraform apply
+aws_security_group.web-server: Refreshing state... (ID: sg-8a53d6ef)
+aws_security_group.web-server: Modifying...
+  egress.2221449193.cidr_blocks.#:              "0" =&gt; "0"
+  egress.2221449193.from_port:                  "" =&gt; "0"
+  egress.2221449193.protocol:                   "" =&gt; "-1"
+  egress.2221449193.security_groups.#:          "0" =&gt; "1"
+  egress.2221449193.security_groups.1429001686: "" =&gt; "sg-2da11148"
+  egress.2221449193.self:                       "" =&gt; "0"
+  egress.2221449193.to_port:                    "" =&gt; "65535"
+aws_security_group.web-server: Modifications complete
+
+Apply complete! Resources: 0 added, 1 changed, 0 destroyed.
+
+The state of your infrastructure has been saved to the path
+below. This state is required to modify and destroy your
+infrastructure, so keep it safe. To inspect the complete state
+use the `terraform show` command.
+
+State path: terraform.tfstate
+$ terraform show
+aws_security_group.web-server:
+  id = sg-8a53d6ef
+  description = Allow traffic of webserver
+  egress.# = 1
+  egress.2221449193.cidr_blocks.# = 0
+  egress.2221449193.from_port = 0
+  egress.2221449193.protocol = -1
+  egress.2221449193.security_groups.# = 1
+  egress.2221449193.security_groups.1429001686 = sg-2da11148
+  egress.2221449193.self = false
+  egress.2221449193.to_port = 65535
+  ingress.# = 2
+  ingress.2603706321.cidr_blocks.# = 1
+  ingress.2603706321.cidr_blocks.0 = 0.0.0.0/0
+  ingress.2603706321.from_port = 80
+  ingress.2603706321.protocol = tcp
+  ingress.2603706321.security_groups.# = 0
+  ingress.2603706321.self = false
+  ingress.2603706321.to_port = 80
+  ingress.4089093546.cidr_blocks.# = 1
+  ingress.4089093546.cidr_blocks.0 = 0.0.0.0/0
+  ingress.4089093546.from_port = 443
+  ingress.4089093546.protocol = tcp
+  ingress.4089093546.security_groups.# = 0
+  ingress.4089093546.self = false
+  ingress.4089093546.to_port = 443
+  name = web-server-sg
+  owner_id = MY_AWS_ACCOUNT_NUMBER
+  tags.# = 2
+  tags.Made = terraform
+  tags.Name = web-server
+  vpc_id = vpc-d01806b2
+</code></pre>
+
+　1 changed　となっています。既存のリソースに変更が発生しています。マネジメントコンソール上で確認すると、outboundにsg-2da11148向けのALL Trafficが増えています。
+
+　![][3]
+
+ [1]: http://aimless.jp/blog/wp-content/uploads/2015/03/2015-03-22-01.png
+ [2]: http://aimless.jp/blog/wp-content/uploads/2015/03/2015-03-22-02.png
+ [3]: http://aimless.jp/blog/wp-content/uploads/2015/03/2015-03-22-03.png

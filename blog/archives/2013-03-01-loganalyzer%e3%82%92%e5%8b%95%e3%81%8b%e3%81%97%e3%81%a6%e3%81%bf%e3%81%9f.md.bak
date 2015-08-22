@@ -1,0 +1,69 @@
+---
+title: LogAnalyzerを動かしてみた
+author: kongou_ae
+layout: post
+date: 2013-03-01
+url: /blog/archives/1561
+categories:
+  - network
+---
+### 事の発端
+
+[tweet https://twitter.com/ttkzw/status/306913213272977408 lang=&#8217;ja&#8217;]
+
+### とりあえずやってみた
+
+　何事もやってみるのが大事。
+
+　ソースをダウンロードして、適当なディレクトリに展開します。INSTALLというファイルにインストール方法が記載されています。インストール方法を流し読みして、いざインストール！
+
+　contribディレクトリ配下のconfigure.shに実行権限を付与して実行します。config.phpが出来上がるので、そのファイルをsrcディレクトリに移動します。そして、srcディレクトリを外部公開するために、apacheの設定を追加します。
+
+　ブラウザでアクセスしてみるとError画面が表示されますので、「here」をクリックします。
+
+![LogAnalyzar_1][1]
+
+　ディレクトリの権限等々をチェックしてくれるそうです。Nextをクリック。
+  
+![LogAnalyzar_2][2]
+
+　config.phpに書き込めないと怒られました。config.phpの所有者をapacheに変更してNextを押します。
+
+![LogAnalyzar_3][3]
+
+　step3～6はとりあえずデフォ値でそのままNextを押します。どのログをWEBで閲覧するかを決めるのがstep7です。[Name of the source]に分りやすい名前を、[syslog file]は閲覧したいログファイルのパスを入力します。その他はとりあえずデフォルトのままにし、Nextをクリック。
+
+![LogAnalyzar_4][4]
+
+　できました！rsyslogで収集しているCisco892Jのログを閲覧しています。
+
+![LogAnalyzar_6][5]
+
+　複数のログファイルを閲覧する事も可能です。config.phpに先ほどGUIで設定した内容がSource1として記載されているので、これをコピペして別ファイルの設定を追記します。下記はmessagesを対象にしています。
+
+<pre><code>$CFG['Sources']['Source1']['ID'] = 'Source1';
+$CFG['Sources']['Source1']['Name'] = 'xx.xx.xx.xx_local3.log';
+$CFG['Sources']['Source1']['ViewID'] = 'SYSLOG';
+$CFG['Sources']['Source1']['SourceType'] = SOURCE_DISK;
+$CFG['Sources']['Source1']['LogLineType'] = 'syslog';
+$CFG['Sources']['Source1']['DiskFile'] = '/var/log/syslog/xx.xx.xx.xx_local3.log';
+
+$CFG['Sources']['Source2']['ID'] = 'Source2';
+$CFG['Sources']['Source2']['Name'] = 'messages';
+$CFG['Sources']['Source2']['ViewID'] = 'SYSLOG';
+$CFG['Sources']['Source2']['SourceType'] = SOURCE_DISK;
+$CFG['Sources']['Source2']['LogLineType'] = 'syslog';
+$CFG['Sources']['Source2']['DiskFile'] = '/var/log/messages';
+</code></pre>
+
+閲覧するログの切り替えはGUIの右上「select Source」で可能です。
+
+### 感想
+
+　rsyslogで収集しているログをWEBで見せたいというニッチな用途に最適だと思います。インストールは簡単で、操作も分りやすいです。@ttkzw、要件にあったツールを教えて下さりありがとうございました。
+
+ [1]: http://aimless.jp/images/logAna1.png
+ [2]: http://aimless.jp/images/logAna2.png
+ [3]: http://aimless.jp/images/logAna3.png
+ [4]: http://aimless.jp/images/logAna4.png
+ [5]: http://aimless.jp/images/logAna6.png

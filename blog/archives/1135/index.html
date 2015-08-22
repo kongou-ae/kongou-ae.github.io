@@ -73,7 +73,7 @@
 
 <p>　やりたかった事は下図の通り。利用ユーザのグループ単位で、ポータルを変えたり、IPアドレスを変えたり、社内へのアクセスポリシーを変えたり等々柔軟に。自社ユーザは社内にフルアクセスで、社外保守ベンダは社員とは別IPアドレスで、さらにアクセス先を制限するみたいな使い方を想定しています。</p>
 
-<p><img src="http://aimless.jp/images/sslvpn.png" alt="sslvpn" /></p>
+<p><img src="http://aimless.jp/blog/images/sslvpn.png" alt="sslvpn" /></p>
 
 <h3 id="ユーザ作成のハマりどころ:483e536bcb93d01cf7c3b5a7bcb27b43">ユーザ作成のハマりどころ</h3>
 
@@ -88,11 +88,11 @@
 
 <p>　必要な設定は大きく二つ。一つはSSL-VPNでのアクセスを自体を許可するルール、もう一つはトンネル接続を許可するルールです。</p>
 
-<p><img src="http://aimless.jp/images/sslvpn-policy.png" alt="sslvpn-policy" /></p>
+<p><img src="http://aimless.jp/blog/images/sslvpn-policy.png" alt="sslvpn-policy" /></p>
 
 <p>　1つ目のルール（上図ルール8）の詳細は下記の通りです。必要なユーザグループに対して、インターネットの全てからLAN内の192.168.2.0/24へのSSLVPNを許可します。</p>
 
-<p><img src="http://aimless.jp/images/sslvpn-policy-detail.png" alt="sslvpn-policy-detail" /></p>
+<p><img src="http://aimless.jp/blog/images/sslvpn-policy-detail.png" alt="sslvpn-policy-detail" /></p>
 
 <p>　2つ目のルール（上図ルール4）の詳細は下記の通りです。sslall_group内のユーザがトンネル接続した時に割り当てられるIPアドレスから、LAN内の192.168.2.0/24に対してTELNETとICMPを許可します。Fortigateから見ると、トンネル接続用のIPアドレスはssl.root（SSLVPNトンネルインターフェース）の先にいますので、WANではなくssl.rootを選択します。</p>
 
@@ -104,7 +104,7 @@
 
 <p>　クライアントインストール時に「IE6じゃ動かないからIE8以上にしてねー（意訳）」という注意が出ますので、素直に従ってください。本当にIE6では動きませんでした。</p>
 
-<p>[4]: <a href="http://aimless.jp/images/sslvpn-policy-detail2.png">http://aimless.jp/images/sslvpn-policy-detail2.png</a></p>
+<p>[4]: <a href="http://aimless.jp/blog/images/sslvpn-policy-detail2.png">http://aimless.jp/blog/images/sslvpn-policy-detail2.png</a></p>
 
     </article>
     <div class="ad-left">

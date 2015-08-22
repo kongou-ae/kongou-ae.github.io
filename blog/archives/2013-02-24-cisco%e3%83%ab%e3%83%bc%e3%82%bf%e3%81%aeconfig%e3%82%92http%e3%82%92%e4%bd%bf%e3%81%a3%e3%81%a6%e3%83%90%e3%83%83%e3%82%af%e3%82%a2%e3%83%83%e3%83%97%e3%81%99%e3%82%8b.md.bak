@@ -1,0 +1,20 @@
+---
+title: CiscoルータのConfigをHTTPを使ってバックアップする
+author: kongou_ae
+layout: post
+date: 2013-02-23
+url: /blog/archives/1538
+categories:
+  - cisco
+  - network
+---
+　「変更作業後に、ルータのCLIからconfigをバージョン管理システムに登録出来たら便利だなー」と思って色々と調べてみたら、copy run http/httpsなるコマンドがあったので使ってみました。普段はTFTPなのですが、HTTPもあるんですね。バックアップ先はWevDAVが利用可能なOwnCloudです。
+
+<pre><code>Router#copy running-config http://ID:PASS@OwnClound-URL/remote.php/webdav/
+Address or name of remote host [OwnClound-URL]? 
+Destination filename [remote.php/webdav/router-confg]? 
+Translating "OwnClound-URL"...domain server (xx.xx.xx.xx)
+
+Storing http://*****:*****@OwnClound-URL/remote.php/webdav/router-confg !
+24893 bytes copied in 2.800 secs (8890 bytes/sec)
+</code></pre>

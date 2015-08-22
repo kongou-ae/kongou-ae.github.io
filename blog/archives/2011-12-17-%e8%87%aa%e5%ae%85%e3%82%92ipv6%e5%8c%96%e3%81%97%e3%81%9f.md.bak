@@ -1,0 +1,18 @@
+---
+title: 自宅をIPv6化した
+author: kongou_ae
+layout: post
+date: 2011-12-17
+url: /blog/archives/554
+categories:
+  - network
+---
+　自宅のルータをPLANEXからCisco892Jにリプレースしました。これまでのブロードバンドルータと比べると色々な事ができるようになったので、HEからもらった/48のPrefixを半分の/56にして、GREトンネル経由で自宅に渡しました。現在のIPv6お遊び環境は下図の通りです。IHANetから始めた環境も大きくなったものです。 
+
+![myIPv6][1]
+
+　一見マルチホームみたいですが、自宅のPrefixはHEからもらったものなので、インターネットへの通信はSaaSesVPSを経由します。HEのTunnelを抜けないといけないので、国内サーバへのアクセスがすごく遅いです。。www.iij.ad.jp（IPv4）は20msくらいなのですが、www.iij.ad.jp（IPv6）は500ms以上かかります。
+
+　この遅延のせいで、Chromeだと自動Fallbackが発生してしまうようで、IPv6に対応しているWebサイトもIPv4でアクセスしてしまいます。。。亀は踊らないし、はちゅねもネギを振りません。自ブログは300ms以内にアクセス出来ているらしく、かわいいふぉーてぃげーとたんが見えます。いつかは純粋なIPv6にしたいものです。
+
+ [1]: http://aimless.jp/images/myIPv6.png

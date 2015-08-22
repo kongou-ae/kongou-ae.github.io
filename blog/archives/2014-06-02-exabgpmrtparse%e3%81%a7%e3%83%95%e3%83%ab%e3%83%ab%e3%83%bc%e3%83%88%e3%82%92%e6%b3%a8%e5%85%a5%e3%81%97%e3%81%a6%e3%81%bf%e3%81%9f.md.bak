@@ -1,0 +1,71 @@
+---
+title: exabgp+mrtparseでフルルートを注入してみた
+author: kongou_ae
+layout: post
+date: 2014-06-01
+url: /blog/archives/1991
+categories:
+  - cisco
+---
+　[exabgpでフルルートを注入してみた][1]のその後です。
+
+　上記のエントリーでは、物理のCisco892Jに搭載されているメモリの関係で、IPv6フルルートを食わせました。しかし、手元には仮想メモリが3GもあるIOS XRvが存在します。こうなるとIPv4のフルルートを食わせたくなります。
+
+　2年前は、MRTデータをbgpdumpでテキストに吐き出してから、お手製スクリプトを通してexabgpのコンフィグに書き換えました。大変でした。
+
+　IPv4のフルルートを扱うにあたって、改めて実現方法を模索したところ、githubにて[mrtparse][2]というツールを見つけました。
+
+　このツールに含まれている「exabgp\_conf.py」を利用すると、特定のMRTデータを利用してexabgpのコンフィグを標準出力してくれます。neighborの設定と経路のNext-hopは「exabgp\_conf.py」内にベタ書きされていますので、必要に応じて事前に「exabgp_conf.py」を変更しておく必要があります。
+
+    # ./exabgp_conf.py /usr/local/exabgp/routes/rib.20140601.1000.bz2
+        neighbor 192.168.1.100 {
+            router-id 192.168.0.20;
+            local-address 192.168.1.20;
+            local-as 65000;
+            peer-as 64512;
+            graceful-restart;
+    
+            static {
+                route 0.0.0.0/0 origin IGP as-path [2905 65023 16637 ] med 0 next-hop 192.168.1.254;
+                route 1.0.0.0/24 origin IGP as-path [8492 15169 ] community [8492:1202] next-hop 192.168.1.254;
+                route 1.0.4.0/24 origin IGP as-path [8492 6939 7545 56203 ] community [8492:1305 29076:303 29076:901 29076:51003 29076:53003 29076:64615] next-hop 192.168.1.254;
+                route 1.0.5.0/24 origin IGP as-path [8492 6939 7545 56203 ] community [8492:1305 29076:303 29076:901 29076:51003 29076:53003 29076:64615] next-hop 192.168.1.254;
+    （中略）
+    
+
+　この標準出力をファイルにリダイレクトすると、フルルートを含んだexabgpの設定ファイルが完成します。元ネタが50万超えの経路なので、「exabgp_conf.py」を利用して最新のMRTファイルからexabgpの設定ファイルに作成するのには1時間弱かかりました。これは実行環境によると思います。作成されたコンフィグファイルの容量は約80Mになりました。。。
+
+　あとはこのコンフィグを利用して、exabgpを起動すればOKです。exabgpが約50万件の経路を処理しなければならないため、neighborがEstablishedになるまでには時間がかかります。また、exabgpを起動するマシンには、フルルートを格納するためのメモリが必要になります。
+
+    # sbin/exabgp config/ibgp4-fullroute.txt 
+    Sun, 01 Jun 2014 23:23:44 | INFO     | 1550   | configuration | environment file missing
+    Sun, 01 Jun 2014 23:23:44 | INFO     | 1550   | configuration | generate it using "exabgp -fi > /usr/local/exabgp/etc/exabgp/exabgp.env"
+    Sun, 01 Jun 2014 23:23:44 | INFO     | 1550   | reactor       | Performing reload of exabgp 3.3.2
+    Sun, 01 Jun 2014 23:23:44 | INFO     | 1550   | reactor       | Performing 
+    (中略)
+    
+
+　exabgpが完全に起動した後、IOS XRvはneighborであるexabgpから514557経路を受け取りました。exabgp + mrtparseを利用すると、かなり気軽に疑似的なフルルートを生成できますね。（データ量が膨大ゆえにある程度の待ち時間が発生しますが）
+
+    RP/0/0/CPU0:aimless-XRv#show bgp ipv4 unicast summary 
+    Sun Jun  1 14:08:01.461 UTC
+    BGP router identifier 192.168.1.252, local AS number 64585
+    BGP generic scan interval 60 secs
+    BGP table state: Active
+    Table ID: 0xe0000000   RD version: 514558
+    BGP main routing table version 514558
+    BGP scan interval 60 secs
+    
+    BGP is operating in STANDALONE mode.
+    
+    
+    Process       RcvTblVer   bRIB/RIB   LabelVer  ImportVer  SendTblVer  StandbyVer
+    Speaker          514558     514558     514558     514558      514558      514558
+    
+    Neighbor        Spk    AS MsgRcvd MsgSent   TblVer  InQ OutQ  Up/Down  St/PfxRcd
+    192.168.1.131     0 64585  514600      43   514558    0    0 00:40:11     514557
+    
+    RP/0/0/CPU0:aimless-XRv#
+
+ [1]: http://aimless.jp/blog/blog/archives/713
+ [2]: https://github.com/YoshiyukiYamauchi/mrtparse

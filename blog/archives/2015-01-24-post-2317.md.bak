@@ -1,0 +1,85 @@
+---
+title: AWSにFortiGateをデプロイしてみた（ネットワーク設定編）
+author: kongou_ae
+layout: post
+date: 2015-01-23
+url: /blog/archives/2317
+categories:
+  - AWS
+  - Fortigate
+---
+　いつの日か、AWS上の通信ログを取りたくなる日が来るだろうということで、使い慣れているFortiGateのVM版をAWS上にデプロイしてみました。
+
+　以前調べた時は、AWSのマーケットプライスで提供されているモデルがBYOL版のみであったため試せなかったのですが、現時点ではライセンス込みのモデルがあるので、気軽に試せます。
+
+## VPC環境
+
+　FortiGate-VMをデプロイするVPCの環境は以下の通りです。
+
+**CIDR** 
+
+| 項目              | 値                 |
+| --------------- | ----------------- |
+| VPC CIDR        | 10&#46;175.0.0/16 |
+| external_subnet | 10&#46;175.1.0/24 |
+| internal_subnet | 10&#46;175.2.0/24 |
+
+**external_subnetのroute-table** 
+
+| Destination       | Target |
+| ----------------- | ------ |
+| 10&#46;175.0.0/16 | local  |
+| 0&#46;0.0.0       | IGW    |
+
+**internal_subnetのroute-table** 
+
+| Destination       | Target |
+| ----------------- | ------ |
+| 10&#46;175.0.0/16 | local  |
+
+## とりあえずNIC1個でデプロイ
+
+　マーケットプライスからポチポチとデプロイします。とりあえず、一般的なサーバと同様、NIC1個で始めます。
+
+| パラメータ          | 設定              |
+| -------------- | --------------- |
+| AMI            | FortiGate-VM    |
+| instance type  | m3.medium       |
+| Network        | VPC             |
+| subnet         | external_subnet |
+| security group | 全通信許可           |
+
+　起動後、EIPを作成し、external_subnetのENIに割り当てます。この時点で、ブラウザからENIのグローバルIPアドレスにHTTPSでアクセスすると、ログイン画面が見られるはずです。初期IDとパスワード（admin/インスタンスID）を入力してログインしましょう。
+
+　ログインすると、FortiGateを触ったことのある人には見慣れた画面が出ます。取りあえずGUIを日本語表示にしましょう。気になる方は、管理アクセスのIPアドレス制限を行いましょう。
+
+![enter image description here][1]
+
+　FortiGate-VMは、バンドル版なんですね。フルUTM機能が使えますので、ファイアウォール以外の使い道もありそうです。
+
+![enter image description here][2]
+
+## NICを増やす
+
+　GUIでインターフェースを確認すると、NICは当然一つしかありません。
+
+![enter image description here][3]
+
+　FWはインターフェースを複数持ってなんぼですので、NICを増やします。マネジメントコンソールでENIを作成し、FortiGate-VMのインスタンスにアタッチします。そして、アタッチしたNICを認識させるためにFortiGateを再起動します。（他の方法はないのか&#8230;）
+
+　FortiGateがENIを認識すると、IP未設定のインターフェースがリンクアップしますので、GUIでENIに設定したIPアドレスを設定します。これで、NICを二つ持ったNATモードのFortiGateの完成です。
+
+![enter image description here][4]
+
+　なお、AWSのインスタンスは、インスタンスタイプごとに利用できるENIの数が決まっています。（[参考：インスタンスタイプあたりの ENI ごとのプライベート IP アドレス][5]） 今回選択したm3.mediumは最大2です。そのため、GUI的には7ポートまで利用可能な様に見えますが、3つ目のENIをアタッチしようとすると、エラーになります&#8230;m3.mediumだとDMZが作れない&#8230;
+
+![enter image description here][6]
+
+　次回は、バーチャルIPを作成し、internal_subnetに設置したインスタンスとインターネット間の通信を実現します。また、複数のバーチャルIPを作成する方法を確認します。
+
+ [1]: http://aimless.jp/blog/wp-content/uploads/2015/01/aws-1.png
+ [2]: http://aimless.jp/blog/wp-content/uploads/2015/01/aws-6.png
+ [3]: http://aimless.jp/blog/wp-content/uploads/2015/01/aws-3.png
+ [4]: http://aimless.jp/blog/wp-content/uploads/2015/01/aws-5.png
+ [5]: http://docs.aws.amazon.com/ja_jp/AWSEC2/latest/UserGuide/using-eni.html#AvailableIpPerENI
+ [6]: http://aimless.jp/blog/wp-content/uploads/2015/01/aws-7.png

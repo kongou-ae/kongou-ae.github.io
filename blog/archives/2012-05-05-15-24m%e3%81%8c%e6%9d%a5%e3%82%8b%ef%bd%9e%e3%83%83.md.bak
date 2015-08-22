@@ -1,0 +1,17 @@
+---
+title: 15.2(4)Mが来る～ッ!!
+author: kongou_ae
+layout: post
+date: 2012-05-05
+url: /blog/archives/977
+categories:
+  - cisco
+  - network
+---
+</p> 
+
+　<a href="http://aimless.jp/blog/blog/archives/814" title="Cisco892Jを15.2(3)Tにアップデートした" target="_blank">ちょっと前</a>にアップデートしたIOS15.2(3)TのEoLアナウンスが出ました。アナウンス内には「2012年中旬に15.2(4)Mだすからアップデートしたほうがええよー（意訳）」とあります。今のIOSはTトレインなのでリリースから19カ月サポートされますが、どんどん新しいIOSにアップデートしようと思います。早く来い次のIOS!!面白い機能来い!!
+
+<a href="http://www.cisco.com/en/US/prod/collateral/iosswrel/ps8802/ps10587/ps11746/end_of_life_notice_c51-706108.html" title="End-of-Sale and End-of-Life Announcement for the Cisco IOS Software Release 15.2(3)T" target="_blank">End-of-Sale and End-of-Life Announcement for the Cisco IOS Software Release 15.2(3)T</a>
+
+> Customers are encouraged to migrate to the Cisco IOS Software Release 15.2(4)M which is expected to be available in mid calendar year 2012. While IOS 15.1(4)M is also a viable migration option, its end-of-sale is planned for 2012; therefore it is highly recommended to migrate to 15.2(4)M when available.

@@ -1,0 +1,61 @@
+---
+title: pythonでサーバのリソースを取得する。
+author: kongou_ae
+layout: post
+date: 2014-03-04
+url: /blog/archives/1718
+categories:
+  - Server
+---
+　GrowthForecastでサーバのリソース状況をグラフ化するために、リソースの使用状況を取得してGrowthForecastにPostするスクリプトをpythonで書きました。
+
+  * <a href="https://code.google.com/p/psutil/" title="psutil" target="_blank">psutil</a>マジ便利。
+  * psutil.hogehogeにおいて複数の値を含んでいる戻り値（以下のpsutil.virtual_memory()など）から、特定の項目を綺麗に取得する方法がわからない。今回は正規表現で抽出しましたが、何か違う気がする。
+
+<pre><code>&gt;&gt;&gt; import psutil
+&gt;&gt;&gt; 
+&gt;&gt;&gt; 
+&gt;&gt;&gt; psutil.virtual_memory()
+vmem(total=2100154368, available=1049169920, percent=50.0, used=1940869120, free=159285248, active=654180352, inactive=894349312, buffers=324390912, cached=565493760)
+</code></pre>
+
+　psutilにはネットワークやプロセスの情報も取得できるようなので、ほかにもグラフ化できそうなものがないか確認しようと思います。
+
+<pre><code>#!~/.virtualenvs/py3.3/bin/python
+#! -*- coding: utf-8 -*-
+
+import psutil
+import requests
+import re
+import socket
+import math
+
+# GrowthForecastを更新する$
+def update_gf(name, category, value):
+
+    gf_url = 'http://127.0.0.1:5125/api/'+name+'/'+category+'/value'
+    result = requests.post(gf_url, {'number': value})
+    print(result.content)
+
+# 後続で利用する正規表現を事前に定義する
+memory_regex = re.compile('percent=(.+?),\s')
+disk_regex = re.compile('percent=(.+?)\)')
+util_regex = re.compile('_util')
+
+# ホスト名と各種情報を取得する
+hostname = socket.gethostname()
+dict = {
+        'cpu_util' : psutil.cpu_percent(),
+        'memory_util' : memory_regex.search(str(psutil.virtual_memory())).group(1),
+        'root_disk_util' : disk_regex.search(str(psutil.disk_usage('/'))).group(1),
+        'home_disk_util' : disk_regex.search(str(psutil.disk_usage('/home'))).group(1)
+        }
+
+# 辞書の中身を利用してGrowthForecastを更新する
+for key,value in dict.items():
+    # 小数点が表示されるパーセント物（util=使用率）は100倍してグラフのData adjustmentで1/100する
+    if util_regex.search(key) is None:
+        update_gf(hostname, key, int(value))
+    else:
+        update_gf(hostname, key, math.floor(float(value))*100)
+</code></pre>

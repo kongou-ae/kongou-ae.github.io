@@ -1,0 +1,43 @@
+---
+title: JANOG30とLISP
+author: kongou_ae
+layout: post
+date: 2012-07-05
+url: /blog/archives/1186
+categories:
+  - network
+---
+</p> 
+
+　仕事が打ち合わせばかりで、JANOGにUSTREAM参加すら出来ていません。。。さて、JANOG30のネットワークにはLISPが使われているみたいです。今までLISPなサイトと通信したことがなかったので、これはいい機会だと思い色々試してみました。
+
+### 普段のMAP-Cache
+
+　www.iij.ad.jp（2001:240:BB42:B000::1:80）へPingを打った後のcacheです。LISPから非LISPへの通信はProxy-eTRを経由しますので、宛先がPeTRになっています。その他のIPv6宛通信も全てPeTR宛になります。これはさびしい。
+
+<pre><code>2001::/22, uptime: 00:00:05, expires: 00:14:47, via map-reply, forward-native
+  Encapsulating to proxy ETR
+</code></pre>
+
+### 今日のMAP-Cache
+
+　JANOGの会場で使われているEID内のIPアドレス（IPv4/IPv6）にPingを打ったあとのcacheです。2610:D0:3216::/48と153.16.72.0/24のRouting Locatorとして211.125.127.xxがcacheされています！whoisで引くと倉敷ケーブルテレビのアドレスなので間違いないですね。
+
+　我が家のIPv6と2610:D0:3216::/48のIPv6通信は、我が家のIPv4 xTRとJANOG会場のIPv4 xTR間でカプセル化されてIPv4の海を越えているのでしょう。
+
+<pre><code>#show ipv6 lisp map-cache 
+2001::/22, uptime: 00:06:22, expires: 00:08:30, via map-reply, forward-native
+  Encapsulating to proxy ETR
+2610:D0:3216::/48, uptime: 00:31:05, expires: 23:28:47, via map-reply, complete
+  Locator         Uptime    State      Pri/Wgt
+  211.125.127.xx  00:31:05  up           1/100
+
+#show ip lisp map-cache 
+64.0.0.0/4, uptime: 01:34:26, expires: 00:08:26, via map-reply, forward-native
+  Encapsulating to proxy ETR
+153.16.72.0/24, uptime: 00:46:44, expires: 23:13:08, via map-reply, complete
+  Locator         Uptime    State      Pri/Wgt
+  211.125.127.xx  00:46:44  up           1/100
+</code></pre>
+
+　LISP-BetaのEIDから見られるLISPのLookingGrassがありますので、よろしければ倉敷の会場でどうぞ。<a href="http://lg.aimless.jp/" title="Looking Grass(AS64585)" target="_blank">Looking Grass(AS64585)</a>

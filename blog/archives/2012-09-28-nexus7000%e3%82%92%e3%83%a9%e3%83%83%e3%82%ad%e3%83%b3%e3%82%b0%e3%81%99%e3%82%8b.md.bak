@@ -1,0 +1,31 @@
+---
+title: Nexus7000をラッキングする
+author: kongou_ae
+layout: post
+date: 2012-09-28
+url: /blog/archives/1372
+categories:
+  - cisco
+  - network
+---
+　仕事でNexus7009を触る機会がありそうなので色々とお勉強中です。ライセンスやモジュールが多岐にわたっていて「とりあえずこれでいけばなんでもOK！」みたいな構成が取りにくいですね。今回はラッキングに関するお話です。
+
+### エアフロー
+
+　n7kシリーズのエアフローは下記の通りです。コールドアイルホットアイルなDCやオープンラックなDCを困らせる側面吸気や側面排気があります。
+
+<blockquote cite="  <!-- wpnl --><p> http://www.cisco.com/en/US/docs/switches/datacenter/hw/nexus7000/site_prep/guide/siteprep_rack.html">
+  <br /> 7004　：　side-to-rear airflow<br /> 7009　：　side-to-side airflow<br /> 7010　：　front-to-back airflow<br /> 7018　：　side-to-side airflow </p>
+</blockquote>
+
+<cite><a href="http://www.cisco.com/en/US/docs/switches/datacenter/hw/nexus7000/site_prep/guide/siteprep_rack.html">Cisco Nexus 7000 Series Site Preparation Guide</a></cite>
+
+　これを解決する方法にひとつが、Panduitから出ているNexus専用ラックです。専用のダクトを利用して強引に前面吸気背面排気にすることができます。さらに配線まで考慮された出来る奴です。
+
+<a href="http://ncg.panduit.co.jp/products/new/nexus7009/product.html" title="パンドウイット/Cisco® Nexus 7009ソリューション" target="_blank">パンドウイット/Cisco® Nexus 7009ソリューション</a>
+  
+<a href="http://ncg.panduit.co.jp/pdf/sekou/CM385A-JP.pdf" title="Net-Access ™ キャビネット（Cisco Nexus7018スイッチ用" target="_blank">Net-Access ™ キャビネット（Cisco Nexus7018スイッチ用</a>
+
+　Nexus7009専用ラックの専用吸気ダクトだけも販売しているみたいです。普通のラックに収まるn7009の為に専用ラックを買わなくていいのはかなり大きい。世のNexus使いはどうやったラッキングしてるのかかなり興味があります。
+
+<a href="http://ncg.panduit.co.jp/pdf/PJ12-257.pdf" title="Net-Access™ スイッチキャビネット用 Cisco ® Nexus7009 専用吸気ダクト" target="_blank">Net-Access™ スイッチキャビネット用 Cisco®Nexus7009 専用吸気ダクト</a>

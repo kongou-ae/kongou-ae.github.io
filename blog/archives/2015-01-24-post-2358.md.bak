@@ -1,0 +1,115 @@
+---
+title: AWSにFortiGateをデプロイしてみた（NATとFWポリシー編）
+author: kongou_ae
+layout: post
+date: 2015-01-24
+url: /blog/archives/2358
+categories:
+  - AWS
+  - Fortigate
+---
+　[AWSにFortiGateをデプロイしてみた（ネットワーク設定編）][1]の続きです。AWS上に設置したFortiGateでNATとFWポリシーを試します。
+
+## VPC環境
+
+**FortiGate-VM** 
+
+| 項目            | ID           | プライベートIP         | EIP               |
+| ------------- | ------------ | ---------------- | ----------------- |
+| ENI(Exernal)  | eni-921a6ecb | 10&#46;175.1.195 | 54&#46;65.151.103 |
+| ENI(internal) | eni-6304703a | 10&#46;175.2.195 | &#8211;           |
+
+**CIDR** 
+
+| 項目              | 値                 |
+| --------------- | ----------------- |
+| VPC CIDR        | 10&#46;175.0.0/16 |
+| external_subnet | 10&#46;175.1.0/24 |
+| internal_subnet | 10&#46;175.2.0/24 |
+
+**external_subnetのroute-table** 
+
+| Destination       | Target |
+| ----------------- | ------ |
+| 10&#46;175.0.0/16 | local  |
+| 0&#46;0.0.0       | IGW    |
+
+**internal_subnetのroute-table** 
+
+| Destination       | Target       |
+| ----------------- | ------------ |
+| 10&#46;175.0.0/16 | local        |
+| 0&#46;0.0.0/0     | eni-6304703a |
+
+　internal_subnetに配置されたインスタンスとインターネットとの通信が、FortiGate-VMを経由するよう、デフォルトルートをFortiGate-VMのinternal側ENIに向けます。
+
+**動作確認用インスタンス**
+
+　internal\_subnetにAmazon\_linuxを設置します。IPアドレスは10.175.2.152です。
+
+## 事前準備
+
+　FortiGate-VMの2つのENIで「Source/dest. check」をfalseにします。なお、インスタンスを右クリックしてSource/dest. checkをfalseにしても、2本目のENIはenableのままでした。Source/dest. checkは、インスタンスではなくENIに対して実施しましょう。
+
+## ポートフォワード
+
+　まずはポートフォワードからです。internalに設置されているEC2:10.175.2.152のSSHを、EIP:54.65.151.103の11022で外部公開します。
+
+　クライアントとサーバだけに注目した通信要件は、「54.65.151.103の11022」を「10.175.2.152の22」にポートフォワードするになりますので、以下の様に設定したのですが、通信できずドツボにはまりました。
+
+![enter image description here][2]
+
+　正しい通信要件は、「EIP:54.65.151.103の11022」をAWSが変換した「10.175.1.195の11022」を、ForiGateが「10.175.2.152の22」にポートフォワードするになりますので、以下の様に設定する必要があります。
+
+![enter image description here][3]
+
+## スタティックNAT
+
+　次はスタティックNATです。FortiGate-VMとは異なるグローバルIPアドレスでEC2を外部公開します。
+
+　external側のENIに10.175.1.0/24のIPアドレス（10.175.1.194）を追加します。そしてEIPをもう一つ取得し、10.175.1.194に割り当てます。
+
+![enter image description here][4]
+
+これにより、FortiGate-VMのパラメータは以下になります。
+
+**FortiGate-VM** 
+
+| 項目            | ID           | プライベートIP         | EIP               |
+| ------------- | ------------ | ---------------- | ----------------- |
+| ENI(Exernal)  | eni-921a6ecb | 10&#46;175.1.195 | 54&#46;65.151.103 |
+| ENI(Exernal)  | eni-921a6ecb | 10&#46;175.1.194 | 54&#46;64.192.17  |
+| ENI(internal) | eni-6304703a | 10&#46;175.2.195 | &#8211;           |
+
+　そして、新規取得した54.64.192.17を割り当てた10.175.1.194を利用して、バーチャルIPアドレスを作成します。
+
+![enter image description here][3]
+
+## ポリシー
+
+　ネットワークやNATの設定はAWSの仕様を意識する必要がありますが、ポリシーの設定はFortiGate-VM単体の設定ですので、普通のFortiGateと同じです。
+
+**サンプル**　 　![enter image description here][5]
+
+このように設定すると、以下の動作になります。
+
+  * 外部から54.64.192.17へのすべての通信が、AWSによって10.175.1.194にNATされ、さらにFortiGate-VMでNATされてEC2：10.175.2.152に到達する
+  * EC2：10.175.2.152から外部へのアクセスは、FortiGateによって10.175.1.194でNATされ、さらにAWSによって54.64.192.17にNATされて外部に到達する。
+  * internal_subnetから外部へのアクセスは、FortiGateによって10.175.1.195でNATされ、さらにAWSによって54.65.151.103にNATされて外部に到達する。
+  * それ以外の通信はすべて拒否する。
+
+## IPアドレスの制限
+
+　バーチャルIP用のアドレスを確保するためには、ENIにIPアドレスを追加割り当てする必要があります。ただし、ENIに割り当てられるIPアドレスはインスタンスタイプによって上限があります。（[参考：インスタンスタイプあたりの ENI ごとのプライベート IP アドレス][6]）
+
+　今回利用しているt3.mediumは最大6個になります。EIPはENIのプライベートアドレスに割り当てる必要がありますので、取得できるEIPの数も最大6個になってしまいます。つまり、このt3.mediumのFortiGate-VMを利用すると、最大6個のIPアドレスしか外部公開できなくなります&#8230;インスタンスタイプを上げても最大30個です。これは微妙&#8230;
+
+![enter image description here][7]
+
+ [1]: http://aimless.jp/blog/blog/archives/2317
+ [2]: http://aimless.jp/blog/wp-content/uploads/2015/01/aws-fg-1.png
+ [3]: http://aimless.jp/blog/wp-content/uploads/2015/01/aws-fg-2.png
+ [4]: http://aimless.jp/blog/wp-content/uploads/2015/01/aws-fg-3.png
+ [5]: http://aimless.jp/blog/wp-content/uploads/2015/01/aws-fg-4.png
+ [6]: http://docs.aws.amazon.com/ja_jp/AWSEC2/latest/UserGuide/using-eni.html#AvailableIpPerENI
+ [7]: http://aimless.jp/blog/wp-content/uploads/2015/01/aws-fg-5.png

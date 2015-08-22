@@ -1,0 +1,68 @@
+---
+title: ACLのremarkを一番上に持っていきたい。
+author: kongou_ae
+layout: post
+date: 2011-07-16
+url: /blog/archives/303
+categories:
+  - cisco
+  - network
+---
+　ネットワークエンジニアとしては基本中の基本なのでしょうが、ACL素人の私がCiscoのACL編集でハマったことをメモします
+
+　show access-listの結果にシーケンス番号が表示されている場合、ip access-list extended ACL-Noコマンドを利用する事で、希望する位置にACLを挿入することができます。しかし、挿入時にRemarkの位置は一切考慮されません。
+
+　下記のようなACLが設定されている時に、10.10.10.1のみ10.10.20.0/24への通信を許可したい場合は、1番目のdenyよりも上にACLを追加しないといけません。
+
+<pre><code>ip access-list 100 remark ### deny for 10.10.10.0/24 ###
+ip access-list 100 deny ip 10.10.10.0 0.0.0.255 10.10.20.0 0.0.0.255
+ip access-list 100 deny ip 10.10.10.0 0.0.0.255 10.10.21.0 0.0.0.255
+ip access-list 100 permit ip any any
+</code></pre>
+
+　デフォルトでは、各ACLに10ずつインクリでシーケンス番号が振られています。したがって、10未満の値で挿入すれば、1番目のdeny行よりも前にpermitのACLを追加することができます。なお。作業後はresequenceコマンドでシーケンス番号を整列します。 
+
+<pre><code>conf t
+ip access-list extended 100
+1 permit ip host 10.10.10.1 10.10.20.0 0.0.0.255
+exit
+ip access-list resequence 100 10 10
+end
+</code></pre>
+
+　すると、こうなります。作業時にびっくりしました。え、そこに入っちゃうの！？ 
+
+<pre><code>ip access-list 100 permit ip host 10.10.10.1 10.10.20.0　0.0.0.255 
+ip access-list 100 remark ### deny for 10.10.10.0/24 ###
+ip access-list 100 deny ip 10.10.10.0 0.0.0.255 10.10.20.0 0.0.0.255
+ip access-list 100 deny ip 10.10.10.0 0.0.0.255 10.10.21.0 0.0.0.255
+ip access-list 100 permit ip any any
+</code></pre>
+
+　確かにそうだよなぁ・・・と思いつつも、ぶかっこうなので、ACLを追加したのと同じ方法でremarkをシーケンス番号つきで挿入してみる。 
+
+<pre><code>conf t
+ip access-list extended 100
+1 ?
+</code></pre>
+
+　クエスチョンで以降のコマンドを表示すると、「remark」の文字がない。。。つまり、シーケンス番号を使ってremarkを特定の位置に挿入することはできないわけです。これではremarkが中途半端な位置にあって見にくい。仕方がないので、こうします。 
+
+<pre><code>conf t
+ip access-list extended 100
+no remark ### deny for 10.10.10.0/24 ###
+exit
+ip access-list 100 remark ### deny for 10.10.10.0/24 ###
+end
+</code></pre>
+
+　そのままno ip access-list 100 remark・・・ でやるとACL100そのものが消えそうなので、extendedつきで削除します。その後、remarkをextendedなしで新規追加します。普通に追加すると。自動的に一番下に挿入されますので、上記コマンドの結果は下記の通りになります。 
+
+<pre><code>ip access-list 100 permit ip host 10.10.10.1 10.10.20.0 
+ip access-list 100 deny ip 10.10.10.0 0.0.0.255 10.10.20.0 0.0.0.255
+ip access-list 100 deny ip 10.10.10.0 0.0.0.255 10.10.21.0 0.0.0.255
+ip access-list 100 permit ip any any
+ip access-list 100 remark ### deny for 10.10.10.0/24 ###
+</code></pre>
+
+　ACLの途中にremarkがあるよりは、見やすくなったと思います。ACL全削除からの全入れが許されるのであれば、remarkを最上位に持ってくることが可能ですが、一瞬ACLが外れてフリーダムになってしまうのでなか難しいのかなと思います。何かいい方法はないものか。

@@ -1,0 +1,16 @@
+---
+title: さくらVPSのメモリが増えた
+author: kongou_ae
+layout: post
+date: 2012-05-28
+url: /blog/archives/1072
+categories:
+  - network
+---
+</p> 
+
+　さくらVPS 512で動いている弊ブログですが、本日早朝にメモリが1Gに増設されたみたいです。Cactiのグラフを見たら、天井がぐいっと伸びていました。
+
+![sakuraVPS memory][1]
+
+ [1]: http://dns3.aimless.jp/images/sakuraMem.png

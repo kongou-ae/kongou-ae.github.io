@@ -1,0 +1,74 @@
+---
+title: Amazon LinuxでPrometheusを動かしてみた
+author: kongou_ae
+layout: post
+date: 2015-05-09
+url: /blog/archives/2586
+categories:
+  - Server
+---
+　Prometheusを試してみようと思いインストール方法を調べた結果、バイナリファイルが公開されていることがわかりました。バイナリファイルを利用すると、さくっと動いたのでメモしておきます。必要な手順は以下の通りです。
+
+  1. tarballのダウンロードと解凍
+  2. prometheus.confの作成（[GETTING STARTEDの内容をままコピペ][1]）
+  3. prometheusの起動
+  4. HTTPで9090ポートにアクセス
+
+<pre><code>[ec2-user@ip-10-175-10-126 ~]$ wget https://github.com/prometheus/prometheus/releases/download/0.13.2/prometheus-0.13.2.linux-amd64.tar.gz
+--2015-05-09 12:07:12--  https://github.com/prometheus/prometheus/releases/download/0.13.2/prometheus-0.13.2.linux-amd64.tar.gz
+Resolving github.com (github.com)... 192.30.252.131
+Connecting to github.com (github.com)|192.30.252.131|:443... connected.
+HTTP request sent, awaiting response... 302 Found
+Location: https://s3.amazonaws.com/github-cloud/releases/6838921/b318dbf0-f3e7-11e4-8be7-d3716d1f32e5.gz?response-content-disposition=attachment%3B%20filename%3Dprometheus-0.13.2.linux-amd64.tar.gz&response-content-type=application/octet-stream&AWSAccessKeyId=AKIAISTNZFOVBIJMK3TQ&Expires=1431173292&Signature=J5eC%2F4n8UDnReRDLitzGezZLj88%3D [following]
+--2015-05-09 12:07:13--  https://s3.amazonaws.com/github-cloud/releases/6838921/b318dbf0-f3e7-11e4-8be7-d3716d1f32e5.gz?response-content-disposition=attachment%3B%20filename%3Dprometheus-0.13.2.linux-amd64.tar.gz&response-content-type=application/octet-stream&AWSAccessKeyId=AKIAISTNZFOVBIJMK3TQ&Expires=1431173292&Signature=J5eC%2F4n8UDnReRDLitzGezZLj88%3D
+Resolving s3.amazonaws.com (s3.amazonaws.com)... 54.231.244.8
+Connecting to s3.amazonaws.com (s3.amazonaws.com)|54.231.244.8|:443... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 6796769 (6.5M) [application/octet-stream]
+Saving to: ‘prometheus-0.13.2.linux-amd64.tar.gz’
+
+prometheus-0.13.2.linux-am 100%[==========================================&gt;]   6.48M  1.89MB/s   in 3.4s   
+
+2015-05-09 12:07:17 (1.89 MB/s) - ‘prometheus-0.13.2.linux-amd64.tar.gz’ saved [6796769/6796769]
+
+[ec2-user@ip-10-175-10-126 ~]$ tar xzvf prometheus-0.13.2.linux-amd64.tar.gz 
+prometheus
+tools/rule_checker/rule_checker
+consoles/
+consoles/haproxy.html
+consoles/cassandra.html
+consoles/haproxy-frontend.html
+consoles/index.html.example
+consoles/node-overview.html
+consoles/federation_template_example.txt
+consoles/aws_elb.html
+consoles/aws_redshift-cluster.html
+consoles/node-cpu.html
+consoles/index.html
+consoles/node-disk.html
+consoles/haproxy-backends.html
+consoles/aws_redshift.html
+consoles/cloudwatch.html
+consoles/aws_elasticache.html
+consoles/haproxy-backend.html
+consoles/node.html
+consoles/haproxy-frontends.html
+console_libraries/
+console_libraries/prom.lib
+console_libraries/menu.lib
+[ec2-user@ip-10-175-10-126 ~]$ ls
+console_libraries  consoles  prometheus  prometheus-0.13.2.linux-amd64.tar.gz  tools
+
+[ec2-user@ip-10-175-10-126 ~]$ touch prometheus.conf                                                        
+[ec2-user@ip-10-175-10-126 ~]$ vim prometheus.conf 
+[ec2-user@ip-10-175-10-126 ~]$ ./prometheus 
+prometheus, version 0.13.2 (branch: HEAD, revision: f4d90a1)
+  build user:       fish@localhost
+  build date:       20150506-12:01:47
+  go version:       1.4.2
+</code></pre>
+
+![GUI][2]
+
+ [1]: http://prometheus.io/docs/introduction/getting_started/#configuring-prometheus-to-monitor-itself
+ [2]: http://aimless.jp/blog/wp-content/uploads/2015/05/Prometheus_GUI.png

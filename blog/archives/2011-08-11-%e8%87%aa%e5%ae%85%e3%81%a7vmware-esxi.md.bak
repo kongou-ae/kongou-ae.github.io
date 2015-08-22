@@ -1,0 +1,51 @@
+---
+title: 自宅でVMware ESXi
+author: kongou_ae
+layout: post
+date: 2011-08-11
+url: /blog/archives/360
+categories:
+  - network
+---
+　自宅にある機材を利用して、VMware ESXiな仮想環境を作成しました。仕事でやる機会がない以上、自宅でやるしかない！という趣旨です。ありあわせの機器だけで環境が作れたことに感動しました。完成した構成は下記の通り。
+
+![ESXi][1]
+  
+![sum][2]
+
+### ESXi用PC
+
+　嫁と共用の<a href="http://dynabook.com/pc/catalog/dynabook/090702tx/index_j.htm" title="Dynabook TX/66JSBL" target="_blank">Dynabook TX/66J2BL</a>をUSBブートさせました。搭載しているNICはRealtekでしたが、oem.tgzを変更したら見事に起動しました。嫁共用PCをつぶすわけにはいかないので、USBブート出来るのは本当にありがたい。
+
+### NFS用PC
+
+　Dynabookを買うまで使っていた<a href="http://pc-support.jp.onkyo.com/upfile/HARDWARE/SPECSHEET/A4170CB-L5J_SPEC.htm" title="PC STATION A4170CB" target="_blank">PC STATION A4170CB</a>に頑張ってもらいました。もともと入っていたWindowsXPにCygwinを入れて試してみたがうまくいかなかったので、DドライブにCentOSを入れてNFSを構築したら見事にマウントできました。古い機種＋Dドライブのみなので、ストレージ領域は奇跡の27Gbyteです。。。
+
+### vSphere Client用PC
+
+　勉強会用としてヤフオクで落札した<a href="http://www.asus.co.jp/Eee/Eee_PC/Eee_PC_1000HE/" title="EeePC 1000HE" target="_blank">EeePC 1000HE</a>を利用しました。
+
+### スイッチ
+
+　ネットワークエンジニアとしてはあるまじき事なのかもしれませんが、我が家には純粋なスイッチが存在しません。スイッチとして動く装置は、PLANEXの無線ルータ<a href="http://www.planex.co.jp/product/router/mzk-wnh/" title="MZK-WHN" target="_blank">MZK-WHN</a>とFortigate60しかないので、MZK-WHNに頑張ってもらいました。
+
+### 動作確認
+
+　ESXi上に仮想Altorを起動させて、ｖSphireClient用端末からWebGUIにアクセスしたところ、問題なくアクセス可能でした。こんなしょうもない環境でもしっかり動いているみたいですね。VMwareすごい。
+
+### 今後やりたいこと
+
+　今後は、無料or評価版で出来る範囲で下記にも挑戦したいのですが、機材を買うのが難しい（嫁的な意味で）ので断念しています。。。やるとなると、Gigaな端末×2とGigaなスイッチが必要でしょうか。
+
+・TagVLANをしゃべってみる
+  
+・別のホストを作ってみる
+  
+・2台のホストをクラスタリングしてみる
+  
+・自宅でｖMotionしてみる
+  
+・ストレージ容量を増やす＆iSCSIにしてみる
+
+ [1]: http://aimless.jp/images/homeESXi.png
+ [2]: http://aimless.jp/images/ESXisummary.png

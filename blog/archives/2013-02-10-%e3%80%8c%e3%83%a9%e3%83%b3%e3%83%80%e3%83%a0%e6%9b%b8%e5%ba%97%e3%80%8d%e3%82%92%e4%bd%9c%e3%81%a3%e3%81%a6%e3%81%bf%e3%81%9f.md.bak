@@ -1,0 +1,16 @@
+---
+title: 「ランダム書店」を作ってみた
+author: kongou_ae
+layout: post
+date: 2013-02-10
+url: /blog/archives/1520
+categories:
+  - ruby
+---
+　帰宅途中に「<a href="https://twitter.com/kongou_ae/status/299891452148871168" title="Twitter" target="_blank">ランダムにAmazonの商品ページを表示するWebサービス「Amazonおみくじ」とかどうだろうか。</a>」と思いついたのでRoRで実現しました。Amazonの本からお勧めの本をランダムに表示してくれる<a href="http://random-book.aimless.jp/" title="ランダム書店" target="_blank">「ランダム書店」</a>です。
+
+　実際のところお勧めの30冊とは名ばかりで、内部処理的にはrand関数で生成された乱数を利用してsqlite3に格納されているデータを引っ張ってきているだけです。
+
+　現時点の在庫は、文庫・新書、コミック、ライトノベル、趣味・実用、ビジネス、コンピュータの6つのBrowseNodeからTopSeller順で取得した100件の合計600件です。現時点では1つのBrowseNodeから100件以上アイテムを取得する方法が分らないので6つのカテゴリを一緒くたにしていますが、1つのBrowseNodeから1000件くらい取得できる方法があればカテゴリ別にしたいと思います。
+
+　それにして、しょうもない思いつきが簡単に形になるRuby on Rails(とBootstrap)はすごい。

@@ -1,0 +1,43 @@
+---
+title: Fedora19でSSHのポート番号変更
+author: kongou_ae
+layout: post
+date: 2014-02-27
+url: /blog/archives/1674
+categories:
+  - Server
+---
+　何度やっても覚えられないのでメモ。
+
+### firewalldの設定
+
+    # firewall-cmd --list-all 
+    public 
+    interfaces: eth0 
+    sources: 
+    services: mdns dhcpv6-client ssh 
+    ports: 
+    masquerade: no 
+    forward-ports: 
+    icmp-blocks: 
+    rich rules: 
+    # firewall-cmd --permanent --zone=public --add-port=11022/tcp 
+    # firewall-cmd --reload 
+    # firewall-cmd --list-all 
+    public 
+    interfaces: eth0 
+    sources: 
+    services: mdns dhcpv6-client ssh 
+    ports: 11022/tcp 
+    masquerade: no 
+    forward-ports: 
+    icmp-blocks: 
+    rich rules:
+    
+
+### sshdの再起動
+
+　Selinuxが有効だとPermission Denyされる。
+
+    # systemctl status sshd.service 
+    # systemctl restart sshd.service

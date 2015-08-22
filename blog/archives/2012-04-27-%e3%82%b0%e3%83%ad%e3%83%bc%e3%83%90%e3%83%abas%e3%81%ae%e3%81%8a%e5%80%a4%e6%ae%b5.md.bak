@@ -1,0 +1,38 @@
+---
+title: グローバルASのお値段
+author: kongou_ae
+layout: post
+date: 2012-04-27
+url: /blog/archives/880
+categories:
+  - network
+---
+　「ネットワークエンジニアたるもの、やっぱりグローバルASの一つや二つ欲しいよね」という事で試算しました。JPNICの中のひとではないので間違っているかもしれません。その点ご了承ください。
+
+### AS番号の取得条件
+
+　<a href="http://www.nic.ad.jp/ja/ip/asnumber.html" title="asnumber" target="_blank">AS番号の申請について</a>に記載されている条件は下記の通りです。素直に読むと、「二つのグローバルASとebgpで経路交換しろ」という条件ですね。これは某AS45679と、Hurricane ElectricのCreate BGP Tunnel（AS6939）でクリアできそうです。と○ちゃさん何とぞPeeringのほどorz HE以外にもBGPなtunnel brokerがあるみたいなので、それを使うのもいいかと思います。<a href="http://en.wikipedia.org/wiki/List_of_IPv6_tunnel_brokers" title="tunnel brokers" target="_blank">List of IPv6 tunnel brokers</a>
+
+>   1. 自律ネットワークがBGP(Border Gateway Protocol)を利用して他の自律ネットワークとの間で外部経路制御情報を交換すること。
+>   2. 自律ネットワークの外部経路制御ポリシが、他のいかなる自律ネットワークに委ねても実現が困難な、固有のものであること。典型的には、他の一つの自律ネットワークのみと接続するのではなく、複数の自律ネットワークとの間でBGPにより接続し、外部経路制御情報の交換を行うこと。
+>   3. 上記の条件 1) 2) を、割り当てから3ヶ月以内に満たす予定であること。
+> 
+> <a href="http://www.nic.ad.jp/ja/ip/asnumber.html" title="asnumber" target="_blank">AS番号の申請について</a> 
+
+### 広告するグローバルIPアドレスの取得
+
+　経路交換することが条件なので、広告するグローバルIPアドレスが必要です。二つのグローバルASが両方ともIPv6なので、IPv6のGUA Prefixを取得します。
+
+　広告できるIPアドレスを取得する方法は2つ。指定事業者となりJPNICから割り振りを受けるか、技術的な事情からJPNICから直接分配を受けるかです。指定事業者になる条件（<a href="http://www.nic.ad.jp/ja/ip/member/" title="member" target="_blank">IPアドレス管理指定事業者契約について</a>）が厳しすぎるので、今回の試算では「技術的要件なんです！BGPオペレータ養成用ASを作るんです！」と言い張り、特殊用途用プロバイダ非依存アドレスを割り振ってもらう事にします。条件は下記の通り。AS取得の時点でクリア出来ています。
+
+> 3ヶ月以内にマルチホームによるネットワークを運用する計画がある、あるいは現在割り当てられているIPv6アドレスでマルチホームによるネットワークを運用している(現在割り当てられているIPv6アドレスからリナンバしていただく必要があります)。
+  
+> <a href="http://www.nic.ad.jp/ja/ip/pi-application.html" title="pi-application" target="_blank">特殊用途用プロバイダ非依存アドレス割り当て申請</a> 
+
+### お見積り
+
+　<a href="http://www.nic.ad.jp/ja/ip/member/fee.html#2" title="as_fee" target="_blank">AS番号に関連する費用</a>によると、AS番号の契約料が262,500円、維持料が52,500円です。また、<a href="http://www.nic.ad.jp/ja/ip/member/fee.html#3" title="ipv6_fee" target="_blank">プロバイダ非依存アドレスに関連する費用</a>によると、GUAの契約料が262,500円、維持料が210,000円/年です。
+
+　契約料は2重請求されない（片方の契約料を支払えば、もう一方の契約料が発生しない、AS番号の維持料はグローバルIPアドレスの維持料に含まれる）ので、実際にはイニシャル：262,500円、ランニング：210,000円/年です。グローバルIPアドレスを手配すると、個人だとちょっときつい額になりますね。。。
+
+　とはいっても、10人くらいで一つの組織を作って、参加者で費用を割り勘すれば、初期26,250円、維持費21,000円/年です。20人でやればさらに半額。意外と行けるかも？

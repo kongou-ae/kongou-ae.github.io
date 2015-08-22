@@ -1,0 +1,181 @@
+---
+title: OpenSSL脆弱性の影響（ネットワーク機器編）
+author: kongou_ae
+layout: post
+date: 2014-06-07
+url: /blog/archives/2019
+categories:
+  - Fortigate
+  - network
+---
+　週明けからの対応に向けて、自分に影響のありそうなベンダのアナウンスを調べたのでメモ。（6/7 21:30現在です）
+
+　CVE-2010-5298がCVE-2014-5298になっていたので、修正しました（6/9）　
+
+# サマリー
+
+| CVE           | Impact | fortinet | Juniper  | Checkpoint | Cisco |
+| ------------- | ------ | -------- | -------- | ---------- | ----- |
+| CVE-2014-0076 | 情報漏洩   | 影響なし     | **影響あり** | 影響なし       | 調査中   |
+| CVE-2014-0195 | DoS    | **影響あり** | **影響あり** | 影響なし       | 調査中   |
+| CVE-2014-0198 | DoS    | **影響あり** | **影響あり** | 影響なし       | 調査中   |
+| CVE-2014-0221 | DoS    | **影響あり** | 影響なし     | 影響なし       | 調査中   |
+| CVE-2014-0224 | MITM   | **影響あり** | **影響あり** | **影響あり**   | 調査中   |
+| CVE-2014-3470 | DoS    | 影響なし     | 調査中      | 影響なし       | 調査中   |
+| CVE-2010-5298 | DoS    | **影響あり** | **影響あり** | 影響なし       | 調査中   |
+
+# Fortinet
+
+　私が影響を受けるFortGateだけ記載します。その他については[Multiple Vulnerabilities in OpenSSL][1]を参照してください。これはバージョンアップ祭りか？
+
+| CVE           | Impact | 影響 | 該当                                           |
+| ------------- | ------ | -- | -------------------------------------------- |
+| CVE-2014-0076 | 情報漏洩   | なし | &#8211;                                      |
+| CVE-2014-0195 | DoS    | あり | FortiOS 4.x and 5.x(CAPWAPを使っていれば)           |
+| CVE-2014-0198 | DoS    | あり | FortiOS 5.x SSL VPN and HTTPS administration |
+| CVE-2014-0221 | DoS    | あり | FortiGateは影響なし                               |
+| CVE-2014-0224 | MITM   | あり | FortiOS 4.x and 5.x                          |
+| CVE-2014-3470 | DoS    | なし | &#8211;                                      |
+| CVE-2010-5298 | DoS    | あり | FortiOS 5.x SSL VPN and HTTPS administration |
+
+| CVE           | Workarounds         | 根本対応     |
+| ------------- | ------------------- | -------- |
+| CVE-2014-0076 | &#8211;             | &#8211;  |
+| CVE-2014-0195 | インターフェースでCAPWAPを無効化 | バージョンアップ |
+| CVE-2014-0198 | なし                  | バージョンアップ |
+| CVE-2014-0221 | なし                  | バージョンアップ |
+| CVE-2014-0224 | インターフェースへのIPS適応     | バージョンアップ |
+| CVE-2014-3470 | &#8211;             | &#8211;  |
+| CVE-2010-5298 | なし                  | バージョンアップ |
+
+# Juniper
+
+　私が影響を受けるScreenOSとVPNだけ記載します。その他について[2014-06 Out of Cycle Security Bulletin: Vulnerabilities in OpenSSL related to ChangeCipherSpec, DTLS, SSL\_MODE\_RELEASE_BUFFERS and ECDH ciphersuites][2]を参照してください。
+
+　CVE-2014-0224は、個別で詳細アナウンスがあります。[Junos Pulse/SA (SSLVPN): Details on fixes for SSL/TLS MITM vulnerability (CVE-2014-0224)/JSA10629][3]
+
+| CVE           | Impact | 影響  | 該当                                  |
+| ------------- | ------ | --- | ----------------------------------- |
+| CVE-2014-0076 | 情報漏洩   | あり  | 該当なし                                |
+| CVE-2014-0195 | DoS    | あり  | 該当なし                                |
+| CVE-2014-0198 | DoS    | あり  | SSL-VPN                             |
+| CVE-2014-0221 | DoS    | なし  | 該当なし                                |
+| CVE-2014-0224 | MITM   | あり  | ScreenOS、SSL-VPN※1                  |
+| CVE-2014-3470 | DoS    | 調査中 | Junos Pulseは影響なし                    |
+| CVE-2010-5298 | DoS    | あり  | SSL-VPN(IVE OS 8.0r4, and 7.4r11未満) |
+
+※1　サーバが7.4Rx または8.0Rxで クライアントがPulseまたはN/Cを利用している場合。
+
+| CVE           | Workarounds                   | 根本対応     |
+| ------------- | ----------------------------- | -------- |
+| CVE-2014-0076 | &#8211;                       | &#8211;  |
+| CVE-2014-0195 | &#8211;                       | &#8211;  |
+| CVE-2014-0198 | &#8211;                       | 情報なし     |
+| CVE-2014-0221 | &#8211;                       | &#8211;  |
+| CVE-2014-0224 | ScreenOS:SSLを使う機能を停止(e.g.GUI) | バージョンアップ |
+| CVE-2014-3470 | &#8211;                       | &#8211;  |
+| CVE-2010-5298 | &#8211;                       | 情報なし     |
+
+# CheckPoint
+
+　こちらにまとまっています。[　週明けからの対応に向けて、自分に影響のありそうなベンダのアナウンスを調べたのでメモ。（6/7 21:30現在です）
+
+　CVE-2010-5298がCVE-2014-5298になっていたので、修正しました（6/9）　
+
+# サマリー
+
+| CVE           | Impact | fortinet | Juniper  | Checkpoint | Cisco |
+| ------------- | ------ | -------- | -------- | ---------- | ----- |
+| CVE-2014-0076 | 情報漏洩   | 影響なし     | **影響あり** | 影響なし       | 調査中   |
+| CVE-2014-0195 | DoS    | **影響あり** | **影響あり** | 影響なし       | 調査中   |
+| CVE-2014-0198 | DoS    | **影響あり** | **影響あり** | 影響なし       | 調査中   |
+| CVE-2014-0221 | DoS    | **影響あり** | 影響なし     | 影響なし       | 調査中   |
+| CVE-2014-0224 | MITM   | **影響あり** | **影響あり** | **影響あり**   | 調査中   |
+| CVE-2014-3470 | DoS    | 影響なし     | 調査中      | 影響なし       | 調査中   |
+| CVE-2010-5298 | DoS    | **影響あり** | **影響あり** | 影響なし       | 調査中   |
+
+# Fortinet
+
+　私が影響を受けるFortGateだけ記載します。その他については[Multiple Vulnerabilities in OpenSSL][1]を参照してください。これはバージョンアップ祭りか？
+
+| CVE           | Impact | 影響 | 該当                                           |
+| ------------- | ------ | -- | -------------------------------------------- |
+| CVE-2014-0076 | 情報漏洩   | なし | &#8211;                                      |
+| CVE-2014-0195 | DoS    | あり | FortiOS 4.x and 5.x(CAPWAPを使っていれば)           |
+| CVE-2014-0198 | DoS    | あり | FortiOS 5.x SSL VPN and HTTPS administration |
+| CVE-2014-0221 | DoS    | あり | FortiGateは影響なし                               |
+| CVE-2014-0224 | MITM   | あり | FortiOS 4.x and 5.x                          |
+| CVE-2014-3470 | DoS    | なし | &#8211;                                      |
+| CVE-2010-5298 | DoS    | あり | FortiOS 5.x SSL VPN and HTTPS administration |
+
+| CVE           | Workarounds         | 根本対応     |
+| ------------- | ------------------- | -------- |
+| CVE-2014-0076 | &#8211;             | &#8211;  |
+| CVE-2014-0195 | インターフェースでCAPWAPを無効化 | バージョンアップ |
+| CVE-2014-0198 | なし                  | バージョンアップ |
+| CVE-2014-0221 | なし                  | バージョンアップ |
+| CVE-2014-0224 | インターフェースへのIPS適応     | バージョンアップ |
+| CVE-2014-3470 | &#8211;             | &#8211;  |
+| CVE-2010-5298 | なし                  | バージョンアップ |
+
+# Juniper
+
+　私が影響を受けるScreenOSとVPNだけ記載します。その他について[2014-06 Out of Cycle Security Bulletin: Vulnerabilities in OpenSSL related to ChangeCipherSpec, DTLS, SSL\_MODE\_RELEASE_BUFFERS and ECDH ciphersuites][2]を参照してください。
+
+　CVE-2014-0224は、個別で詳細アナウンスがあります。[Junos Pulse/SA (SSLVPN): Details on fixes for SSL/TLS MITM vulnerability (CVE-2014-0224)/JSA10629][3]
+
+| CVE           | Impact | 影響  | 該当                                  |
+| ------------- | ------ | --- | ----------------------------------- |
+| CVE-2014-0076 | 情報漏洩   | あり  | 該当なし                                |
+| CVE-2014-0195 | DoS    | あり  | 該当なし                                |
+| CVE-2014-0198 | DoS    | あり  | SSL-VPN                             |
+| CVE-2014-0221 | DoS    | なし  | 該当なし                                |
+| CVE-2014-0224 | MITM   | あり  | ScreenOS、SSL-VPN※1                  |
+| CVE-2014-3470 | DoS    | 調査中 | Junos Pulseは影響なし                    |
+| CVE-2010-5298 | DoS    | あり  | SSL-VPN(IVE OS 8.0r4, and 7.4r11未満) |
+
+※1　サーバが7.4Rx または8.0Rxで クライアントがPulseまたはN/Cを利用している場合。
+
+| CVE           | Workarounds                   | 根本対応     |
+| ------------- | ----------------------------- | -------- |
+| CVE-2014-0076 | &#8211;                       | &#8211;  |
+| CVE-2014-0195 | &#8211;                       | &#8211;  |
+| CVE-2014-0198 | &#8211;                       | 情報なし     |
+| CVE-2014-0221 | &#8211;                       | &#8211;  |
+| CVE-2014-0224 | ScreenOS:SSLを使う機能を停止(e.g.GUI) | バージョンアップ |
+| CVE-2014-3470 | &#8211;                       | &#8211;  |
+| CVE-2010-5298 | &#8211;                       | 情報なし     |
+
+# CheckPoint
+
+　こちらにまとまっています。][4] 　OpenSSL脆弱性に対しては安心のCheckPoint。 　 
+
+| CVE           | Impact | 影響 | 該当                  |
+| ------------- | ------ | -- | ------------------- |
+| CVE-2014-0076 | 情報漏洩   | なし | &#8211;             |
+| CVE-2014-0195 | DoS    | なし | &#8211;             |
+| CVE-2014-0198 | DoS    | なし | &#8211;             |
+| CVE-2014-0221 | DoS    | なし | &#8211;             |
+| CVE-2014-0224 | MITM   | あり | Mobile Access Blade |
+| CVE-2014-3470 | DoS    | なし | &#8211;             |
+| CVE-2010-5298 | DoS    | なし | &#8211;             |
+
+| CVE           | Workarounds | 根本対応      |
+| ------------- | ----------- | --------- |
+| CVE-2014-0076 | &#8211;     | &#8211;   |
+| CVE-2014-0195 | &#8211;     | &#8211;   |
+| CVE-2014-0198 | &#8211;     | &#8211;   |
+| CVE-2014-0221 | &#8211;     | &#8211;   |
+| CVE-2014-0224 | &#8211;     | FotFixの適応 |
+| CVE-2014-3470 | &#8211;     | &#8211;   |
+| CVE-2010-5298 | &#8211;     | &#8211;   |
+
+# Cisco
+
+　絶賛調査中のようです。[Multiple Vulnerabilities in OpenSSL Affecting Cisco Products][5] 　HeartBleedの影響を受けた製品と、今回の脆弱性の内容を踏まえると、ASA,Aironetあたりが対象になるのかも。
+
+ [1]: https://www.fortiguard.com/advisory/FG-IR-14-018/
+ [2]: http://kb.juniper.net/InfoCenter/index?page=content&id=JSA10629
+ [3]: http://kb.juniper.net/InfoCenter/index?page=content&id=KB29195
+ [4]: https://supportcenter.checkpoint.com/supportcenter/portal?eventSubmit_doGoviewsolutiondetails=&solutionid=sk92447&js_peid=P-114a7ba5fd7-10001&partition=General&product=All%22
+ [5]: http://tools.cisco.com/security/center/content/CiscoSecurityAdvisory/cisco-sa-20140605-openssl

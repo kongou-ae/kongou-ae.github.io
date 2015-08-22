@@ -1,0 +1,75 @@
+---
+title: PrometheusでAmazon Linuxのメトリクスを収集する
+author: kongou_ae
+layout: post
+date: 2015-05-10
+url: /blog/archives/2595
+categories:
+  - Server
+---
+　[Amazon LinuxでPrometheusを動かしてみた][1]で動いたPrometheusを利用して、サーバのメトリクスを収集します。今回はPrometheusが稼働しているAmazon Linuxのメトリクスを収集します。
+
+## node_exporterを稼働させる
+
+　メトリクスを収集したいサーバでnode_exporterというバイナリを起動します。
+
+<pre><code>yum install git hg gcc golang
+git clone https://github.com/prometheus/node_exporter.git
+make
+./node_exporter &
+</code></pre>
+
+　node_exporterは、Prometheusサーバが読み取れるデータを生成し9100ポートで公開してくれます。
+
+<pre><code>[ec2-user@ip-10-175-10-126 ~]$  wget http://localhost:9100/metrics
+[ec2-user@ip-10-175-10-126 ~]$ more metrics 
+# HELP go_gc_duration_seconds A summary of the GC invocation durations.
+# TYPE go_gc_duration_seconds summary
+go_gc_duration_seconds{quantile="0"} 8.5685e-05
+go_gc_duration_seconds{quantile="0.25"} 0.0006615610000000001
+go_gc_duration_seconds{quantile="0.5"} 0.00068378
+go_gc_duration_seconds{quantile="0.75"} 0.000708493
+go_gc_duration_seconds{quantile="1"} 0.017944932
+go_gc_duration_seconds_sum 0.155032352
+go_gc_duration_seconds_count 205
+</code></pre>
+
+　なお、node_exporterはWindowsをサポートしないようです。（[Windows support][2]）
+
+　node_exporterと同じように、定期的に自サーバのメトリクスを取得し、ファイルに書き込み、httpで公開できる仕組みを作れば、windowsでもメトリクスを収集できる気がします。
+
+## Prometheusにnodeを登録する
+
+　Prometheusサーバに、node_exporterが生成するデータを登録します。
+
+<pre><code>[ec2-user@ip-10-175-10-126 ~]$ cat prometheus.conf  
+（中略）
+job: {
+  name: "node"
+  scrape_interval: "5s"
+  target_group: {
+    target: "http://localhost:9100/metrics"
+  }
+}
+</code></pre>
+
+## Prometheusでメトリクスを確認する
+
+　Prometheusサーバを再起動すると、コンソールにNodeが追加され、メトリクスを収集している対象の一覧が表示されます。
+
+![primetheus_node_summary][3]
+
+　対象のノードをクリックすると、CPUとメモリ、ディスクのグラフが描画されています。
+
+![prometheus_node_detail][4]
+
+　Graphタブを利用することで、取得したメトリクスのグラフを描画することが可能です。データの抽出は[QUERY LANGUAGE][5]を利用する必要があります。
+
+![prometheus_node_metric_graph][6]
+
+ [1]: http://aimless.jp/blog/blog/archives/2586
+ [2]: https://github.com/prometheus/node_exporter/issues/65
+ [3]: http://aimless.jp/blog/wp-content/uploads/2015/05/primetheus_node_summary.png
+ [4]: http://aimless.jp/blog/wp-content/uploads/2015/05/prometheus_node_detail.png
+ [5]: http://prometheus.io/docs/querying/basics/#querying-prometheus
+ [6]: http://aimless.jp/blog/wp-content/uploads/2015/05/prometheus_node_metric_graph.png

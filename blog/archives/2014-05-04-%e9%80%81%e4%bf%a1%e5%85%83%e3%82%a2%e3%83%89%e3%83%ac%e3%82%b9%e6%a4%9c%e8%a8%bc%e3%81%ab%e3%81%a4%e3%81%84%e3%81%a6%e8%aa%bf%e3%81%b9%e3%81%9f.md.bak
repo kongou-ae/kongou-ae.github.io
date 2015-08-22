@@ -1,0 +1,46 @@
+---
+title: 送信元アドレス検証について調べた
+author: kongou_ae
+layout: post
+date: 2014-05-04
+url: /blog/archives/1902
+categories:
+  - network
+---
+　上司と同僚に送信元アドレス検証の必要性を説明するための下調べです。
+
+## 送信元アドレス検証とは
+
+　非トランジットASな弊社においては、インターネット接続サービスを利用している顧客から転送されるパケットが、適切なものかを検証すること。
+
+　適切なパケットとは、弊社が顧客に割り当てたグローバルIPアドレスが送信元IPアドレスになっているパケットである。これに該当しない不適切なパケットは、DoS攻撃を意図するものや顧客インフラの設定不備によるものであり、他ASに転送してはならない。
+
+　送信元アドレス検証を実施することで、自ASがDoS攻撃の加害者となるリスクを大幅に軽減することができる。[RFC2827][1]に「are urged to」「should」って書かれているんだから今すぐやれ。
+
+> All providers of Internet connectivity are urged to implement filtering described in this document to prohibit attackers from using forged source addresses which do not reside within a range of legitimately advertised prefixes.
+> 
+> Corporate network administrators should implement filtering to ensure their corporate networks are not the source of such problems.
+
+　技術的な実装方法としては、アクセスリストとuRPF（unicast reverse path forwarding）がある。運用性を考えると、顧客収容インターフェースにおけるコンフィグが「ip verify unicast source reachable-via rx」の一行ですむuRPFでの実装が望ましい。アクセスリスト方式の場合、顧客収容インターフェースにかけるアクセスリストを大量に設定しなければならない。
+
+　ただし、別の用途（e.g. 帯域制御）で顧客に割り当てたグローバルIPアドレスのACLを定義済みなのであり、送信元アドレス検証に流用可能であれば、そのACLを顧客収容インターフェースにin方向でかけてしまえばいいので、運用性での差異はない。
+
+## 関連するRFC
+
+  * RFC2827（BCP38）
+  * RFC3704（BCP84）
+
+## 実施を表明しているISP
+
+  * [IIJ（2006/03/08～）][2]
+  * [OCN（2006/04/05～）][3]
+  * [アルテリア（旧UCOM）　2007/02/05～][4]
+  * [フリービット（2007/08/28～）][5]
+  * [DYI（2007/08/28～）][6]
+
+ [1]: http://www.ipa.go.jp/security/rfc/RFC2827JA.html
+ [2]: http://japan.cnet.com/news/sec/20098110/
+ [3]: http://www.ocn.ne.jp/business/bocn/gijyutsu/urpf.html
+ [4]: http://www.fttx.co.jp/information/2007/detail/070205.html
+ [5]: http://biz.freebit.com/support/manuals/sav/index.html
+ [6]: http://dream.jp/support/techinfo/security/sav.html

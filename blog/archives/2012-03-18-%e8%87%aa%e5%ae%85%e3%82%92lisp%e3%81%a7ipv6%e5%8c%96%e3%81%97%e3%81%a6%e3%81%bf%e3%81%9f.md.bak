@@ -1,0 +1,51 @@
+---
+title: 自宅をLISPでIPv6化してみた
+author: kongou_ae
+layout: post
+date: 2012-03-18
+url: /blog/archives/726
+categories:
+  - network
+---
+　これまでHurricane ElectricのTunnelBrokerでIPv6化していた自宅を、LISP Beta Networkを利用したIPv6に切り替えました。LISP Beta Networkに個人で接続できるとは思っていませんでしたが、思い切ってCiscoに英語でメールした甲斐がありました。
+
+　cisco892JにはIPv6のデフォルトルートを書いていないので、www.iij.ad.jp（2001:240:BB42:B000::1:80）向けの経路は存在しません。
+
+<pre><code>Router#show ipv6 route 2001:240:BB42:B000::1:80
+Load for five secs: 3%/0%; one minute: 3%; five minutes: 3%
+Time source is NTP, 22:34:15.588 JST Sun Mar 18 2012
+
+% Route not found
+</code></pre>
+
+　にも関わらず、ルータからwww.iij.ad.jpへPingが飛びます。
+
+<pre><code>Router#ping www.iij.ad.jp source loopback 0           
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 2001:240:BB42:B000::1:80, timeout is 2 seconds:
+Packet sent with a source address of 2610:D0:3211:0::xxxx
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 24/28/32 ms
+</code></pre>
+
+　LISPのマップキャッシュを見ると、Map-Resolverから「2001::/22の経路はPeTRに送って」と言われているっぽいので、PETR経由でwww.iij.ad.jpと通信しているのでしょう。
+
+<pre><code>Router#show ipv6 lisp map-cache 
+Load for five secs: 3%/0%; one minute: 3%; five minutes: 3%
+Time source is NTP, 22:37:44.010 JST Sun Mar 18 2012
+
+LISP IPv6 Mapping Cache for EID-table default (IID 0), 4 entries
+
+::/0, uptime: 4d01h, expires: never, via static send map-request
+  Negative cache entry, action: send-map-request
+2001::/22, uptime: 00:01:03, expires: 00:13:49, via map-reply, forward-native
+  Encapsulating to proxy ETR
+</code></pre>
+
+　自siteのRLOCはIPv4しか登録していないので、LISP網内はIPv4で通信します。そのため、通信フローは下図のようになっているはずです。（ちょっと自信ない）
+
+![LISP][1]
+
+　我が家のxTRがIPv6パケットをLISPでカプセル化してIPv4でPeTRに送信します。そしてPeTRがLISPのカプセルを外して、IPv6パケットをIIJに送信する流れです。戻りはその逆です。せっかく接続させて頂いたLISP Beta Networkなので、色々遊んでみようと思います。
+
+ [1]: http://aimless.jp/images/LISP.png

@@ -1,0 +1,18 @@
+---
+title: b10-cmdctlのエラーでBIND10が起動しない。
+author: kongou_ae
+layout: post
+date: 2014-03-06
+url: /blog/archives/1729
+categories:
+  - DNS
+---
+　BIND10のb10-cmdctlはTCP/8080を利用します。そのため、TCP/8080を既に利用中の場合、BIND10がb10-cmdctlのエラー（[Errno 98] Address already in use）によって起動しません。うちの環境では、Nginx配下のサーバがTCP/808xを利用しているため、サーバ側のポートを変更することで対応しました。
+
+<pre><code>$netstat -anp | grep b10-cmd 
+tcp        0      0 127.0.0.1:8080              0.0.0.0:*                   LISTEN      15266/b10-cmdctl   
+</code></pre>
+
+<pre><code>FATAL [b10-cmdctl.cmdctl]: CMDCTL_UNCAUGHT_EXCEPTION uncaught exception: Error creating server, because: [Errno 98] Address already in use 
+INFO [b10-cmdctl.cmdctl]: CMDCTL_EXITING exiting
+</code></pre>

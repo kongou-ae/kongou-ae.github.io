@@ -1,0 +1,51 @@
+---
+title: スマート署名を試してみた（その①）
+author: kongou_ae
+layout: post
+date: 2012-01-27
+url: /blog/archives/633
+categories:
+  - DNS
+---
+　現在、DNSSECの自動化に挑戦しています。ずぼらな私に手動運用は無理でした。。。とりあえずcronでの定期的な再署名を実装したので、前回のように署名が有効期限切れになってしまう事はないと思います。
+
+　問題はZSKのロールオーバーです。調べてみたところ、Bind9.7から実装されているスマート署名なる機能があるみたいなので試してみました。
+
+　手動DNSSECだと、ゾーンファイルに署名鍵のパスを記載しなければなりません。これがちょっと前にシェルで自動化しようとした時、障壁になりました。
+
+<pre><code>$TTL    3600
+$INCLUDE /var/named/chroot/var/named/work/Kaimless.jp.+008+51904.key
+$INCLUDE /var/named/chroot/var/named/work/Kaimless.jp.+008+59091.key
+@       IN      SOA     dns1.aimless.jp.    root.aimless.jp. (
+        2011082201  ;Serial
+        3600            ;Refresh
+        900             ;Retry
+        1209600         ;Expire
+        3600            ;Minimum
+)
+</code></pre>
+
+　スマート署名ではこの点が解消されていました。-Sオプションを付けることで、署名鍵のパスが記載されていないゾーンファイルも署名可能です。
+
+<pre><code>$TTL    3600
+@       IN      SOA     dns1.aimless.jp.    root.aimless.jp. (
+        2011082201      ;Serial
+        3600            ;Refresh
+        900             ;Retry
+        1209600         ;Expire
+        3600            ;Minimum
+</code></pre>
+
+<pre><code># dnssec-signzone -S -o aimless.jp -N unixtime -K /var/named/chroot/var/named
+/work/ /var/named/chroot/var/named/aimless.zone
+Fetching KSK 51904/RSASHA256 from key repository.
+Fetching ZSK 59091/RSASHA256 from key repository.
+dnssec-signzone: warning: Serial number not advanced, zone may not transfer
+Verifying the zone using the following algorithms: RSASHA256.
+Zone signing complete:
+Algorithm: RSASHA256: KSKs: 1 active, 0 stand-by, 0 revoked
+                      ZSKs: 1 active, 0 stand-by, 0 revoked
+/var/named/chroot/var/named/aimless.zone.signed
+</code></pre>
+
+　これを利用しながら、dnssec-keygen ＋ 時刻オプション ＋ cronで定期的に良い感じのZSKを作成すれば、ZSKロールオーバも自動化できるはず。。。頑張ろう。

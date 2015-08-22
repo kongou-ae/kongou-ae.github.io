@@ -1,0 +1,33 @@
+---
+title: Rubyのresolvで遊んでみた
+author: kongou_ae
+layout: post
+date: 2013-01-01
+url: /blog/archives/1456
+categories:
+  - DNS
+  - ruby
+---
+　あけましておめでどうございます。今年も宜しくお願い致します。
+
+　年末から年明けにかけて、Rubyのresolvライブラリで遊んでおりました。こんな便利なライブラリがあったのですね。IPv6kumaのAAAAチェックはコード内でdigを実施してその結果を正規表現でひっかけて値を入手しています・・・いつかresolvを使って書きなおしたいと思います。
+
+<pre><code># cat test.rb
+require 'resolv'
+
+resolver = Resolv::DNS.new(:nameserver =&gt; ['127.0.0.1'])
+resolver.getresources("aimless.jp",Resolv::DNS::Resource::IN::NS).each {|ns|
+    print "#{ns.name}n"
+}
+# ruby test.rb 
+dns1.aimless.jp
+dns4.aimless.jp
+</code></pre>
+
+　せっかくなのでresolvとブイロクマがチェックしている約5000件のFQDNを利用して、色々なリストを作ってみました。
+
+  * <a href="http://dns1.aimless.jp/authlist.txt" title="権威DNS" target="_blank">権威DNSのリスト</a>
+  * <a href="http://dns1.aimless.jp/openresolv.txt" title="オープンリゾルバ" target="_blank">オープンリゾルバリストのリスト（権威と兼任）</a>
+  * <a href="http://dns1.aimless.jp/versionbind.txt" title="BINDのバージョン" target="_blank">Bindのバージョンリスト</a>
+
+　resolvでchaosクラスを問い合わせる術が不明だったため、最後のリストはIPv6kumaと同様コード内でdigをベタ打ちしました・・・version.bindレコードにAAを書く発想はなかった。

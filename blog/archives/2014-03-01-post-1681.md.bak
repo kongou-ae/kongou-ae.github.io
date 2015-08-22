@@ -1,0 +1,16 @@
+---
+title: wordpressのURLをCLIで変更する。
+author: kongou_ae
+layout: post
+date: 2014-02-28
+url: /blog/archives/1681
+categories:
+  - Server
+---
+　wordpressを別のサーバに移行中です。旧サーバから新サーバへwordpressのディレクトリを丸ごとコピーし、動作確認のため従来のURLとは異なるURLで公開したのですが、旧URLにリダイレクトされてしまいます。
+
+　ぐぐったところ、WP上で設定されているURLにリダイレクトする仕様のようなので、SQLを直接いじって直しました。
+
+    > update wp_options set option_value='変更したいURL' where option_name='siteurl'; 
+    Query OK, 1 row affected (0.01 sec) Rows matched: 1 Changed: 1 Warnings: 0 
+    > update wp_options set option_value='変更したいURL' where option_name='home'; Query OK, 1 row affected (0.00 sec) Rows matched: 1 Changed: 1 Warnings: 0

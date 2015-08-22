@@ -1,0 +1,42 @@
+---
+title: API Gateway + Lambdaを使って、マルチクラウド管理APIを作る
+author: kongou_ae
+layout: post
+date: 2015-07-18
+url: /blog/archives/2679
+categories:
+  - AWS
+---
+　「単一のREST APIで複数のクラウドを操作できたら便利だろうなー」と思い調べてみたところ、以下のようなライブラリを見つけました。
+
+| 言語      | ライブラリ       |
+| ------- | ----------- |
+| Ruby    | DeltaCloud  |
+| Python  | libcloud    |
+| Node.js | pkgcloud    |
+| Golang  | Gophercloud |
+
+　ライブラリによってサポートするクラウドプロバイダーが異なり、さらに管理できるサービスと管理できないサービスがあります。どれか一つのライブラリと心中するのは、少々リスクだと思いました。
+
+　「何か他にいい方法はないかなー」と調べていたところに、Amazon API Gatewayがリリースされました。API Gatewayを利用すると、API Gateway経由でLambdaを実行することができます。LambdaではNode.jsとjavaが動きます。主要なクラウドにはNode.jsやjavaのSDKが存在します。つまり、API Gatewayを利用すれば、自分のやりたいことができる、マルチクラウド管理APIを作れそうな気がしました。
+
+　というわけで実践。AzureとAWSのインスタンス情報をまとめて返すAPIを作ってみます。
+
+　API Gatewayでは、/computeがGETされた場合にLambdaファンクションを発火するようにします。
+
+![][1]
+
+　そして、対応するLambdaファンクションでは以下のコードを動かします。SDKを利用して各クラウドのインスタンス情報を取得し配列に格納し、その配列を返すスクリプトです。
+
+　とりあえずということで、認証情報の扱いは適当です。AWSの認証情報はコード内にベタ書きします。Azureの証明書は、lambdaファンクションのZIPに含めます。実際のところは、API Gatewayにアクセスする際のHTTPヘッダに認証情報を含め、Lambdaファンクションに渡す方法がカッコいいと思います。
+
+<script src="https://gist.github.com/kongou-ae/ad0b1366da2ee5efbbaa.js"></script>
+
+　ブラウザでAPI Gatewayの/computeにアクセスすると、以下のJSONが返ってきます。AzureとAWSのインスタンス情報が一つのJSONのレスポンスになっています。いい感じですね。このレスポンスをJavascriptでいい感じに表示するHTMLを作ってS3に配置すれば、サーバレスのマルチクラウド管理ポータルが作れるかも？
+
+<script src="https://gist.github.com/kongou-ae/825a49a087311e0814ad.js"></script>
+
+![][2]
+
+ [1]: http://aimless.jp/blog/wp-content/uploads/2015/07/api_gateway_setting.png
+ [2]: http://aimless.jp/blog/wp-content/uploads/2015/07/result_of_api.png

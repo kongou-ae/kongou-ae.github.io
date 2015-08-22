@@ -1,0 +1,45 @@
+---
+title: Cisco892Jを15.2(3)Tにアップデートした
+author: kongou_ae
+layout: post
+date: 2012-04-06
+url: /blog/archives/814
+categories:
+  - cisco
+  - IHANet
+  - network
+---
+　IOS15.2のリリースノートを見ていたら、「BGP Route Server」や「LISP Virtualization」、「mGRE Tunnel Support over IPv6」などなど面白そうな機能が追加されていたので、15.1(4)XB7から最新の15.2(3)Tにアップデートしました。自宅ルータだからこそEarly Deployment (ED) を積極的に採用します。
+
+　CiscoのサイトからIOSをダウンロードして、TFTPでPCからフラッシュにコピーします。そういえば、エンタイトルメントの強化によって、アカウントに紐づくサポート対象の機器に関するIOSしかダウンロードできなくなっていました。試しに1812JのIOSをダウンロードしようとしたら怒られました。
+
+<pre><code>Router#copy tftp: flash:
+Address or name of remote host []? 192.168.1.20
+Source filename []? c890-universalk9-mz.152-3.T.bin
+Destination filename [c890-universalk9-mz.152-3.T.bin]? 
+Accessing tftp://192.168.1.20/c890-universalk9-mz.152-3.T.bin...
+!!!!!!!!!!!!!!!!!!!!!!!!!!
+[OK - 45161124 bytes]
+
+45161124 bytes copied in 292.368 secs (154467 bytes/sec)
+</code></pre>
+
+　boot systemコマンドで新しいIOSを設定してリロードします。
+
+<pre><code>Router(config)#no boot system flash c890-universalk9-mz.151-4.XB7.bin
+Router(config)#boot system flash  c890-universalk9-mz.152-3.T.bin
+Router#reload 
+Proceed with reload? [confirm]
+</code></pre>
+
+　IOSのバージョンが上がったことを確認します。ルートサーバのコマンドも追加されています。
+
+<pre><code>Router#show version 
+Cisco IOS Software, C890 Software (C890-UNIVERSALK9-M), Version 15.2(3)T, RELEASE SOFTWARE (fc1)
+
+Router(config-router-af)#          neighbor 2001:470:24:xxx::xxx route-server-client
+Router(config-router)#route-server-context ?
+  WORD  Name of route server context 
+</code></pre>
+
+　Ciscoルータで接続できるL2VPNを作って、そこにIHAnetのルートサーバを建てたいですね。

@@ -1,0 +1,18 @@
+---
+title: cisco892JでVRRPv3をやりたい
+author: kongou_ae
+layout: post
+date: 2012-08-16
+url: /blog/archives/1248
+categories:
+  - cisco
+---
+</p> 
+
+　<a href="http://aimless.jp/blog/blog/archives/1240" title="Cisco892Jを15.2(4)Mにしてみた" target="_blank">「Cisco892Jを15.2(4)Mにしてみた」</a>の続きです。
+
+　VRRPv3の設定方法が不明だったので、思い切ってCisco TACにSRしました。その結果「ドキュメントの公開が遅れててごめーん。さっき公開したよ（意訳）」との回答とともに下記リンクをご教示頂きました。
+
+<a href="http://www.cisco.com/en/US/docs/ios-xml/ios/ipapp_fhrp/configuration/15-2mt/fhrp-vrrpv3.html" title="First Hop Redundancy Protocols Configuration Guide, Cisco IOS Release 15.2M&#038;T" target="_blank">First Hop Redundancy Protocols Configuration Guide, Cisco IOS Release 15.2M&T</a>
+
+　さっそくCisco892Jのグローバルコンフィグレーションモードで「fhrp version vrrp v3」を叩いてみましたが、コマンドが存在しませんでした。。。仕方が無いのでルータのsh techを取得してCiscoTACに送付してSRは継続。いつになったらVRRPv3で遊べるのやら。

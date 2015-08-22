@@ -1,0 +1,74 @@
+---
+title: ShellShock（ネットワーク機器編）
+author: kongou_ae
+layout: post
+date: 2014-09-26
+url: /blog/archives/2229
+categories:
+  - cisco
+  - Fortigate
+  - network
+---
+# はじめに
+
+ShellShockに関して、私の業務と関わりのあるネットワーク機器ベンダのSecurity Advisoryが揃ってきたので、現時点での情報を簡単にまとめます。
+
+あくまでも現時点ですので、今後内容が変更になる可能性があります。また、詳細については、保守ベンダにお問い合わせください。
+
+# Cisco
+
+<http://tools.cisco.com/security/center/content/CiscoSecurityAdvisory/cisco-sa-20140926-bash>
+
+<s>IOSは該当しません。Nexusについては、N7kとN9kが該当します。具体的な対応方法については、個別にBugIDが振られていますので、そちらで確認する必要があります。</s>
+
+（9/28更新）IOSとIOS XRは該当しません。IOS XE、Nexus、UCSは該当します。具体的な対応方法については、個別にBugIDが振られていますので、そちらで確認する必要があります。
+
+# Fortinet
+
+<http://www.fortiguard.com/advisory/FG-IR-14-030>
+
+FortiGateは該当しません。ManagerやAnalyzerが該当します。
+
+# Juniper
+
+<http://kb.juniper.net/InfoCenter/index?page=content&id=JSA10648>
+
+Junos、ScreenOS、IVE OSといった主要製品は該当しません。
+
+# F5
+
+<http://support.f5.com/kb/en-us/solutions/public/15000/600/sol15629.html>
+
+主要な製品はほとんど該当します。
+
+# CheckPoint
+
+<https://supportcenter.checkpoint.com/supportcenter/portal?eventSubmit_doGoviewsolutiondetails=&solutionid=sk102673&src=securityAlerts>
+
+GaiaとSPLATともに該当します。
+
+# HP
+
+<s>Security Advisoryのページが見当たりません。。。どこー。</s>
+
+（9/28更新）<http://h17007.www1.hp.com/docs/networking/alert/GNUBASHStatement-20140926.pdf>
+
+主要な製品が該当しない旨を示すPDFが公開されたのですが、リンク切れになってしまいました。。。キャッシュは以下です。
+
+<http://webcache.googleusercontent.com/search?q=cache:cq8A9XMgwUIJ:h17007.www1.hp.com/docs/networking/alert/GNUBASHStatement-20140926.pdf+&cd=1&hl=ja&ct=clnk&gl=jp>
+
+# A10
+
+<s>Security Advisoryのページが見当たりません。。。どこー</s>
+  
+（9/28更新）<https://www.a10networks.com/vadc/index.php/shellshock-bug-when-a-perfect-10-0-score-is-not-so-perfect-and-how-you-can-protect-your-infrastructure/>
+
+主要な製品は該当するようです。ただし、A10のSecurity Advisory を見るためには、製品のSNを使ってアカウント登録が必要のようなので、詳細は不明です。。。
+
+# Radware
+
+<s>現時点でのアナウンスは確認できません。</s>
+
+（9/28更新）<https://kb.radware.com/questions/3588/Security+Advisory%3A+Shellshock+bash+CVE-2014-6271%2C+CVE-2014-7169>
+
+AlteonやLinkProofなど主要製品は該当しません。

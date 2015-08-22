@@ -1,0 +1,52 @@
+---
+title: '自宅ラック勉強会#3に参加してきた'
+author: kongou_ae
+layout: post
+date: 2012-04-15
+url: /blog/archives/857
+categories:
+  - network
+---
+</p> 
+
+　今流行り？の自宅ラック勉強会に参加してきました。場所は中原拠点でしたが、実際はリモート柏拠点（AS64585）ということで、本部のデスマーチっぷりを横目で見つつ、自ASのメンテナンスを少々とひかりさんの活躍を眺めていました。
+
+### 反省
+
+　中原拠点のiBGP設計に積極的に関わるべきだったかな？と反省しています。「分る人間が関わってしまうと勉強会の面白みが薄れてしまうかな」と思い要所要所のアドバイスだけにしていましたが、リモート柏拠点の設定が終了した時点で中原拠点のiBGP設計に関わっていれば仕様変更は回避できたかもなーと。。。
+
+### 9の次はa
+
+　::19/126と::20/126でトンネルを張ろうとしました。これで人生3度目です。2度ある事は3度あるということで。。。
+
+### Vyattaとネイバになれず
+
+　名古屋拠点のVyattaとneighborになれなかったのでdebugを眺めた結果、Graceful-restartに対応していないように見受けられたので、グローバルコンフィグレーションから削除する事で解決しました。
+
+<pre><code>Apr 14 15:21:49.881 JST: BGP: ses global vyatta (0x8AF0CF94:0) act Send OPEN
+Apr 14 15:21:49.881 JST: BGP: ses global vyatta (0x8AF0CF94:0) act NSF Building GR capability.
+Apr 14 15:21:49.881 JST: BGP: ses global vyatta (0x8AF0CF94:0) act Building Enhanced Refresh capability
+Apr 14 15:21:49.881 JST: BGP: vyatta active went from Active to OpenSent
+Apr 14 15:21:49.881 JST: BGP: vyatta active sending OPEN, version 4, my as: 64585, holdtime 180 seconds, ID 24026B4B
+Apr 14 15:21:49.909 JST: BGP: ses global vyatta (0x8AF0CF94:0) act Remote close.
+Apr 14 15:21:49.909 JST: BGP: nbr_topo global vyatta IPv6 Unicast:base (0x8AF0CF94:0) Not scheduling for GR processing [Peer did not advertise GR cap]
+Apr 14 15:21:49.909 JST: BGP: ses global vyatta (0x8AF0CF94:0) act Reset (Peer closed the session).
+Apr 14 15:21:49.909 JST: BGP: nbr_topo global vyatta IPv6 Unicast:base (0x8AF0CF94:0) NSF delete stale NSF not active
+Apr 14 15:21:49.909 JST: BGP: nbr_topo global vyatta IPv6 Unicast:base (0x8AF0CF94:0) NSF no stale paths state is NSF not active
+Apr 14 15:21:49.909 JST: BGP: nbr_topo global vyatta IPv6 Unicast:base (0x8AF0CF94:0) Resetting ALL counters.
+Apr 14 15:21:49.909 JST: BGP: vyatta active closing
+Apr 14 15:21:49.909 JST: BGP: ses global vyatta (0x8AF0CF94:0) act Session close and reset neighbor vyatta topostate
+Apr 14 15:21:49.909 JST: BGP: nbr_topo global vyatta IPv6 Unicast:base (0x8AF0CF94:0) Resetting ALL counters.
+Apr 14 15:21:49.909 JST: BGP: vyatta active went from OpenSent to Idle
+Apr 14 15:21:49.909 JST: %BGP_SESSION-5-ADJCHANGE: neighbor vyatta IPv6 Unicast topology base removed from session  Peer closed the session
+</code></pre>
+
+　この記事を書いてるときに「そういえば、グローバルコンフィグレーションではなくネイバの設定で何とかならんのか？」とググってみたところ、<a href="https://supportforums.cisco.com/thread/2053597" title="BGP issue on cisco 1905" target="_blank">「dont-capability-negotiate」なるコマンド</a>があるとのことで、そちらに変更しました。？すると「Unrecognized command」になるのにコマンドが入る隠しコマンドみたいです。
+
+### IPv6フルルートをもらった
+
+　あのともちゃさん（プライベートAS）とPeeringさせて頂き、綺麗なIPv6フルルートをもらいました。しかしながら、これをそのままグローバルルーティングテーブルに反映させてしまうとLISP-Betaの意味がなくなってしまうので、as-path list（permit ^64525$）でフィルタリングさせて頂いております・・・
+
+### 次回？
+
+　今回はただのフルメッシュ構成で経路交換して終了だったので、次回があるなら経路制御が出来るといいかも？。トランジットと非トランジットを分けて、経路を受ける受け取らない、この経路を通したいなどをやれれば、BGPの面白さがもっと伝わるのかなと。みんなでニフティにBuffalo WHR-G301Nを持ち寄ってBGPハンズオンとか出来ると思うので、どなたか検証用のWHR-G301N下さいｗ

@@ -1,0 +1,51 @@
+---
+title: YAMAHAのIPIPトンネルが上手く動かない
+author: kongou_ae
+layout: post
+date: 2012-02-04
+url: /blog/archives/675
+categories:
+  - cisco
+  - network
+---
+　[前回][1]から引き続き、Cisco892JとRTX1000でグローバルIP経由のIPIPトンネルを掘ろうと試行錯誤しているものの、開通には至っていません。トンネルの対向にPingすら飛ばず・・・ 
+
+<pre><code>■Cisco Configuration
+interface Tunnel11
+ description test-ipip
+ ip address 172.16.16.5 255.255.255.252
+ tunnel source 36.2.107.xxx
+ tunnel mode ipip
+ tunnel destination 122.26.28.xxx
+</code></pre>
+
+<pre><code>■YAMAHA Configuration
+tunnel select 11
+ description tunnel test-ipip
+ tunnel encapsulation ipip
+ tunnel endpoint address 122.26.28.xxx 36.2.107.xxx
+ ip tunnel address 172.16.16.6/30
+ tunnel enable 11
+</code></pre>
+
+　全スルーなfilterを明示的にPPインターフェースにしても駄目。困り果ててキャプチャしたところ、RTX側のトンネルが受信パケットに対してDestination unreachableを返していました。なぜ・・・。
+
+　CiscoからRTXにPingを打つと、Replyが返ってこず代わりにトンネル先のグローバルIPアドレスからDestination Unreachable・・・
+
+![ICMPfromCisco][2]
+
+RTXからCiscoにPingを打つと、Ciscoから返ってきたReplyにDestinationUnreachable・・・
+
+![ICMPfromRTX][3]
+
+　Network Unreachableって事はRTXに経路がないって事になるけど、トンネル用セグメントはshow ip route の結果にちゃんと載っている。なぜNetwork　Unreachable・・・。もう分らないよ・・・。
+
+<pre><code># show ip route                                                            
+Destination         Gateway          Interface       Kind  Additional Info.
+default             -                    PP[01]    static  
+172.16.16.4/30      -                TUNNEL[11]  implicit  
+</code></pre>
+
+ [1]: http://aimless.jp/blog/blog/archives/644 "IPIPトンネル"
+ [2]: http://aimless.jp/images/ICMPfromCisco.png
+ [3]: http://aimless.jp/images/ICMPfromRTX.png

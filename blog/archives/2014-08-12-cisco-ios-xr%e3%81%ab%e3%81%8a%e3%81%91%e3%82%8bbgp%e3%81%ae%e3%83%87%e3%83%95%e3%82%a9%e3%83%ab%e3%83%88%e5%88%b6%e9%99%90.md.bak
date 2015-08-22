@@ -1,0 +1,24 @@
+---
+title: Cisco IOS XRにおけるBGPのデフォルト制限
+author: kongou_ae
+layout: post
+date: 2014-08-12
+url: /blog/archives/2143
+categories:
+  - cisco
+---
+　気になったのでメモ。把握したうえで適切な設定にしないと、ある日突然PeerがAdmin Dowmしてお祭りになりそう。。。フルルートをやり取りするpeerに対しては、明示的にmaximum-prefixを設定しておいた方がよさそうです。
+
+[Cisco ASR 9000 シリーズ ルータへの BGP の実装][1]
+
+> アドバタイズメントによりピアが BGP をフラッディングしないようにするために、サポートされているアドレス ファミリごとに、1 つのピアから受け入れるプレフィックスの数に対する制限が課されます。 デフォルトの制限値は、該当するアドレス ファミリのピアに対して maximum-prefix limit コマンドを設定することにより、上書きできます。 ユーザがそのアドレス ファミリに対するプレフィックスの最大数を設定していない場合は、次のデフォルト制限値が使用されます。
+> 
+>   * IPv4 ユニキャストに対する 512K（524,288）のプレフィックス
+> 
+>   * IPv4 マルチキャストに対する 128K（131,072）のプレフィックス
+> 
+>   * IPv6 ユニキャストに対する 128K（131,072）のプレフィックス
+> 
+>   * VPNv4 ユニキャストに対する 512K（524,288）のプレフィックス
+
+ [1]: http://www.cisco.com/cisco/web/support/JP/docs/RT/ServProviderEdgeRT/ASR9000AggregationServsRT/CG/024/b_routing_cg43xasr9k_chapter_010.html?bid=0900e4b183069caa#con_1088375

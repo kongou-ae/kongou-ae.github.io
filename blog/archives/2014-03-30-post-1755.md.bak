@@ -1,0 +1,155 @@
+---
+title: Virtual Private Gatewayのベストパス選択アルゴリズムで遊んでみた。
+author: kongou_ae
+layout: post
+date: 2014-03-30
+url: /blog/archives/1755
+categories:
+  - AWS
+  - cisco
+  - network
+---
+　仕事でVPC DXに関わっています。その際に、VPCからオンプレ側へのトラフィック設計で不明点があったので、VPC IPSecを利用して自腹で試してみました。
+
+　VPCのVirtual Private Gateways（VGW）とオンプレ側の複数ルータが接続しており、各ルータがVPCに対して同一経路を広報している場合、VPCからの戻りのトラフィックがどの拠点に流れるかを意図的に設計したくなります。これはVGWにどのルータが広報した経路をベストパスとして選ばせるかという作業であり、BGPにおける経路設計が利用できます。
+
+　VGWにおけるベストパス選択アルゴリズムは、[公式ドキュメント][1]の『Configuring Multiple VPN Connections to Your Amazon VPC』に記載されています。 素直に読むと、下記の順番です。一般的なベストパス選択アルゴリズムには含まれているMEDがないのが気になります。
+
+  1. ロンゲストマッチ 
+  2. BGPよりもSTATIC 
+  3. AS-PATH 
+  4. ORIGIN 
+  5. ルータID 
+  6. ネイバーのID
+
+### 検証環境
+
+![enter image description here][2]
+
+　VPCのVGWに対して、2つのVPN Connectionを張ります。設定と動作確認が煩雑になるため、1つのVPN装置が張るVPN Connectionは1つのグローバルIPアドレスのみにします。VPN装置（cisco892JとFortiGate50B）からは、同一経路（192.168.2.0/24）をVPCに対して広報します。
+
+　この状態でEC2から192.168.2.254へTracerouteを行うことで、VGWがCiscoとFortiGateが広報した経路のどちらをベストパスとして選択するかを確認します。
+
+### 1　そのまま接続してみる
+
+　特に経路制御をせずにVPNコネクションを確立し、EC2からTracerouteを行います。FortiGate（169.254.252.33）経由になりました。これはORIGINによるものです。
+
+    traceroute to 192.168.2.254 (192.168.2.254), 30 hops max, 60 byte packets
+    1 169.254.252.17 (169.254.252.17) 0.335 ms 0.506 ms 0.694 ms
+    2 169.254.252.33 (169.254.252.33) 2.939 ms 9.704 ms 3.032 ms
+    3 169.254.252.34 (169.254.252.34) 19.684 ms 19.898 ms 19.838 ms
+    4 192.168.2.254 (192.168.2.254) 20.345 ms * * 
+    
+
+　CiscoはBGPに対してconnectedをredistributeしているので、originが?（incomplite）になっています。
+
+    Router#show bgp ipv4 unicast neighbors 169.254.252.25 advertised-routes 
+    Network Next Hop Metric LocPrf Weight Path
+     *> 192.168.2.0 0.0.0.0 0 32768 ?
+    
+
+　一方FortiGateは、BGPのNETWORKコマンドで経路を作っているので、originがi（IGP）になっています。
+
+    (root) # get router info bgp neighbors 169.254.252.33
+    Network Next Hop Metric LocPrf Weight Path 
+    *> 192.168.2.0 169.254.252.34 100 32768 i 
+    
+
+　ORIGIN属性はigp、egp、incompliteの順で選ばれるので、FortiGateが広告した192.168.2.0/24がベストパスに選択され、TracerouteがFortiGate経由になります。
+
+### 2　ORIGIONをそろえる
+
+　Cisco側のORIGIN属性をIGPに変更してみます。
+
+    Router#show bgp ipv4 unicast neighbors 169.254.252.25 advertised-routes 
+    Network Next Hop Metric LocPrf Weight Path 
+    *> 192.168.2.0 0.0.0.0 0 32768 i
+    
+
+　すると、Cisco（169.254.252.25）経由になりました。ORIGINが同じigpになった結果、次の選択基準であるrouter-idによってベストパスが決定したと思われます。（CiscoのほうがルータIDが小さいです。）
+
+    $ traceroute 192.168.2.254 traceroute to 192.168.2.254 (192.168.2.254), 30 hops max, 60 byte packets 
+    1 169.254.252.17 (169.254.252.17) 2.839 ms 3.039 ms 2.991 ms 
+    2 169.254.252.25 (169.254.252.25) 9.339 ms 9.034 ms 2.835 ms 
+    3 169.254.252.26 (169.254.252.26) 13.584 ms 
+    4 192.168.2.254 (192.168.2.254) 20.392 ms * 
+    
+
+### 3　AS-PATHをPrependしてみる。
+
+　router-idでベストパスが選択されている状況で、AS-PATHを使ってみます。Cisco側が広報する経路にAS-PATHを3つ積みます。
+
+    route-map aws-aspath permit 10 
+    set as-path prepend 64585 64585 64585 
+    
+    router bgp 64585 
+    address-family ipv4 
+    neighbor 169.254.252.25 route-map aws-aspath out
+    
+
+　すると、EC2からのTracerouteはFortiGate（169.254.252.33）経由になります。
+
+    $ traceroute 192.168.2.254 traceroute to 192.168.2.254 (192.168.2.254), 30 hops max, 60 byte packets 
+    1 169.254.252.17 (169.254.252.17) 0.337 ms 0.505 ms 0.717 ms 
+    2 169.254.252.33 (169.254.252.33) 9.134 ms 5.161 ms 9.263 ms 
+    3 169.254.252.34 (169.254.252.34) 17.613 ms 24.352 ms 17.749 ms 
+    4 192.168.2.254 (192.168.2.254) 20.646 ms * *
+    
+
+### 4　MEDを積んでみる
+
+　AS-PATHではなく、MEDを積んでみましょう。Cisco側を通っている状況でCisco側にMEDを積みます。
+
+    route-map aws-addmed permit 10 
+    set metric 10 
+    
+    router bgp 64585 
+    address-family ipv4 
+    neighbor 169.254.252.25 route-map aws-addmed out
+    
+
+　MEDは値が少ない経路が優先されます。FortiGateが広報する経路のMEDは初期値の0なので、FortiGate（169.254.252.33）経由になります。
+
+    $ traceroute 192.168.2.254 traceroute to 192.168.2.254 (192.168.2.254), 30 hops max, 60 byte packets 
+    1 169.254.252.17 (169.254.252.17) 0.323 ms 0.481 ms 0.692 ms 
+    2 169.254.252.33 (169.254.252.33) 9.070 ms 3.027 ms 3.191 ms 
+    3 169.254.252.34 (169.254.252.34) 24.657 ms 18.121 ms 18.064 ms 
+    4 192.168.2.254 (192.168.2.254) 19.204 ms * *
+    
+
+　この状況でFortiGate側でMEDを積んでみましょう。Cisco側の10よりも大きくすればいいので100を積みます。
+
+    config router route-map 
+    edit "addmed" 
+    config rule 
+    edit 100 
+    set set-metric 100 
+    next 
+    end 
+    next
+    end 
+    config router bgp 
+    set as 64585 
+    config neighbor 
+    edit "169.254.252.33" 
+    set remote-as 10124 
+    set route-map-out "addmed" 
+    set send-community6 disable 
+    next 
+    end 
+    end 
+    end
+    
+
+　結果、Cisco（169.254.252.25）経由に戻ります。
+
+    $ traceroute 192.168.2.254 traceroute to 192.168.2.254 (192.168.2.254), 30 hops max, 60 byte packets 
+    1 169.254.252.17 (169.254.252.17) 0.321 ms 0.500 ms 0.705 ms 
+    2 169.254.252.25 (169.254.252.25) 23.050 ms 23.011 ms 22.699 ms 
+    3 169.254.252.26 (169.254.252.26) 16.317 ms * *
+    
+
+　公式のドキュメントにはMEDの記載がありませんでしたが、MEDによる経路制御も効くようですね。個人的にはAS-PATHがわかりやすくて好きなので、AS-PATHを利用します。
+
+ [1]: http://docs.aws.amazon.com/AmazonVPC/latest/NetworkAdminGuide/Introduction.html
+ [2]: http://aimless.jp/blog/wp-content/uploads/2014/03/vpc-diag.png

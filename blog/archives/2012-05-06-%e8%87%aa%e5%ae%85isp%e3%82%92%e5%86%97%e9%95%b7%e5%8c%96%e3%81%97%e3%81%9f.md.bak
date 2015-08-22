@@ -1,0 +1,123 @@
+---
+title: 自宅ISPを冗長化した
+author: kongou_ae
+layout: post
+date: 2012-05-06
+url: /blog/archives/961
+categories:
+  - network
+---
+</p> 
+
+　GWの課題ということで、自宅のISP回線を冗長化しました。GMOの固定IPを契約した際にOCNを解約していなかったので、それを有効活用します。また、お仕事で「メインDCとDRサイト間でのISP冗長」ってのを提案しないといけない事もあり、その技術検証も兼ねてます。機器が足りないので縮小構成ですが・・
+
+### 論理構成図
+
+![nw-topology][1]
+
+　通常時はGMOの固定IPを利用し、GMO経由でインターネットへ接続できなくなった場合、OCNの非固定IP経由に切り替えます。
+
+　実際の所、物理構成的には1本のフレッツをマルチセッションで使っているので、全く冗長化されていません。さらにモデムの配下を二つに分解するSWとしてCisco892Jを利用しているので、Cisco892Jが死ぬと全てが終わります。。。。
+
+### 「インターネットに接続できない」を具体化する
+
+　インターネットへ接続できないと一言で言っても、実際のNWでは色々な状態が考えられます。ISPの網内トラブル、ゲートウェイになっているFWが壊れた、デフォルトルートを広告している機器が壊れた等々。
+
+　今回の構成では「インターネットに接続できない」を「メインルータのデフォルトルートで8.8.8.8にPingが飛ばなくなった」とし、それをルータ自身で検知して経路を切り替えます。自分に設定されたデフォルトルートの到達性に責任を持ってもらう形です。
+
+　こうすると、コアSWがOSPFにデフォルトルートを広告しているような構成の場合に、ISP網内のインターネット接続性が死んでいる事をコアSWで検知して広告を止める⇒別DCのコアL3SWが広告するメトリックが高いデフォルトルートに切り替わる、みたいな事も出来ます。
+
+### IP SLA & Object Tracking
+
+　メイン回線のデフォルトルートが正常かどうかを調べる為に、IP SLAを利用を利用して、ルータのDialer1（GMOのPPPoEインターフェース）から10秒に1回icmp-echoを送信します。
+
+<pre><code>ip sla 20
+ icmp-echo 8.8.8.8 source-interface Dialer1
+ frequency 10
+ip sla schedule 20 life forever start-time now
+
+Router#show ip sla summary
+IPSLAs Latest Operation Summary
+ID          Type       Destination       Stats   Return      Last
+                                          (ms)    Code        Run
+----------- ---------- ---------------  ------ ---------- ----------------- 
+*20         icmp-echo  8.8.8.8          RTT=8    OK         1 second ago    
+</code></pre>
+
+　そして、8.8.8.8へのICMP-echoが通らなくなった事を検知するためにオブジェクトトラッキングを利用します。先ほど設定したIP SLAの到達性をトラッキングするよう設定し、それを依存したデフォルトルートを設定します。こうすると、Pingが通る時はルーティングが有効に、通らない場合はルーティングテーブルに乗らないようになります。
+
+<pre><code>track 20 ip sla 20 reachability
+ip route 0.0.0.0 0.0.0.0 Dialer1 track 20
+
+Router#show track 
+Track 20
+  IP SLA 20 reachability
+  Reachability is Up
+    5 changes, last change 23:30:13
+  Latest operation return code: OK
+  Latest RTT (millisecs) 7
+  Tracked by:
+    STATIC-IP-ROUTING 0
+</code></pre>
+
+<a href="http://www.cisco.com/en/US/docs/ios/ipapp/configuration/guide/ipapp_eot.html" title="Configuring Enhanced Object Tracking" target="_blank">Object Trackingの設定例：Configuring Enhanced Object Tracking</a>
+
+### バックアップルートの設定
+
+　OCNに接続しているFortigateから、OSPFでデフォルトルートを広告します。こうする事で、Cisco892Jのルーティングテーブルは、通常時はAD値1のStaticが利用されてGMO経由に、StaticがObject Trackingで消えたあとはOSPFで受信しているAD値110のOCN経由に切り替わります。
+
+　ただし、このままだと、Dialer1がUpしている状態で8.8.8.8への到達性がなくなるような障害が発生した場合、デフォルトルートがフラッピングしそうな気がします。（8.8.8.8への到達性がなくなる⇒デフォルトルートがOCNに切り替わる⇒Dialer1からのPingがOCN経由のデフォルトに乗って到達する⇒GMOに切り替わる⇒8.8.8.8への到達性がなくなる（初めに戻る））。
+
+　そこで、8.8.8.8だけはいつでもGMO経由で抜けるように/32のホストルートを設定します。障害時に8.8.8.8が利用不可になりますが、使ってないのでOKということで。。。
+
+<pre><code>ip route 8.8.8.8 255.255.255.255 Dialer1
+</code></pre>
+
+### 動作確認
+
+　疑似的に障害を発生させるために、8.8.8.8をnull0に落とします。PPPoEをしゃべるIFのケーブルを抜いてもいいのですが、そうするとDialer1が落ちてデフォルトルートが消えてしまいます。PPPoEは生きてるけど網内が死んでる、つまりコアSWのネクストホップは生きてるけどその先が死んでる、という状況にも対応できるのがこの構成の良さなので、疑似的に8.8.8.8へPingが飛ばないようにします。
+
+　すると、IP SLAで設定したICMPが到達性を失い、それをオブジェクトトラッキングが検知します。そして、Staticのデフォルトルートが消失し、OSPFで受信した経路に切り替わります。
+
+<pre><code>Router(config)#ip route 8.8.8.8 255.255.255.255 null 0
+Router(config)#end
+May  6 21:12:42.188 JST: %TRACKING-5-STATE: 20 ip sla 20 reachability Up-&gt;Down
+Router#
+Router#show ip sla summary 
+ID          Type       Destination       Stats   Return      Last
+                                          (ms)    Code        Run
+----------- ---------- ---------------  ------ ---------- ----------------- 
+*20         icmp-echo  8.8.8.8          -        Timeout    8 seconds ago      
+Router#
+Router#show ip route
+Gateway of last resort is 192.168.4.200 to network 0.0.0.0
+
+O*E2  0.0.0.0/0 [110/10] via 192.168.4.200, 00:00:15, Vlan4
+</code></pre>
+
+　障害を復旧させる為に、null0に落としていた8.8.8.8を正常に戻します。するとIP SLAで設定したICMPの到達性が復旧したことをオブジェクトトラッキングが検知し、Staticのデフォルトルートが復旧します。
+
+<pre><code>Router(config)#no ip route 8.8.8.8 255.255.255.255 Null0
+Router(config)#end
+Router#
+May  6 21:15:07.293 JST: %TRACKING-5-STATE: 20 ip sla 20 reachability Down-&gt;Up
+Router#
+Router#show ip sla summary        
+IPSLAs Latest Operation Summary
+ID          Type       Destination       Stats   Return      Last
+                                          (ms)    Code        Run
+----------- ---------- ---------------  ------ ---------- ----------------- 
+*20         icmp-echo  8.8.8.8          RTT=8    OK         9 seconds ago  
+Router#
+Router#show ip route 
+S*    0.0.0.0/0 is directly connected, Dialer1
+</code></pre>
+
+### 今後の野望
+
+　IP SLA & Object Trackingでデフォルトルートを消すのは問題なく動きそうなので、エンタープライズにありがちな下記のような構成でもちゃんとISP冗長できることを確認したいです。動きそうな気はするのですが、検証するための機器が足りない・・・。
+
+![enterprise-nw][2]
+
+ [1]: http://aimless.jp/images/dr.png
+ [2]: http://aimless.jp/images/enterprise.png

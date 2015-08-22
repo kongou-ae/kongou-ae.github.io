@@ -1,0 +1,45 @@
+---
+title: CactiでBGPの経路数を監視してみた
+author: kongou_ae
+layout: post
+date: 2012-05-24
+url: /blog/archives/1058
+categories:
+  - IHANet
+  - network
+---
+</p> 
+
+　「LookingGrassを作ったし、あとは経路数のモニタリングだよなー」という事で、Cactiを使ってモニタリングを始めました。ゆくゆくはブログのサイドバーに仕込みたいです。
+
+![bgproute][1]
+  
+![bgproute][2]
+
+　Cisco892Jのshow ipv6 route summryで出力されるBGPのネットワーク数をグラフにしています。IPv6のBGP経路数を直接取得できるOIDが見つからなかったため、下記のスクリプトを利用して経路数をCactiに渡しています。ルータにtelnetしてコマンド直打ち⇒必要な部分だけ正規表現で抽出という感じです。
+
+<pre><code>#!/usr/local/bin/ruby
+
+require 'net/telnet'
+
+@router = "IPAddress"
+@user = "Username"
+@password = "password"
+@prompt = "Router&gt;"
+
+tn  = Net::Telnet::new("Host" =&gt; @router, "Timeout" =&gt; 5)
+tn.cmd("String" =&gt; "#{@user}","Match"=&gt;/^Password/) 
+tn.cmd("String" =&gt; "#{@password}","Match"=&gt;/^#{@prompt}/) 
+tn.cmd("String" =&gt; "ter len 0","Match"=&gt;/^#{@prompt}/) 
+@result = tn.cmd("String" =&gt; "show ipv6 route summary | inc bgp","Match"=&gt;/^#{@prompt}/)
+tn.puts("exit") 
+tn.close
+
+/64585 +[0-9]+ / =~ @result
+@result = $&.gsub(/64585 +/,"")
+@result = @result.gsub(/ /,"")
+print @result
+</code></pre>
+
+ [1]: http://dns3.aimless.jp/images/bgproute2.png
+ [2]: http://dns3.aimless.jp/images/bgproute3.png

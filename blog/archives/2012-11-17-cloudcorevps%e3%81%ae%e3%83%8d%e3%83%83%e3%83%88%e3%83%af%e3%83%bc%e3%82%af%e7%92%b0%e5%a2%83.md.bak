@@ -1,0 +1,35 @@
+---
+title: CloudCoreVPSのネットワーク環境
+author: kongou_ae
+layout: post
+date: 2012-11-17
+url: /blog/archives/1440
+categories:
+  - network
+---
+　セカンダリDNS他で利用しているKDDIのCloudCoreVPSにてネットワークのメンテナンスが実施されます。届いたメールより引用。
+
+> 2012年8月下旬より、CloudCore VPSにて利用しているネットワーク
+  
+> 機器の問題により、お客様がご利用の稼動サーバへの通信が不安定
+  
+> になる事象が発生しておりました。
+> 
+> 当社にて9月3日に、利用している機器のファームアップデートを実施
+  
+> しましたが、状況は改善されず、この度、問題を解消するために、
+  
+> 利用している機器とは別の機器への入れ替えをすることになりました。 
+
+<cite>【重要】CloudCoreVPSネットワークメンテナンスのお知らせ(11/22 00:00～最大10分の断)</cite>
+
+　8月くらいから、さくらのVPS上のsmokepingでCloudCoreVPSにPingを投げまくっているのですが、VPS宛のICMPがコンスタンスに落ちる落ちる。
+
+![cloudcore-icmp][1]
+
+　我が家の固定IP（vectant）と比較しても、そのICMPの落ちっぷりが分ると思います。今回のメンテナンスでこれが解消されるといいのですが。
+
+![vectant-icmp][2]
+
+ [1]: http://aimless.jp/images/cloudcore-icmp.png
+ [2]: http://aimless.jp/images/vectant-icmp.png

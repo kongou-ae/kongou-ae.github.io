@@ -71,7 +71,7 @@
 
 <p>　上の箱がFortigate50B、下の箱がCisco892Jです。1台のFortigate50Bの中にL3SW1台と2台のFWを作ってみました。VDOM rootはインターネットとFWをつなぐL3SW、VDOM14はLAN側のNICが二つ（InternalとDMZ）があるFW、VDOM15はLAN側のNICが一つだけのFWをイメージしています。今回のエントリーはVDOM14に関する部分だけです。</p>
 
-<p><img src="http://aimless.jp/images/vdom-topo.png" alt="" /></p>
+<p><img src="http://aimless.jp/blog/images/vdom-topo.png" alt="" /></p>
 
 <h3 id="global設定:53c738c0f35b9e72e785be171e1cc256">Global設定</h3>
 
@@ -79,13 +79,13 @@
 
 <p>　LAN側のInternalはルーテッドにしてしまうと1つしかIPアドレスが振れないので、tagVLANで分割しVLANインターフェースにします。それぞれのVLANインターフェースにIPアドレスとVLAN-ID、所属するVDOMを設定します。</p>
 
-<p><img src="http://aimless.jp/images/vdom-global-interface.png" alt="" /></p>
+<p><img src="http://aimless.jp/blog/images/vdom-global-interface.png" alt="" /></p>
 
 <h3 id="vdom-root設定:53c738c0f35b9e72e785be171e1cc256">VDOM root設定</h3>
 
 <p>　VDOM rootにインターネット向けのデフォルトルートと、下にぶら下がっているVDOM向けのルーティングを追加します。VDOM向けのネクストホップはVDOMリンクのIPアドレスです。unnumbered設定の場合、ネクストホップは不要です。初めは少々混乱しましたが、FW間の物理リンクが仮想的なVDOMリンクに置き換わっただけです。</p>
 
-<p><img src="http://aimless.jp/images/vdom-root-routing.png" alt="" /></p>
+<p><img src="http://aimless.jp/blog/images/vdom-root-routing.png" alt="" /></p>
 
 <p>　VDOM rootのFWポリシーは全開けし、個別の制御は各VDOMに任せます。VDOMからInternetへのルールはNATを有効にします。</p>
 
@@ -93,15 +93,15 @@
 
 <p>　VDOM14のインターフェースを確認すると、グローバルで設定した通りWAN側1つ、LAN側2つになっています。</p>
 
-<p><img src="http://aimless.jp/images/vdom-vdom14-interface.png" alt="" /></p>
+<p><img src="http://aimless.jp/blog/images/vdom-vdom14-interface.png" alt="" /></p>
 
 <p>　インターネットと通信するために、デフォルトルートをVDOM root側のVDOMリンクアドレスに向けます。</p>
 
-<p><img src="http://aimless.jp/images/vdom-vdom14-routing.png" alt="" /></p>
+<p><img src="http://aimless.jp/blog/images/vdom-vdom14-routing.png" alt="" /></p>
 
 <p>　それっぽいルールを追加します。Internal⇒DMZ、DMZ⇒Internet、DMZ⇒Internalです。InternalからInternetへの通信は許可しません。記載されているホストは、ルータのSVIに振ってあるIPアドレスです。</p>
 
-<p><img src="http://aimless.jp/images/vdom-vdom14-policy.png" alt="" /></p>
+<p><img src="http://aimless.jp/blog/images/vdom-vdom14-policy.png" alt="" /></p>
 
 <h3 id="動作確認:53c738c0f35b9e72e785be171e1cc256">動作確認</h3>
 
@@ -199,7 +199,7 @@ FGT50B3G08625936 (VDOM-14) #
 
 <p>　複数のFWを統合して管理コストを削減したり、1台のFWを仮想化して複数のユーザを異なるポリシーで収容したり、Virtual Private Firewallみたいな事をしたりと、色々な使い方ができるなーと思いました。自宅でどう使うかはこれから考えます。。。</p>
 
-<p>[7]: <a href="http://aimless.jp/images/vdom-resouce.png">http://aimless.jp/images/vdom-resouce.png</a></p>
+<p>[7]: <a href="http://aimless.jp/blog/images/vdom-resouce.png">http://aimless.jp/blog/images/vdom-resouce.png</a></p>
 
     </article>
     <div class="ad-left">

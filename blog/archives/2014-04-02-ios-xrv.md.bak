@@ -1,0 +1,27 @@
+---
+title: IOS XRv
+author: kongou_ae
+layout: post
+date: 2014-04-02
+url: /blog/archives/1796
+categories:
+  - cisco
+---
+　IOS XRvなんてのがリリースされていたんですね！[Cisco IOS XRv Router Installation and Configuration Guide][1]
+
+　ESXi上へのデプロイは成功したのですが、vSPhere Clientのコンソールでは操作できません。
+
+![enter image description here][2]
+
+　マニュアルを見るとネットワーク経由でのシリアルポートを有効化する必要があるようなのですが、以下のエラーが出てしまい有効化できません。
+
+![enter image description here][3]
+
+　エラー文を素直に読むと、無償版ESXiではダメなような。。。起動しているであろうIOS XRvに接続できない。。。IOS XRvは KVM-QEMUもサポートしているのでIOS XRv on KVM on ESXiにするか検討中です。
+
+　続きを書きました。→[IOS XRVにコンソール接続する][4]
+
+ [1]: http://www.cisco.com/en/US/docs/ios_xr_sw/ios_xrv/install_config/b_xrvr_432.html
+ [2]: http://aimless.jp/blog/wp-content/uploads/2014/04/esxi-console.png
+ [3]: http://aimless.jp/blog/wp-content/uploads/2014/04/iosxrv-esxi-errror.png
+ [4]: http://aimless.jp/blog/blog/archives/1804

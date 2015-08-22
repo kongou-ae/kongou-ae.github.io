@@ -1,0 +1,136 @@
+---
+title: Google Public DNSを使うとxvideos.comにアクセスできない理由
+author: kongou_ae
+layout: post
+date: 2014-06-05
+url: /blog/archives/2007
+categories:
+  - DNS
+---
+　[xvideosが突然見れなくなった場合はDNSサーバーを変更しよう][1]を踏まえて、色々と調べたのでメモ。
+
+　アクセス出来ない理由は、『Google Public DNSが、国内？からのwww.xvideos.comに関する問い合わせに対して、正しくないAレコードを返すから』の様に見えます。ただし、なぜそんな動作になるのかは不明。
+
+　自分で運用しているキャッシュDNSサーバ on ConoHaで名前解決を行った結果は以下の通りです。複数のAレコードが帰ってきます。本サーバをリゾルバに設定している自PCからxvideos.comへのアクセスは問題ありません。
+
+    $ drill www.xvideos.com                                                                         
+    ;; ->>HEADER<<- opcode: QUERY, rcode: NOERROR, id: 6737
+    ;; flags: qr rd ra ; QUERY: 1, ANSWER: 9, AUTHORITY: 0, ADDITIONAL: 0 
+    ;; QUESTION SECTION:
+    ;; www.xvideos.com.     IN      A
+    
+    ;; ANSWER SECTION:
+    www.xvideos.com.        20      IN      CNAME   xvideos.com.
+    xvideos.com.    300     IN      A       141.0.174.39
+    xvideos.com.    300     IN      A       141.0.174.40
+    xvideos.com.    300     IN      A       141.0.174.41
+    xvideos.com.    300     IN      A       141.0.174.34
+    xvideos.com.    300     IN      A       141.0.174.35
+    xvideos.com.    300     IN      A       141.0.174.36
+    xvideos.com.    300     IN      A       141.0.174.37
+    xvideos.com.    300     IN      A       141.0.174.38
+    
+    ;; AUTHORITY SECTION:
+    
+    ;; ADDITIONAL SECTION:
+    
+    ;; Query time: 451 msec
+    ;; SERVER: ::1
+    ;; WHEN: Thu Jun  5 09:23:05 2014
+    ;; MSG SIZE  rcvd: 175
+    $ 
+    
+
+　自分で運用しているキャッシュDNSサーバ on ConoHaから8.8.8.8に問い合わせた結果は以下の通りです。先程のDNS応答には含まれていないIPアドレス(141.0.173.53)が帰ってきます。さくらVPS at 大阪から8.8.8.8に問い合わせても結果は同じでした。
+
+    $ drill www.xvideos.com @8.8.8.8
+    ;; ->>HEADER<<- opcode: QUERY, rcode: NOERROR, id: 56317
+    ;; flags: qr rd ra ; QUERY: 1, ANSWER: 2, AUTHORITY: 0, ADDITIONAL: 0 
+    ;; QUESTION SECTION:
+    ;; www.xvideos.com.     IN      A
+    
+    ;; ANSWER SECTION:
+    www.xvideos.com.        361     IN      CNAME   xvideos.com.
+    xvideos.com.    361     IN      A       141.0.173.53
+    
+    ;; AUTHORITY SECTION:
+    
+    ;; ADDITIONAL SECTION:
+    
+    ;; Query time: 38 msec
+    ;; SERVER: 8.8.8.8
+    ;; WHEN: Thu Jun  5 09:23:01 2014
+    ;; MSG SIZE  rcvd: 63
+    
+
+　Google Public DNSに案内された141.0.173.53にアクセスすると、Nginxがステータスコード301でhttp://randomserver.com/を通知します。これによって、www.xvideos.comにアクセスしたつもりが、randomserver.comにアクセスしてしまうという現象が発生します。
+
+　なんでだろと思いぐぐってみたのですが、見つかるのは日本語のページばかりです。「海外は困っていないのか？もしかして国内だけの現象？」と思い、AWSのVirginia上にEC2をデプロイして、同様の確認をしてみました。
+
+　EC2に設定されているリゾルバ（172.16.0.23）に問い合わせた結果は以下の通りです。正しいAレコードが帰ってきます。なお、EC2のリゾルバは、54.80.202.238のアドレスで外部に問い合わせを行っていました。（EC2でairinterop.jpの名前解決を行い、airinterop.jpの権威DNSサーバのクエリログを確認）
+
+    $ drill www.xvideos.com
+    ;; ->>HEADER<<- opcode: QUERY, rcode: NOERROR, id: 4238
+    ;; flags: qr rd ra ; QUERY: 1, ANSWER: 9, AUTHORITY: 0, ADDITIONAL: 0 
+    ;; QUESTION SECTION:
+    ;; www.xvideos.com.     IN      A
+    
+    ;; ANSWER SECTION:
+    www.xvideos.com.        6       IN      CNAME   xvideos.com.
+    xvideos.com.    24      IN      A       141.0.174.39
+    xvideos.com.    24      IN      A       141.0.174.40
+    xvideos.com.    24      IN      A       141.0.174.41
+    xvideos.com.    24      IN      A       141.0.174.34
+    xvideos.com.    24      IN      A       141.0.174.35
+    xvideos.com.    24      IN      A       141.0.174.36
+    xvideos.com.    24      IN      A       141.0.174.37
+    xvideos.com.    24      IN      A       141.0.174.38
+    
+    ;; AUTHORITY SECTION:
+    
+    ;; ADDITIONAL SECTION:
+    
+    ;; Query time: 4 msec
+    ;; SERVER: 172.16.0.23
+    ;; WHEN: Thu Jun  5 03:40:41 2014
+    ;; MSG SIZE  rcvd: 175
+    
+
+　EC2から8.8.8.8に問い合わせを行った結果は以下の通りです。正しいAレコードが帰ってきます。
+
+    $ drill www.xvideos.com @8.8.8.8
+    ;; ->>HEADER<<- opcode: QUERY, rcode: NOERROR, id: 17395
+    ;; flags: qr rd ra ; QUERY: 1, ANSWER: 9, AUTHORITY: 0, ADDITIONAL: 0 
+    ;; QUESTION SECTION:
+    ;; www.xvideos.com.     IN      A
+    
+    ;; ANSWER SECTION:
+    www.xvideos.com.        15      IN      CNAME   xvideos.com.
+    xvideos.com.    295     IN      A       141.0.174.35
+    xvideos.com.    295     IN      A       141.0.174.36
+    xvideos.com.    295     IN      A       141.0.174.37
+    xvideos.com.    295     IN      A       141.0.174.38
+    xvideos.com.    295     IN      A       141.0.174.39
+    xvideos.com.    295     IN      A       141.0.174.40
+    xvideos.com.    295     IN      A       141.0.174.41
+    xvideos.com.    295     IN      A       141.0.174.34
+    
+    ;; AUTHORITY SECTION:
+    
+    ;; ADDITIONAL SECTION:
+    
+    ;; Query time: 15 msec
+    ;; SERVER: 8.8.8.8
+    ;; WHEN: Thu Jun  5 03:40:52 2014
+    ;; MSG SIZE  rcvd: 175
+    
+
+　なぜGoogle Public DNSがこのような動作をするのか、すごく気になります。
+
+　なお、Google Public DNSを使っているせいでxvideos.comにアクセス出来ない方につきましては、安易にDNSサーバのIPアドレスを変更するのではなく、以下の対応をされるのがよろしいかと思います。
+
+  * 利用しているIPSが提供するキャッシュDNSサーバを設定する
+  * PCのhostsファイルに正しいAレコードのIPアドレスを設定する
+  * 自前でキャッシュDNSサーバを運営する（PCにunboundを入れるのが気軽だと思います）
+
+ [1]: http://dobonkai.hatenablog.com/entry/xvideos/%E7%AA%81%E7%84%B6%E8%A6%8B%E3%82%8C%E3%81%AA%E3%81%8F%E3%81%AA%E3%81%A3%E3%81%9F/DNS%E3%82%B5%E3%83%BC%E3%83%90%E3%83%BC/%E5%A4%89%E6%9B%B4

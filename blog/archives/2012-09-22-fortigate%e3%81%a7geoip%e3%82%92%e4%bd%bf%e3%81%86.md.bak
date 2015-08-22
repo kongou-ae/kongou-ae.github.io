@@ -1,0 +1,62 @@
+---
+title: FortigateでGeoIPを使う
+author: kongou_ae
+layout: post
+date: 2012-09-22
+url: /blog/archives/1283
+categories:
+  - Fortigate
+---
+</p> 
+
+　JANOGのMLで話題になっているGeoIPがFortigateでも使えるよーというお話です。弄ってたら気付きました。
+
+### 設定方法
+
+　アドレスオブジェクトのタイプを「地域」を選択して、国を選択します。今回は日本にしてみました。
+
+![fortigate-geoip-01][1]
+
+　作成したアドレスオブジェクトを利用してルールを作成します。これによりLAN内の端末はFortigateが日本と判断するIPアドレスにしかアクセスできなくなります。
+
+![fortigate-geoip-02][2]
+
+　どうやってIPアドレスと国を紐づけているのかなと調べて見たら、マニュアルに書いてありました。FortiGuardからデータを入手してローカルに持っているみたいです。
+
+<blockquote cite="http://docs.fortinet.com/fgt/handbook/40mr3/fortigate-firewall-40-mr3.pdf">
+  <p>
+    The FortiGate unit includes an internal list of countries and IP addresses based on historical data from the FortiGuard network
+  </p>
+</blockquote>
+
+<cite><a href="http://docs.fortinet.com/fgt/handbook/40mr3/fortigate-firewall-40-mr3.pdf" title="FortiOS™ Handbook v3 for FortiOS 4.0 MR3" target="_blank">FortiOS™ Handbook v3 for FortiOS 4.0 MR3</a></cite>
+
+### IPと地域のマッピングDBを確認する
+
+　実際にFortigateが持っているDBを確認する事も出来ます。アドレスオブジェクトで利用している国のみDBを持つみたいです。
+
+<pre><code>###　設定した国の略称を確認する
+(root) # diagnose firewall ipgeo country-list
+Total countries loaded:1
+JP
+
+###　その国に一致するIPアドレスを表示する
+ (root) # diagnose firewall ipgeo ip-list JP
+            1.0.16.0 - 1.0.31.255
+            1.0.64.0 - 1.0.127.255
+       （中略）
+       223.223.208.0 - 223.223.215.255
+       223.223.224.0 - 223.223.255.255
+Country name:JP Total IP Range:1337
+
+###　61.213.187.132（www.mofa.go.jp）を調べて見る。
+ (root) # diagnose firewall ipgeo ip2country 61.213.187.132                         
+61.213.187.132 is in country:JP
+
+###　GoogleDNSを調べて見たが、DBに存在しない
+ (root) # diagnose firewall ipgeo ip2country 8.8.8.8                                
+8.8.8.8 is not in kernel ip-country DB
+</code></pre>
+
+ [1]: http://aimless.jp/images/geoip-forti-01.png
+ [2]: http://aimless.jp/images/geoip-forti-02.png

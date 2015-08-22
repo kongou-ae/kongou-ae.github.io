@@ -1,0 +1,26 @@
+---
+title: CentOS 6.6にBitnami Redmineをインストールした
+author: kongou_ae
+layout: post
+date: 2014-11-12
+url: /blog/archives/2243
+categories:
+  - Server
+---
+　minimalでインストールしたCentOS6.6にBitnami Redmineをインストールしました。今後のために手順をメモしておきます。
+
+# Bitnami Redmineのインストール
+
+　インストーラをダウンロードして実行権限をつけて実行するだけ。簡単です。Bitnamiシリーズは、ドリルではなく穴が欲しい人向けですね。
+
+
+
+# プラグインのインストール
+
+　本体がすんなりインストールできたので、プライグイン（redmine_knowledgebase）もインストールしました。Bitnami Consoleの存在を知らなかったため、インストールディレクトリ配下の実行ファイルを直接叩いています。
+
+
+
+# Bitnami Consoleを使う
+
+　環境変数を設定してくれる便利なスクリプトがありました。。。インストールディレクトリは以下のuse_redmineです。実行するとインストールディレクトリ配下のソフトへのパスが通るので、上記の手順の様に実行ファイルを直接叩く必要がありません。

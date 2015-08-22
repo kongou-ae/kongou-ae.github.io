@@ -1,0 +1,140 @@
+---
+title: EEMでBGPを操作する
+author: kongou_ae
+layout: post
+date: 2012-09-24
+url: /blog/archives/1338
+categories:
+  - cisco
+  - network
+---
+　<a href="http://aimless.jp/blog/blog/archives/1326" title="BGP Multipath" target="_blank">前回</a>の続きです。Multipathを使うことで2本のリンクをDualActiveに使うことができそうです。ですがDualActiveにはちょっと問題があります。2本の合計トラフィックが1本を超えた時点で、別の代替経路に切り替えなければいけない事です。
+
+![bgp-eem][1]
+
+　よくある？マルチホーミングの構成です。ASαと100M×2で接続している状態で2本合計のトラフィックが120Mになった場合を想定します。この状態で100Mが1本が死んだ場合、障害に伴う経路の変更は発生しない為、引き続きASαに120Mbpsが流れてしまいます。そうするとASα向けの通信で輻輳が発生してしまいます。
+
+　これを回避する方法は、ASα向けのリンクで障害が発生した場合に、ASαとの経路交換を停止し全てのトラフィックをASβに向けるしかありません。（ASβ向けの帯域に120M以上の余裕がある事が前提です）
+
+### Embedded Event ManagerでBGPを操作する
+
+　上記はObjrctTrackingだけでは対応できないため、IP SLA + ObjectTracking + EEMを利用します。まずはIP SLAとObjeckTrackingにて、「片方のリンクが落ちたら～」の部分を実装します。
+
+<pre><code>### IP SLAで1本目のリンク状態をICMPで監視する
+ip sla 1
+ icmp-echo 10.0.1.1 source-ip 10.0.1.254
+ frequency 5
+ip sla schedule 1 life forever start-time now
+
+### IP SLAで1本目のリンク状態をICMP監視する
+ip sla 2
+ icmp-echo 10.0.2.1 source-ip 10.0.2.254
+ frequency 5
+ip sla schedule 2 life forever start-time now
+
+### 1本目のリンク状態をトラッキング
+track 1 ip sla 1 reachability
+
+### 2本目のリンク状態をトラッキング
+track 2 ip sla 2 reachability
+</code></pre>
+
+　そしてトラッキングの結果をトリガーに発動するEEMを定義します。
+
+<pre><code>### track1が落ちたら、2本目のneighborをshutdownする
+event manager applet bgp-2-shutdown
+ event track 1 state down
+ action 1.0 cli command "enable"
+ action 1.1 cli command "conf t"
+ action 1.2 cli command "router bgp 65002"
+ action 1.4 cli command "neighbor 10.0.2.1 shutdown"
+ action 1.5 cli command "end"
+
+### track1が上がったら、2本目のneighborをno shutdownする
+event manager applet bgp-2-activate
+ event track 1 state up
+ action 1.0 cli command "enable"
+ action 1.1 cli command "conf t"
+ action 1.2 cli command "router bgp 65002"
+ action 1.3 cli command "address-family ipv4"
+ action 1.4 cli command "no neighbor 10.0.2.1 shutdown"
+ action 1.5 cli command "end"
+
+### track2が落ちたら、1本目のneighborをshutdownする
+event manager applet bgp-1-shutdown
+ event track 2 state down
+ action 1.0 cli command "enable"
+ action 1.1 cli command "conf t"
+ action 1.2 cli command "router bgp 65002"
+ action 1.4 cli command "neighbor 10.0.1.1 shutdown"
+ action 1.5 cli command "end"
+
+### track2が上がったら、1本目のneighborをno shutdownする
+event manager applet bgp-1-activate
+ event track 2 state up
+ action 1.0 cli command "enable"
+ action 1.1 cli command "conf t"
+ action 1.2 cli command "router bgp 65002"
+ action 1.3 cli command "address-family ipv4"
+ action 1.4 cli command "no neighbor 10.0.1.1 shutdown"
+ action 1.5 cli command "end"
+</code></pre>
+
+### 動作確認
+
+　試しにLeftの10.0.1.1のIPアドレスを消してみます。リンクは上がってるけどL3で障害発生中のパターンです。IP SLA 1がダウンしたことをObjectTrackingが検知して、2本目のネイバがshutdownされているのが分ります。その後1本目のネイバがホールドダウンタイムを経過してDownします。これによりRigthはASαとの経路交換を完全に停止します。
+
+<pre><code>### Log of Right
+*Sep 24 22:21:22.527: %TRACKING-5-STATE: 1 ip sla 1 reachability Up-&gt;Down
+*Sep 24 22:21:22.603: %BGP-5-ADJCHANGE: neighbor 10.0.2.1 Down Admin. shutdown
+*Sep 24 22:21:22.607: %BGP_SESSION-5-ADJCHANGE: neighbor 10.0.2.1 IPv4 Unicast topology base removed from session  Admin. shutdown
+*Sep 24 22:21:22.655: %SYS-5-CONFIG_I: Configured from console by  on vty0 (EEM:bgp-2-shutdown)
+*Sep 24 22:21:43.431: %BGP-5-ADJCHANGE: neighbor 10.0.1.1 Down BGP Notification sent
+*Sep 24 22:21:43.431: %BGP-3-NOTIFICATION: sent to neighbor 10.0.1.1 4/0 (hold time expired) 0 bytes 
+*Sep 24 22:21:43.435: %BGP_SESSION-5-ADJCHANGE: neighbor 10.0.1.1 IPv4 Unicast topology base removed from session  BGP Notification sent
+
+right#show bgp ipv4 unicast summary 
+
+Neighbor        V           AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
+10.0.1.1        4        65001       0       0        1    0    0 00:00:09 Idle
+10.0.2.1        4        65001       0       0        1    0    0 00:00:30 Idle (Admin)
+
+right#show ip route
+
+      10.0.0.0/8 is variably subnetted, 4 subnets, 2 masks
+C        10.0.1.0/24 is directly connected, FastEthernet1/0
+L        10.0.1.254/32 is directly connected, FastEthernet1/0
+C        10.0.2.0/24 is directly connected, FastEthernet1/1
+L        10.0.2.254/32 is directly connected, FastEthernet1/1
+</code></pre>
+
+　1本目の障害を復旧させるために、10.0.1.1のIPアドレスを設定します。するとshutdownした2本目がno shutされ有効になります。経路交換が始まり、Multipathな経路がルーティングテーブルに乗ってきます。
+
+<pre><code>### Log of Right
+*Sep 24 22:37:39.323: %BGP-5-ADJCHANGE: neighbor 10.0.1.1 Up 
+*Sep 24 22:37:42.527: %TRACKING-5-STATE: 1 ip sla 1 reachability Down-&gt;Up
+*Sep 24 22:37:42.607: %SYS-5-CONFIG_I: Configured from console by  on vty0 (EEM:bgp-2-activate)
+*Sep 24 22:37:42.951: %BGP-5-ADJCHANGE: neighbor 10.0.2.1 Up 
+
+right#show bgp ipv4 unicast summary 
+
+Neighbor        V           AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
+10.0.1.1        4        65001      17      17       31    0    0 00:02:02        2
+10.0.2.1        4        65001      15      16       31    0    0 00:01:58        2
+
+right#show ip route
+
+      10.0.0.0/8 is variably subnetted, 4 subnets, 2 masks
+C        10.0.1.0/24 is directly connected, FastEthernet1/0
+L        10.0.1.254/32 is directly connected, FastEthernet1/0
+C        10.0.2.0/24 is directly connected, FastEthernet1/1
+L        10.0.2.254/32 is directly connected, FastEthernet1/1
+B     192.168.1.0/24 [20/0] via 10.0.2.1, 00:02:36
+                     [20/0] via 10.0.1.1, 00:02:36
+B     192.168.2.0/24 [20/0] via 10.0.2.1, 00:02:36
+                     [20/0] via 10.0.1.1, 00:02:36
+</code></pre>
+
+　EEMのタイミングとBGPのホールドダウンタイマを合わせたりと微調整が必要な気がしますが、想定通り動きました。フルルートを食べてる時にちゃんと動くのかは要検証です。
+
+ [1]: http://aimless.jp/images/BGP-EEM.png

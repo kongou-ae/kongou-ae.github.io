@@ -1,0 +1,46 @@
+---
+title: onePKを使う準備
+author: kongou_ae
+layout: post
+date: 2014-03-31
+url: /blog/archives/1786
+categories:
+  - cisco
+---
+　onePKのGeneral Availabilityが目前の様なので、利用する際に何度も見そうなドキュメントのリンクを纏めておきます。現時点では日本語の情報が見当たらないため、DevNetに載っている英語の情報を見る形になりそうです。
+
+### 公式サイト
+
+　とりあえずここを見ればOK。[Cisco DevNet][1]
+
+### SDK
+
+　公式からダウンロードします。[SDK and Docs for Python &#8211; Cisco Developer Community][2]
+
+### 開発環境
+
+　onePKのアプリケーションを作成するために必要なものがセットになったVMが配布されてます。Cisco IOSvなるエミュレータが動いている模様。ご自宅にCiscoルータが無い人はこちらを使うのがよさそうです。[All-in-One VM &#8211; Cisco Developer Community][3]
+
+### はじめに
+
+　Getting Startedに開発環境の準備方法とルータの設定方法が載っています。これを見て、onePKでアプリケーションを環境するための準備をします。[Getting Started with onePK Version 1.1, Controlled Availability][4]
+
+### チュートリアル
+
+　で、どうやってコーディングすればいいの？という人のために、チュートリアルがあります。私は1個ずつやっていこうと思います。 [Cisco onePK &#8211; Python Tutorial][5]
+
+### リファレンス
+
+　モジュールが提供する機能の一覧がファレンスにまとまっています。実際にコーディングする際に使うのはもちろんのこと、onePKでどのような事が出来るかを把握するためにも便利だと思います。[onePK Python Presentation Library][6]
+
+### コミュニティ
+
+　Ciscoのコミュニティサイトに、onePKのカテゴリがあります。 いざという時に役に立つはずです。 [Space: onePK | Cisco Communities][7]
+
+ [1]: https://developer.cisco.com/site/networking/one/onepk/overview/
+ [2]: https://developer.cisco.com/site/networking/one/onepk/sdk-and-docs/sdk-and-docs-for-python/index.gsp
+ [3]: https://developer.cisco.com/site/networking/one/onepk/sdk-and-docs/all-in-one-vm/index.gsp
+ [4]: https://developer.cisco.com/site/networking/one/onepk/getting-started/getting-started-1-1/index.gsp
+ [5]: https://developer.cisco.com/site/networking/one/onepk/tutorials/online-python-tutorial/index.gsp
+ [6]: https://developer.cisco.com/media/onePKPythonAPI-v1-1-0/index.html
+ [7]: https://communities.cisco.com/community/developer/networking/cisco-one/onepk

@@ -1,0 +1,26 @@
+---
+title: FortiGateのsyslogをパースするFluentdのプラグインを作った。
+author: kongou_ae
+layout: post
+date: 2014-03-18
+url: /blog/archives/1735
+categories:
+  - Fortigate
+  - network
+---
+　勢いだけで、FortiGateのsyslogをパースするためのFluentdプラグインを作りました。<a href="https://github.com/kongou-ae/fluent-plugin-fortigate-traffic-log" title="fluent-plugin-fortigate-traffic-log" target="_blank">fluent-plugin-fortigate-traffic-log</a>です。（命名センスなし）
+
+　「ファイアウォールの通信ログを気軽に分析できれば、ユーザへの提案に繋がる何かが生まれそうだなー」と思い、FortiGateのsyslogをFluentd+Elastic Search+kibana3の組み合わせに乗せるべく試行錯誤した結果です。当初は普通のTailインプットプラグインでサポートされている正規表現で頑張るつもりでしたが、FortiGateのsyslogのフォーマットが一定でなかったため、カスタムパーサを作った次第です。
+
+　このプラグインでFortiGateのsyslogファイルをインプットして、elasticsearchへアウトプットすると、下図のような形で格納されます。
+
+![elasticsearch-fortigate][1]
+
+　kibana3を利用すると下図のようなログビュアーが作れます。非管理者に通信ログを見せたい場合などに使えるかも？通信内容を集計したグラフなんかも作れるのでしょうか？（elasticsearchとkibana3は現在勉強中なので、実現可否は不明瞭。）
+
+![kibana3-fortigate.png][2]
+
+　現在の実装ではsyslogで飛んできたログをなんでも処理しますので、fluent-plugin-fortigate-traffic-logという名前にも関わらずeventログやUTMログも処理されてしまいます。type=trafficの時のみ処理する形にすればいいと思うので、そのうち直したいです。
+
+ [1]: http://aimless.jp/images/es-forti.png
+ [2]: http://aimless.jp/images/kibana3-fortigate.png

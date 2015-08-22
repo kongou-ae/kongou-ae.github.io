@@ -1,0 +1,139 @@
+---
+title: DNSSECで事前公開方式をやってみた
+author: kongou_ae
+layout: post
+date: 2011-08-25
+url: /blog/archives/423
+categories:
+  - DNS
+---
+　先週終わってしまったDNSSECを復旧させたので、改めて鍵の更新を試していきます。まずは自ドメイン内で簡単にできるZSKの更新です。多分あってる。自信はない。
+
+### 作業前の状態
+
+　DNSVizで確認した状態は下記の通りです。
+
+![doublesign1][1]
+
+### 新しいZSKの作成
+
+　更新後に利用する新しいZSKを作成します。bindを9.7に変更したのでRSA-SHA256が利用可能になりました。CentOS5.6でyum installしたbindは9.3だったので、RSASHA256が使えませんでした。。。
+
+<pre><code># dnssec-keygen -r /dev/urandom -a RSASHA256 -b 1024 aimless.jp
+Generating key pair.............++++++ ...++++++
+Kaimless.jp.+008+18138
+</code></pre>
+
+### ゾーンファイルへの追記
+
+　作成したZSKをゾーンファイルに追記します。
+
+<pre><code>$INCLUDE /var/named/chroot/var/named/work/Kaimless.jp.+008+51904.key
+$INCLUDE /var/named/chroot/var/named/work/Kaimless.jp.+008+05766.key
+$INCLUDE /var/named/chroot/var/named/work/Kaimless.jp.+008+18138.key
+</code></pre>
+
+### 既存のZSKで署名する
+
+　新しいZSKをDNSKEYレコードで事前に公開しておくことで、キャッシュDNSサーバに新旧両方のZSKを所持させます。こうしないと、ZSKを切り替えた際に、古いDNSKEYレコードをキャッシュしているキャッシュDNSサーバが、新しいZSKで作られた署名を検証できなくなってしまうからです。
+
+　新しいZSKはあくまでもDNSKEYレコードに含めるだけですので、署名に利用してはいけません。そのため、ゾーンファイル名の後で古いZSKのみを指定します。ここで間違えて新しいZSKだけで署名してしまうと、DNSKEYをキャッシュしているキャッシュDNSサーバが署名の検証に失敗してしまうので注意です。
+
+<pre><code># dnssec-signzone -o aimless.jp -N unixtime -k Kaimless.jp.
++008+51904. ../aimless.zone Kaimless.jp.+008+05766.
+dnssec-signzone: warning: Serial number not advanced, zone may not transfer
+Verifying the zone using the following algorithms: RSASHA256.
+Zone signing complete:
+Algorithm: RSASHA256: KSKs: 1 active, 0 stand-by, 0 revoked
+                      ZSKs: 1 active, 1 stand-by, 0 revoked
+#service named restart
+</code></pre>
+
+署名後のゾーンファイルを見ると、DNSKEYレコードには2つのZSKが登録されていますが、RRSIGは一つだけです。鍵IDも署名で使ったものと一致します。多分あってる。
+
+<pre><code>3600    DNSKEY  256 3 8 () ; key id = 18138
+                        3600    DNSKEY  256 3 8 () ; key id = 5766
+</code></pre>
+
+<pre><code>3600    A       49.212.54.72
+                        3600    RRSIG   A 8 2 3600 20110924130414 (
+                                        20110825130414 5766 aimless.jp.）
+                        3600    AAAA    2001:e41:31d4:3648::1
+                        3600    RRSIG   AAAA 8 2 3600 20110924130414 (
+                                        20110825130414 5766 aimless.jp.
+)
+</code></pre>
+
+　DNSVizの結果は下記の通りです。ZSKが二つ登録されており、片方のみで署名されているのが見てとれます。
+
+![doublesign2][2]
+
+### DNSKEYのTTL分放置する
+
+　事前公開した新ZSKが広まるのを待ちます。古いZSKだけをキャッシュしたキャッシュDNSサーバがいなくなれば良いので、DNSKEYのTTL分我慢します。
+
+### 新しいZSKで署名する
+
+　キャッシュDNSサーバが新旧のZSKをキャッシュするようになったタイミングで、署名するZSKを切り替えます。署名後のゾーンファイルを見ると、作業前は5766だったRRSIGの鍵IDが18138に切り替わっています。
+
+<pre><code># dnssec-signzone -o aimless.jp -N unixtime -k Kaimless.jp.+008+51904. ../aimless.zone Kaimless.jp.+008+18138.
+dnssec-signzone: warning: Serial number not advanced, zone may not transfer
+Verifying the zone using the following algorithms: RSASHA256.
+Zone signing complete:
+Algorithm: RSASHA256: KSKs: 1 active, 0 stand-by, 0 revoked
+                      ZSKs: 1 active, 1 stand-by, 0 revoked
+../aimless.zone.signed
+#service named restart
+</code></pre>
+
+![doublesign3][3]
+
+<pre><code>3600    DNSKEY  256 3 8 () ; key id = 18138
+                        3600    DNSKEY  256 3 8 () ; key id = 5766
+</code></pre>
+
+<pre><code>　　　　　　　　　　　　3600    A       49.212.54.72
+                        3600    RRSIG   A 8 2 3600 20110925111056 (
+                                        20110826111056 18138 aimless.jp.)
+                        3600    AAAA    2001:e41:31d4:3648::1
+                        3600    RRSIG   AAAA 8 2 3600 20110925111056 (
+                                        20110826111056 18138 aimless.jp.)
+</code></pre>
+
+　これ以降、何もキャッシュしていないキャッシュDNSサーバは、新ZSKで新署名を検証します。DNSKEYをキャッシュしているサーバは、事前公開した新ZSKで新署名を検証します。
+
+　注意しないといけない点は、RRSIGをキャッシュしているキャッシュDNSサーバへの対処です。古いZSKをゾーンファイルから抜いて新しいZSKで署名してしまうと、古いRRSIGを検証するDNSKEYが存在しないので、検証に失敗してしまいます。
+
+### 古いRRSIGのTTL分放置する
+
+　あとは、古いZSKをDNSKEYから削除すれば鍵の更新が完了します。ですが、旧ZSKをすぐにゾーンファイルから削除してしまうと、古いRRSIGをキャッシュしているキャッシュDNSサーバの検証が失敗してしまします。というわけで、古いRRSIGのTTL分放置してキャッシュがクリアされるのを待ちます。
+
+### 古いZSKを削除し、新しいZSKで再署名する
+
+　TTLが経過しキャッシュ上に存在しなくなった古いZSKをゾーンファイルから削除し、新ZSKで再署名します。その後bindを再起動させれば、事前公開方式によるZSKの更新が終了します。
+
+<pre><code>$INCLUDE /var/named/chroot/var/named/work/Kaimless.jp.+008+51904.key
+$INCLUDE /var/named/chroot/var/named/work/Kaimless.jp.+008+18138.key
+</code></pre>
+
+<pre><code># dnssec-signzone -o aimless.jp -N unixtime ../aimless.zone
+dnssec-signzone: warning: Serial number not advanced, zone may not transfer
+Verifying the zone using the following algorithms: RSASHA256.
+Zone signing complete:
+Algorithm: RSASHA256: KSKs: 1 active, 0 stand-by, 0 revoked
+                      ZSKs: 1 active, 0 stand-by, 0 revoked
+../aimless.zone.signed
+# service named restart
+Stopping named:                                            [  OK  ]
+Starting named:                                            [  OK  ]
+#
+</code></pre>
+
+DNSVizの結果を見てもZSKが入れ替わっているので、多分あってると思います。自信はないです。
+
+![doublesign3][4]
+
+ [1]: http://aimless.jp/images/doublesign110825_1.png
+ [2]: http://aimless.jp/images/doublesign110825_2.png
+ [3]: http://aimless.jp/images/doublesign110826_2.png
+ [4]: http://aimless.jp/images/doublesign110826_3.png

@@ -1,0 +1,43 @@
+---
+title: Gehirn DNSを試してみた。
+author: kongou_ae
+layout: post
+date: 2012-11-12
+url: /blog/archives/1428
+categories:
+  - DNS
+---
+　TLでGehirnDNSなるサービスが流れて来たので早速試してみました。なぜ試そうかと思ったかというと、名前が中二病心をくすぐったからです。
+
+### ドメイン所有権の確認
+
+![dns-verification][1]
+
+　アカウントを取得してドメインを登録しようとすると、所有権の確認が行われます。ちょっと前に色々ありましたからね。「新規であればレジストラのDNSにGehirn DNSと検証用のコードを登録してから来い。所有者なら出来るだろ！」「移転なら、ドメインのTXTレコードに検証用のコードを示せ。所有者なら出来るだろ！」って事だと思います。とりあえず移転扱いと言う事で、自ドメインのTXTに検証用コードを追加しました。
+
+### 登録画面
+
+![gehirn-console][2]
+
+　GUIでぽちぽちする形で登録できます。登録出来る内容は、NS、A、AAAA、MX、CNAME、TXT、SRVです。ただし、GehirnDNSのDNSサーバがIPv4にしか対応していないので、AAAAは実質無駄かなと思います。また、RRSIGとDNSKEYに対応していないのでDNSSECは未対応です。なお、ゾーン転送に関する設定画面が存在しないため、セカンダリとしての使い方は出来ないと思います。
+
+### API利用
+
+　ARIを利用する事で、DNSを操作する事が出来ます。ここらへん疎いので試せていません。。。<a href="http://support.gehirn.jp/manual/dns/api" title="Gehirn DNS APIリファレンス" target="_blank">Gehirn DNS APIリファレンス</a>
+
+### インポート/エクスポート
+
+　Bindのゾーンファイル形式でのインポート/エクスポートが出来ます。現在の設定をバックアップする意味でエクスポートが便利かなと思います。また、大量に追加したいけどGUIだとめんどくさい時に、インポートを使うこともできますね。
+  
+
+
+### サブドメインをGehirnDNSで管理する
+
+　GehirnDNSで管理しているドメインのサブドメインを、GehirnDNSへ権限委譲する事はできません。aimless.jpを登録している状態で、gehirn.aimless.jpを登録しようとした際に、「409: Conflict: すでにドメインが存在しています」というメッセージが出て拒否されました。
+
+### 勝手なまとめ
+
+　APIでアクセスできるDNSって珍しいような気がします。そういった利用をしたい方にはお勧めかもしれません。
+
+ [1]: http://aimless.jp/images/gehirn1.png
+ [2]: http://aimless.jp/images/gehirn2.png

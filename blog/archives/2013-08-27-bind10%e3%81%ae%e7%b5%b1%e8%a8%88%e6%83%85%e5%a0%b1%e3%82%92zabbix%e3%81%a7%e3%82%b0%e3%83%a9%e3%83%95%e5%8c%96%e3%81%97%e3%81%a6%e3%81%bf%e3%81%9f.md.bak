@@ -1,0 +1,24 @@
+---
+title: BIND10の統計情報をZABBIXでグラフ化してみた
+author: kongou_ae
+layout: post
+date: 2013-08-27
+url: /blog/archives/1642
+categories:
+  - DNS
+---
+　<a href="http://aimless.jp/blog/blog/archives/1634" title="BIND10の統計情報" target="_blank">「BIND10の統計情報」</a>に記載したb10-stats-httpdを利用して、BIND10の統計情報をZABBIXでグラフ化してみました。なお、監視対象のBIND10がしがないドメインのセカンダリDNSのため、描画されるグラフは全く面白くありません。。。
+
+![BIND10 Stats][1]
+  
+　グラフ化したい項目をb10-stats-httpd経由で取得するスクリプトを作ります。下記は第二引数に「.1.3.6.1.4.1.2021.255.1」を与えられるとrequest.v4のvalueを、「.1.3.6.1.4.1.2021.255.2」を与えられるとrequest.v6のvalueを取得するスクリプトです。（改行コードが） 
+
+<pre><code>
+
+　snmpdのpassを利用して、.1.3.6.1.4.1.2021.255.hogehogeをsnmpgetされた際にこのスクリプトが起動するようにします。passに記載したスクリプトは「EXEC -g MIBOID」の形式で実行されるので、スクリプト内でOIDを利用する場合は第二引数を拾う必要があります。（第一引数を拾うスクリプトを書いて「うごかなーいうごかなーい」と悩みました。。。） 
+
+<pre><code>
+
+　ZABBIXで「.1.3.6.1.4.1.2021.255.1」と「.1.3.6.1.4.1.2021.255.2」を監視するアイテムを作成し、それらを利用した複合グラフを作成すれば完成です。
+
+ [1]: http://dns4.aimless.jp/zabbinavi/10087/534_daily.png

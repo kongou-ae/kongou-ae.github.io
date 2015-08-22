@@ -1,0 +1,115 @@
+---
+title: rubyでCiscoルータの設定を自動化してみた
+author: kongou_ae
+layout: post
+date: 2012-07-01
+url: /blog/archives/1168
+categories:
+  - network
+---
+</p> 
+
+　「Peeringする度にコマンドを手で打つのもあれだなー。やる事は同じだし」ということで、rubyで自動化しました。実行すると対話形式で必要な情報の入力を求められ、答えると自動的にCiscoルータに我が家のテンプレconfigが投入されます。本番テストはまだですが・・・
+
+　BGPの経路監視とLookingGrassについで3回目のrubyでCiscoルータシリーズですが、同じ事の繰り返しな作業についてはNet::Telnetを使えば何でも出来る気がしてきました。
+
+　また、当たり前の事ではありますが、自動化するって事はルールを決める事なんだなと実感しました。これまではPeering用のパラメータを何となく連番で決めてきましたが、今後は下記のルールで統一しようと思います。
+
+  * Peering用トンネル番号：AS番号
+  * トンネル用IPアドレス：2610:D0:3211:FFFF::相手のAS番号5ケタ目:相手のAS番号1~4桁名:1/126
+
+### 使い方
+
+<pre><code># ruby peering.rb 
+input the neighbor's name : test
+input the neighbor's AS number : 64585
+input the neighbor's IPv4 address : 192.168.1.1
+</code></pre>
+
+### 素人コード
+
+<pre><code>#!/usr/local/bin/ruby
+
+require 'net/telnet'
+
+#必要情報を収集する
+print "input the neighbor's name : "
+name = gets.to_s
+name.chomp!
+
+if /^\n$/ =~ name then
+  print "name is mpty!!\n"
+  exit!
+end  
+
+print "input the neighbor's AS number : "
+as = gets.to_s
+as.chomp!
+
+if /^\n$/ =~ as then
+  print "AS number is empty!!\n"
+  exit!
+end
+
+print "input the neighbor's IPv4 address : "
+ip = gets.to_s
+ip.chomp!
+
+if /^\n$/ =~ ip then
+  print "IPv4 address is empty!!\n"
+  exit!
+elsif /[0-255]\.[0-255]\.[0-255]\.[0-255]/ !~ ip then
+  print "your input is not IPv4 address\n"
+  exit!
+end
+
+#AS番号をIPv6アドレス形式に変換
+
+ascount = as.split(//).size
+
+if ascount &gt; 4 then
+  asvar = as.split('')
+  asaddress = "#{asvar[0]}:#{asvar[1]}#{asvar[2]}#{asvar[3]}#{asvar[4]}"   
+else  
+  asaddress = as
+end
+  
+#config投入
+
+@router = "router'S IPaddress"
+@user = "username"
+@password = "password"
+@enpassword = "enable password"
+@prompt = "hostname"
+
+tn  = Net::Telnet::new("Host" =&gt; @router, "Timeout" =&gt; 5)
+
+tn.cmd("String" =&gt; "#{@user}","Match"=&gt;/^Password/) 
+tn.cmd("String" =&gt; "#{@password}","Match"=&gt;/^#{@prompt}/)
+tn.cmd("String" =&gt; "en","Match"=&gt;/^Password/)
+tn.cmd("String" =&gt; "#{@enpassword}","Match"=&gt;/^#{@prompt}/) 
+
+tn.cmd("String" =&gt; "conf t","Match"=&gt;/^#{@prompt}/)
+tn.cmd("String" =&gt; "interface tunnel #{as}","Match"=&gt;/^#{@prompt}/)
+tn.cmd("String" =&gt; "description #{name}","Match"=&gt;/^#{@prompt}/)
+tn.cmd("String" =&gt; "no ip address","Match"=&gt;/^#{@prompt}/)
+tn.cmd("String" =&gt; "ipv6 address 2610:D0:3211:FFFF::#{asaddress}:1/126","Match"=&gt;/^#{@prompt}/)
+tn.cmd("String" =&gt; "ipv6 enable","Match"=&gt;/^#{@prompt}/)
+tn.cmd("String" =&gt; "ipv6 mtu 1280","Match"=&gt;/^#{@prompt}/)
+tn.cmd("String" =&gt; "tunnel source 36.2.107.75","Match"=&gt;/^#{@prompt}/)
+tn.cmd("String" =&gt; "tunnel mode ipv6ip","Match"=&gt;/^#{@prompt}/)
+tn.cmd("String" =&gt; "tunnel destination #{ip}","Match"=&gt;/^#{@prompt}/)
+tn.cmd("String" =&gt; "exit","Match"=&gt;/^#{@prompt}/)
+tn.cmd("String" =&gt; "router bgp 64585","Match"=&gt;/^#{@prompt}/)
+tn.cmd("String" =&gt; "neighbor 2610:D0:3211:FFFF::#{asaddress}:2 remote-as #{as}","Match"=&gt;/^#{@prompt}/)
+tn.cmd("String" =&gt; "neighbor 2610:D0:3211:FFFF::#{asaddress}:2 description #{name}","Match"=&gt;/^#{@prompt}/)
+tn.cmd("String" =&gt; "neighbor 2610:D0:3211:FFFF::#{asaddress}:2 timers 10 30","Match"=&gt;/^#{@prompt}/)
+tn.cmd("String" =&gt; "address-family ipv6","Match"=&gt;/^#{@prompt}/)
+tn.cmd("String" =&gt; "neighbor 2610:D0:3211:FFFF::#{asaddress}:2 activate","Match"=&gt;/^#{@prompt}/)
+tn.cmd("String" =&gt; "neighbor 2610:D0:3211:FFFF::#{asaddress}:2 next-hop-self","Match"=&gt;/^#{@prompt}/)
+tn.cmd("String" =&gt; "neighbor 2610:D0:3211:FFFF::#{asaddress}:2 soft-reconfiguration inbound","Match"=&gt;/^#{@prompt}/)
+tn.cmd("String" =&gt; "neighbor 2610:D0:3211:FFFF::#{asaddress}:2 prefix-list this-network out","Match"=&gt;/^#{@prompt}/)
+tn.cmd("String" =&gt; "end","Match"=&gt;/^#{@prompt}/)
+tn.puts("exit") 
+tn.close
+</code></pre>

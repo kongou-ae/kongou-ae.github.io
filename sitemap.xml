@@ -693,7 +693,23 @@
   </url>
   
   <url>
+    <loc>http://aimless.jp/blog/images/test/</loc>
+  </url>
+  
+  <url>
+    <loc>http://aimless.jp/blog/images/test.md/</loc>
+  </url>
+  
+  <url>
+    <loc>http://aimless.jp/blog/images/title/</loc>
+  </url>
+  
+  <url>
     <loc>http://aimless.jp/blog/wp-content/uploads/2015/07/README/</loc>
+  </url>
+  
+  <url>
+    <loc>http://aimless.jp/blog/images/killer/</loc>
   </url>
   
 </urlset>

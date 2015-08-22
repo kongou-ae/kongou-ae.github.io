@@ -1,0 +1,38 @@
+---
+title: YAMAHAのＩＰＩＰトンネルが上手く動いた
+author: kongou_ae
+layout: post
+date: 2012-02-29
+url: /blog/archives/694
+categories:
+  - network
+---
+　MLの方々からアドバイスを頂いた結果、YAMAHAでグローバルIPアドレス経由のIPIPトンネルを張る方法がわかったのでメモ。
+
+<pre><code>■YAMAHA Configuration
+pp select 1
+ ip pp address 122.26.28.xxx
+pp select none 
+tunnel select 11
+ description tunnel test-ipip
+ tunnel encapsulation ipip
+ tunnel endpoint address 122.26.28.xxx 36.2.107.xxx
+ ip tunnel address 172.16.16.6/30
+tunnel enable 11
+</code></pre>
+
+　
+
+　PPにPPPoEで取得したIPアドレスを直接書きます。こうするとPPの経路がルーティングテーブルに乗り、戻りのパケットを正しく処理してくれるようになります。なお、ISPから払いだされるIPアドレスが非固定の場合、ルータが再起動するとトンネルが正常に動かなくなりますので要注意です。。。新しいIアドレスを手動で設定してください。
+
+　そもそも、PPPoEでもらったパケットを自動的にテーブルに載せないのはどうなんだろう。CiscoではPPPoEで取得したIPアドレスを、DialerのConnetedとしてルーティングテーブルに反映してくれるのに。。。
+
+　これ以外に下記の方法もありました。でもトンネル張るのにNATは何か違う気がします。
+
+・tunnel endpoint addressの送信元IPを削除する⇒送信元IPがLANのアドレスになる。
+  
+・LAN⇒WANのNATPを設定する
+  
+・WAN⇒LANのStaticNATを設定する
+
+　なお、このトンネルインターフェースでOSPFを回すと、なぜかOSPFが2つ動きました。1つはunnumbered、もう一つが172.16.16.6/32です。なぜ2つ動くのか、なぜ/32なのか。これが原因でCiscoとOSPFのネイバーが確立せず、最終的な目的は達成できず。

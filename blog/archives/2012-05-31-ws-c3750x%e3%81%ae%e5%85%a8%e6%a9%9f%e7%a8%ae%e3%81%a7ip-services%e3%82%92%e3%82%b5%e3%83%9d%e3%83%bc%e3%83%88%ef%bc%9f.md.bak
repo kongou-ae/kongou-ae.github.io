@@ -1,0 +1,15 @@
+---
+title: WS-C3750Xの全機種でIP Services搭載モデルが出るみたい
+author: kongou_ae
+layout: post
+date: 2012-05-31
+url: /blog/archives/1103
+categories:
+  - cisco
+  - network
+---
+</p> 
+
+　これまで、WS-C3750XシリーズでIP Servicesが標準搭載されている型番は、WS-C3750X-12S-EとWS-C3750X-24S-Eしかありませんでした。その為、RJ45のダウンリンク＋IP Servicesを実現する為には、IP Base搭載のモデルとライセンスを別々に発注しなければならず少々面倒でした。
+
+　なのですが、今日<a href="http://www.cisco.com/en/US/prod/collateral/switches/ps5718/ps6406/data_sheet_c78-584733.html" title="Cisco Catalyst 3750-X and 3560-X Series Switches Data Sheet" target="_blank">USのサイト</a>を見たところ、全ての型番において-E（IP Servicesを搭載）が追加されていました。あれ？いつの間にか変わった？<a href="http://www.cisco.com/web/JP/product/hs/switches/cat3750x/prodlit/data_sheet_c78-584733.html" title="Cisco Catalyst 3750-X および 3560-X シリーズ スイッチ" target="_blank">日本のサイト</a>には未反映みたいです。

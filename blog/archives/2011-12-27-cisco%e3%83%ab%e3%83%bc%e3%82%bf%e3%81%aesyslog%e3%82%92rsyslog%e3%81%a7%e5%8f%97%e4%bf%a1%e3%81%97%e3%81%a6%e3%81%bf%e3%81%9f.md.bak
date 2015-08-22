@@ -1,0 +1,28 @@
+---
+title: Ciscoルータのsyslogをrsyslogで受信してみた
+author: kongou_ae
+layout: post
+date: 2011-12-27
+url: /blog/archives/575
+categories:
+  - network
+---
+　自宅のCisco892J用のsyslogサーバが欲しかったので、SaaSesVPS上のubuntuで動いているrsyslogに設定を追加した。以下メモ。
+
+　CiscoのsyslogはデフォルトUDPで送信される。/etc/rsyslog.confを見るとUDP受信の部分がコメントアウトされていたので、コメントインする。
+
+<pre><code># provides UDP syslog reception
+$ModLoad imudp
+$UDPServerRun 514
+</code></pre>
+
+　ファシリティやログファイルなどの詳細設定は、/etc/rsyslog.confにべた書きではなく、/etc/rsyslog.d/*.confと別ファイルにするお作法みたいなので、cisco892J用のファイルを作成する。デフォルトの設定ファイルが「50-default.conf」だったので、ファイル名はなんとなく「10-cisco892j.conf」に。また、Ciscoのfacilityはデフォルトがlocal7なのでとりあえずそのままにする。
+
+<pre><code># cat /etc/rsyslog.d/10-cisco892j.conf 
+# save the cisco892J syslog
+local7.*        /var/log/cisco892j.log
+</code></pre>
+
+　rysylogを再起動すればログが来るかなーと思い、Cisco892J側でconf t→endを繰り返してみたものの、一向にログが転送されてこない。。。よくよく考えるとiptablesでUDP514を空けていなかったからだった。穴をあけたところ無事ログが転送されてきた。よかったよかった。
+
+　現在はインターネットで直接syslogを送っているけども、いずれはVPN経由にしたいところ。

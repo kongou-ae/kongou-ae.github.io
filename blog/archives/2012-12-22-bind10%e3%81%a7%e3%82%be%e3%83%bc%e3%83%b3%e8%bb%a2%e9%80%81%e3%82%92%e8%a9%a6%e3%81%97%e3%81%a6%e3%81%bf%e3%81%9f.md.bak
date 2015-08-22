@@ -1,0 +1,39 @@
+---
+title: BIND10でゾーン転送を試してみた
+author: kongou_ae
+layout: post
+date: 2012-12-22
+url: /blog/archives/1448
+categories:
+  - DNS
+---
+　セカンダリDNSをbind10-1.0.0-betaで作り直しました。その際にゾーン転送の設定を確認したのでメモ
+
+　まずはマスターからのゾーン転送を受け入れる設定を追加する
+
+<pre><code># bindctl 
+&gt; config add Xfrin/zones
+&gt; config set Xfrin/zones[0]/name "aimless.jp"
+&gt; config set Xfrin/zones[0]/master_addr "xxx.xxx.xxx.xxx"
+&gt; config commit
+</code></pre>
+
+　試しにマスターのbindを再起動させてゾーン転送を実施するも下記エラーにより上手く行かず・・・b10-zonemgrが「aimless.jpなど知らん！」とお怒りです。
+
+<pre><code>2012-12-22 20:37:24.605 ERROR [b10-zonemgr.zonemgr/23101] ZONEMGR_UNKNOWN_ZONE_NOTIFIED notified zone aimless.jp./IN from xxx.xxx.xxx.xxx is not known to the zone manager
+2012-12-22 20:37:24.605 ERROR [b10-auth.auth/23105] AUTH_ZONEMGR_ERROR received error response from zone manager: "[b10-zonemgr] Notified zone (aimless.jp., IN) doesn't belong to zonemgr"
+</code></pre>
+
+　そこでZonemgrにドメインを覚えさせます。
+
+<pre><code># bindctl 
+&gt; config add Zonemgr/secondary_zones
+&gt; config set Zonemgr/secondary_zones[0]/name aimless.jp
+&gt; config commit
+</code></pre>
+
+　改めてマスターのbindを再起動させてゾーン転送を実施した所、上手く受信出来ました。
+
+<pre><code>2012-12-22 20:43:54.384 INFO  [b10-xfrin.xfrin/23104] XFRIN_XFR_TRANSFER_STARTED AXFR transfer of zone aimless.jp/IN started
+2012-12-22 20:43:54.429 INFO  [b10-xfrin.xfrin/23104] XFRIN_TRANSFER_SUCCESS full AXFR transfer of zone aimless.jp/IN succeeded (messages: 1, records: 87, bytes: 9069, run time: 0.086 seconds, 105344 bytes/second)
+</code></pre>

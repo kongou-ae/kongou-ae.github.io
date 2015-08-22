@@ -1,0 +1,58 @@
+---
+title: FortigateでGREトンネルを掘ってみた
+author: kongou_ae
+layout: post
+date: 2012-01-02
+url: /blog/archives/586
+categories:
+  - network
+---
+　あけましておめでとうございます。本年もよろしくお願いいたします。
+
+　さて、年越しから年明けにかけて、Fortigate60とCisco892JでGREトンネルを掘ったのでメモ。なお、本エントリーとは関係ありませんが、Forigate60はFortiOS 4.0が乗らないのでご注意ください。年度の初めにヤフオクで60を買ったのですが、少し高くても60Bを買うべきでした。。。
+
+![GREトンネル論理図][1]
+
+　まずはGREトンネル自体を定義します。GUIでは出来ないのでCLIでトンネルを張りたいインターフェース、自分のIPと対向のIPと対向のIPアドレスを入力します。
+
+<pre><code>config system gre-tunnel
+    edit "tunnel1"
+        set interface "wan1"
+        set local-gw 自分のIP
+        set remote-gw 相手のIP
+    next
+end
+</code></pre>
+
+　設定が完了すると、GUI上ではWANインターフェースのサブインターフェースとして表示されます。
+
+![GUI][2]
+
+　続いて、トンネルインターフェースの設定をします。ここではトンネルインターフェースのIPアドレスと対向のIPアドレスを入力します。
+
+<pre><code>config system interface
+    edit "tunnel1"
+        set vdom "root"
+        set ip 172.25.1.2 255.255.255.255
+        set allowaccess ping https ssh
+        set type tunnel
+        set remote-ip 172.25.1.1
+        set interface "wan1"
+    next
+end
+</code></pre>
+
+　接続先のCisco892Jのコンフィグは下記の通りです。
+
+<pre><code>interface Tunnel3
+ description Fortigate
+ ip address 172.25.1.1 255.255.255.252
+ ip ospf mtu-ignore
+ tunnel source 自分のIP
+ tunnel destination 相手のIP
+</code></pre>
+
+　設定完了後、お互いに問題なくPingが飛ぶことを確認しています。現在はこのリンクでOSPFを回すべく試行錯誤中です。本来ならGRE over IPSecあたりにするべきなのでしょうが、とりあえずはそのままやっています。肝心のOSPFは、MTUや再帰ルーティングの問題で上手いこといっていませんけが、いずれエントリーにしたいなとおもいます。
+
+ [1]: http://aimless.jp/images/gre.png
+ [2]: http://aimless.jp/images/fortiGUI.png

@@ -1,0 +1,85 @@
+---
+title: BIND10でキャッシュDNSサーバをやってみた
+author: kongou_ae
+layout: post
+date: 2013-01-02
+url: /blog/archives/1475
+categories:
+  - DNS
+---
+　Rubyのresolvで遊ぶタイミングで、自PCのIPv6キャッシュDNSをunboundからBIND10に切り替えたのでメモ。
+
+　デフォルトだと権威DNSが全てのアドレスの53番でListenしてしまうので、権威DNSがListenするアドレスを公開アドレスに限定します。
+
+<pre><code># netstat -an | grep 53
+tcp        0      0 0.0.0.0:53                  0.0.0.0:*                   LISTEN
+tcp        0      0 :::53                       :::*                        LISTEN
+udp        0      0 0.0.0.0:53                  0.0.0.0:*                               
+udp        0      0 :::53                       :::*    
+
+&gt; config show all
+...
+Auth/listen_on[0]/address       "::"    string  (default)
+Auth/listen_on[1]/address       "0.0.0.0"       string  (default)
+
+&gt; config set Auth/listen_on[0]/address 157.7.135.191
+&gt; config set Auth/listen_on[1]/address 2001:470:23:756::2
+&gt; config commit
+
+# netstat -an | grep 53
+tcp        0      0 157.7.135.191:53            0.0.0.0:*                   LISTEN
+tcp        0      0 2001:470:23:756::2:53       :::*                        LISTEN
+udp        0      0 157.7.135.191:53            0.0.0.0:*                               
+udp        0      0 2001:470:23:756::2:53       :::*  
+</code></pre>
+
+　キャッシュDNS機能であるb10-resolverを有効にします。デフォルトでは127.0.0.1:53と::1:53でキャッシュDNSが起動します。
+
+<pre><code>&gt; config add Boss/components b10-resolver
+&gt; config set Boss/components/b10-resolver/special resolver
+&gt; config set Boss/components/b10-resolver/kind needed                           
+&gt; config set Boss/components/b10-resolver/priority 10                           
+&gt; config commit
+
+&gt; config show all
+...
+Resolver/listen_on[0]/address   "::1"   string  (default)
+Resolver/listen_on[0]/port      53      integer (default)
+Resolver/listen_on[1]/address   "127.0.0.1"     string  (default)
+Resolver/listen_on[1]/port      53      integer (default)
+Resolver/query_acl[0]   {"action": "ACCEPT", "from": "127.0.0.1"}       any    (default)
+Resolver/query_acl[1]   {"action": "ACCEPT", "from": "::1"}     any     (default)
+</code></pre>
+
+　外部から参照するために、キャッシュDNSとしてListenするIPアドレスを追加します。IPv4だと簡単にはできませんが、IPv6は/48のPrefixでグローバルユニキャストアドレスをもらっているので簡単です 
+
+<pre><code>&gt; config add Resolver/listen_on 
+&gt; config set Resolver/listen_on[2]/address 2001:470:fde1:xx::xx/64
+&gt; config set Resolver/listen_on[2]/port 53                                                                     
+&gt; config commit  
+&gt; config show all
+...
+Resolver/listen_on[0]/address   "::1"   string  
+Resolver/listen_on[0]/port      53      integer 
+Resolver/listen_on[1]/address   "127.0.0.1"     string  
+Resolver/listen_on[1]/port      53      integer 
+Resolver/listen_on[2]/address   "2001:470:fde1:xx::xx"  string  
+Resolver/listen_on[2]/port      53      integer 
+
+# netstat -anp | grep 53 | grep 2001:470:fde1:xx::xx                              
+tcp        0      0 2001:470:fde1:xx::xx:53     :::*                        LISTEN      26141/b10-resolver  
+udp        0      0 2001:470:fde1:xx::xx:53     :::*                                    26141/b10-resolver
+</code></pre>
+
+　問い合わせを許可するPrefixをACLに追加します。
+
+<pre><code>&gt; config set Resolver/query_acl[2] {"from": ["2610:d0:3211:xx::/64", "2001:e41:31d4:3648::1/128"], "action": "ACCEPT"}
+&gt; config commit
+&gt; config show all
+...
+Resolver/query_acl[0]   {"from": "127.0.0.1", "action": "ACCEPT"}       any     
+Resolver/query_acl[1]   {"from": "::1", "action": "ACCEPT"}     any     
+Resolver/query_acl[2]   {"from": ["2610:d0:3211:xx::/64", "2001:e41:31d4:3648::1/128"], "action": "ACCEPT"}    any  
+</code></pre>
+
+　確認の為2001:e41:31d4:3648::1からキャッシュDNSにwww.google.comを問い合わせみると、ちゃんと応答が返ってきました。多分動いていると思います。

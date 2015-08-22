@@ -1,0 +1,106 @@
+---
+title: Cisco892Jで経路交換サーバ（IPv4）を作った
+author: kongou_ae
+layout: post
+date: 2012-04-07
+url: /blog/archives/822
+categories:
+  - cisco
+  - network
+---
+</p> 
+
+　15.2(3)Tで実装された経路交換サーバ機能を試してみました。 
+
+### 構成
+
+![route-server-ipv4][1]
+
+　経路交換サーバ用のCisco892Jと、CentOS（quagga+openNHRP）です。実際の経路交換サーバは同一セグメント内にあるなーということで、mGREとNHRPを使って強引に同一セグメントにしました。トラフィックは経路交換サーバを経由してしますのでそれほど意味はありません。。
+
+### Cisco892Jの設定
+
+　通常のBGP設定と大きな違いはありません。ネイバに対して「route-server-client」を追加するだけです。vrfで分けているのは我が家の都合です。
+
+<pre><code>interface Tunnel1216
+ vrf forwarding route-server
+ ip address 10.12.16.1 255.255.255.0
+ no ip redirects
+ no ip proxy-arp
+ ip nhrp authentication 1216
+ ip nhrp map multicast dynamic
+ ip nhrp network-id 1216
+ ip nhrp holdtime 300
+ tunnel source Loopback1
+ tunnel mode gre multipoint
+
+router bgp 64585
+ (中略)
+ address-family ipv4 vrf route-server
+  neighbor 10.12.16.2 remote-as 65002
+  neighbor 10.12.16.2 activate
+  neighbor 10.12.16.2 route-server-client
+  neighbor 10.12.16.3 remote-as 65003
+  neighbor 10.12.16.3 activate
+  neighbor 10.12.16.3 route-server-client
+ exit-address-family
+</code></pre>
+
+### CentOS設定
+
+　opennhrpの設定は下記の通りです。あとは同じ名前のGREトンネルを作り、opennhrpを起動すればOKです。この時点でAS65003のルータからAS65002のWAN側IP（10.12.16.2）へPingが飛びます。BGPの設定は通常のeBGPと同様です。
+
+<pre><code>AS65003# more /etc/opennhrp/opennhrp.conf                                              
+interface gre1216
+  map 10.12.16.1/24 153.16.xxx.xxx register
+  cisco-authentication 1216
+
+AS65003# ping 10.12.16.2
+PING 10.12.16.2 (10.12.16.2) 56(84) bytes of data.
+64 bytes from 10.12.16.2: icmp_seq=1 ttl=63 time=45.0 ms
+64 bytes from 10.12.16.2: icmp_seq=2 ttl=63 time=47.3 ms
+64 bytes from 10.12.16.2: icmp_seq=3 ttl=63 time=47.8 ms
+</code></pre>
+
+### 動作確認
+
+　経路交換サーバから1つ経路を受信しています。本来のeBGPであれば経路交換サーバ（AS64585）のAS-PATHが付与されるはずですが、それがついておらずAS65002だけになっているのがわかります。「route-server-client」コマンドを外すとただのeBGP扱いとなり、AS64585のAS-PATHが付与されます。
+
+<pre><code>AS65003# show ip bgp summary 
+BGP router identifier 192.168.3.1, local AS number 65003
+2 BGP AS-PATH entries
+0 BGP community entries
+
+Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
+10.12.16.1      4 64585      52      45        0    0    0 00:26:42        1
+
+Total number of neighbors 1
+AS65003# show ip bgp                                                                                 
+BGP table version is 0, local router ID is 192.168.3.1
+Status codes: s suppressed, d damped, h history, * valid, &gt; best, i - internal
+Origin codes: i - IGP, e - EGP, ? - incomplete
+
+   Network          Next Hop            Metric LocPrf Weight Path
+*&gt; 192.168.2.0      10.12.16.2               0             0 65002 i
+*&gt; 192.168.3.0      0.0.0.0                  0         32768 i
+
+Total number of prefixes 2
+
+■route-server-clientコマンドを外した場合
+AS65003# show ip bgp                                                                                 
+BGP table version is 0, local router ID is 192.168.3.1
+Status codes: s suppressed, d damped, h history, * valid, &gt; best, i - internal
+Origin codes: i - IGP, e - EGP, ? - incomplete
+
+   Network          Next Hop            Metric LocPrf Weight Path
+*&gt; 192.168.2.0      10.12.16.2                             0 64585 65002 i
+*&gt; 192.168.3.0      0.0.0.0                  0         32768 i
+
+Total number of prefixes 2
+</code></pre>
+
+### 今後の予定
+
+　IPv6でも動作確認をして、IHANet内に経路交換サーバを立てられればなと思います。問題はopenNHRPがIPv6で動作しないので今の環境では動作確認が出来ないことと、IHANet内にCiscoルータが接続できるIXが存在しない事ですね・・mGREなL2?IXを立てても需要がなさそうだし・・・
+
+ [1]: http://aimless.jp/images/route-server-ipv4.png

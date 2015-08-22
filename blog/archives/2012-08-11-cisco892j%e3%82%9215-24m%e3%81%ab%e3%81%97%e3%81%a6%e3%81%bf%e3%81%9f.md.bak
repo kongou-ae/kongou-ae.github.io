@@ -1,0 +1,59 @@
+---
+title: Cisco892Jを15.2(4)Mにしてみた
+author: kongou_ae
+layout: post
+date: 2012-08-10
+url: /blog/archives/1240
+categories:
+  - cisco
+  - network
+---
+</p> 
+
+　いつの間にかIOS15.2(4)Mがリリースされていました。「OSPFv3 VRF-Lite/PE-CE」と「VRRPv3 Protocol Support」が気になったので早速アップデートしました。
+
+[release 15.2(4)M New Features and Important Notes][1]
+
+### OSPFv3 VRF-Lite/PE-CE
+
+　OSPFv3でもaddress-familyがサポートされたみたいです。下記の様な形でVRF単位でOSPFを定義できます。
+
+<pre><code>router ospfv3 1
+ !
+ address-family ipv6 unicast
+  redistribute connected
+  redistribute static
+  router-id 36.2.xxx.xxx
+ exit-address-family
+ !
+ address-family ipv6 unicast vrf route-server
+  router-id xxx.xxx
+ exit-address-family
+</code></pre>
+
+　インターフェースへの適応方法も、ipv6 ospf ではなくospfv3で行います。VRFなインターフェース上だとそもそもipv6 ospfが出てきません。<a href="http://aimless.jp/blog/blog/archives/748" title="OSPFv3はVRF未対応？" target="_blank">その昔は</a>出来なかった事が出来るようになりました！
+
+<pre><code>Router(config)#interface Vlan999
+Router(config-if)#ipv6 ospf ?
+% Unrecognized command
+Router# 
+Router# 
+Router# show running-config interface vlan 999
+interface Vlan999
+ vrf forwarding route-server
+ no ip address
+ ipv6 enable
+ ospfv3 1 ipv6 area 0.0.0.0
+end
+Router# 
+Router# 
+Router#show ospfv3 vrf route-server interface brief 
+Interface    PID   Area            AF         Cost  State Nbrs F/C
+Vl999        1     0.0.0.0         IPv6       1     DOWN  0/0
+</code></pre>
+
+### VRRPv3 Protocol Support
+
+　これが見当たらない。。。こちらは継続調査と言う事で。
+
+ [1]: http://www.cisco.com/en/US/customer/docs/ios/15_2m_and_t/release/notes/152-4MNEWF.html "release 15.2(4)M New Features and Important Notes"

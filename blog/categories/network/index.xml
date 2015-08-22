@@ -1565,7 +1565,7 @@ end
 
 &lt;p&gt;　このプラグインでFortiGateのsyslogファイルをインプットして、elasticsearchへアウトプットすると、下図のような形で格納されます。&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;http://aimless.jp/images/es-forti.png&#34; alt=&#34;elasticsearch-fortigate&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/images/es-forti.png&#34; alt=&#34;elasticsearch-fortigate&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;　kibana3を利用すると下図のようなログビュアーが作れます。非管理者に通信ログを見せたい場合などに使えるかも？通信内容を集計したグラフなんかも作れるのでしょうか？（elasticsearchとkibana3は現在勉強中なので、実現可否は不明瞭。）&lt;/p&gt;
 
@@ -1573,7 +1573,7 @@ end
 
 &lt;p&gt;　現在の実装ではsyslogで飛んできたログをなんでも処理しますので、fluent-plugin-fortigate-traffic-logという名前にも関わらずeventログやUTMログも処理されてしまいます。type=trafficの時のみ処理する形にすればいいと思うので、そのうち直したいです。&lt;/p&gt;
 
-&lt;p&gt;[2]: &lt;a href=&#34;http://aimless.jp/images/kibana3-fortigate.png&#34;&gt;http://aimless.jp/images/kibana3-fortigate.png&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;[2]: &lt;a href=&#34;http://aimless.jp/blog/images/kibana3-fortigate.png&#34;&gt;http://aimless.jp/blog/images/kibana3-fortigate.png&lt;/a&gt;&lt;/p&gt;
 </description>
     </item>
     
@@ -1690,7 +1690,7 @@ x.x.0.0.0.0.0.0.0.0.0.0.0.0.0.0.3.5.0.0.1.e.d.f.0.7.4.0.1.0.0.2.ip6.arpa. 3600 I
 1.e.d.f.0.7.4.0.1.0.0.2.ip6.arpa. 3600 IN NS    dns4.aimless.jp.
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;[1]: &lt;a href=&#34;http://aimless.jp/images/rDNS_of_HE.png&#34;&gt;http://aimless.jp/images/rDNS_of_HE.png&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;[1]: &lt;a href=&#34;http://aimless.jp/blog/images/rDNS_of_HE.png&#34;&gt;http://aimless.jp/blog/images/rDNS_of_HE.png&lt;/a&gt;&lt;/p&gt;
 </description>
     </item>
     
@@ -1754,19 +1754,19 @@ Router#
 
 &lt;p&gt;　ブラウザでアクセスしてみるとError画面が表示されますので、「here」をクリックします。&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;http://aimless.jp/images/logAna1.png&#34; alt=&#34;LogAnalyzar_1&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/images/logAna1.png&#34; alt=&#34;LogAnalyzar_1&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;　ディレクトリの権限等々をチェックしてくれるそうです。Nextをクリック。&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;http://aimless.jp/images/logAna2.png&#34; alt=&#34;LogAnalyzar_2&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/images/logAna2.png&#34; alt=&#34;LogAnalyzar_2&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;　config.phpに書き込めないと怒られました。config.phpの所有者をapacheに変更してNextを押します。&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;http://aimless.jp/images/logAna3.png&#34; alt=&#34;LogAnalyzar_3&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/images/logAna3.png&#34; alt=&#34;LogAnalyzar_3&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;　step3～6はとりあえずデフォ値でそのままNextを押します。どのログをWEBで閲覧するかを決めるのがstep7です。[Name of the source]に分りやすい名前を、[syslog file]は閲覧したいログファイルのパスを入力します。その他はとりあえずデフォルトのままにし、Nextをクリック。&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;http://aimless.jp/images/logAna4.png&#34; alt=&#34;LogAnalyzar_4&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/images/logAna4.png&#34; alt=&#34;LogAnalyzar_4&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;　できました！rsyslogで収集しているCisco892Jのログを閲覧しています。&lt;/p&gt;
 
@@ -1795,7 +1795,7 @@ $CFG[&#39;Sources&#39;][&#39;Source2&#39;][&#39;DiskFile&#39;] = &#39;/var/log/m
 
 &lt;p&gt;　rsyslogで収集しているログをWEBで見せたいというニッチな用途に最適だと思います。インストールは簡単で、操作も分りやすいです。@ttkzw、要件にあったツールを教えて下さりありがとうございました。&lt;/p&gt;
 
-&lt;p&gt;[5]: &lt;a href=&#34;http://aimless.jp/images/logAna6.png&#34;&gt;http://aimless.jp/images/logAna6.png&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;[5]: &lt;a href=&#34;http://aimless.jp/blog/images/logAna6.png&#34;&gt;http://aimless.jp/blog/images/logAna6.png&lt;/a&gt;&lt;/p&gt;
 </description>
     </item>
     
@@ -1847,7 +1847,7 @@ if ( $FROMHOST-IP == &#39;xxx.xxx.xxx.xxx&#39; ) and ($syslogfacility-text == &#
 
 &lt;p&gt;　そうはいっても、RANCIDを利用すると色々と楽ができそうなので、もう少し触ってみようと思います。&lt;/p&gt;
 
-&lt;p&gt;[1]: &lt;a href=&#34;http://aimless.jp/images/diagram.png&#34;&gt;http://aimless.jp/images/diagram.png&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;[1]: &lt;a href=&#34;http://aimless.jp/blog/images/diagram.png&#34;&gt;http://aimless.jp/blog/images/diagram.png&lt;/a&gt;&lt;/p&gt;
 </description>
     </item>
     

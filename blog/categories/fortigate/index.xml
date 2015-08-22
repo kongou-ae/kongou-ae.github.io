@@ -1425,7 +1425,7 @@
 
 &lt;p&gt;　このプラグインでFortiGateのsyslogファイルをインプットして、elasticsearchへアウトプットすると、下図のような形で格納されます。&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;http://aimless.jp/images/es-forti.png&#34; alt=&#34;elasticsearch-fortigate&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/images/es-forti.png&#34; alt=&#34;elasticsearch-fortigate&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;　kibana3を利用すると下図のようなログビュアーが作れます。非管理者に通信ログを見せたい場合などに使えるかも？通信内容を集計したグラフなんかも作れるのでしょうか？（elasticsearchとkibana3は現在勉強中なので、実現可否は不明瞭。）&lt;/p&gt;
 
@@ -1433,7 +1433,7 @@
 
 &lt;p&gt;　現在の実装ではsyslogで飛んできたログをなんでも処理しますので、fluent-plugin-fortigate-traffic-logという名前にも関わらずeventログやUTMログも処理されてしまいます。type=trafficの時のみ処理する形にすればいいと思うので、そのうち直したいです。&lt;/p&gt;
 
-&lt;p&gt;[2]: &lt;a href=&#34;http://aimless.jp/images/kibana3-fortigate.png&#34;&gt;http://aimless.jp/images/kibana3-fortigate.png&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;[2]: &lt;a href=&#34;http://aimless.jp/blog/images/kibana3-fortigate.png&#34;&gt;http://aimless.jp/blog/images/kibana3-fortigate.png&lt;/a&gt;&lt;/p&gt;
 </description>
     </item>
     
@@ -1469,7 +1469,7 @@ end
 
 &lt;p&gt;　アドレスオブジェクトのタイプを「地域」を選択して、国を選択します。今回は日本にしてみました。&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;http://aimless.jp/images/geoip-forti-01.png&#34; alt=&#34;fortigate-geoip-01&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/images/geoip-forti-01.png&#34; alt=&#34;fortigate-geoip-01&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;　作成したアドレスオブジェクトを利用してルールを作成します。これによりLAN内の端末はFortigateが日本と判断するIPアドレスにしかアクセスできなくなります。&lt;/p&gt;
 
@@ -1512,7 +1512,7 @@ Country name:JP Total IP Range:1337
 8.8.8.8 is not in kernel ip-country DB
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;[2]: &lt;a href=&#34;http://aimless.jp/images/geoip-forti-02.png&#34;&gt;http://aimless.jp/images/geoip-forti-02.png&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;[2]: &lt;a href=&#34;http://aimless.jp/blog/images/geoip-forti-02.png&#34;&gt;http://aimless.jp/blog/images/geoip-forti-02.png&lt;/a&gt;&lt;/p&gt;
 </description>
     </item>
     
@@ -1532,21 +1532,21 @@ Country name:JP Total IP Range:1337
 
 &lt;p&gt;　Fortigateが利用するMTAを登録します。送信元メールアドレスを指定したい場合は、合わせて設定します。私の環境はVDOMを利用しているので、MTAの設定はグローバル側に、送信元メールアドレスの設定はVDOM側に存在していました。&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;http://aimless.jp/images/forti-ssl01.png&#34; alt=&#34;MTAの設定&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/images/forti-ssl01.png&#34; alt=&#34;MTAの設定&#34; /&gt;&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;http://aimless.jp/images/forti-ssl01a.png&#34; alt=&#34;送信元メアドの設定&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/images/forti-ssl01a.png&#34; alt=&#34;送信元メアドの設定&#34; /&gt;&lt;/p&gt;
 
 &lt;h3 id=&#34;二要素認証の追加:6bb5d555ef829444fa722170bec6b738&#34;&gt;二要素認証の追加&lt;/h3&gt;
 
 &lt;p&gt;二要素認証を実施したいユーザの設定画面で、二要素認証を追加します。Emailの項目に記載したアドレスに、認証コードが送信されます。&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;http://aimless.jp/images/forti-ssl02.png&#34; alt=&#34;二要素認証の有効化&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/images/forti-ssl02.png&#34; alt=&#34;二要素認証の有効化&#34; /&gt;&lt;/p&gt;
 
 &lt;h3 id=&#34;ssl-vpnでアクセスする:6bb5d555ef829444fa722170bec6b738&#34;&gt;SSL-VPNでアクセスする&lt;/h3&gt;
 
 &lt;p&gt;　二要素認証を有効にしたユーザでSSL-VPNのログイン画面にアクセスします。IDとPassの認証を通過すると、Tokenの入力を求められます。&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;http://aimless.jp/images/forti-ssl04.png&#34; alt=&#34;TokenCodeの要求&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/images/forti-ssl04.png&#34; alt=&#34;TokenCodeの要求&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;　二要素認証を設定した際に入力したEmailアドレスにTokenCodeが送信されていますので、これを入力するといつものWEBポータルにつながります。&lt;/p&gt;
 
@@ -1554,7 +1554,7 @@ Country name:JP Total IP Range:1337
 
 &lt;p&gt;　携帯のメアドにTokenCodeを送るようにすれば、かなり簡単に二要素認証を実現できますね。&lt;/p&gt;
 
-&lt;p&gt;[5]: &lt;a href=&#34;http://aimless.jp/images/forti-ssl03.png&#34;&gt;http://aimless.jp/images/forti-ssl03.png&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;[5]: &lt;a href=&#34;http://aimless.jp/blog/images/forti-ssl03.png&#34;&gt;http://aimless.jp/blog/images/forti-ssl03.png&lt;/a&gt;&lt;/p&gt;
 </description>
     </item>
     
@@ -1574,7 +1574,7 @@ Country name:JP Total IP Range:1337
 
 &lt;p&gt;　USB扇風機はCisco892JのUSBポートで給電しています。Cisco892JのUSBポートマジ便利。&lt;/p&gt;
 
-&lt;p&gt;[1]: &lt;a href=&#34;http://aimless.jp/images/usbfan.png&#34;&gt;http://aimless.jp/images/usbfan.png&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;[1]: &lt;a href=&#34;http://aimless.jp/blog/images/usbfan.png&#34;&gt;http://aimless.jp/blog/images/usbfan.png&lt;/a&gt;&lt;/p&gt;
 </description>
     </item>
     
@@ -1592,7 +1592,7 @@ Country name:JP Total IP Range:1337
 
 &lt;p&gt;　やりたかった事は下図の通り。利用ユーザのグループ単位で、ポータルを変えたり、IPアドレスを変えたり、社内へのアクセスポリシーを変えたり等々柔軟に。自社ユーザは社内にフルアクセスで、社外保守ベンダは社員とは別IPアドレスで、さらにアクセス先を制限するみたいな使い方を想定しています。&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;http://aimless.jp/images/sslvpn.png&#34; alt=&#34;sslvpn&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/images/sslvpn.png&#34; alt=&#34;sslvpn&#34; /&gt;&lt;/p&gt;
 
 &lt;h3 id=&#34;ユーザ作成のハマりどころ:483e536bcb93d01cf7c3b5a7bcb27b43&#34;&gt;ユーザ作成のハマりどころ&lt;/h3&gt;
 
@@ -1607,11 +1607,11 @@ Country name:JP Total IP Range:1337
 
 &lt;p&gt;　必要な設定は大きく二つ。一つはSSL-VPNでのアクセスを自体を許可するルール、もう一つはトンネル接続を許可するルールです。&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;http://aimless.jp/images/sslvpn-policy.png&#34; alt=&#34;sslvpn-policy&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/images/sslvpn-policy.png&#34; alt=&#34;sslvpn-policy&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;　1つ目のルール（上図ルール8）の詳細は下記の通りです。必要なユーザグループに対して、インターネットの全てからLAN内の192.168.2.0/24へのSSLVPNを許可します。&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;http://aimless.jp/images/sslvpn-policy-detail.png&#34; alt=&#34;sslvpn-policy-detail&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/images/sslvpn-policy-detail.png&#34; alt=&#34;sslvpn-policy-detail&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;　2つ目のルール（上図ルール4）の詳細は下記の通りです。sslall_group内のユーザがトンネル接続した時に割り当てられるIPアドレスから、LAN内の192.168.2.0/24に対してTELNETとICMPを許可します。Fortigateから見ると、トンネル接続用のIPアドレスはssl.root（SSLVPNトンネルインターフェース）の先にいますので、WANではなくssl.rootを選択します。&lt;/p&gt;
 
@@ -1623,7 +1623,7 @@ Country name:JP Total IP Range:1337
 
 &lt;p&gt;　クライアントインストール時に「IE6じゃ動かないからIE8以上にしてねー（意訳）」という注意が出ますので、素直に従ってください。本当にIE6では動きませんでした。&lt;/p&gt;
 
-&lt;p&gt;[4]: &lt;a href=&#34;http://aimless.jp/images/sslvpn-policy-detail2.png&#34;&gt;http://aimless.jp/images/sslvpn-policy-detail2.png&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;[4]: &lt;a href=&#34;http://aimless.jp/blog/images/sslvpn-policy-detail2.png&#34;&gt;http://aimless.jp/blog/images/sslvpn-policy-detail2.png&lt;/a&gt;&lt;/p&gt;
 </description>
     </item>
     
