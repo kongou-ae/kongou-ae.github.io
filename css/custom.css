@@ -1,0 +1,9 @@
+.ad-left {
+    float: left;
+    margin-right: 2px;
+}
+
+.ad-right {
+    float: right;
+    margin-left: 2px;
+}
