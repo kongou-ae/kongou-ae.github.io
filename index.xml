@@ -6,8 +6,52 @@
     <description>Recent content on Aimless</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja</language>
-    <lastBuildDate>Sat, 18 Jul 2015 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 27 Sep 2015 00:00:00 +0000</lastBuildDate>
     <atom:link href="http://aimless.jp/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>ソフトバンクショップでiPhone 6s Plusに機種変更したら、5137円/月のオプションが付いた</title>
+      <link>http://aimless.jp/blog/archives/2680</link>
+      <pubDate>Sun, 27 Sep 2015 00:00:00 +0000</pubDate>
+      
+      <guid>http://aimless.jp/blog/archives/2680</guid>
+      <description>
+
+&lt;p&gt;iPhone 6s Plusに機種変更しました。画面が大きいのはいいことです。&lt;/p&gt;
+
+&lt;p&gt;　さて、&lt;a href=&#34;http://akimotoshoji.blog.jp/archives/51481475.html&#34;&gt;iPhone6sの機種変で、ソフトバンクに3500円/月のオプション加入を迫られたwww&lt;/a&gt;を見て、「そういえば私もかなりのオプションサービスに加入したなぁ」と思ったのでメモ。&lt;/p&gt;
+
+&lt;h2 id=&#34;加入させられたオプション一覧:ce8ce68010b7d182bf86a7b0486be8f5&#34;&gt;加入させられたオプション一覧&lt;/h2&gt;
+
+&lt;p&gt;| サービス名 | 月額料金 |備考|
+|&amp;mdash;&amp;mdash;&amp;ndash;|&amp;mdash;&amp;mdash;&amp;ndash;|
+| あんしん保証パックプラス       |  ￥702      |機種変更前も契約。機種変更後も利用|
+|基本パック|￥540|機種変更前も契約。機種変更後も利用|
+|機種変更先取りプログラム|￥324||
+|オススメコンテンツ|￥324|ことりっぷ、ライフレンジャー、music.jpのパック|
+|とく放題（m）|￥637||
+|UULA|￥504||
+|アニメ放題|￥540||
+|ブック放題|￥540||
+|NETFLIX|￥1026||&lt;/p&gt;
+
+&lt;p&gt;　さらに、速度維持の仕組みを「制限モード」から「快適モード」に変更されました。「快適モード」の場合、「3日で1Gバイト」の制限に引っかかった場合に、￥2500/2Gの権利が自動的に購入されます。つまり、この現代においてパケ死するモードです。&lt;/p&gt;
+
+&lt;h2 id=&#34;対応:ce8ce68010b7d182bf86a7b0486be8f5&#34;&gt;対応&lt;/h2&gt;
+
+&lt;p&gt;　契約時に不要なオプションがつくのは儀式だと思っているので、お店の方と「今日家に帰ってすぐに全部解約してもいいんですよね？」「お店としては10月1日以降だとありがたいのですが・・・」というやり取りをしたうえで、不要なオプションは全部解約＆速度維持を制限モードに変更しました。&lt;/p&gt;
+
+&lt;p&gt;　解約の手続きをお客様センターのオペレータさんにお願いしようと思ったのですが、オペレータさんの対応時間が20時までであり、帰宅したのが20時を過ぎていたため、MySoftbankで手続きを行いました。大変でした。&lt;/p&gt;
+
+&lt;p&gt;　唯一、NETFLIXだけが、解約手続きをしたはずなのに、My Softbankのオプションサービス一覧に居続けています。これは、NETFLIXの契約が請求期間の最終日にキャンセルになる関係だと信じたい。&lt;/p&gt;
+
+&lt;h2 id=&#34;感想:ce8ce68010b7d182bf86a7b0486be8f5&#34;&gt;感想&lt;/h2&gt;
+
+&lt;p&gt;　お店の方は「いらなければ全部変更してくださいね」「（説明資料をマーキングしたうえで）これを外してくださいね」ときちんと説明してくれました。また、説明資料にはオプションサービスの解約方法がしっかり書いてありました。そのため、いらいないサービスを押し付けられたにも関わらず、お店の印象は悪くないという不思議。気持ちよく儀式を終えることができました。&lt;/p&gt;
+
+&lt;p&gt;　「100発撃てば1発はあたる」と思ってやっているんでしょうが、この儀式、いったい誰の指示なんでしょうね。&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>API Gateway &#43; Lambdaを使って、マルチクラウド管理APIを作る</title>
@@ -1583,108 +1627,6 @@ sg-b10aecd4,outbound,ALL Traffic,ALL,ALL,0.0.0.0/0
 &lt;p&gt;　&lt;/p&gt;
 
 &lt;p&gt;　また、TCP/3000でのアクセスは不便だったので、前段にNginx等のリバースプロキシを置いてTCP/80でアクセスできるようにしました。&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>AWS上のオンデマンドなUTM製品を比較する</title>
-      <link>http://aimless.jp/blog/archives/2399</link>
-      <pubDate>Mon, 16 Feb 2015 00:00:00 +0000</pubDate>
-      
-      <guid>http://aimless.jp/blog/archives/2399</guid>
-      <description>&lt;p&gt;イマイチ使いどころが見つけられないAWS上のUTM製品について、オンデマンド版（ライセンスこみで使えるAMI）の費用を比較しました。&lt;/p&gt;
-
-&lt;p&gt;　なお、AWS上には、Barracuda NG FirewallやPaloalto VM-Seriesもあるのですが、これらはオンデマンド版が存在せずBYOL版のみのため、記載していません。オンデマンド版があれば、評価しやすいのに。。。&lt;/p&gt;
-
-&lt;table&gt;
-&lt;thead&gt;
-&lt;tr&gt;
-&lt;th&gt;インスタンスタイプ&lt;/th&gt;
-&lt;th&gt;FortiGate-VM&lt;/th&gt;
-&lt;th&gt;CheckPoint VA&lt;/th&gt;
-&lt;th&gt;sophos-UTM 9&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
-
-&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td&gt;t1.micro&lt;/td&gt;
-&lt;td&gt;&amp;#8211;&lt;/td&gt;
-&lt;td&gt;&amp;#8211;&lt;/td&gt;
-&lt;td&gt;$0.02/hr&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;t1.small&lt;/td&gt;
-&lt;td&gt;&amp;#8211;&lt;/td&gt;
-&lt;td&gt;&amp;#8211;&lt;/td&gt;
-&lt;td&gt;$0.264/hr&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;m3.medium&lt;/td&gt;
-&lt;td&gt;$0.37/hr&lt;/td&gt;
-&lt;td&gt;–&lt;/td&gt;
-&lt;td&gt;$0.42/hr&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;m3.large&lt;/td&gt;
-&lt;td&gt;$0.95/hr&lt;/td&gt;
-&lt;td&gt;–&lt;/td&gt;
-&lt;td&gt;$0.84/hr&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;m3.xlarge&lt;/td&gt;
-&lt;td&gt;$2.13/hr&lt;/td&gt;
-&lt;td&gt;–&lt;/td&gt;
-&lt;td&gt;$1.68/hr&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;m3.2xlarge&lt;/td&gt;
-&lt;td&gt;$4.49/hr&lt;/td&gt;
-&lt;td&gt;–&lt;/td&gt;
-&lt;td&gt;$3.36/hr&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;c3.large&lt;/td&gt;
-&lt;td&gt;$0.835/hr&lt;/td&gt;
-&lt;td&gt;$1.815/hr&lt;/td&gt;
-&lt;td&gt;$0.525/hr&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;c3.xlarge&lt;/td&gt;
-&lt;td&gt;$1.87/hr&lt;/td&gt;
-&lt;td&gt;$2.80/hr&lt;/td&gt;
-&lt;td&gt;$1.05/hr&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;c3.2xlarge&lt;/td&gt;
-&lt;td&gt;$3.95/hr&lt;/td&gt;
-&lt;td&gt;$4.86/hr&lt;/td&gt;
-&lt;td&gt;$2.10/hr&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;c3.4xlarge&lt;/td&gt;
-&lt;td&gt;–&lt;/td&gt;
-&lt;td&gt;$6.483/hr&lt;/td&gt;
-&lt;td&gt;$4.20/hr&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;c3.8xlarge&lt;/td&gt;
-&lt;td&gt;–&lt;/td&gt;
-&lt;td&gt;$8.688/hr&lt;/td&gt;
-&lt;td&gt;$8.40/hr&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
 </description>
     </item>
     
