@@ -23,17 +23,71 @@
 
 &lt;h2 id=&#34;加入させられたオプション一覧:ce8ce68010b7d182bf86a7b0486be8f5&#34;&gt;加入させられたオプション一覧&lt;/h2&gt;
 
-&lt;p&gt;| サービス名 | 月額料金 |備考|
-|&amp;mdash;&amp;mdash;&amp;ndash;|&amp;mdash;&amp;mdash;&amp;ndash;|
-| あんしん保証パックプラス       |  ￥702      |機種変更前も契約。機種変更後も利用|
-|基本パック|￥540|機種変更前も契約。機種変更後も利用|
-|機種変更先取りプログラム|￥324||
-|オススメコンテンツ|￥324|ことりっぷ、ライフレンジャー、music.jpのパック|
-|とく放題（m）|￥637||
-|UULA|￥504||
-|アニメ放題|￥540||
-|ブック放題|￥540||
-|NETFLIX|￥1026||&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;サービス名&lt;/th&gt;
+&lt;th&gt;月額料金&lt;/th&gt;
+&lt;th&gt;備考&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;あんしん保証パックプラス&lt;/td&gt;
+&lt;td&gt;￥702&lt;/td&gt;
+&lt;td&gt;機種変更前も契約。機種変更後も利用&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;基本パック&lt;/td&gt;
+&lt;td&gt;￥540&lt;/td&gt;
+&lt;td&gt;機種変更前も契約。機種変更後も利用&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;機種変更先取りプログラム&lt;/td&gt;
+&lt;td&gt;￥324&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;オススメコンテンツ&lt;/td&gt;
+&lt;td&gt;￥324&lt;/td&gt;
+&lt;td&gt;ことりっぷ、ライフレンジャー、music.jpのパック&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;とく放題（m）&lt;/td&gt;
+&lt;td&gt;￥637&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;UULA&lt;/td&gt;
+&lt;td&gt;￥504&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;アニメ放題&lt;/td&gt;
+&lt;td&gt;￥540&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;ブック放題&lt;/td&gt;
+&lt;td&gt;￥540&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;NETFLIX&lt;/td&gt;
+&lt;td&gt;￥1026&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
 
 &lt;p&gt;　さらに、速度維持の仕組みを「制限モード」から「快適モード」に変更されました。「快適モード」の場合、「3日で1Gバイト」の制限に引っかかった場合に、￥2500/2Gの権利が自動的に購入されます。つまり、この現代においてパケ死するモードです。&lt;/p&gt;
 
