@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Golang on Aimless</title>
+    <link>http://aimless.jp/categories/golang/</link>
+    <description>Recent content in Golang on Aimless</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ja</language>
+    <lastBuildDate>Mon, 23 Feb 2015 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://aimless.jp/categories/golang/feed/" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>セキュリティグループの詳細をCSV形式で出力する</title>
+      <link>http://aimless.jp/blog/archives/2418</link>
+      <pubDate>Mon, 23 Feb 2015 00:00:00 +0000</pubDate>
+      
+      <guid>http://aimless.jp/blog/archives/2418</guid>
+      <description>&lt;p&gt;セキュリティグループにルールを追加すればするほどマネジメントコンソールでの一覧性が下がるので、全てのルールをCSV形式でエクスポートするコマンドを作ってみました。aws-to-csvです。&lt;/p&gt;
+
+&lt;p&gt;[kongou-ae/aws-to-csv][1]&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ ./a2csv securityGroups -r ap-northeast-1 -p private
+GroupID,Direction,Type,Protocol,Port Range,IP Range
+sg-b6822ed3,inbound,ALL ICMP,ICMP(1),ALL,sg-a9822ecc
+sg-b6822ed3,outbound,ALL Traffic,ALL,ALL,0.0.0.0/0
+sg-6ad86e0f,inbound,SSH(22),TCP(6),22,0.0.0.0/0
+sg-6ad86e0f,outbound,ALL Traffic,ALL,ALL,0.0.0.0/0
+sg-f07cdd95,inbound,RDP(3389),TCP(6),3389,192.168.11.1/32
+sg-f07cdd95,outbound,ALL Traffic,ALL,ALL,0.0.0.0/0
+sg-a9822ecc,inbound,ALL Traffic,ALL,ALL,192.168.11.1/32
+sg-a9822ecc,outbound,ALL ICMP,ICMP(1),ALL,sg-b6822ed3
+sg-aa2686cf,inbound,Custom Rrotocol Rule,HOPOPT(0),ALL,sg-6ad86e0f
+sg-aa2686cf,inbound,SSH(22),TCP(6),22,192.168.11.1/32
+sg-aa2686cf,outbound,ALL Traffic,ALL,ALL,0.0.0.0/0
+sg-b10aecd4,inbound,SSH(22),TCP(6),22,0.0.0.0/0
+sg-b10aecd4,outbound,ALL Traffic,ALL,ALL,0.0.0.0/0
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;　セキュリティグループは、APIのレスポンスをそのままCSV形式でエクスポートすると、出力内容がマネジメントコンソールの表示と大きく異なってしまい可読性が低くなります。そこで、APIのレスポンスをあの手この手で細工してからCSV形式で出力するようにしています。&lt;/p&gt;
+
+&lt;p&gt;　今までpythonで遊んでいましたが、今回は、クロスコンパイルにあこがれてgolangを使ってみました。これはすごいですね。VPSでwindows用にコンパイルしたa2csv.exeが、会社のwindows端末でそのまま動く。pythonで書いたコードを使うために、会社のPCにpythonをインストールしていたのが馬鹿みたいです。。。&lt;/p&gt;
+
+&lt;p&gt;[1]: &lt;a href=&#34;https://github.com/kongou-ae/aws-to-csv&#34;&gt;https://github.com/kongou-ae/aws-to-csv&lt;/a&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

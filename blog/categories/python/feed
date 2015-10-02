@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Python on Aimless</title>
+    <link>http://aimless.jp/categories/python/</link>
+    <description>Recent content in Python on Aimless</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ja</language>
+    <lastBuildDate>Tue, 05 Aug 2014 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://aimless.jp/categories/python/feed/" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Fedora20にしたらgraphiteが動かなくなった。</title>
+      <link>http://aimless.jp/blog/archives/2124</link>
+      <pubDate>Tue, 05 Aug 2014 00:00:00 +0000</pubDate>
+      
+      <guid>http://aimless.jp/blog/archives/2124</guid>
+      <description>&lt;p&gt;Fedora19にyumでインストールしたgraphiteが、Fedora20にアップグレードした時から動かなくなりました。具体的な症状は、WEBでアクセスすると以下のメッセージとともにInternal Server errorになります。&lt;/p&gt;
+
+&lt;p&gt;　モジュールがimport errorになる理由は、[Django import error &amp;#8211; no module named django.conf.urls.defaults][1]に記載のある通り、Django1.6からdefaultモジュールが廃止されているためのようです。確かに、Fedora19のpython-djangoは1.5.8、Fedora20のpytho-djangoは1.6.5です。&lt;/p&gt;
+
+&lt;p&gt;　Fedora20のyumでインストールできるgraphite-webパッケージはこの変更に追随していないようなので、githubのコミットを元に自分でパッチを当てました。なお、作業中のvimでは以下の2点を手修正しています。&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;manage.pyへのパッチが失敗したので、コメントアウト&lt;/li&gt;
+&lt;li&gt;ファイルのパスが本番環境と異なるので、正しいパスに置換&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;　パッチ適応後、Internal server errorは解消され、正常にgraphiteの管理画面が表示されるようになりました。&lt;/p&gt;
+
+&lt;p&gt;[1]: &lt;a href=&#34;http://stackoverflow.com/questions/19962736/django-import-error-no-module-named-django-conf-urls-defaults&#34;&gt;http://stackoverflow.com/questions/19962736/django-import-error-no-module-named-django-conf-urls-defaults&lt;/a&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>気軽にドキュメントを書く（Sphinx &#43; rst2pdf &#43; LiveReload &#43; docker）</title>
+      <link>http://aimless.jp/blog/archives/2067</link>
+      <pubDate>Wed, 09 Jul 2014 00:00:00 +0000</pubDate>
+      
+      <guid>http://aimless.jp/blog/archives/2067</guid>
+      <description>
+
+&lt;p&gt;本エントリーは、Wordを満足に使いこなせない私が、Wordよりも気軽にドキュメントを書く方法を試行錯誤した結果のメモです。せめて内部用のドキュメントくらいは気軽に書きたいのです。&lt;/p&gt;
+
+&lt;h1 id=&#34;概要図:a272f9313b7feb55abc66d4c9811e04e&#34;&gt;概要図&lt;/h1&gt;
+
+&lt;p&gt;　試行錯誤した結果、下図のような構成になりました。人がやることは、WindowsのターミナルエミュレータからSSH経由でreSTファイルを編集する事だけです。あとは全自動でいい感じな見た目のPDFファイルがChromeに表示されます。&lt;/p&gt;
+
+&lt;p&gt;　&amp;#8230;Wordでいいじゃね？とは思いますが、気のせいだと思います。&lt;/p&gt;
+
+&lt;p&gt;![doc-diag][1]&lt;/p&gt;
+
+&lt;h1 id=&#34;sphinxを使って-文書の内容と見た目を分離する:a272f9313b7feb55abc66d4c9811e04e&#34;&gt;Sphinxを使って、文書の内容と見た目を分離する&lt;/h1&gt;
+
+&lt;p&gt;　ドキュメント作成のめんどくさいところは、想定読者向けに見た目を整える必要があることです。自分が読むだけならメモ帳でいいですが、ドキュメントとして想定読者が存在する場合、ドキュメントの第一印象は見た目が9割。&lt;/p&gt;
+
+&lt;p&gt;　そうはいっても、ドキュメントの最終的な価値は内容で決まるのであり、限りある能力と時間はドキュメントの内容に注力したい。逆に考えると、見た目にかかる労力を自動化できれば、第一印象の9割を気軽に得られるわけです。&lt;/p&gt;
+
+&lt;p&gt;　というわけで、Sphinxを利用して、内容と見た目を分離することにしました。これにより、編集すべきものはreSTなプレーンテキストだけになります。気軽。&lt;/p&gt;
+
+&lt;h1 id=&#34;rst2pdfを使って-見た目を整える:a272f9313b7feb55abc66d4c9811e04e&#34;&gt;rst2pdfを使って、見た目を整える&lt;/h1&gt;
+
+&lt;p&gt;　ドキュメント作成のめんどくさいところは、想定読者が納得する見た目にする必要があることです。見た目とは「ファイル形式」と「文章の体裁」です。&lt;/p&gt;
+
+&lt;p&gt;　上司にreSTなテキストファイルを提出しようものなら、中身を見ずにやり直しを食らうことでしょう。お客様にreSTを変換したHTMLファイルを提出するわけにはいかない。また、段落がそろっていない、表の罫線の太さが違う、フォントがそろっていないといった基本的な体裁が整っていないと、ドキュメントの評価はダダ下がりです。&lt;/p&gt;
+
+&lt;p&gt;　というわけで、rst2pdfを利用して、reSTファイルをPDFにすることにしました。「make pdf」を叩くと、プレーンテキストがPDFになります。気軽。これでファイル形式の問題はクリアです。&lt;/p&gt;
+
+&lt;p&gt;　さらに、rst2pdfのスタイルシートを利用して、文書の体制を細かく指定します。一度スタイルシートを決めてしまえば、次から体裁に悩むことはありません。気軽。これで体裁の問題もクリアです。&lt;/p&gt;
+
+&lt;h1 id=&#34;python-livereloadを使って-操作性を高める:a272f9313b7feb55abc66d4c9811e04e&#34;&gt;python-livereloadを使って、操作性を高める&lt;/h1&gt;
+
+&lt;p&gt;　内容と見た目を分離したデメリットは、内容を変更した際に見た目を再生成する必要があることです。wordであれば、ドキュメントの内容を修正するだけで見た目も修正されますが、Sphinx + rst2pdfを使う場合、reSTを修正した後に「make pdf」をして、さらにPDFを開きなおす必要がある。これはすごくめんどくさい。&lt;/p&gt;
+
+&lt;p&gt;　というわけで、このめんどくさい作業を、python-livereloadで自動化しました。&lt;/p&gt;
+
+&lt;p&gt;　reSTを配置しているディレクトリで以下のスクリプトを起動し、Chromeでlocalhostの35729/tcpでPDFにアクセスします。そして、Chrome拡張のlivereloadで接続します。この状態でreSTまたはrst2pdfのスタイルシートを更新すると、勝手にmake pdfが走り、更にブラウザのPDFファイルがリロードされるようになります。気軽。超便利。&lt;/p&gt;
+
+&lt;h1 id=&#34;dockerを使って-仕組みのポータビリティを高める:a272f9313b7feb55abc66d4c9811e04e&#34;&gt;dockerを使って、仕組みのポータビリティを高める&lt;/h1&gt;
+
+&lt;p&gt;　気軽にドキュメントを書く仕組みができましたが、根本的な問題として、この仕組み自体をWindows環境で作る事が気軽ではありません。PCが変わるたびにこの環境を一から作り直すのはバカみたいです。&lt;/p&gt;
+
+&lt;p&gt;　というわけで、Doeckerを利用してこの仕組みをコンテナにしました。Dockerfileにしたので、Dockerさえ動けば、どの端末でも直ぐにこの仕組みを利用できます。windowsにもboot2dockerがあるので、Docker環境の準備は簡単です。気軽。&lt;/p&gt;
+
+&lt;p&gt;以上、気軽さを求めて試行錯誤した結果でした。&lt;/p&gt;
+
+&lt;p&gt;[1]: &lt;a href=&#34;http://aimless.jp/blog/images/doc-diag.jpg&#34;&gt;http://aimless.jp/blog/images/doc-diag.jpg&lt;/a&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>実機でonePKを使う</title>
+      <link>http://aimless.jp/blog/archives/1863</link>
+      <pubDate>Tue, 08 Apr 2014 00:00:00 +0000</pubDate>
+      
+      <guid>http://aimless.jp/blog/archives/1863</guid>
+      <description>
+
+&lt;p&gt;いつまでもAll-in-oneVMだと面白くないので、自宅のcisco892JでもonepKでアクセスできるようにしました。乗り越えた課題は以下の二つです。&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;onePKのバージョンを合わせる&lt;/li&gt;
+&lt;li&gt;認証&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&#34;onepkのバージョン:121230cfe88f8075c75727c1b3ea9e45&#34;&gt;onePKのバージョン&lt;/h2&gt;
+
+&lt;p&gt;　自宅のCisco892J：IOS 15.3(2)Tに対してonePKで書いたアプリを試してみたのですが、ONEP_BASE-3-VERSION_ERR:のエラーが出て接続できませんでした。ルータに出力されたログを見ると、IOSのバージョンが0.7.0、SDKのバージョンが1.2.0であることが原因のようです。&lt;/p&gt;
+
+&lt;p&gt;　&lt;/p&gt;
+
+&lt;p&gt;　現時点で最新の15.4(2)Tにアップデートしたところ、onePKのバージョンが1.2.0になりました。契約していてよかったSMARTnet。課題ひとつ解決。&lt;/p&gt;
+
+&lt;h2 id=&#34;認証:121230cfe88f8075c75727c1b3ea9e45&#34;&gt;認証&lt;/h2&gt;
+
+&lt;p&gt;　次は認証です。TLS認証は自己署名証明書と認証局の二択ですが、スタートガイドの注意点（&lt;a href=&#34;https://developer.cisco.com/media/onepk_getting_started_guide/GUID-03D9D7BB-B201-45FD-B0DE-B928C9D70692.html&#34;&gt;Using a Cisco Router with a Self-Signed Certificate&lt;/a&gt;）を踏まえて、認証局（ただしオレオレ）を立てることにしました。&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;Note: Self-signed certificates are appropriate for application development and testing in small deployments. For additional security, as well as more granular controls over individual certificate use and revocation, you should use certificates generated by your organization&amp;#8217;s Certificate Authority. See Using a Cisco Router with a Certificate Authority. Additionally you should never use pinned certificates in a production environment.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;　ルータの認証はID/Pass認証とクライアント証明書の二択（&lt;a href=&#34;https://developer.cisco.com/media/onepk_getting_started_guide/GUID-354FCB46-EA02-4315-8681-583C177357F4.html&#34;&gt;Configuring onePK Application Authentication&lt;/a&gt;）です。現時点ではID/Passにします。&lt;/p&gt;
+
+&lt;p&gt;　作業の大まかな流れは以下の通りです。&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;オレオレ認証局を立てる。&lt;/li&gt;
+&lt;li&gt;ルータでCSRを発行する。&lt;/li&gt;
+&lt;li&gt;認証局で、CSRを利用して証明書を発行する。&lt;/li&gt;
+&lt;li&gt;ルータにオレオレルート証明書とオレオレサーバ証明書をインポートする。&lt;/li&gt;
+&lt;li&gt;アプリケーションが稼働するサーバにオレオレルート証明書を読み込む。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;　オレオレ認証局の設定は、&lt;a href=&#34;http://l-w-i.net/t/openssl/cert_001.txt&#34;&gt;プライベート認証局(CA)を構築して証明書の発行を行なう&lt;/a&gt;が参考になります。&lt;/p&gt;
+
+&lt;p&gt;　Ciscoルータ側の設定は、&lt;a href=&#34;http://www.cisco.com/cisco/web/support/JP/100/1004/1004783_sslm-csr.html&#34;&gt;コピー アンド ペーストによる SSL サービス モジュールでの証明書署名要求の作成&lt;/a&gt;と[PKI の証明書登録の設定][5]が参考になります。ルータへのオレオレRoot証明書とオレオレサーバ証明書のインストールは、コピーアンドペースト方式でやりました。&lt;/p&gt;
+
+&lt;p&gt;[5]: &lt;a href=&#34;http://www.cisco.com/cisco/web/support/JP/docs/CIAN/IOS/IOS15_1M_T/CG/002/sec_cert_enroll_pki.html&#34;&gt;http://www.cisco.com/cisco/web/support/JP/docs/CIAN/IOS/IOS15_1M_T/CG/002/sec_cert_enroll_pki.html&lt;/a&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>onePKで遊ぶ（ルーティング取得）</title>
+      <link>http://aimless.jp/blog/archives/1852</link>
+      <pubDate>Sun, 06 Apr 2014 00:00:00 +0000</pubDate>
+      
+      <guid>http://aimless.jp/blog/archives/1852</guid>
+      <description>
+
+&lt;p&gt;GAになったonePKで遊んでいます。見よう見まねでルーティング情報を取得するスクリプトを書いてみました。必要な情報を入手するために、SSHでログインして正規表現で抽出していた従来とは全く違います。&lt;/p&gt;
+
+&lt;p&gt;　次はルーティングを追加するスクリプトを書いてみようと思います。&lt;/p&gt;
+
+&lt;h2 id=&#34;実行結果:6e2abe9be2e5eb47329c287eceefb687&#34;&gt;実行結果&lt;/h2&gt;
+
+&lt;h3 id=&#34;スクリプト:6e2abe9be2e5eb47329c287eceefb687&#34;&gt;スクリプト&lt;/h3&gt;
+
+&lt;h3 id=&#34;メモ:6e2abe9be2e5eb47329c287eceefb687&#34;&gt;メモ&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;ルータでonepkを有効にする。設定はGetting Staredに書いてある通り。[Using a Cisco Router with a Self-Signed Certificate][1]&lt;/li&gt;
+&lt;li&gt;対象機器は、NetworkElementオブジェクトで定義する&lt;/li&gt;
+&lt;li&gt;対象機器への接続方式は、SessionConfigオブジェクトで定義する。&lt;/li&gt;
+&lt;li&gt;SessionConfigを利用してNetworkElement.connectすることで、実機にアクセスする。&lt;/li&gt;
+&lt;li&gt;connect後のNetworkElementから必要な情報を入手する。&lt;/li&gt;
+&lt;li&gt;明示的にdisconnectしないと、対象機器とのコネクションは切れない。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;[1]: &lt;a href=&#34;https://developer.cisco.com/media/onepk_getting_started_guide/GUID-03D9D7BB-B201-45FD-B0DE-B928C9D70692.html&#34;&gt;https://developer.cisco.com/media/onepk_getting_started_guide/GUID-03D9D7BB-B201-45FD-B0DE-B928C9D70692.html&lt;/a&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

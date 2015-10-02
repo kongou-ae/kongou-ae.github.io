@@ -1,0 +1,926 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Cisco on Aimless</title>
+    <link>http://aimless.jp/categories/cisco/</link>
+    <description>Recent content in Cisco on Aimless</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ja</language>
+    <lastBuildDate>Fri, 26 Sep 2014 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://aimless.jp/categories/cisco/feed/" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>ShellShock（ネットワーク機器編）</title>
+      <link>http://aimless.jp/blog/archives/2229</link>
+      <pubDate>Fri, 26 Sep 2014 00:00:00 +0000</pubDate>
+      
+      <guid>http://aimless.jp/blog/archives/2229</guid>
+      <description>
+
+&lt;h1 id=&#34;はじめに:b35a1c1c8d870e3c08abe903af5123b9&#34;&gt;はじめに&lt;/h1&gt;
+
+&lt;p&gt;ShellShockに関して、私の業務と関わりのあるネットワーク機器ベンダのSecurity Advisoryが揃ってきたので、現時点での情報を簡単にまとめます。&lt;/p&gt;
+
+&lt;p&gt;あくまでも現時点ですので、今後内容が変更になる可能性があります。また、詳細については、保守ベンダにお問い合わせください。&lt;/p&gt;
+
+&lt;h1 id=&#34;cisco:b35a1c1c8d870e3c08abe903af5123b9&#34;&gt;Cisco&lt;/h1&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://tools.cisco.com/security/center/content/CiscoSecurityAdvisory/cisco-sa-20140926-bash&#34;&gt;http://tools.cisco.com/security/center/content/CiscoSecurityAdvisory/cisco-sa-20140926-bash&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;s&gt;IOSは該当しません。Nexusについては、N7kとN9kが該当します。具体的な対応方法については、個別にBugIDが振られていますので、そちらで確認する必要があります。&lt;/s&gt;&lt;/p&gt;
+
+&lt;p&gt;（9/28更新）IOSとIOS XRは該当しません。IOS XE、Nexus、UCSは該当します。具体的な対応方法については、個別にBugIDが振られていますので、そちらで確認する必要があります。&lt;/p&gt;
+
+&lt;h1 id=&#34;fortinet:b35a1c1c8d870e3c08abe903af5123b9&#34;&gt;Fortinet&lt;/h1&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://www.fortiguard.com/advisory/FG-IR-14-030&#34;&gt;http://www.fortiguard.com/advisory/FG-IR-14-030&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;FortiGateは該当しません。ManagerやAnalyzerが該当します。&lt;/p&gt;
+
+&lt;h1 id=&#34;juniper:b35a1c1c8d870e3c08abe903af5123b9&#34;&gt;Juniper&lt;/h1&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://kb.juniper.net/InfoCenter/index?page=content&amp;amp;id=JSA10648&#34;&gt;http://kb.juniper.net/InfoCenter/index?page=content&amp;amp;id=JSA10648&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Junos、ScreenOS、IVE OSといった主要製品は該当しません。&lt;/p&gt;
+
+&lt;h1 id=&#34;f5:b35a1c1c8d870e3c08abe903af5123b9&#34;&gt;F5&lt;/h1&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://support.f5.com/kb/en-us/solutions/public/15000/600/sol15629.html&#34;&gt;http://support.f5.com/kb/en-us/solutions/public/15000/600/sol15629.html&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;主要な製品はほとんど該当します。&lt;/p&gt;
+
+&lt;h1 id=&#34;checkpoint:b35a1c1c8d870e3c08abe903af5123b9&#34;&gt;CheckPoint&lt;/h1&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://supportcenter.checkpoint.com/supportcenter/portal?eventSubmit_doGoviewsolutiondetails=&amp;amp;solutionid=sk102673&amp;amp;src=securityAlerts&#34;&gt;https://supportcenter.checkpoint.com/supportcenter/portal?eventSubmit_doGoviewsolutiondetails=&amp;amp;solutionid=sk102673&amp;amp;src=securityAlerts&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;GaiaとSPLATともに該当します。&lt;/p&gt;
+
+&lt;h1 id=&#34;hp:b35a1c1c8d870e3c08abe903af5123b9&#34;&gt;HP&lt;/h1&gt;
+
+&lt;p&gt;&lt;s&gt;Security Advisoryのページが見当たりません。。。どこー。&lt;/s&gt;&lt;/p&gt;
+
+&lt;p&gt;（9/28更新）&lt;a href=&#34;http://h17007.www1.hp.com/docs/networking/alert/GNUBASHStatement-20140926.pdf&#34;&gt;http://h17007.www1.hp.com/docs/networking/alert/GNUBASHStatement-20140926.pdf&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;主要な製品が該当しない旨を示すPDFが公開されたのですが、リンク切れになってしまいました。。。キャッシュは以下です。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://webcache.googleusercontent.com/search?q=cache:cq8A9XMgwUIJ:h17007.www1.hp.com/docs/networking/alert/GNUBASHStatement-20140926.pdf+&amp;amp;cd=1&amp;amp;hl=ja&amp;amp;ct=clnk&amp;amp;gl=jp&#34;&gt;http://webcache.googleusercontent.com/search?q=cache:cq8A9XMgwUIJ:h17007.www1.hp.com/docs/networking/alert/GNUBASHStatement-20140926.pdf+&amp;amp;cd=1&amp;amp;hl=ja&amp;amp;ct=clnk&amp;amp;gl=jp&lt;/a&gt;&lt;/p&gt;
+
+&lt;h1 id=&#34;a10:b35a1c1c8d870e3c08abe903af5123b9&#34;&gt;A10&lt;/h1&gt;
+
+&lt;p&gt;&lt;s&gt;Security Advisoryのページが見当たりません。。。どこー&lt;/s&gt;&lt;/p&gt;
+
+&lt;p&gt;（9/28更新）&lt;a href=&#34;https://www.a10networks.com/vadc/index.php/shellshock-bug-when-a-perfect-10-0-score-is-not-so-perfect-and-how-you-can-protect-your-infrastructure/&#34;&gt;https://www.a10networks.com/vadc/index.php/shellshock-bug-when-a-perfect-10-0-score-is-not-so-perfect-and-how-you-can-protect-your-infrastructure/&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;主要な製品は該当するようです。ただし、A10のSecurity Advisory を見るためには、製品のSNを使ってアカウント登録が必要のようなので、詳細は不明です。。。&lt;/p&gt;
+
+&lt;h1 id=&#34;radware:b35a1c1c8d870e3c08abe903af5123b9&#34;&gt;Radware&lt;/h1&gt;
+
+&lt;p&gt;&lt;s&gt;現時点でのアナウンスは確認できません。&lt;/s&gt;&lt;/p&gt;
+
+&lt;p&gt;（9/28更新）&lt;a href=&#34;https://kb.radware.com/questions/3588/Security+Advisory%3A+Shellshock+bash+CVE-2014-6271%2C+CVE-2014-7169&#34;&gt;https://kb.radware.com/questions/3588/Security+Advisory%3A+Shellshock+bash+CVE-2014-6271%2C+CVE-2014-7169&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;AlteonやLinkProofなど主要製品は該当しません。&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Cisco IOS XRにおけるBGPのデフォルト制限</title>
+      <link>http://aimless.jp/blog/archives/2143</link>
+      <pubDate>Tue, 12 Aug 2014 00:00:00 +0000</pubDate>
+      
+      <guid>http://aimless.jp/blog/archives/2143</guid>
+      <description>&lt;p&gt;気になったのでメモ。把握したうえで適切な設定にしないと、ある日突然PeerがAdmin Dowmしてお祭りになりそう。。。フルルートをやり取りするpeerに対しては、明示的にmaximum-prefixを設定しておいた方がよさそうです。&lt;/p&gt;
+
+&lt;p&gt;[Cisco ASR 9000 シリーズ ルータへの BGP の実装][1]&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;アドバタイズメントによりピアが BGP をフラッディングしないようにするために、サポートされているアドレス ファミリごとに、1 つのピアから受け入れるプレフィックスの数に対する制限が課されます。 デフォルトの制限値は、該当するアドレス ファミリのピアに対して maximum-prefix limit コマンドを設定することにより、上書きできます。 ユーザがそのアドレス ファミリに対するプレフィックスの最大数を設定していない場合は、次のデフォルト制限値が使用されます。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;IPv4 ユニキャストに対する 512K（524,288）のプレフィックス&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;IPv4 マルチキャストに対する 128K（131,072）のプレフィックス&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;IPv6 ユニキャストに対する 128K（131,072）のプレフィックス&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;VPNv4 ユニキャストに対する 512K（524,288）のプレフィックス&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;[1]: &lt;a href=&#34;http://www.cisco.com/cisco/web/support/JP/docs/RT/ServProviderEdgeRT/ASR9000AggregationServsRT/CG/024/b_routing_cg43xasr9k_chapter_010.html?bid=0900e4b183069caa#con_1088375&#34;&gt;http://www.cisco.com/cisco/web/support/JP/docs/RT/ServProviderEdgeRT/ASR9000AggregationServsRT/CG/024/b_routing_cg43xasr9k_chapter_010.html?bid=0900e4b183069caa#con_1088375&lt;/a&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>onePKのアクセスログを残さない方法</title>
+      <link>http://aimless.jp/blog/archives/2137</link>
+      <pubDate>Fri, 08 Aug 2014 00:00:00 +0000</pubDate>
+      
+      <guid>http://aimless.jp/blog/archives/2137</guid>
+      <description>&lt;p&gt;onePKで機器にアクセスすると、以下のメッセージが出力されます。私はonePKで1分間隔のトラフィックを取得しているので、機器のログがこのメッセージでいっぱいになっています。&lt;/p&gt;
+
+&lt;p&gt;　正直、onepkでアクセスしたことを示すログの有用性が見いだせないので、フィルタしました。ファシリティがONEP_BASEであることを条件としているので、アクセスログ以外も消えるかもしれません&amp;#8230;&lt;/p&gt;
+
+&lt;p&gt;　onepk独自の設定として、no logging event link-status みたいな便利コマンドがあると助かるのですが&amp;#8230;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>exabgp&#43;mrtparseでフルルートを注入してみた</title>
+      <link>http://aimless.jp/blog/archives/1991</link>
+      <pubDate>Sun, 01 Jun 2014 00:00:00 +0000</pubDate>
+      
+      <guid>http://aimless.jp/blog/archives/1991</guid>
+      <description>&lt;p&gt;&lt;a href=&#34;http://aimless.jp/blog/blog/archives/713&#34;&gt;exabgpでフルルートを注入してみた&lt;/a&gt;のその後です。&lt;/p&gt;
+
+&lt;p&gt;　上記のエントリーでは、物理のCisco892Jに搭載されているメモリの関係で、IPv6フルルートを食わせました。しかし、手元には仮想メモリが3GもあるIOS XRvが存在します。こうなるとIPv4のフルルートを食わせたくなります。&lt;/p&gt;
+
+&lt;p&gt;　2年前は、MRTデータをbgpdumpでテキストに吐き出してから、お手製スクリプトを通してexabgpのコンフィグに書き換えました。大変でした。&lt;/p&gt;
+
+&lt;p&gt;　IPv4のフルルートを扱うにあたって、改めて実現方法を模索したところ、githubにて[mrtparse][2]というツールを見つけました。&lt;/p&gt;
+
+&lt;p&gt;　このツールに含まれている「exabgp_conf.py」を利用すると、特定のMRTデータを利用してexabgpのコンフィグを標準出力してくれます。neighborの設定と経路のNext-hopは「exabgp_conf.py」内にベタ書きされていますので、必要に応じて事前に「exabgp_conf.py」を変更しておく必要があります。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# ./exabgp_conf.py /usr/local/exabgp/routes/rib.20140601.1000.bz2
+    neighbor 192.168.1.100 {
+        router-id 192.168.0.20;
+        local-address 192.168.1.20;
+        local-as 65000;
+        peer-as 64512;
+        graceful-restart;
+
+        static {
+            route 0.0.0.0/0 origin IGP as-path [2905 65023 16637 ] med 0 next-hop 192.168.1.254;
+            route 1.0.0.0/24 origin IGP as-path [8492 15169 ] community [8492:1202] next-hop 192.168.1.254;
+            route 1.0.4.0/24 origin IGP as-path [8492 6939 7545 56203 ] community [8492:1305 29076:303 29076:901 29076:51003 29076:53003 29076:64615] next-hop 192.168.1.254;
+            route 1.0.5.0/24 origin IGP as-path [8492 6939 7545 56203 ] community [8492:1305 29076:303 29076:901 29076:51003 29076:53003 29076:64615] next-hop 192.168.1.254;
+（中略）
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;　この標準出力をファイルにリダイレクトすると、フルルートを含んだexabgpの設定ファイルが完成します。元ネタが50万超えの経路なので、「exabgp_conf.py」を利用して最新のMRTファイルからexabgpの設定ファイルに作成するのには1時間弱かかりました。これは実行環境によると思います。作成されたコンフィグファイルの容量は約80Mになりました。。。&lt;/p&gt;
+
+&lt;p&gt;　あとはこのコンフィグを利用して、exabgpを起動すればOKです。exabgpが約50万件の経路を処理しなければならないため、neighborがEstablishedになるまでには時間がかかります。また、exabgpを起動するマシンには、フルルートを格納するためのメモリが必要になります。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# sbin/exabgp config/ibgp4-fullroute.txt 
+Sun, 01 Jun 2014 23:23:44 | INFO     | 1550   | configuration | environment file missing
+Sun, 01 Jun 2014 23:23:44 | INFO     | 1550   | configuration | generate it using &amp;quot;exabgp -fi &amp;gt; /usr/local/exabgp/etc/exabgp/exabgp.env&amp;quot;
+Sun, 01 Jun 2014 23:23:44 | INFO     | 1550   | reactor       | Performing reload of exabgp 3.3.2
+Sun, 01 Jun 2014 23:23:44 | INFO     | 1550   | reactor       | Performing 
+(中略)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;　exabgpが完全に起動した後、IOS XRvはneighborであるexabgpから514557経路を受け取りました。exabgp + mrtparseを利用すると、かなり気軽に疑似的なフルルートを生成できますね。（データ量が膨大ゆえにある程度の待ち時間が発生しますが）&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;RP/0/0/CPU0:aimless-XRv#show bgp ipv4 unicast summary 
+Sun Jun  1 14:08:01.461 UTC
+BGP router identifier 192.168.1.252, local AS number 64585
+BGP generic scan interval 60 secs
+BGP table state: Active
+Table ID: 0xe0000000   RD version: 514558
+BGP main routing table version 514558
+BGP scan interval 60 secs
+
+BGP is operating in STANDALONE mode.
+
+
+Process       RcvTblVer   bRIB/RIB   LabelVer  ImportVer  SendTblVer  StandbyVer
+Speaker          514558     514558     514558     514558      514558      514558
+
+Neighbor        Spk    AS MsgRcvd MsgSent   TblVer  InQ OutQ  Up/Down  St/PfxRcd
+192.168.1.131     0 64585  514600      43   514558    0    0 00:40:11     514557
+
+RP/0/0/CPU0:aimless-XRv#
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;[2]: &lt;a href=&#34;https://github.com/YoshiyukiYamauchi/mrtparse&#34;&gt;https://github.com/YoshiyukiYamauchi/mrtparse&lt;/a&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>IOS XRvでEmacsを使う</title>
+      <link>http://aimless.jp/blog/archives/1986</link>
+      <pubDate>Sat, 31 May 2014 00:00:00 +0000</pubDate>
+      
+      <guid>http://aimless.jp/blog/archives/1986</guid>
+      <description>&lt;p&gt;IOS XRでは、Routing Policy Language（RPL）というルーティングポリシーを定義する言語が実装されています。IOSでいう、prefix-listとas-path-list、community-list、route-mapあたりをひっくるめてRPLと呼んでいるイメージです。&lt;/p&gt;
+
+&lt;p&gt;　RPLを編集する方法として、従来通りのコンフィグレーションモードだけでなく、テキストエディタが導入されています。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.cisco.com/cisco/web/support/JP/docs/RT/ServProviderEdgeRT/ASR9000AggregationServsRT/CG/014/b_routing_cg42asr9k_chapter_0111.html&#34;&gt;Cisco ASR 9000 シリーズ ルータへのルーティング ポリシーの実装&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;[Implementing Routing Policy on Cisco IOS XR Software][2]&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;　prefix-set ALL-DENY　が設定されています。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;RP/0/0/CPU0:aimless-XRv#show running-config prefix-set ALL-DENY 
+Sat May 31 13:26:01.932 UTC
+prefix-set ALL-DENY
+  192.168.5.0/24,
+  192.168.3.0/24,
+  192.168.1.0/24,
+  192.168.2.0/24
+end-set
+!
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;　editコマンドで設定項目を編集できます。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;RP/0/0/CPU0:aimless-XRv#
+RP/0/0/CPU0:aimless-XRv#edit ?
+  as-path-set       edit an as-path-set
+  community-set     edit a community-set
+  extcommunity-set  edit an extended-community-set
+  policy-global     edit policy-global definitions
+  prefix-set        edit a prefix-set
+  rd-set            edit a rd-set
+  route-policy      edit a route-policy
+  tag-set           edit a tag-set
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;　複数のテキストエディタを選択できます。今回はEmacsにします。私の環境ではnanoとvimが正常に動作しませんでした。inlineはまた次回。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;RP/0/0/CPU0:aimless-XRv#edit prefix-set ALL-DEN ?               
+  emacs   to use Emacs editor
+  inline  to use command line
+  nano    to use nano editor
+  vim     to use Vim editor
+  &amp;lt;cr&amp;gt;    
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;　ちゃんとEmacsが起動します。私はvim派なので使いませんけど。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;RP/0/0/CPU0:aimless-XRv#edit prefix-set ALL-DENY emacs 
+
+F10 key ==&amp;gt; File   Edit   Search   Buffers   Windows   Help                                        
+prefix-set A+------------------------+
+  192.168.5.| Open               ^X^F|
+  192.168.3.| Close                  |
+  192.168.1.| Save               ^X^S|
+  192.168.2.| Save As            ^X^W|
+end-set     | Save Buffers       ^XS |
+!           | Insert File        ^XI |
+            | ---------------------- |
+            | Cancel Operation   ^G  |
+            | Exit               ^X^C|
+            +------------------------+
+
+
+-------+(Jed 0.99.18) Emacs: rpl_edit.7352589    (Text)  1/8   1:23pm------------------------------
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;[2]: &lt;a href=&#34;http://www.cisco.com/c/en/us/td/docs/routers/xr12000/software/xr12k_r4-0/routing/configuration/guide/rc40xr12k_chapter7.html&#34;&gt;http://www.cisco.com/c/en/us/td/docs/routers/xr12000/software/xr12k_r4-0/routing/configuration/guide/rc40xr12k_chapter7.html&lt;/a&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>IOS XRvで遊ぶ（BGP編）</title>
+      <link>http://aimless.jp/blog/archives/1975</link>
+      <pubDate>Sun, 25 May 2014 00:00:00 +0000</pubDate>
+      
+      <guid>http://aimless.jp/blog/archives/1975</guid>
+      <description>
+
+&lt;p&gt;IOS XRvでBGPの設定を試したのでメモ。&lt;/p&gt;
+
+&lt;h1 id=&#34;自asの経路を広報する:7254d2635514f7f3eb366b003c624840&#34;&gt;自ASの経路を広報する&lt;/h1&gt;
+
+&lt;p&gt;　お作法的な方法で、広報したい経路をNull0で設定し、Networkコマンドで広報します。追加後のコンフィグ（抜粋）は以下のような形になります。スタティックルートがIOSとは全く異なります。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;!
+router static
+ address-family ipv6 unicast
+  2610:d0:3211::/48 Null0
+ !
+!         
+router bgp 64585
+ bgp router-id 192.168.1.252
+ bgp graceful-restart
+ bgp log neighbor changes detail
+ address-family ipv6 unicast
+  network 2610:d0:3211::/48
+ !
+!
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h1 id=&#34;inboundのソフトリセットを有効にする:7254d2635514f7f3eb366b003c624840&#34;&gt;Inboundのソフトリセットを有効にする&lt;/h1&gt;
+
+&lt;p&gt;　IOS XRvでは[auto-policy-soft-reset]という機能がデフォルトで有効になっています。この機能が有効だとBGPのポリシー設定を変更した際、直後に自動的にsoft reset が実行されます。&lt;/p&gt;
+
+&lt;p&gt;　私は意識的にsoft resetを行いたい人なので、disableにします。[clear bgp ipv4 unicast hogehoge soft [in|out]]をたたく瞬間こそがBGPぺレーション！disableにしたあと、ネイバーに対して明示的に[soft-reconfiguration inbound always]を追加します。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;router bgp 64585
+ bgp router-id 192.168.1.252
+ bgp graceful-restart
+ bgp log neighbor changes detail
+ bgp auto-policy-soft-reset disable
+ address-family ipv6 unicast
+  network 2610:d0:3211::/48
+ !
+ neighbor 2610:d0:3211:100::beaf
+  remote-as 64585
+  graceful-restart
+  address-family ipv6 unicast
+   soft-reconfiguration inbound always
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h1 id=&#34;経路制御:7254d2635514f7f3eb366b003c624840&#34;&gt;経路制御&lt;/h1&gt;
+
+&lt;p&gt;　IOSで言う所のprefix-list、filter-list、route-mapに代わりに、route-policyが実装されています。全ての経路の受信を止める場合は、条件に[drop]を使えばよさそうです。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;!
+route-policy IBGP-IN-DENY
+  drop
+end-policy
+!
+router bgp 64585
+ !
+ neighbor 2610:d0:3211:100::beaf
+  remote-as 64585
+  graceful-restart
+  address-family ipv6 unicast
+   route-policy IBGP-IN-DENY in
+   soft-reconfiguration inbound always
+  !
+ !
+!    
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;　特定の経路を利用した制御を行う場合、prefix-setを利用したroute-policyを設定します。以下のコンフィグに記載されている[IBGP-IN]のroute-policyをネイバーに適応すると、そのネイバーからは2001:200:xxx::/48の経路のみを受け取るようになります。&lt;/p&gt;
+
+&lt;p&gt;　IOSでは同一名のroute-mapにおいてシーケンス番号で複数の処理を設定していましたが、IOS XRでは一つのroute-policy内でIF文を利用して複数の処理を設定します。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;!
+prefix-set IBGP-IN-FLITER
+  2001:200:xxx::/48
+end-set
+!
+route-policy IBGP-IN
+  if destination in IBGP-IN-FLITER then
+    pass
+  else
+    drop
+  endif
+end-policy
+!
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;　AS番号を利用した制御を行う場合は、as-path-setを利用します。以下のコンフィグに記載されている[IBGP-IN]のroute-policyをネイバーに適応すると、そのネイバーからはAS-PATHが64525のみの経路のみを学習します。また、学習した経路にはLocal-Preference値が10000付与されます。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;!
+as-path-set 64525
+  ios-regex &#39;^64525$&#39;
+end-set
+!
+route-policy IBGP-IN
+  if as-path in 64525 then
+    pass
+    set local-preference 10000
+  endif
+end-policy
+!
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;　prefix-setとas-path-setを使ってroute-policyを定義することで、IOSでやっていた経路制御と同じことができそうです。route-policy内のIF文の動作については、別途いろいろやってみようと思います。&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>IOS XRvで遊ぶ（設定変更編）</title>
+      <link>http://aimless.jp/blog/archives/1967</link>
+      <pubDate>Sat, 24 May 2014 00:00:00 +0000</pubDate>
+      
+      <guid>http://aimless.jp/blog/archives/1967</guid>
+      <description>
+
+&lt;p&gt;ASR9001を運用する機会がありそうなので、IOS XRvで事前勉強中です。取りあえず、昔ながらのターミナルで設定を変更するにはどうすればいいかを調べました。&lt;/p&gt;
+
+&lt;h1 id=&#34;設定を変更してみる:95be1ad11a83191468b6d828f20cde11&#34;&gt;設定を変更してみる&lt;/h1&gt;
+
+&lt;pre&gt;&lt;code&gt;RP/0/0/CPU0:aimless-XRv#show running-config 
+Sat May 24 10:40:28.924 UTC
+!
+router bgp 64585
+ bgp router-id 192.168.1.252
+ bgp graceful-restart
+ bgp log neighbor changes detail
+ address-family ipv6 unicast
+ !
+ neighbor 2610:d0:3211:xxx::beaf
+  remote-as 64585
+  graceful-restart
+ !
+!
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;　BGPネイバーの2610:d0:3211:xxx::beafに「address-family ipv6 unicast」を追加します。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;RP/0/0/CPU0:aimless-XRv#conf terminal 
+Sat May 24 10:40:30.874 UTC
+RP/0/0/CPU0:aimless-XRv(config)#router bgp 64585
+RP/0/0/CPU0:aimless-XRv(config-bgp)#neighbor 2610:d0:3211:xxx::beaf
+RP/0/0/CPU0:aimless-XRv(config-bgp-nbr)#address-family ipv6 unicast 
+RP/0/0/CPU0:aimless-XRv(config-bgp-nbr-af)#exit  
+RP/0/0/CPU0:aimless-XRv(config-bgp-nbr)#exit
+RP/0/0/CPU0:aimless-XRv(config-bgp)#exit
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;　コンフィグレーションモードで[show configuration] コマンドを実行すると、変更した箇所だけを確認することができます。&lt;/p&gt;
+
+&lt;p&gt;　また、[show configuration merge] コマンドを実行すると、変更した個所をマージした全てのコンフィグを確認することができます。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;RP/0/0/CPU0:aimless-XRv(config)#show configuration 
+Sat May 24 10:40:53.203 UTC
+Building configuration...
+!! IOS XR Configuration 5.1.1
+router bgp 64585
+ neighbor 2610:d0:3211:xxx::beaf
+  address-family ipv6 unicast
+  !
+ !
+!
+end
+
+RP/0/0/CPU0:aimless-XRv(config)#show configuration merge 
+Sat May 24 10:40:57.423 UTC
+!
+router bgp 64585
+ bgp router-id 192.168.1.252
+ bgp graceful-restart
+ bgp log neighbor changes detail
+ address-family ipv6 unicast
+ !
+ neighbor 2610:d0:3211:xxx::beaf
+  remote-as 64585
+  graceful-restart
+  address-family ipv6 unicast
+  !
+ !
+!
+end
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;　不要な設定は入っていませんのでコミットします。変更箇所がrunning-configに反映されます。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;RP/0/0/CPU0:aimless-XRv(config)#commit comment ### added address-family ipv6 unicast 
+Sat May 24 10:41:46.069 UTC
+RP/0/0/CPU0:aimless-XRv(config)#end
+RP/0/0/CPU0:aimless-XRv#show running-config 
+Sat May 24 10:41:50.539 UTC
+!
+router bgp 64585
+ bgp router-id 192.168.1.252
+ bgp graceful-restart
+ bgp log neighbor changes detail
+ address-family ipv6 unicast
+ !
+ neighbor 2610:d0:3211:xxx::beaf
+  remote-as 64585
+  graceful-restart
+  address-family ipv6 unicast
+  !
+ !
+!
+end
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;　コミットについては複数のオプションがありますが、使いそうなのは[comment]です。これを利用すると、commitにコメントをつけることができます。変更の意図や変更管理のIDを入れると、ルータ上のコミット履歴が分かりやすくなると思います。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;RP/0/0/CPU0:aimless-XRv#show configuration commit list detail 
+Sat May 24 11:37:10.301 UTC
+（中略）
+   3) CommitId: 1000000018                 Label: NONE
+      UserId:   aimless                    Line:  vty0:node0_0_CPU0
+      Client:   CLI                        Time:  Sat May 24 10:50:52 2014
+      Comment:   ### 140524-01 ### 
+
+   4) CommitId: 1000000017                 Label: NONE
+      UserId:   aimless                    Line:  vty0:node0_0_CPU0
+      Client:   Rollback                   Time:  Sat May 24 10:48:14 2014
+      Comment:  NONE
+
+   5) CommitId: 1000000016                 Label: NONE
+      UserId:   aimless                    Line:  vty0:node0_0_CPU0
+      Client:   CLI                        Time:  Sat May 24 10:41:46 2014
+      Comment:   ### added address-family ipv6 unicast  
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h1 id=&#34;設定をロールバックしてみる:95be1ad11a83191468b6d828f20cde11&#34;&gt;設定をロールバックしてみる&lt;/h1&gt;
+
+&lt;p&gt;　「あ、やべ間違えた」という事で先ほどの設定をなかったことにします。[rollback]を利用します。[last 1]で直近のコミットを取り消します。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;RP/0/0/CPU0:aimless-XRv#rollback configuration last 1
+Sat May 24 10:48:13.373 UTC
+Loading Rollback Changes.
+Loaded Rollback Changes in 1 sec 
+Committing.
+5 items committed in 1 sec (4)items/sec
+Updating.
+Updated Commit database in 1 sec 
+Configuration successfully rolled back 1 commits.
+RP/0/0/CPU0:aimless-XRv#show running-config 
+Sat May 24 10:48:21.942 UTC
+(中略)
+!
+router bgp 64585
+ bgp router-id 192.168.1.252
+ bgp graceful-restart
+ bgp log neighbor changes detail
+ address-family ipv6 unicast
+ !
+ neighbor 2610:d0:3211:xxx::beaf
+  remote-as 64585
+  graceful-restart
+ !
+!         
+end
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;　ロールバックの機能は、作業ミスの切り戻しだけでなく、メンテナンスのために追加した設定を元に戻すといった用途でも利用できそうです。&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>実機でonePKを使う</title>
+      <link>http://aimless.jp/blog/archives/1863</link>
+      <pubDate>Tue, 08 Apr 2014 00:00:00 +0000</pubDate>
+      
+      <guid>http://aimless.jp/blog/archives/1863</guid>
+      <description>
+
+&lt;p&gt;いつまでもAll-in-oneVMだと面白くないので、自宅のcisco892JでもonepKでアクセスできるようにしました。乗り越えた課題は以下の二つです。&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;onePKのバージョンを合わせる&lt;/li&gt;
+&lt;li&gt;認証&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&#34;onepkのバージョン:121230cfe88f8075c75727c1b3ea9e45&#34;&gt;onePKのバージョン&lt;/h2&gt;
+
+&lt;p&gt;　自宅のCisco892J：IOS 15.3(2)Tに対してonePKで書いたアプリを試してみたのですが、ONEP_BASE-3-VERSION_ERR:のエラーが出て接続できませんでした。ルータに出力されたログを見ると、IOSのバージョンが0.7.0、SDKのバージョンが1.2.0であることが原因のようです。&lt;/p&gt;
+
+&lt;p&gt;　&lt;/p&gt;
+
+&lt;p&gt;　現時点で最新の15.4(2)Tにアップデートしたところ、onePKのバージョンが1.2.0になりました。契約していてよかったSMARTnet。課題ひとつ解決。&lt;/p&gt;
+
+&lt;h2 id=&#34;認証:121230cfe88f8075c75727c1b3ea9e45&#34;&gt;認証&lt;/h2&gt;
+
+&lt;p&gt;　次は認証です。TLS認証は自己署名証明書と認証局の二択ですが、スタートガイドの注意点（&lt;a href=&#34;https://developer.cisco.com/media/onepk_getting_started_guide/GUID-03D9D7BB-B201-45FD-B0DE-B928C9D70692.html&#34;&gt;Using a Cisco Router with a Self-Signed Certificate&lt;/a&gt;）を踏まえて、認証局（ただしオレオレ）を立てることにしました。&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;Note: Self-signed certificates are appropriate for application development and testing in small deployments. For additional security, as well as more granular controls over individual certificate use and revocation, you should use certificates generated by your organization&amp;#8217;s Certificate Authority. See Using a Cisco Router with a Certificate Authority. Additionally you should never use pinned certificates in a production environment.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;　ルータの認証はID/Pass認証とクライアント証明書の二択（&lt;a href=&#34;https://developer.cisco.com/media/onepk_getting_started_guide/GUID-354FCB46-EA02-4315-8681-583C177357F4.html&#34;&gt;Configuring onePK Application Authentication&lt;/a&gt;）です。現時点ではID/Passにします。&lt;/p&gt;
+
+&lt;p&gt;　作業の大まかな流れは以下の通りです。&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;オレオレ認証局を立てる。&lt;/li&gt;
+&lt;li&gt;ルータでCSRを発行する。&lt;/li&gt;
+&lt;li&gt;認証局で、CSRを利用して証明書を発行する。&lt;/li&gt;
+&lt;li&gt;ルータにオレオレルート証明書とオレオレサーバ証明書をインポートする。&lt;/li&gt;
+&lt;li&gt;アプリケーションが稼働するサーバにオレオレルート証明書を読み込む。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;　オレオレ認証局の設定は、&lt;a href=&#34;http://l-w-i.net/t/openssl/cert_001.txt&#34;&gt;プライベート認証局(CA)を構築して証明書の発行を行なう&lt;/a&gt;が参考になります。&lt;/p&gt;
+
+&lt;p&gt;　Ciscoルータ側の設定は、&lt;a href=&#34;http://www.cisco.com/cisco/web/support/JP/100/1004/1004783_sslm-csr.html&#34;&gt;コピー アンド ペーストによる SSL サービス モジュールでの証明書署名要求の作成&lt;/a&gt;と[PKI の証明書登録の設定][5]が参考になります。ルータへのオレオレRoot証明書とオレオレサーバ証明書のインストールは、コピーアンドペースト方式でやりました。&lt;/p&gt;
+
+&lt;p&gt;[5]: &lt;a href=&#34;http://www.cisco.com/cisco/web/support/JP/docs/CIAN/IOS/IOS15_1M_T/CG/002/sec_cert_enroll_pki.html&#34;&gt;http://www.cisco.com/cisco/web/support/JP/docs/CIAN/IOS/IOS15_1M_T/CG/002/sec_cert_enroll_pki.html&lt;/a&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>onePKで遊ぶ（ルーティング取得）</title>
+      <link>http://aimless.jp/blog/archives/1852</link>
+      <pubDate>Sun, 06 Apr 2014 00:00:00 +0000</pubDate>
+      
+      <guid>http://aimless.jp/blog/archives/1852</guid>
+      <description>
+
+&lt;p&gt;GAになったonePKで遊んでいます。見よう見まねでルーティング情報を取得するスクリプトを書いてみました。必要な情報を入手するために、SSHでログインして正規表現で抽出していた従来とは全く違います。&lt;/p&gt;
+
+&lt;p&gt;　次はルーティングを追加するスクリプトを書いてみようと思います。&lt;/p&gt;
+
+&lt;h2 id=&#34;実行結果:6e2abe9be2e5eb47329c287eceefb687&#34;&gt;実行結果&lt;/h2&gt;
+
+&lt;h3 id=&#34;スクリプト:6e2abe9be2e5eb47329c287eceefb687&#34;&gt;スクリプト&lt;/h3&gt;
+
+&lt;h3 id=&#34;メモ:6e2abe9be2e5eb47329c287eceefb687&#34;&gt;メモ&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;ルータでonepkを有効にする。設定はGetting Staredに書いてある通り。[Using a Cisco Router with a Self-Signed Certificate][1]&lt;/li&gt;
+&lt;li&gt;対象機器は、NetworkElementオブジェクトで定義する&lt;/li&gt;
+&lt;li&gt;対象機器への接続方式は、SessionConfigオブジェクトで定義する。&lt;/li&gt;
+&lt;li&gt;SessionConfigを利用してNetworkElement.connectすることで、実機にアクセスする。&lt;/li&gt;
+&lt;li&gt;connect後のNetworkElementから必要な情報を入手する。&lt;/li&gt;
+&lt;li&gt;明示的にdisconnectしないと、対象機器とのコネクションは切れない。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;[1]: &lt;a href=&#34;https://developer.cisco.com/media/onepk_getting_started_guide/GUID-03D9D7BB-B201-45FD-B0DE-B928C9D70692.html&#34;&gt;https://developer.cisco.com/media/onepk_getting_started_guide/GUID-03D9D7BB-B201-45FD-B0DE-B928C9D70692.html&lt;/a&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>IOS XRv</title>
+      <link>http://aimless.jp/blog/archives/1796</link>
+      <pubDate>Wed, 02 Apr 2014 00:00:00 +0000</pubDate>
+      
+      <guid>http://aimless.jp/blog/archives/1796</guid>
+      <description>&lt;p&gt;IOS XRvなんてのがリリースされていたんですね！&lt;a href=&#34;http://www.cisco.com/en/US/docs/ios_xr_sw/ios_xrv/install_config/b_xrvr_432.html&#34;&gt;Cisco IOS XRv Router Installation and Configuration Guide&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;　ESXi上へのデプロイは成功したのですが、vSPhere Clientのコンソールでは操作できません。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/wp-content/uploads/2014/04/esxi-console.png&#34; alt=&#34;enter image description here&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;　マニュアルを見るとネットワーク経由でのシリアルポートを有効化する必要があるようなのですが、以下のエラーが出てしまい有効化できません。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/wp-content/uploads/2014/04/iosxrv-esxi-errror.png&#34; alt=&#34;enter image description here&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;　エラー文を素直に読むと、無償版ESXiではダメなような。。。起動しているであろうIOS XRvに接続できない。。。IOS XRvは KVM-QEMUもサポートしているのでIOS XRv on KVM on ESXiにするか検討中です。&lt;/p&gt;
+
+&lt;p&gt;　続きを書きました。→[IOS XRVにコンソール接続する][4]&lt;/p&gt;
+
+&lt;p&gt;[4]: &lt;a href=&#34;http://aimless.jp/blog/blog/archives/1804&#34;&gt;http://aimless.jp/blog/blog/archives/1804&lt;/a&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>IOS XRvにコンソール接続する</title>
+      <link>http://aimless.jp/blog/archives/1804</link>
+      <pubDate>Wed, 02 Apr 2014 00:00:00 +0000</pubDate>
+      
+      <guid>http://aimless.jp/blog/archives/1804</guid>
+      <description>
+
+&lt;p&gt;&lt;a href=&#34;http://aimless.jp/blog/blog/archives/1796&#34;&gt;IOS XRv&lt;/a&gt;の続きです。我が家のESXiではCiscoのドキュメントに記載された方法（ネットワーク越しの仮想コンソール接続）でIOS XRvのコンソールに接続することができないようなので、名前付きパイプを利用したコンソール接続を行いました。&lt;/p&gt;
+
+&lt;h2 id=&#34;ios-xrvの設定:a47b7d9c46ee1c93b25a8346c48dd9c8&#34;&gt;IOS XRvの設定&lt;/h2&gt;
+
+&lt;p&gt;　下記の様に、IOS XRvが稼働している仮想マシンに、名前付きパイプを使用したシリアルポートを追加します。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/wp-content/uploads/2014/04/named-pipe_xrv.png&#34; alt=&#34;IOS XRv sirial setting&#34; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;コンソールサーバの設定:a47b7d9c46ee1c93b25a8346c48dd9c8&#34;&gt;コンソールサーバの設定&lt;/h2&gt;
+
+&lt;p&gt;　IOS XRvが稼働しているESXi上にシリアルポートを利用可能なサーバをデプロイし、IOS XRvと同様、名前付きパイプを使用したシリアルポートを追加します。パイプ名はIOS XRvの設定と同一にしてください。今回は元々vmdkが配置されていたCentos6.2を利用しました。&lt;/p&gt;
+
+&lt;p&gt;![centos sirial setting][3]&lt;/p&gt;
+
+&lt;h2 id=&#34;接続:a47b7d9c46ee1c93b25a8346c48dd9c8&#34;&gt;接続&lt;/h2&gt;
+
+&lt;p&gt;　コンソールサーバからscreenを利用してIOS XRvに接続します。IDの作成を求められたので適当なユーザを作ったところ、無事繋がりましたー。&lt;/p&gt;
+
+&lt;p&gt;[3]: &lt;a href=&#34;http://aimless.jp/blog/wp-content/uploads/2014/04/named-pipe_centos.png&#34;&gt;http://aimless.jp/blog/wp-content/uploads/2014/04/named-pipe_centos.png&lt;/a&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>onePKを使う準備</title>
+      <link>http://aimless.jp/blog/archives/1786</link>
+      <pubDate>Mon, 31 Mar 2014 00:00:00 +0000</pubDate>
+      
+      <guid>http://aimless.jp/blog/archives/1786</guid>
+      <description>
+
+&lt;p&gt;onePKのGeneral Availabilityが目前の様なので、利用する際に何度も見そうなドキュメントのリンクを纏めておきます。現時点では日本語の情報が見当たらないため、DevNetに載っている英語の情報を見る形になりそうです。&lt;/p&gt;
+
+&lt;h3 id=&#34;公式サイト:bb0dca5de7c128a969ca5a7464d74623&#34;&gt;公式サイト&lt;/h3&gt;
+
+&lt;p&gt;　とりあえずここを見ればOK。&lt;a href=&#34;https://developer.cisco.com/site/networking/one/onepk/overview/&#34;&gt;Cisco DevNet&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;sdk:bb0dca5de7c128a969ca5a7464d74623&#34;&gt;SDK&lt;/h3&gt;
+
+&lt;p&gt;　公式からダウンロードします。&lt;a href=&#34;https://developer.cisco.com/site/networking/one/onepk/sdk-and-docs/sdk-and-docs-for-python/index.gsp&#34;&gt;SDK and Docs for Python &amp;#8211; Cisco Developer Community&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;開発環境:bb0dca5de7c128a969ca5a7464d74623&#34;&gt;開発環境&lt;/h3&gt;
+
+&lt;p&gt;　onePKのアプリケーションを作成するために必要なものがセットになったVMが配布されてます。Cisco IOSvなるエミュレータが動いている模様。ご自宅にCiscoルータが無い人はこちらを使うのがよさそうです。&lt;a href=&#34;https://developer.cisco.com/site/networking/one/onepk/sdk-and-docs/all-in-one-vm/index.gsp&#34;&gt;All-in-One VM &amp;#8211; Cisco Developer Community&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;はじめに:bb0dca5de7c128a969ca5a7464d74623&#34;&gt;はじめに&lt;/h3&gt;
+
+&lt;p&gt;　Getting Startedに開発環境の準備方法とルータの設定方法が載っています。これを見て、onePKでアプリケーションを環境するための準備をします。&lt;a href=&#34;https://developer.cisco.com/site/networking/one/onepk/getting-started/getting-started-1-1/index.gsp&#34;&gt;Getting Started with onePK Version 1.1, Controlled Availability&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;チュートリアル:bb0dca5de7c128a969ca5a7464d74623&#34;&gt;チュートリアル&lt;/h3&gt;
+
+&lt;p&gt;　で、どうやってコーディングすればいいの？という人のために、チュートリアルがあります。私は1個ずつやっていこうと思います。 &lt;a href=&#34;https://developer.cisco.com/site/networking/one/onepk/tutorials/online-python-tutorial/index.gsp&#34;&gt;Cisco onePK &amp;#8211; Python Tutorial&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;リファレンス:bb0dca5de7c128a969ca5a7464d74623&#34;&gt;リファレンス&lt;/h3&gt;
+
+&lt;p&gt;　モジュールが提供する機能の一覧がファレンスにまとまっています。実際にコーディングする際に使うのはもちろんのこと、onePKでどのような事が出来るかを把握するためにも便利だと思います。&lt;a href=&#34;https://developer.cisco.com/media/onePKPythonAPI-v1-1-0/index.html&#34;&gt;onePK Python Presentation Library&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;コミュニティ:bb0dca5de7c128a969ca5a7464d74623&#34;&gt;コミュニティ&lt;/h3&gt;
+
+&lt;p&gt;　Ciscoのコミュニティサイトに、onePKのカテゴリがあります。 いざという時に役に立つはずです。 [Space: onePK | Cisco Communities][7]&lt;/p&gt;
+
+&lt;p&gt;[7]: &lt;a href=&#34;https://communities.cisco.com/community/developer/networking/cisco-one/onepk&#34;&gt;https://communities.cisco.com/community/developer/networking/cisco-one/onepk&lt;/a&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Virtual Private Gatewayのベストパス選択アルゴリズムで遊んでみた。</title>
+      <link>http://aimless.jp/blog/archives/1755</link>
+      <pubDate>Sun, 30 Mar 2014 00:00:00 +0000</pubDate>
+      
+      <guid>http://aimless.jp/blog/archives/1755</guid>
+      <description>
+
+&lt;p&gt;仕事でVPC DXに関わっています。その際に、VPCからオンプレ側へのトラフィック設計で不明点があったので、VPC IPSecを利用して自腹で試してみました。&lt;/p&gt;
+
+&lt;p&gt;　VPCのVirtual Private Gateways（VGW）とオンプレ側の複数ルータが接続しており、各ルータがVPCに対して同一経路を広報している場合、VPCからの戻りのトラフィックがどの拠点に流れるかを意図的に設計したくなります。これはVGWにどのルータが広報した経路をベストパスとして選ばせるかという作業であり、BGPにおける経路設計が利用できます。&lt;/p&gt;
+
+&lt;p&gt;　VGWにおけるベストパス選択アルゴリズムは、&lt;a href=&#34;http://docs.aws.amazon.com/AmazonVPC/latest/NetworkAdminGuide/Introduction.html&#34;&gt;公式ドキュメント&lt;/a&gt;の『Configuring Multiple VPN Connections to Your Amazon VPC』に記載されています。 素直に読むと、下記の順番です。一般的なベストパス選択アルゴリズムには含まれているMEDがないのが気になります。&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;ロンゲストマッチ&lt;/li&gt;
+&lt;li&gt;BGPよりもSTATIC&lt;/li&gt;
+&lt;li&gt;AS-PATH&lt;/li&gt;
+&lt;li&gt;ORIGIN&lt;/li&gt;
+&lt;li&gt;ルータID&lt;/li&gt;
+&lt;li&gt;ネイバーのID&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&#34;検証環境:8a801d7caae5205bbd472b545f0f0c21&#34;&gt;検証環境&lt;/h3&gt;
+
+&lt;p&gt;![enter image description here][2]&lt;/p&gt;
+
+&lt;p&gt;　VPCのVGWに対して、2つのVPN Connectionを張ります。設定と動作確認が煩雑になるため、1つのVPN装置が張るVPN Connectionは1つのグローバルIPアドレスのみにします。VPN装置（cisco892JとFortiGate50B）からは、同一経路（192.168.2.0/24）をVPCに対して広報します。&lt;/p&gt;
+
+&lt;p&gt;　この状態でEC2から192.168.2.254へTracerouteを行うことで、VGWがCiscoとFortiGateが広報した経路のどちらをベストパスとして選択するかを確認します。&lt;/p&gt;
+
+&lt;h3 id=&#34;1-そのまま接続してみる:8a801d7caae5205bbd472b545f0f0c21&#34;&gt;1　そのまま接続してみる&lt;/h3&gt;
+
+&lt;p&gt;　特に経路制御をせずにVPNコネクションを確立し、EC2からTracerouteを行います。FortiGate（169.254.252.33）経由になりました。これはORIGINによるものです。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;traceroute to 192.168.2.254 (192.168.2.254), 30 hops max, 60 byte packets
+1 169.254.252.17 (169.254.252.17) 0.335 ms 0.506 ms 0.694 ms
+2 169.254.252.33 (169.254.252.33) 2.939 ms 9.704 ms 3.032 ms
+3 169.254.252.34 (169.254.252.34) 19.684 ms 19.898 ms 19.838 ms
+4 192.168.2.254 (192.168.2.254) 20.345 ms * * 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;　CiscoはBGPに対してconnectedをredistributeしているので、originが?（incomplite）になっています。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Router#show bgp ipv4 unicast neighbors 169.254.252.25 advertised-routes 
+Network Next Hop Metric LocPrf Weight Path
+ *&amp;gt; 192.168.2.0 0.0.0.0 0 32768 ?
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;　一方FortiGateは、BGPのNETWORKコマンドで経路を作っているので、originがi（IGP）になっています。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;(root) # get router info bgp neighbors 169.254.252.33
+Network Next Hop Metric LocPrf Weight Path 
+*&amp;gt; 192.168.2.0 169.254.252.34 100 32768 i 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;　ORIGIN属性はigp、egp、incompliteの順で選ばれるので、FortiGateが広告した192.168.2.0/24がベストパスに選択され、TracerouteがFortiGate経由になります。&lt;/p&gt;
+
+&lt;h3 id=&#34;2-origionをそろえる:8a801d7caae5205bbd472b545f0f0c21&#34;&gt;2　ORIGIONをそろえる&lt;/h3&gt;
+
+&lt;p&gt;　Cisco側のORIGIN属性をIGPに変更してみます。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Router#show bgp ipv4 unicast neighbors 169.254.252.25 advertised-routes 
+Network Next Hop Metric LocPrf Weight Path 
+*&amp;gt; 192.168.2.0 0.0.0.0 0 32768 i
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;　すると、Cisco（169.254.252.25）経由になりました。ORIGINが同じigpになった結果、次の選択基準であるrouter-idによってベストパスが決定したと思われます。（CiscoのほうがルータIDが小さいです。）&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ traceroute 192.168.2.254 traceroute to 192.168.2.254 (192.168.2.254), 30 hops max, 60 byte packets 
+1 169.254.252.17 (169.254.252.17) 2.839 ms 3.039 ms 2.991 ms 
+2 169.254.252.25 (169.254.252.25) 9.339 ms 9.034 ms 2.835 ms 
+3 169.254.252.26 (169.254.252.26) 13.584 ms 
+4 192.168.2.254 (192.168.2.254) 20.392 ms * 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;3-as-pathをprependしてみる:8a801d7caae5205bbd472b545f0f0c21&#34;&gt;3　AS-PATHをPrependしてみる。&lt;/h3&gt;
+
+&lt;p&gt;　router-idでベストパスが選択されている状況で、AS-PATHを使ってみます。Cisco側が広報する経路にAS-PATHを3つ積みます。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;route-map aws-aspath permit 10 
+set as-path prepend 64585 64585 64585 
+
+router bgp 64585 
+address-family ipv4 
+neighbor 169.254.252.25 route-map aws-aspath out
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;　すると、EC2からのTracerouteはFortiGate（169.254.252.33）経由になります。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ traceroute 192.168.2.254 traceroute to 192.168.2.254 (192.168.2.254), 30 hops max, 60 byte packets 
+1 169.254.252.17 (169.254.252.17) 0.337 ms 0.505 ms 0.717 ms 
+2 169.254.252.33 (169.254.252.33) 9.134 ms 5.161 ms 9.263 ms 
+3 169.254.252.34 (169.254.252.34) 17.613 ms 24.352 ms 17.749 ms 
+4 192.168.2.254 (192.168.2.254) 20.646 ms * *
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;4-medを積んでみる:8a801d7caae5205bbd472b545f0f0c21&#34;&gt;4　MEDを積んでみる&lt;/h3&gt;
+
+&lt;p&gt;　AS-PATHではなく、MEDを積んでみましょう。Cisco側を通っている状況でCisco側にMEDを積みます。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;route-map aws-addmed permit 10 
+set metric 10 
+
+router bgp 64585 
+address-family ipv4 
+neighbor 169.254.252.25 route-map aws-addmed out
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;　MEDは値が少ない経路が優先されます。FortiGateが広報する経路のMEDは初期値の0なので、FortiGate（169.254.252.33）経由になります。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ traceroute 192.168.2.254 traceroute to 192.168.2.254 (192.168.2.254), 30 hops max, 60 byte packets 
+1 169.254.252.17 (169.254.252.17) 0.323 ms 0.481 ms 0.692 ms 
+2 169.254.252.33 (169.254.252.33) 9.070 ms 3.027 ms 3.191 ms 
+3 169.254.252.34 (169.254.252.34) 24.657 ms 18.121 ms 18.064 ms 
+4 192.168.2.254 (192.168.2.254) 19.204 ms * *
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;　この状況でFortiGate側でMEDを積んでみましょう。Cisco側の10よりも大きくすればいいので100を積みます。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;config router route-map 
+edit &amp;quot;addmed&amp;quot; 
+config rule 
+edit 100 
+set set-metric 100 
+next 
+end 
+next
+end 
+config router bgp 
+set as 64585 
+config neighbor 
+edit &amp;quot;169.254.252.33&amp;quot; 
+set remote-as 10124 
+set route-map-out &amp;quot;addmed&amp;quot; 
+set send-community6 disable 
+next 
+end 
+end 
+end
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;　結果、Cisco（169.254.252.25）経由に戻ります。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ traceroute 192.168.2.254 traceroute to 192.168.2.254 (192.168.2.254), 30 hops max, 60 byte packets 
+1 169.254.252.17 (169.254.252.17) 0.321 ms 0.500 ms 0.705 ms 
+2 169.254.252.25 (169.254.252.25) 23.050 ms 23.011 ms 22.699 ms 
+3 169.254.252.26 (169.254.252.26) 16.317 ms * *
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;　公式のドキュメントにはMEDの記載がありませんでしたが、MEDによる経路制御も効くようですね。個人的にはAS-PATHがわかりやすくて好きなので、AS-PATHを利用します。&lt;/p&gt;
+
+&lt;p&gt;[2]: &lt;a href=&#34;http://aimless.jp/blog/wp-content/uploads/2014/03/vpc-diag.png&#34;&gt;http://aimless.jp/blog/wp-content/uploads/2014/03/vpc-diag.png&lt;/a&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>管理ポートの仕様</title>
+      <link>http://aimless.jp/blog/archives/1615</link>
+      <pubDate>Tue, 11 Jun 2013 00:00:00 +0000</pubDate>
+      
+      <guid>http://aimless.jp/blog/archives/1615</guid>
+      <description>&lt;p&gt;2960Xや3750Xで実装された管理ポート（FastEthernet0）について、CCOのドキュメントを見つけたのでメモ。&lt;a href=&#34;http://www.cisco.com/en/US/docs/switches/lan/catalyst3750x_3560x/software/release/12.2_53_se/configuration/guide/swint.html&#34; title=&#34;Catalyst 3750-X and 3560-X Switch Software Configuration Guide, Release 12.2(53)SE2&#34; target=&#34;_blank&#34;&gt;Catalyst 3750-X and 3560-X Switch Software Configuration Guide, Release 12.2(53)SE2&lt;/a&gt;のUsing the Ethernet Management Portの項目。&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>HSRP: Global IPv6 Address</title>
+      <link>http://aimless.jp/blog/archives/1607</link>
+      <pubDate>Mon, 13 May 2013 00:00:00 +0000</pubDate>
+      
+      <guid>http://aimless.jp/blog/archives/1607</guid>
+      <description>
+
+&lt;p&gt;15.3(2)TからHSRPのVIPとしてGUAがサポートされたようなので試してみました。&lt;/p&gt;
+
+&lt;h3 id=&#34;cisco892-k9-ios-15-3-1-tの場合:bb196d36658ab089ac6f611d58e19167&#34;&gt;CISCO892-K9 IOS 15.3(1)Tの場合&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;Router(config)#interface vlan 15 
+Router(config-if)#standby ? 
+Router(config-if)#standby ipv6 ? 
+X:X:X:X::X IPv6 link-local address autoconfig Obtain address using autoconfiguration
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;cisco892-k9-ios-15-3-2-tの場合:bb196d36658ab089ac6f611d58e19167&#34;&gt;CISCO892-K9 IOS 15.3(2)Tの場合&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;Router(config)#interface vlan 15 
+Router(config-if)#standby 0 ipv6 ? 
+X:X:X:X::X IPv6 link-local address 
+X:X:X:X::X/&amp;lt;0-128&amp;gt; IPv6 prefix autoconfig Obtain address using autoconfiguration 
+Router(config-if)#standby 0 ipv6 2001:db8::1/64 
+Router(config-if)#end 
+Router#show standby brief 
+all Load for five secs: 49%/0%; one minute: 24%; five minutes: 10% Time source is NTP, 23:23:14.015 JST Mon May 13 2013 
+P indicates configured to preempt.
+| 
+Interface Grp Pri P State Active Standby Virtual IP 
+Vl15 0 100 Init unknown unknown FE80::5:73FF:FEA0:0 (impl auto EUI64) 
+Vl15 0 100 Init unknown unknown 2001:DB8::1/64 
+Router#
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

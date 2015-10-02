@@ -1,0 +1,1794 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Aws on Aimless</title>
+    <link>http://aimless.jp/categories/aws/</link>
+    <description>Recent content in Aws on Aimless</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ja</language>
+    <lastBuildDate>Sat, 18 Jul 2015 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://aimless.jp/categories/aws/feed/" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>API Gateway &#43; Lambdaを使って、マルチクラウド管理APIを作る</title>
+      <link>http://aimless.jp/blog/archives/2679</link>
+      <pubDate>Sat, 18 Jul 2015 00:00:00 +0000</pubDate>
+      
+      <guid>http://aimless.jp/blog/archives/2679</guid>
+      <description>&lt;p&gt;「単一のREST APIで複数のクラウドを操作できたら便利だろうなー」と思い調べてみたところ、以下のようなライブラリを見つけました。&lt;/p&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;言語&lt;/th&gt;
+&lt;th&gt;ライブラリ&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Ruby&lt;/td&gt;
+&lt;td&gt;DeltaCloud&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Python&lt;/td&gt;
+&lt;td&gt;libcloud&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Node.js&lt;/td&gt;
+&lt;td&gt;pkgcloud&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Golang&lt;/td&gt;
+&lt;td&gt;Gophercloud&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;　ライブラリによってサポートするクラウドプロバイダーが異なり、さらに管理できるサービスと管理できないサービスがあります。どれか一つのライブラリと心中するのは、少々リスクだと思いました。&lt;/p&gt;
+
+&lt;p&gt;　「何か他にいい方法はないかなー」と調べていたところに、Amazon API Gatewayがリリースされました。API Gatewayを利用すると、API Gateway経由でLambdaを実行することができます。LambdaではNode.jsとjavaが動きます。主要なクラウドにはNode.jsやjavaのSDKが存在します。つまり、API Gatewayを利用すれば、自分のやりたいことができる、マルチクラウド管理APIを作れそうな気がしました。&lt;/p&gt;
+
+&lt;p&gt;　というわけで実践。AzureとAWSのインスタンス情報をまとめて返すAPIを作ってみます。&lt;/p&gt;
+
+&lt;p&gt;　API Gatewayでは、/computeがGETされた場合にLambdaファンクションを発火するようにします。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/wp-content/uploads/2015/07/api_gateway_setting.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;　そして、対応するLambdaファンクションでは以下のコードを動かします。SDKを利用して各クラウドのインスタンス情報を取得し配列に格納し、その配列を返すスクリプトです。&lt;/p&gt;
+
+&lt;p&gt;　とりあえずということで、認証情報の扱いは適当です。AWSの認証情報はコード内にベタ書きします。Azureの証明書は、lambdaファンクションのZIPに含めます。実際のところは、API Gatewayにアクセスする際のHTTPヘッダに認証情報を含め、Lambdaファンクションに渡す方法がカッコいいと思います。&lt;/p&gt;
+
+&lt;script src=&#34;https://gist.github.com/kongou-ae/ad0b1366da2ee5efbbaa.js&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;　ブラウザでAPI Gatewayの/computeにアクセスすると、以下のJSONが返ってきます。AzureとAWSのインスタンス情報が一つのJSONのレスポンスになっています。いい感じですね。このレスポンスをJavascriptでいい感じに表示するHTMLを作ってS3に配置すれば、サーバレスのマルチクラウド管理ポータルが作れるかも？&lt;/p&gt;
+
+&lt;script src=&#34;https://gist.github.com/kongou-ae/825a49a087311e0814ad.js&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/wp-content/uploads/2015/07/result_of_api.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>VPC FLow Logsを継続的にElasticSearchに投入する</title>
+      <link>http://aimless.jp/blog/archives/2617</link>
+      <pubDate>Sun, 14 Jun 2015 00:00:00 +0000</pubDate>
+      
+      <guid>http://aimless.jp/blog/archives/2617</guid>
+      <description>
+
+&lt;p&gt;VPC FLow Logsのリリース直後から、クラメソさんの「&lt;a href=&#34;http://dev.classmethod.jp/cloud/aws/vpc-flow-logs-visualized-kibana4/&#34;&gt;VPC Flow LogsをElasticsearch + Kibana4で可視化する&lt;/a&gt;」と同じことを考えていました。週末に試行錯誤した結果をアウトプットします。&lt;/p&gt;
+
+&lt;h2 id=&#34;ログの取り方:879fe74068b1e39f8423ed492442144f&#34;&gt;ログの取り方&lt;/h2&gt;
+
+&lt;p&gt;　AWS SDK for Ruby を利用してClodWatch Logsを取得する方法は以下の様になります。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# coding: utf-8
+
+require &amp;#039;aws-sdk-core&amp;#039;
+
+cloudwatchlogs = Aws::CloudWatchLogs::Client.new(region: region )
+
+# cloudwatchlogs.get_log_eventsのオプションを定義
+options = {
+    log_group_name: log_group_name,
+    log_stream_name: log_stream_name,
+}
+
+# ログを取得
+resp = cloudwatchlogs.get_log_events(options)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;　ただし、この方法でログを取得した場合、指定したlog_streamに格納されている大量のデータがレスポンスとして帰ってきます。デフォルトでは最大で1M Byte分のログが取得するようです。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://docs.aws.amazon.com/sdkforruby/api/Aws/CloudWatchLogs/Client.html#get_log_events-instance_method&#34;&gt;Class: Aws::CloudWatchLogs::Client&lt;/a&gt;&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;By default, this operation returns as much log events as can fit in a response size of 1MB, up to 10,000 log events.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;　したがって、このコードを継続的に実行すると、最初から1M byte分のログを繰り返し取得してしまいます。これでは意味がありません。実行時には、前回実行分以降のログを取得してほしい。これを実現する方法が、&lt;code&gt;get_log_events&lt;/code&gt;の&lt;code&gt;next_token&lt;/code&gt;オプションです。&lt;/p&gt;
+
+&lt;h2 id=&#34;増分ログの取り方:879fe74068b1e39f8423ed492442144f&#34;&gt;増分ログの取り方&lt;/h2&gt;
+
+&lt;p&gt;　&lt;code&gt;get_log_events&lt;/code&gt;のレスポンスには&lt;code&gt;next_forward_token&lt;/code&gt;と&lt;code&gt;next_backward_token&lt;/code&gt;が含まれています。これらは取得結果の次のページの位置を示しています。より新しいログの位置は名前的に&lt;code&gt;next_forward_token&lt;/code&gt;が保持しているっぽいです。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://docs.aws.amazon.com/sdkforruby/api/Aws/CloudWatchLogs/Client.html#get_log_events-instance_method&#34;&gt;Class: Aws::CloudWatchLogs::Client&lt;/a&gt;&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;resp.events #=&amp;gt; Array&lt;/p&gt;
+
+&lt;p&gt;resp.events[0].timestamp #=&amp;gt; Integer&lt;/p&gt;
+
+&lt;p&gt;resp.events[0].message #=&amp;gt; String&lt;/p&gt;
+
+&lt;p&gt;resp.events[0].ingestion_time #=&amp;gt; Integer&lt;/p&gt;
+
+&lt;p&gt;resp.next_forward_token #=&amp;gt; String&lt;/p&gt;
+
+&lt;p&gt;resp.next_backward_token #=&amp;gt; String&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;　そこで、このtokenを利用して&lt;code&gt;get_log_events&lt;/code&gt;を実行するように、スクリプトを変更します。tokenの値は、fluentdっぽくstateファイルを作り、そこに書き込んでおきます。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# coding: utf-8
+
+require &amp;#039;aws-sdk-core&amp;#039;
+require &amp;#039;fileutils&amp;#039;
+
+region = &amp;#039;ap-northeast-1&amp;#039;
+log_group_name = &amp;#039;VPCFLowLog&amp;#039;
+log_stream_name = &amp;#039;eni-xxxxxxxx-all&amp;#039;
+@state_file = Dir.pwd + &#34;/&#34; + log_group_name + &#34;.&#34; + log_stream_name + &#34;.state&#34;
+
+# トークンをstateファイルに書き込む
+def write_token(token)
+    File.open(@state_file,&#34;w&#34;) do |file|
+        file.puts(token)
+    end
+end
+
+# トークンをstateファイルから読み込む
+def read_token
+    if File.exist?(@state_file) then
+        return File.read(@state_file).chomp
+    else
+        return 
+    end
+end
+
+cloudwatchlogs = Aws::CloudWatchLogs::Client.new(region: region )
+
+# cloudwatchlogs.get_log_eventsのオプションを定義
+options = {
+    log_group_name: log_group_name,
+    log_stream_name: log_stream_name,
+}
+
+# もしstateファイルから前回のtokenが取得できたら、そのtokenをオプションに追加
+if read_token != nil  then
+    options[:next_token] = read_token
+end
+
+# ログを取得
+resp = cloudwatchlogs.get_log_events(options)
+
+# 取得したログからtokenを保存
+write_token(resp.next_forward_token)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;動作確認:879fe74068b1e39f8423ed492442144f&#34;&gt;動作確認&lt;/h2&gt;
+
+&lt;p&gt;　ElasticSearchに投入済みのデータは以下の通りです。19:25:47までのログが格納されています。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/wp-content/uploads/2015/06/001.png&#34; alt=&#34;投入済みデータ&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;　&lt;code&gt;next_token&lt;/code&gt;をつけて&lt;code&gt;get_log_events&lt;/code&gt;したデータをElasticSearchに投入します。投入時のログは以下の通りです。19:28:40のデータ以降がElasticSearchに投入されていることがわかります。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;2015-06-14 19:38:36 +0900: &amp;gt; {&#34;@timestamp&#34;:&#34;2015-06-14 19:28:40&#34;,&#34;version&#34;:&#34;2&#34;,&#34;account-id&#34;:&#34;250369693989&#34;,&#34;interface-id&#34;:&#34;eni-f5a92c83&#34;,&#34;srcaddr&#34;:&#34;157.7.235.92&#34;,&#34;dstaddr&#34;:&#34;10.175.10.97&#34;,&#34;srcport&#34;:&#34;123&#34;,&#34;dstport&#34;:&#34;123&#34;,&#34;protocol&#34;:&#34;17&#34;,&#34;packets&#34;:&#34;1&#34;,&#34;bytes&#34;:&#34;76&#34;,&#34;start&#34;:&#34;1434277720&#34;,&#34;end&#34;:&#34;1434277760&#34;,&#34;action&#34;:&#34;ACCEPT&#34;,&#34;log-status&#34;:&#34;OK&#34;}
+2015-06-14 19:38:36 +0900: &amp;lt; {&#34;_index&#34;:&#34;aws&#34;,&#34;_type&#34;:&#34;vpcflowlog&#34;,&#34;_id&#34;:&#34;AU3xpkmyyQj6bWWoL4TA&#34;,&#34;_version&#34;:1,&#34;created&#34;:true}
+2015-06-14 19:38:36 +0900: POST http://localhost:9200/aws/vpcflowlog [status:201, request:0.004s, query:n/a]
+2015-06-14 19:38:36 +0900: &amp;gt; {&#34;@timestamp&#34;:&#34;2015-06-14 19:28:40&#34;,&#34;version&#34;:&#34;2&#34;,&#34;account-id&#34;:&#34;250369693989&#34;,&#34;interface-id&#34;:&#34;eni-f5a92c83&#34;,&#34;srcaddr&#34;:&#34;10.175.10.97&#34;,&#34;dstaddr&#34;:&#34;157.7.235.92&#34;,&#34;srcport&#34;:&#34;123&#34;,&#34;dstport&#34;:&#34;123&#34;,&#34;protocol&#34;:&#34;17&#34;,&#34;packets&#34;:&#34;1&#34;,&#34;bytes&#34;:&#34;76&#34;,&#34;start&#34;:&#34;1434277720&#34;,&#34;end&#34;:&#34;1434277760&#34;,&#34;action&#34;:&#34;ACCEPT&#34;,&#34;log-status&#34;:&#34;OK&#34;}
+2015-06-14 19:38:36 +0900: &amp;lt; {&#34;_index&#34;:&#34;aws&#34;,&#34;_type&#34;:&#34;vpcflowlog&#34;,&#34;_id&#34;:&#34;AU3xpkm4yQj6bWWoL4TB&#34;,&#34;_version&#34;:1,&#34;created&#34;:true}
+2015-06-14 19:38:36 +0900: POST http://localhost:9200/aws/vpcflowlog [status:201, request:0.003s, query:n/a]
+2015-06-14 19:38:36 +0900: &amp;gt; {&#34;@timestamp&#34;:&#34;2015-06-14 19:28:40&#34;,&#34;version&#34;:&#34;2&#34;,&#34;account-id&#34;:&#34;250369693989&#34;,&#34;interface-id&#34;:&#34;eni-f5a92c83&#34;,&#34;srcaddr&#34;:&#34;162.255.180.213&#34;,&#34;dstaddr&#34;:&#34;10.175.10.97&#34;,&#34;srcport&#34;:&#34;1982&#34;,&#34;dstport&#34;:&#34;445&#34;,&#34;protocol&#34;:&#34;6&#34;,&#34;packets&#34;:&#34;2&#34;,&#34;bytes&#34;:&#34;96&#34;,&#34;start&#34;:&#34;1434277720&#34;,&#34;end&#34;:&#34;1434277760&#34;,&#34;action&#34;:&#34;REJECT&#34;,&#34;log-status&#34;:&#34;OK&#34;}
+2015-06-14 19:38:36 +0900: &amp;lt; {&#34;_index&#34;:&#34;aws&#34;,&#34;_type&#34;:&#34;vpcflowlog&#34;,&#34;_id&#34;:&#34;AU3xpkm9yQj6bWWoL4TC&#34;,&#34;_version&#34;:1,&#34;created&#34;:true}
+2015-06-14 19:38:36 +0900: POST http://localhost:9200/aws/vpcflowlog [status:201, request:0.003s, query:n/a]
+（中略）
+2015-06-14 19:38:36 +0900: &amp;gt; {&#34;@timestamp&#34;:&#34;2015-06-14 19:35:22&#34;,&#34;version&#34;:&#34;2&#34;,&#34;account-id&#34;:&#34;250369693989&#34;,&#34;interface-id&#34;:&#34;eni-f5a92c83&#34;,&#34;srcaddr&#34;:&#34;10.175.10.97&#34;,&#34;dstaddr&#34;:&#34;46.17.98.184&#34;,&#34;srcport&#34;:&#34;22&#34;,&#34;dstport&#34;:&#34;27530&#34;,&#34;protocol&#34;:&#34;6&#34;,&#34;packets&#34;:&#34;1&#34;,&#34;bytes&#34;:&#34;48&#34;,&#34;start&#34;:&#34;1434278122&#34;,&#34;end&#34;:&#34;1434278181&#34;,&#34;action&#34;:&#34;ACCEPT&#34;,&#34;log-status&#34;:&#34;OK&#34;}
+2015-06-14 19:38:36 +0900: &amp;lt; {&#34;_index&#34;:&#34;aws&#34;,&#34;_type&#34;:&#34;vpcflowlog&#34;,&#34;_id&#34;:&#34;AU3xpkoQyQj6bWWoL4TY&#34;,&#34;_version&#34;:1,&#34;created&#34;:true}
+2015-06-14 19:38:36 +0900: POST http://localhost:9200/aws/vpcflowlog [status:201, request:0.002s, query:n/a]
+2015-06-14 19:38:36 +0900: &amp;gt; {&#34;@timestamp&#34;:&#34;2015-06-14 19:36:55&#34;,&#34;version&#34;:&#34;2&#34;,&#34;account-id&#34;:&#34;250369693989&#34;,&#34;interface-id&#34;:&#34;eni-f5a92c83&#34;,&#34;srcaddr&#34;:&#34;199.203.59.117&#34;,&#34;dstaddr&#34;:&#34;10.175.10.97&#34;,&#34;srcport&#34;:&#34;26600&#34;,&#34;dstport&#34;:&#34;80&#34;,&#34;protocol&#34;:&#34;6&#34;,&#34;packets&#34;:&#34;1&#34;,&#34;bytes&#34;:&#34;48&#34;,&#34;start&#34;:&#34;1434278215&#34;,&#34;end&#34;:&#34;1434278241&#34;,&#34;action&#34;:&#34;REJECT&#34;,&#34;log-status&#34;:&#34;OK&#34;}
+2015-06-14 19:38:36 +0900: &amp;lt; {&#34;_index&#34;:&#34;aws&#34;,&#34;_type&#34;:&#34;vpcflowlog&#34;,&#34;_id&#34;:&#34;AU3xpkoTyQj6bWWoL4TZ&#34;,&#34;_version&#34;:1,&#34;created&#34;:true}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;　投入後のデータ一覧は以下の通りです。19:25:47以前のログが重複登録されることなく、19:25:47以降のログが増えました！！！&lt;/p&gt;
+
+&lt;p&gt;![投入済みデータ][4]&lt;/p&gt;
+
+&lt;p&gt;　それっぽく動いたスクリプトは以下の通りです。cronで回してみてみようと思います。&lt;/p&gt;
+
+&lt;p&gt;　&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# coding: utf-8
+
+require &#34;json&#34;
+require &amp;#039;aws-sdk-core&amp;#039;
+require &amp;#039;elasticsearch&amp;#039;
+require &amp;#039;fileutils&amp;#039;
+
+region = &amp;#039;ap-northeast-1&amp;#039;
+log_group_name = &amp;#039;VPCFLowLog&amp;#039;
+log_stream_name = &amp;#039;eni-xxxxxxxx-all&amp;#039;
+@state_file = Dir.pwd + &#34;/&#34; + log_group_name + &#34;.&#34; + log_stream_name + &#34;.state&#34;
+
+# トークンをstateファイルに書き込む
+def write_token(token)
+    File.open(@state_file,&#34;w&#34;) do |file|
+        file.puts(token)
+    end
+end
+
+# トークンをstateファイルから読み込む
+def read_token
+    if File.exist?(@state_file) then
+        return File.read(@state_file).chomp
+    else
+        return 
+    end
+end
+
+cloudwatchlogs = Aws::CloudWatchLogs::Client.new(region: region )
+
+# cloudwatchlogs.get_log_eventsのオプションを定義
+options = {
+    log_group_name: log_group_name,
+    log_stream_name: log_stream_name,
+}
+
+# もしstateファイルから前回のtokenが取得できたら、そのtokenをオプションに追加
+if read_token != nil  then
+    options[:next_token] = read_token
+end
+
+# ログを取得
+resp = cloudwatchlogs.get_log_events(options)
+
+# 取得したログからtokenを保存
+write_token(resp.next_forward_token)
+
+hash = {}
+message_elements = Array.new()
+
+message_field = [
+    &#34;version&#34;,
+    &#34;account-id&#34;,
+    &#34;interface-id&#34;,
+    &#34;srcaddr&#34;,
+    &#34;dstaddr&#34;,
+    &#34;srcport&#34;,
+    &#34;dstport&#34;,
+    &#34;protocol&#34;,
+    &#34;packets&#34;,
+    &#34;bytes&#34;,
+    &#34;start&#34;,
+    &#34;end&#34;,
+    &#34;action&#34;,
+    &#34;log-status&#34;]
+
+resp.events.each {|event|
+
+    hash[&#34;@timestamp&#34;] = Time.at(event.timestamp/1000.0).strftime(&amp;#039;%Y-%m-%d %H:%M:%S&amp;#039;)
+    message_elements = event.message.split(&#34; &#34;)
+    message_elements.each.with_index(0)  {|element,i|
+        hash[message_field[i]] = element
+    }
+
+    # BytesとPacketsをInteger型にすると、NODATAの時の-が型エラーになるので、捨てる
+    if hash[&#34;log-status&#34;] != &#34;NODATA&#34; then
+        client = Elasticsearch::Client.new(hosts: &#34;localhost:9200&#34;,log: true)
+        client.index(index:&#34;aws&#34;, type:&#34;vpcflowlog&#34;, body:hash.to_json)
+    end
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;[4]: &lt;a href=&#34;http://aimless.jp/blog/wp-content/uploads/2015/06/002.png&#34;&gt;http://aimless.jp/blog/wp-content/uploads/2015/06/002.png&lt;/a&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>aws-sdk-goでELB配下のインスタンスを取得する</title>
+      <link>http://aimless.jp/blog/archives/2546</link>
+      <pubDate>Sat, 11 Apr 2015 00:00:00 +0000</pubDate>
+      
+      <guid>http://aimless.jp/blog/archives/2546</guid>
+      <description>&lt;p&gt;諸事情によりAWS製ツールをインストールできないWindows端末でAWSのAPIを叩く必要があり、手法を検討しました。あーだこーだと悩んだ結果、別の端末で作成したバイナリファイルを実行することを閃きました。こんな時のためのaws-sdk-goです。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;package main
+
+import (
+    &#34;fmt&#34;
+    &#34;github.com/awslabs/aws-sdk-go/aws&#34;
+    &#34;github.com/awslabs/aws-sdk-go/service/elb&#34;
+    &#34;sort&#34;
+    &#34;strings&#34;
+)
+
+func main() {
+    accessKey := &#34;YOUR_ACCESS_KEY&#34;
+    secretKey := &#34;YOUR_AECRET_KEY&#34;
+    region := &#34;ap-northeast-1&#34;
+    elbName := &#34;YOUR_ELB_NAME&#34;
+    var inserviceInstances []string
+
+    cred := aws.DetectCreds(accessKey, secretKey, &#34;&#34;)
+    elbSvc := elb.New(&amp;aws.Config{Credentials: cred, Region: region})
+
+    param := &amp;elb.DescribeInstanceHealthInput{
+        LoadBalancerName: aws.String(elbName),
+    }
+
+    res, err := elbSvc.DescribeInstanceHealth(param)
+
+    if err != nil {
+        panic(err)
+    }
+
+    for i := range res.InstanceStates {
+        result := *res.InstanceStates[i].InstanceID + &#34;:&#34; + *res.InstanceStates[i].State
+        inserviceInstances = append(inserviceInstances, result)
+    }
+
+    sort.Strings(inserviceInstances)
+    fmt.Print(strings.Join(inserviceInstances, &#34;,&#34;))
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;　このスクリプトを実行すると、対象ELB配下のインスタンスとその状態が表示されます。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;gt;go run main.go
+i-xxxxxxxx:OutOfService,i-xxxxxxxx:OutOfService
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;　コンパイルしたバイナリファイルを実行しても同じ結果になります。このバイナリを問題のWindows端末で実行すれば問題は解決です。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;gt;go build main.go
+
+&amp;gt;main.exe
+i-xxxxxxxx:OutOfService,i-xxxxxxxx:OutOfService
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Terraformでセキュリティグループを管理する</title>
+      <link>http://aimless.jp/blog/archives/2481</link>
+      <pubDate>Sun, 22 Mar 2015 00:00:00 +0000</pubDate>
+      
+      <guid>http://aimless.jp/blog/archives/2481</guid>
+      <description>
+
+&lt;p&gt;Terraformによるセキュリティグループ管理に関するメモ。&lt;/p&gt;
+
+&lt;p&gt;　Terraformのバージョンアップにより、タグ付けやegressのルールが使えるようになったので、マネジメントコンソールと同じ事ができるようになっています。&lt;/p&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;version&lt;/th&gt;
+&lt;th&gt;IMPROVEMENTS&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;0.3.7 (February 19, 2015)&lt;/td&gt;
+&lt;td&gt;provider/aws: Security group support egress rules. [GH-856]&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;0.3.1 (October 21, 2014)&lt;/td&gt;
+&lt;td&gt;providers/aws: Support tags for security groups.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h2 id=&#34;ファイル構成:29a47d36f0cb88ad8f2feca5cd4e2d83&#34;&gt;ファイル構成&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code&gt;$ ls                                               
+var.tf　　  　terraform.tfvars        web-sg.tf
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;　tfファイルで利用する変数を定義するためのファイル&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$  cat var.tf                                      
+variable &#34;access_key&#34; {}
+variable &#34;secret_key&#34; {}
+variable &#34;region&#34; {}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;　tfファイルで利用する変数に値を代入するためのファイル&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ cat terraform.tfvars 
+#-------------------------------------$
+# credential$
+#-------------------------------------$
+
+access_key = &#34;YOUR_ACCESS_KEY&#34;
+secret_key = &#34;YOUR_SECRET_KEY&#34;
+
+#-------------------------------------
+# region
+#-------------------------------------
+#
+region = &#34;ap-northeast-1&#34;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;　実際の処理を書いたファイル。WEBサーバ向けにHTTPを全許可するセキュリティグループを作ります。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ cat web-sg.tf 
+provider &#34;aws&#34; {
+    access_key = &#34;${var.access_key}&#34;
+    secret_key = &#34;${var.secret_key}&#34;
+    region = &#34;${var.region}&#34;
+}
+
+resource &#34;aws_security_group&#34; &#34;web-server&#34; {
+  name = &#34;web-server-sg&#34;
+  description = &#34;Allow traffic of webserver&#34;
+
+  ingress {
+      from_port = 80 
+      to_port = 80
+      protocol = &#34;tcp&#34;
+      cidr_blocks = [&#34;0.0.0.0/0&#34;]
+  }
+  vpc_id = &#34;vpc-d01806b2&#34;
+  tags {
+    Name = &#34;web-server&#34;
+    Made = &#34;terraform&#34;
+  }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;セキュリティグループの作成:29a47d36f0cb88ad8f2feca5cd4e2d83&#34;&gt;セキュリティグループの作成&lt;/h2&gt;
+
+&lt;p&gt;まずは&lt;code&gt;terraform plan&lt;/code&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ terraform plan
+Refreshing Terraform state prior to plan...
+
+
+The Terraform execution plan has been generated and is shown below.
+Resources are shown in alphabetical order for quick scanning. Green resources
+will be created (or destroyed and then created if an existing resource
+exists), yellow resources are being changed in-place, and red resources
+will be destroyed.
+
+Note: You didn&amp;#039;t specify an &#34;-out&#34; parameter to save this plan, so when
+&#34;apply&#34; is called, Terraform can&amp;#039;t guarantee this is what will execute.
+
++ aws_security_group.web-server
+    description:                          &#34;&#34; =&amp;gt; &#34;Allow traffic of webserver&#34;
+    egress.#:                             &#34;&#34; =&amp;gt; &#34;&amp;lt;computed&amp;gt;&#34;
+    ingress.#:                            &#34;&#34; =&amp;gt; &#34;1&#34;
+    ingress.2603706321.cidr_blocks.#:     &#34;&#34; =&amp;gt; &#34;1&#34;
+    ingress.2603706321.cidr_blocks.0:     &#34;&#34; =&amp;gt; &#34;0.0.0.0/0&#34;
+    ingress.2603706321.from_port:         &#34;&#34; =&amp;gt; &#34;80&#34;
+    ingress.2603706321.protocol:          &#34;&#34; =&amp;gt; &#34;tcp&#34;
+    ingress.2603706321.security_groups.#: &#34;&#34; =&amp;gt; &#34;0&#34;
+    ingress.2603706321.self:              &#34;&#34; =&amp;gt; &#34;0&#34;
+    ingress.2603706321.to_port:           &#34;&#34; =&amp;gt; &#34;80&#34;
+    name:                                 &#34;&#34; =&amp;gt; &#34;web-server-sg&#34;
+    owner_id:                             &#34;&#34; =&amp;gt; &#34;&amp;lt;computed&amp;gt;&#34;
+    tags.#:                               &#34;&#34; =&amp;gt; &#34;2&#34;
+    tags.Made:                            &#34;&#34; =&amp;gt; &#34;terraform&#34;
+    tags.Name:                            &#34;&#34; =&amp;gt; &#34;web-server&#34;
+    vpc_id:                               &#34;&#34; =&amp;gt; &#34;vpc-d01806b2&#34;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;　問題なさそうなので&lt;code&gt;terraform apply&lt;/code&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ terraform apply
+aws_security_group.web-server: Creating...
+  description:                          &#34;&#34; =&amp;gt; &#34;Allow traffic of webserver&#34;
+  egress.#:                             &#34;&#34; =&amp;gt; &#34;&amp;lt;computed&amp;gt;&#34;
+  ingress.#:                            &#34;&#34; =&amp;gt; &#34;1&#34;
+  ingress.2603706321.cidr_blocks.#:     &#34;&#34; =&amp;gt; &#34;1&#34;
+  ingress.2603706321.cidr_blocks.0:     &#34;&#34; =&amp;gt; &#34;0.0.0.0/0&#34;
+  ingress.2603706321.from_port:         &#34;&#34; =&amp;gt; &#34;80&#34;
+  ingress.2603706321.protocol:          &#34;&#34; =&amp;gt; &#34;tcp&#34;
+  ingress.2603706321.security_groups.#: &#34;&#34; =&amp;gt; &#34;0&#34;
+  ingress.2603706321.self:              &#34;&#34; =&amp;gt; &#34;0&#34;
+  ingress.2603706321.to_port:           &#34;&#34; =&amp;gt; &#34;80&#34;
+  name:                                 &#34;&#34; =&amp;gt; &#34;web-server-sg&#34;
+  owner_id:                             &#34;&#34; =&amp;gt; &#34;&amp;lt;computed&amp;gt;&#34;
+  tags.#:                               &#34;&#34; =&amp;gt; &#34;2&#34;
+  tags.Made:                            &#34;&#34; =&amp;gt; &#34;terraform&#34;
+  tags.Name:                            &#34;&#34; =&amp;gt; &#34;web-server&#34;
+  vpc_id:                               &#34;&#34; =&amp;gt; &#34;vpc-d01806b2&#34;
+aws_security_group.web-server: Creation complete
+
+Apply complete! Resources: 1 added, 0 changed, 0 destroyed.
+
+The state of your infrastructure has been saved to the path
+below. This state is required to modify and destroy your
+infrastructure, so keep it safe. To inspect the complete state
+use the `terraform show` command.
+
+State path: terraform.tfstate
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;　&lt;code&gt;1 added&lt;/code&gt;となっています。&lt;code&gt;terraform show&lt;/code&gt;で今の状態を確認します。sg-8a53d6efができました。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ terraform show                                                                         
+aws_security_group.web-server:
+  id = sg-8a53d6ef
+  description = Allow traffic of webserver
+  egress.# = 1
+  egress.1965070075.cidr_blocks.# = 1
+  egress.1965070075.cidr_blocks.0 = 0.0.0.0/0
+  egress.1965070075.from_port = 0
+  egress.1965070075.protocol = -1
+  egress.1965070075.security_groups.# = 0
+  egress.1965070075.self = false
+  egress.1965070075.to_port = 0
+  ingress.# = 1
+  ingress.2603706321.cidr_blocks.# = 1
+  ingress.2603706321.cidr_blocks.0 = 0.0.0.0/0
+  ingress.2603706321.from_port = 80
+  ingress.2603706321.protocol = tcp
+  ingress.2603706321.security_groups.# = 0
+  ingress.2603706321.self = false
+  ingress.2603706321.to_port = 80
+  name = web-server-sg
+  owner_id = MY_AWS_ACCOUNT_NUMBER
+  tags.# = 2
+  tags.Made = terraform
+  tags.Name = web-server
+  vpc_id = vpc-d01806b2
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;　マネジメントコンソールでも、Terraformの指示通りのセキュリティグループが作成されたことが確認できます。&lt;/p&gt;
+
+&lt;p&gt;　&lt;img src=&#34;http://aimless.jp/blog/wp-content/uploads/2015/03/2015-03-22-01.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;ルールの追加-inbound:29a47d36f0cb88ad8f2feca5cd4e2d83&#34;&gt;ルールの追加（Inbound）&lt;/h2&gt;
+
+&lt;p&gt;　inboundにHTTPSを追加してみましょう。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ cat web-sg.tf 
+provider &#34;aws&#34; {
+    access_key = &#34;${var.access_key}&#34;
+    secret_key = &#34;${var.secret_key}&#34;
+    region = &#34;${var.region}&#34;
+}
+
+resource &#34;aws_security_group&#34; &#34;web-server&#34; {
+  name = &#34;web-server-sg&#34;
+  description = &#34;Allow traffic of webserver&#34;
+
+  ingress {
+      from_port = 80 
+      to_port = 80
+      protocol = &#34;tcp&#34;
+      cidr_blocks = [&#34;0.0.0.0/0&#34;]
+  }
+  ingress {
+      from_port = 443
+      to_port = 443
+      protocol = &#34;tcp&#34;
+      cidr_blocks = [&#34;0.0.0.0/0&#34;]
+  }
+  vpc_id = &#34;vpc-d01806b2&#34;
+  tags {
+    Name = &#34;web-server&#34;
+    Made = &#34;terraform&#34;
+  }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;　tfファイルを編集後、&lt;code&gt;terraform plan&lt;/code&gt;からの&lt;code&gt;terraform apply&lt;/code&gt;、&lt;code&gt;terraform show&lt;/code&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ terraform plan
+Refreshing Terraform state prior to plan...
+
+aws_security_group.web-server: Refreshing state... (ID: sg-8a53d6ef)
+
+The Terraform execution plan has been generated and is shown below.
+Resources are shown in alphabetical order for quick scanning. Green resources
+will be created (or destroyed and then created if an existing resource
+exists), yellow resources are being changed in-place, and red resources
+will be destroyed.
+
+Note: You didn&amp;#039;t specify an &#34;-out&#34; parameter to save this plan, so when
+&#34;apply&#34; is called, Terraform can&amp;#039;t guarantee this is what will execute.
+
+~ aws_security_group.web-server
+    ingress.#:                            &#34;1&#34; =&amp;gt; &#34;2&#34;
+    ingress.2603706321.cidr_blocks.#:     &#34;1&#34; =&amp;gt; &#34;1&#34;
+    ingress.2603706321.cidr_blocks.0:     &#34;0.0.0.0/0&#34; =&amp;gt; &#34;0.0.0.0/0&#34;
+    ingress.2603706321.from_port:         &#34;80&#34; =&amp;gt; &#34;80&#34;
+    ingress.2603706321.protocol:          &#34;tcp&#34; =&amp;gt; &#34;tcp&#34;
+    ingress.2603706321.security_groups.#: &#34;0&#34; =&amp;gt; &#34;0&#34;
+    ingress.2603706321.self:              &#34;0&#34; =&amp;gt; &#34;0&#34;
+    ingress.2603706321.to_port:           &#34;80&#34; =&amp;gt; &#34;80&#34;
+    ingress.4089093546.cidr_blocks.#:     &#34;0&#34; =&amp;gt; &#34;1&#34;
+    ingress.4089093546.cidr_blocks.0:     &#34;&#34; =&amp;gt; &#34;0.0.0.0/0&#34;
+    ingress.4089093546.from_port:         &#34;&#34; =&amp;gt; &#34;443&#34;
+    ingress.4089093546.protocol:          &#34;&#34; =&amp;gt; &#34;tcp&#34;
+    ingress.4089093546.security_groups.#: &#34;0&#34; =&amp;gt; &#34;0&#34;
+    ingress.4089093546.self:              &#34;&#34; =&amp;gt; &#34;0&#34;
+    ingress.4089093546.to_port:           &#34;&#34; =&amp;gt; &#34;443&#34;
+
+
+$ 
+$ terraform apply
+aws_security_group.web-server: Refreshing state... (ID: sg-8a53d6ef)
+aws_security_group.web-server: Modifying...
+  ingress.#:                            &#34;1&#34; =&amp;gt; &#34;2&#34;
+  ingress.2603706321.cidr_blocks.#:     &#34;1&#34; =&amp;gt; &#34;1&#34;
+  ingress.2603706321.cidr_blocks.0:     &#34;0.0.0.0/0&#34; =&amp;gt; &#34;0.0.0.0/0&#34;
+  ingress.2603706321.from_port:         &#34;80&#34; =&amp;gt; &#34;80&#34;
+  ingress.2603706321.protocol:          &#34;tcp&#34; =&amp;gt; &#34;tcp&#34;
+  ingress.2603706321.security_groups.#: &#34;0&#34; =&amp;gt; &#34;0&#34;
+  ingress.2603706321.self:              &#34;0&#34; =&amp;gt; &#34;0&#34;
+  ingress.2603706321.to_port:           &#34;80&#34; =&amp;gt; &#34;80&#34;
+  ingress.4089093546.cidr_blocks.#:     &#34;0&#34; =&amp;gt; &#34;1&#34;
+  ingress.4089093546.cidr_blocks.0:     &#34;&#34; =&amp;gt; &#34;0.0.0.0/0&#34;
+  ingress.4089093546.from_port:         &#34;&#34; =&amp;gt; &#34;443&#34;
+  ingress.4089093546.protocol:          &#34;&#34; =&amp;gt; &#34;tcp&#34;
+  ingress.4089093546.security_groups.#: &#34;0&#34; =&amp;gt; &#34;0&#34;
+  ingress.4089093546.self:              &#34;&#34; =&amp;gt; &#34;0&#34;
+  ingress.4089093546.to_port:           &#34;&#34; =&amp;gt; &#34;443&#34;
+aws_security_group.web-server: Modifications complete
+
+Apply complete! Resources: 0 added, 1 changed, 0 destroyed.
+
+The state of your infrastructure has been saved to the path
+below. This state is required to modify and destroy your
+infrastructure, so keep it safe. To inspect the complete state
+use the `terraform show` command.
+
+State path: terraform.tfstate
+$ 
+$ terraform show
+aws_security_group.web-server:
+  id = sg-8a53d6ef
+  description = Allow traffic of webserver
+  egress.# = 1
+  egress.1965070075.cidr_blocks.# = 1
+  egress.1965070075.cidr_blocks.0 = 0.0.0.0/0
+  egress.1965070075.from_port = 0
+  egress.1965070075.protocol = -1
+  egress.1965070075.security_groups.# = 0
+  egress.1965070075.self = false
+  egress.1965070075.to_port = 0
+  ingress.# = 2
+  ingress.2603706321.cidr_blocks.# = 1
+  ingress.2603706321.cidr_blocks.0 = 0.0.0.0/0
+  ingress.2603706321.from_port = 80
+  ingress.2603706321.protocol = tcp
+  ingress.2603706321.security_groups.# = 0
+  ingress.2603706321.self = false
+  ingress.2603706321.to_port = 80
+  ingress.4089093546.cidr_blocks.# = 1
+  ingress.4089093546.cidr_blocks.0 = 0.0.0.0/0
+  ingress.4089093546.from_port = 443
+  ingress.4089093546.protocol = tcp
+  ingress.4089093546.security_groups.# = 0
+  ingress.4089093546.self = false
+  ingress.4089093546.to_port = 443
+  name = web-server-sg
+  owner_id = MY_AWS_ACCOUNT_NUMBER
+  tags.# = 2
+  tags.Made = terraform
+  tags.Name = web-server
+  vpc_id = vpc-d01806b2
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;　&lt;code&gt;1 changed&lt;/code&gt;となっています。既存のリソースに変更が発生しました。マネジメントコンソール上で確認すると、inboundにHTTPSが増えています。&lt;/p&gt;
+
+&lt;p&gt;　&lt;img src=&#34;http://aimless.jp/blog/wp-content/uploads/2015/03/2015-03-22-02.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;ルールの追加-outbound:29a47d36f0cb88ad8f2feca5cd4e2d83&#34;&gt;ルールの追加（Outbound）&lt;/h2&gt;
+
+&lt;p&gt;　新たにサポートされたegressも使ってみます。sg-2da11148がNATインスタンスに適用されている体で、sg-2da11148向けのOutbound全通信を許可するルールを追加します。&lt;/p&gt;
+
+&lt;p&gt;　許可対象にセキュリティグループを利用する時は、&lt;code&gt;cidr_blocks&lt;/code&gt;ではなく&lt;code&gt;security_groups&lt;/code&gt;を利用します。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ cat web-sg.tf 
+provider &#34;aws&#34; {
+    access_key = &#34;${var.access_key}&#34;
+    secret_key = &#34;${var.secret_key}&#34;
+    region = &#34;${var.region}&#34;
+}
+
+resource &#34;aws_security_group&#34; &#34;web-server&#34; {
+  name = &#34;web-server-sg&#34;
+  description = &#34;Allow traffic of webserver&#34;
+
+  ingress {
+      from_port = 80 
+      to_port = 80
+      protocol = &#34;tcp&#34;
+      cidr_blocks = [&#34;0.0.0.0/0&#34;]
+  }
+  ingress {
+      from_port = 443
+      to_port = 443
+      protocol = &#34;tcp&#34;
+      cidr_blocks = [&#34;0.0.0.0/0&#34;]
+  }
+  egress {
+      from_port = 0
+      to_port = 65535
+      protocol = &#34;-1&#34;
+      security_groups = [&#34;sg-2da11148&#34;]
+  }
+  vpc_id = &#34;vpc-d01806b2&#34;
+  tags {
+    Name = &#34;web-server&#34;
+    Made = &#34;terraform&#34;
+  }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;　tfファイルを編集後、&lt;code&gt;terraform plan&lt;/code&gt;からの&lt;code&gt;terraform apply&lt;/code&gt;、&lt;code&gt;terraform show&lt;/code&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$  terraform plan
+Refreshing Terraform state prior to plan...
+
+aws_security_group.web-server: Refreshing state... (ID: sg-8a53d6ef)
+
+The Terraform execution plan has been generated and is shown below.
+Resources are shown in alphabetical order for quick scanning. Green resources
+will be created (or destroyed and then created if an existing resource
+exists), yellow resources are being changed in-place, and red resources
+will be destroyed.
+
+Note: You didn&amp;#039;t specify an &#34;-out&#34; parameter to save this plan, so when
+&#34;apply&#34; is called, Terraform can&amp;#039;t guarantee this is what will execute.
+
+~ aws_security_group.web-server
+    egress.2221449193.cidr_blocks.#:              &#34;0&#34; =&amp;gt; &#34;0&#34;
+    egress.2221449193.from_port:                  &#34;&#34; =&amp;gt; &#34;0&#34;
+    egress.2221449193.protocol:                   &#34;&#34; =&amp;gt; &#34;-1&#34;
+    egress.2221449193.security_groups.#:          &#34;0&#34; =&amp;gt; &#34;1&#34;
+    egress.2221449193.security_groups.1429001686: &#34;&#34; =&amp;gt; &#34;sg-2da11148&#34;
+    egress.2221449193.self:                       &#34;&#34; =&amp;gt; &#34;0&#34;
+    egress.2221449193.to_port:                    &#34;&#34; =&amp;gt; &#34;65535&#34;
+
+
+$ terraform apply
+aws_security_group.web-server: Refreshing state... (ID: sg-8a53d6ef)
+aws_security_group.web-server: Modifying...
+  egress.2221449193.cidr_blocks.#:              &#34;0&#34; =&amp;gt; &#34;0&#34;
+  egress.2221449193.from_port:                  &#34;&#34; =&amp;gt; &#34;0&#34;
+  egress.2221449193.protocol:                   &#34;&#34; =&amp;gt; &#34;-1&#34;
+  egress.2221449193.security_groups.#:          &#34;0&#34; =&amp;gt; &#34;1&#34;
+  egress.2221449193.security_groups.1429001686: &#34;&#34; =&amp;gt; &#34;sg-2da11148&#34;
+  egress.2221449193.self:                       &#34;&#34; =&amp;gt; &#34;0&#34;
+  egress.2221449193.to_port:                    &#34;&#34; =&amp;gt; &#34;65535&#34;
+aws_security_group.web-server: Modifications complete
+
+Apply complete! Resources: 0 added, 1 changed, 0 destroyed.
+
+The state of your infrastructure has been saved to the path
+below. This state is required to modify and destroy your
+infrastructure, so keep it safe. To inspect the complete state
+use the `terraform show` command.
+
+State path: terraform.tfstate
+$ terraform show
+aws_security_group.web-server:
+  id = sg-8a53d6ef
+  description = Allow traffic of webserver
+  egress.# = 1
+  egress.2221449193.cidr_blocks.# = 0
+  egress.2221449193.from_port = 0
+  egress.2221449193.protocol = -1
+  egress.2221449193.security_groups.# = 1
+  egress.2221449193.security_groups.1429001686 = sg-2da11148
+  egress.2221449193.self = false
+  egress.2221449193.to_port = 65535
+  ingress.# = 2
+  ingress.2603706321.cidr_blocks.# = 1
+  ingress.2603706321.cidr_blocks.0 = 0.0.0.0/0
+  ingress.2603706321.from_port = 80
+  ingress.2603706321.protocol = tcp
+  ingress.2603706321.security_groups.# = 0
+  ingress.2603706321.self = false
+  ingress.2603706321.to_port = 80
+  ingress.4089093546.cidr_blocks.# = 1
+  ingress.4089093546.cidr_blocks.0 = 0.0.0.0/0
+  ingress.4089093546.from_port = 443
+  ingress.4089093546.protocol = tcp
+  ingress.4089093546.security_groups.# = 0
+  ingress.4089093546.self = false
+  ingress.4089093546.to_port = 443
+  name = web-server-sg
+  owner_id = MY_AWS_ACCOUNT_NUMBER
+  tags.# = 2
+  tags.Made = terraform
+  tags.Name = web-server
+  vpc_id = vpc-d01806b2
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;　1 changed　となっています。既存のリソースに変更が発生しています。マネジメントコンソール上で確認すると、outboundにsg-2da11148向けのALL Trafficが増えています。&lt;/p&gt;
+
+&lt;p&gt;　![][3]&lt;/p&gt;
+
+&lt;p&gt;[3]: &lt;a href=&#34;http://aimless.jp/blog/wp-content/uploads/2015/03/2015-03-22-03.png&#34;&gt;http://aimless.jp/blog/wp-content/uploads/2015/03/2015-03-22-03.png&lt;/a&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Terraformのroot_block_deviceを使う</title>
+      <link>http://aimless.jp/blog/archives/2439</link>
+      <pubDate>Mon, 09 Mar 2015 00:00:00 +0000</pubDate>
+      
+      <guid>http://aimless.jp/blog/archives/2439</guid>
+      <description>
+
+&lt;p&gt;Terraformのroot_block_deviceで躓いたのでメモ。&lt;/p&gt;
+
+&lt;h2 id=&#34;やりたいこと:bf37395249d323f0a481b0db49ec8488&#34;&gt;やりたいこと&lt;/h2&gt;
+
+&lt;p&gt;　Terraformを利用して、10Gのルートデバイスと20Gのブロックデバイスを持ったt2.microのインスタンスを起動する&lt;/p&gt;
+
+&lt;h2 id=&#34;やったこと:bf37395249d323f0a481b0db49ec8488&#34;&gt;やったこと&lt;/h2&gt;
+
+&lt;p&gt;　クレデンシャルを記載したtfファイルを作成する&lt;/p&gt;
+
+&lt;script src=&#34;https://gist.github.com/kongou-ae/a993635d9521162fe6b4.js&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;　リソース作成の処理を記載したtfファイルを作成する&lt;/p&gt;
+
+&lt;script src=&#34;https://gist.github.com/kongou-ae/ccb5844778b3d1880f11.js&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;　処理で利用する変数ファイルをまとめて定義するtfファイルを作成する&lt;/p&gt;
+
+&lt;script src=&#34;https://gist.github.com/kongou-ae/effeb26ef16f22c18386.js&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;　terraform実行時に渡す変数をまとめたtfファイルを作成する&lt;/p&gt;
+
+&lt;script src=&#34;https://gist.github.com/kongou-ae/4bbc36de4c64ea1c4fe0.js&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;　terraformする。&lt;/p&gt;
+
+&lt;script src=&#34;https://gist.github.com/kongou-ae/4b8f40fe3a91b6a288c1.js&#34;&gt;&lt;/script&gt;
+
+&lt;h2 id=&#34;失敗談:bf37395249d323f0a481b0db49ec8488&#34;&gt;失敗談&lt;/h2&gt;
+
+&lt;p&gt;　ebs_root_device_nameの値をAMIのルートデバイス名と異なる値にしたところ、root_block_deviceのパラメータが追加のブロックデバイスとして判断されてしまった。&lt;/p&gt;
+
+&lt;p&gt;　たとえば、Amazon Linuxに対してebs_root_device_nameを指定しないと、デフォルト値である/dev/sda1が利用されてしまい、ルートデバイスはAMIのデフォルト、そのほかにブロックデバイスが追加で2個EBSが作成されてしまう。&lt;/p&gt;
+
+&lt;p&gt;　&lt;/p&gt;
+
+&lt;h3 id=&#34;失敗の事例:bf37395249d323f0a481b0db49ec8488&#34;&gt;失敗の事例&lt;/h3&gt;
+
+&lt;p&gt;　ebs_root_device_nameを指定せずにterraformしたログは以下の通り。terraform plan ではルートデバイス1個、ブロックデバイス1個となっているが、terraform applyしてみると、block_device.# = 2になっている。&lt;/p&gt;
+
+&lt;script src=&#34;https://gist.github.com/kongou-ae/7ae35971fa5a2c8a17e0.js&#34;&gt;&lt;/script&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>業務時間外にEC2を停止する</title>
+      <link>http://aimless.jp/blog/archives/2429</link>
+      <pubDate>Thu, 26 Feb 2015 00:00:00 +0000</pubDate>
+      
+      <guid>http://aimless.jp/blog/archives/2429</guid>
+      <description>&lt;p&gt;AWS上に複数人が利用する開発用サーバを立てました。24時間365日稼働させる必要はありませんが、手作業で起動・停止を行うのも馬鹿げています。&lt;/p&gt;
+
+&lt;p&gt;　&lt;/p&gt;
+
+&lt;p&gt;　そこで、業務時間外に対象インスタンスを停止し、始業前に対象インスタンスを開始するスクリプトを書いて、NATインスタンス上のcronで実行してみました。&lt;/p&gt;
+
+&lt;p&gt;　ちゃんと動いていますが、以下の様な点を修正する必要がありますね。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;AWS CLIの実行結果が標準出力となり、ec2-userにメールが届いてしまう&lt;/li&gt;
+&lt;li&gt;万が一起動に失敗した場合、他のメンバーに迷惑がかかるので、メール通知したい。&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>セキュリティグループの詳細をCSV形式で出力する</title>
+      <link>http://aimless.jp/blog/archives/2418</link>
+      <pubDate>Mon, 23 Feb 2015 00:00:00 +0000</pubDate>
+      
+      <guid>http://aimless.jp/blog/archives/2418</guid>
+      <description>&lt;p&gt;セキュリティグループにルールを追加すればするほどマネジメントコンソールでの一覧性が下がるので、全てのルールをCSV形式でエクスポートするコマンドを作ってみました。aws-to-csvです。&lt;/p&gt;
+
+&lt;p&gt;[kongou-ae/aws-to-csv][1]&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ ./a2csv securityGroups -r ap-northeast-1 -p private
+GroupID,Direction,Type,Protocol,Port Range,IP Range
+sg-b6822ed3,inbound,ALL ICMP,ICMP(1),ALL,sg-a9822ecc
+sg-b6822ed3,outbound,ALL Traffic,ALL,ALL,0.0.0.0/0
+sg-6ad86e0f,inbound,SSH(22),TCP(6),22,0.0.0.0/0
+sg-6ad86e0f,outbound,ALL Traffic,ALL,ALL,0.0.0.0/0
+sg-f07cdd95,inbound,RDP(3389),TCP(6),3389,192.168.11.1/32
+sg-f07cdd95,outbound,ALL Traffic,ALL,ALL,0.0.0.0/0
+sg-a9822ecc,inbound,ALL Traffic,ALL,ALL,192.168.11.1/32
+sg-a9822ecc,outbound,ALL ICMP,ICMP(1),ALL,sg-b6822ed3
+sg-aa2686cf,inbound,Custom Rrotocol Rule,HOPOPT(0),ALL,sg-6ad86e0f
+sg-aa2686cf,inbound,SSH(22),TCP(6),22,192.168.11.1/32
+sg-aa2686cf,outbound,ALL Traffic,ALL,ALL,0.0.0.0/0
+sg-b10aecd4,inbound,SSH(22),TCP(6),22,0.0.0.0/0
+sg-b10aecd4,outbound,ALL Traffic,ALL,ALL,0.0.0.0/0
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;　セキュリティグループは、APIのレスポンスをそのままCSV形式でエクスポートすると、出力内容がマネジメントコンソールの表示と大きく異なってしまい可読性が低くなります。そこで、APIのレスポンスをあの手この手で細工してからCSV形式で出力するようにしています。&lt;/p&gt;
+
+&lt;p&gt;　今までpythonで遊んでいましたが、今回は、クロスコンパイルにあこがれてgolangを使ってみました。これはすごいですね。VPSでwindows用にコンパイルしたa2csv.exeが、会社のwindows端末でそのまま動く。pythonで書いたコードを使うために、会社のPCにpythonをインストールしていたのが馬鹿みたいです。。。&lt;/p&gt;
+
+&lt;p&gt;[1]: &lt;a href=&#34;https://github.com/kongou-ae/aws-to-csv&#34;&gt;https://github.com/kongou-ae/aws-to-csv&lt;/a&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Amazon LinuxにLodgeをインストールした</title>
+      <link>http://aimless.jp/blog/archives/2408</link>
+      <pubDate>Thu, 19 Feb 2015 00:00:00 +0000</pubDate>
+      
+      <guid>http://aimless.jp/blog/archives/2408</guid>
+      <description>&lt;p&gt;Amazon Linuxにナレッジ/ノウハウ情報共有サービスのOSS「Lodge」をインストールしたので手順をメモしておきます。取りあえず動かすことが目的です。&lt;/p&gt;
+
+&lt;p&gt;　ブラウザから「ec2-xxx-xxx-xxx-xxx.ap-northeast-1.compute.amazonaws.com:3000」にアクセスしてログイン画面が出れば成功です。TCP/3000をセキュリティグループで許可することを忘れずに。&lt;/p&gt;
+
+&lt;p&gt;　&lt;/p&gt;
+
+&lt;p&gt;　また、TCP/3000でのアクセスは不便だったので、前段にNginx等のリバースプロキシを置いてTCP/80でアクセスできるようにしました。&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>AWS上のオンデマンドなUTM製品を比較する</title>
+      <link>http://aimless.jp/blog/archives/2399</link>
+      <pubDate>Mon, 16 Feb 2015 00:00:00 +0000</pubDate>
+      
+      <guid>http://aimless.jp/blog/archives/2399</guid>
+      <description>&lt;p&gt;イマイチ使いどころが見つけられないAWS上のUTM製品について、オンデマンド版（ライセンスこみで使えるAMI）の費用を比較しました。&lt;/p&gt;
+
+&lt;p&gt;　なお、AWS上には、Barracuda NG FirewallやPaloalto VM-Seriesもあるのですが、これらはオンデマンド版が存在せずBYOL版のみのため、記載していません。オンデマンド版があれば、評価しやすいのに。。。&lt;/p&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;インスタンスタイプ&lt;/th&gt;
+&lt;th&gt;FortiGate-VM&lt;/th&gt;
+&lt;th&gt;CheckPoint VA&lt;/th&gt;
+&lt;th&gt;sophos-UTM 9&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;t1.micro&lt;/td&gt;
+&lt;td&gt;&amp;#8211;&lt;/td&gt;
+&lt;td&gt;&amp;#8211;&lt;/td&gt;
+&lt;td&gt;$0.02/hr&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;t1.small&lt;/td&gt;
+&lt;td&gt;&amp;#8211;&lt;/td&gt;
+&lt;td&gt;&amp;#8211;&lt;/td&gt;
+&lt;td&gt;$0.264/hr&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;m3.medium&lt;/td&gt;
+&lt;td&gt;$0.37/hr&lt;/td&gt;
+&lt;td&gt;–&lt;/td&gt;
+&lt;td&gt;$0.42/hr&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;m3.large&lt;/td&gt;
+&lt;td&gt;$0.95/hr&lt;/td&gt;
+&lt;td&gt;–&lt;/td&gt;
+&lt;td&gt;$0.84/hr&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;m3.xlarge&lt;/td&gt;
+&lt;td&gt;$2.13/hr&lt;/td&gt;
+&lt;td&gt;–&lt;/td&gt;
+&lt;td&gt;$1.68/hr&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;m3.2xlarge&lt;/td&gt;
+&lt;td&gt;$4.49/hr&lt;/td&gt;
+&lt;td&gt;–&lt;/td&gt;
+&lt;td&gt;$3.36/hr&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;c3.large&lt;/td&gt;
+&lt;td&gt;$0.835/hr&lt;/td&gt;
+&lt;td&gt;$1.815/hr&lt;/td&gt;
+&lt;td&gt;$0.525/hr&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;c3.xlarge&lt;/td&gt;
+&lt;td&gt;$1.87/hr&lt;/td&gt;
+&lt;td&gt;$2.80/hr&lt;/td&gt;
+&lt;td&gt;$1.05/hr&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;c3.2xlarge&lt;/td&gt;
+&lt;td&gt;$3.95/hr&lt;/td&gt;
+&lt;td&gt;$4.86/hr&lt;/td&gt;
+&lt;td&gt;$2.10/hr&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;c3.4xlarge&lt;/td&gt;
+&lt;td&gt;–&lt;/td&gt;
+&lt;td&gt;$6.483/hr&lt;/td&gt;
+&lt;td&gt;$4.20/hr&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;c3.8xlarge&lt;/td&gt;
+&lt;td&gt;–&lt;/td&gt;
+&lt;td&gt;$8.688/hr&lt;/td&gt;
+&lt;td&gt;$8.40/hr&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>AWSにFortiGateをデプロイしてみた（NATとFWポリシー編）</title>
+      <link>http://aimless.jp/blog/archives/2358</link>
+      <pubDate>Sat, 24 Jan 2015 00:00:00 +0000</pubDate>
+      
+      <guid>http://aimless.jp/blog/archives/2358</guid>
+      <description>
+
+&lt;p&gt;&lt;a href=&#34;http://aimless.jp/blog/blog/archives/2317&#34;&gt;AWSにFortiGateをデプロイしてみた（ネットワーク設定編）&lt;/a&gt;の続きです。AWS上に設置したFortiGateでNATとFWポリシーを試します。&lt;/p&gt;
+
+&lt;h2 id=&#34;vpc環境:ec17bdc7c38ff198df2edaa2953430eb&#34;&gt;VPC環境&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;FortiGate-VM&lt;/strong&gt;&lt;/p&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;項目&lt;/th&gt;
+&lt;th&gt;ID&lt;/th&gt;
+&lt;th&gt;プライベートIP&lt;/th&gt;
+&lt;th&gt;EIP&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;ENI(Exernal)&lt;/td&gt;
+&lt;td&gt;eni-921a6ecb&lt;/td&gt;
+&lt;td&gt;10&amp;#46;175.1.195&lt;/td&gt;
+&lt;td&gt;54&amp;#46;65.151.103&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;ENI(internal)&lt;/td&gt;
+&lt;td&gt;eni-6304703a&lt;/td&gt;
+&lt;td&gt;10&amp;#46;175.2.195&lt;/td&gt;
+&lt;td&gt;&amp;#8211;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;&lt;strong&gt;CIDR&lt;/strong&gt;&lt;/p&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;項目&lt;/th&gt;
+&lt;th&gt;値&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;VPC CIDR&lt;/td&gt;
+&lt;td&gt;10&amp;#46;175.0.0/16&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;external_subnet&lt;/td&gt;
+&lt;td&gt;10&amp;#46;175.1.0/24&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;internal_subnet&lt;/td&gt;
+&lt;td&gt;10&amp;#46;175.2.0/24&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;&lt;strong&gt;external_subnetのroute-table&lt;/strong&gt;&lt;/p&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Destination&lt;/th&gt;
+&lt;th&gt;Target&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;10&amp;#46;175.0.0/16&lt;/td&gt;
+&lt;td&gt;local&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;0&amp;#46;0.0.0&lt;/td&gt;
+&lt;td&gt;IGW&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;&lt;strong&gt;internal_subnetのroute-table&lt;/strong&gt;&lt;/p&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Destination&lt;/th&gt;
+&lt;th&gt;Target&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;10&amp;#46;175.0.0/16&lt;/td&gt;
+&lt;td&gt;local&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;0&amp;#46;0.0.0/0&lt;/td&gt;
+&lt;td&gt;eni-6304703a&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;　internal_subnetに配置されたインスタンスとインターネットとの通信が、FortiGate-VMを経由するよう、デフォルトルートをFortiGate-VMのinternal側ENIに向けます。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;動作確認用インスタンス&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;　internal_subnetにAmazon_linuxを設置します。IPアドレスは10.175.2.152です。&lt;/p&gt;
+
+&lt;h2 id=&#34;事前準備:ec17bdc7c38ff198df2edaa2953430eb&#34;&gt;事前準備&lt;/h2&gt;
+
+&lt;p&gt;　FortiGate-VMの2つのENIで「Source/dest. check」をfalseにします。なお、インスタンスを右クリックしてSource/dest. checkをfalseにしても、2本目のENIはenableのままでした。Source/dest. checkは、インスタンスではなくENIに対して実施しましょう。&lt;/p&gt;
+
+&lt;h2 id=&#34;ポートフォワード:ec17bdc7c38ff198df2edaa2953430eb&#34;&gt;ポートフォワード&lt;/h2&gt;
+
+&lt;p&gt;　まずはポートフォワードからです。internalに設置されているEC2:10.175.2.152のSSHを、EIP:54.65.151.103の11022で外部公開します。&lt;/p&gt;
+
+&lt;p&gt;　クライアントとサーバだけに注目した通信要件は、「54.65.151.103の11022」を「10.175.2.152の22」にポートフォワードするになりますので、以下の様に設定したのですが、通信できずドツボにはまりました。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/wp-content/uploads/2015/01/aws-fg-1.png&#34; alt=&#34;enter image description here&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;　正しい通信要件は、「EIP:54.65.151.103の11022」をAWSが変換した「10.175.1.195の11022」を、ForiGateが「10.175.2.152の22」にポートフォワードするになりますので、以下の様に設定する必要があります。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/wp-content/uploads/2015/01/aws-fg-2.png&#34; alt=&#34;enter image description here&#34; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;スタティックnat:ec17bdc7c38ff198df2edaa2953430eb&#34;&gt;スタティックNAT&lt;/h2&gt;
+
+&lt;p&gt;　次はスタティックNATです。FortiGate-VMとは異なるグローバルIPアドレスでEC2を外部公開します。&lt;/p&gt;
+
+&lt;p&gt;　external側のENIに10.175.1.0/24のIPアドレス（10.175.1.194）を追加します。そしてEIPをもう一つ取得し、10.175.1.194に割り当てます。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/wp-content/uploads/2015/01/aws-fg-3.png&#34; alt=&#34;enter image description here&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;これにより、FortiGate-VMのパラメータは以下になります。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;FortiGate-VM&lt;/strong&gt;&lt;/p&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;項目&lt;/th&gt;
+&lt;th&gt;ID&lt;/th&gt;
+&lt;th&gt;プライベートIP&lt;/th&gt;
+&lt;th&gt;EIP&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;ENI(Exernal)&lt;/td&gt;
+&lt;td&gt;eni-921a6ecb&lt;/td&gt;
+&lt;td&gt;10&amp;#46;175.1.195&lt;/td&gt;
+&lt;td&gt;54&amp;#46;65.151.103&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;ENI(Exernal)&lt;/td&gt;
+&lt;td&gt;eni-921a6ecb&lt;/td&gt;
+&lt;td&gt;10&amp;#46;175.1.194&lt;/td&gt;
+&lt;td&gt;54&amp;#46;64.192.17&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;ENI(internal)&lt;/td&gt;
+&lt;td&gt;eni-6304703a&lt;/td&gt;
+&lt;td&gt;10&amp;#46;175.2.195&lt;/td&gt;
+&lt;td&gt;&amp;#8211;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;　そして、新規取得した54.64.192.17を割り当てた10.175.1.194を利用して、バーチャルIPアドレスを作成します。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/wp-content/uploads/2015/01/aws-fg-2.png&#34; alt=&#34;enter image description here&#34; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;ポリシー:ec17bdc7c38ff198df2edaa2953430eb&#34;&gt;ポリシー&lt;/h2&gt;
+
+&lt;p&gt;　ネットワークやNATの設定はAWSの仕様を意識する必要がありますが、ポリシーの設定はFortiGate-VM単体の設定ですので、普通のFortiGateと同じです。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;サンプル&lt;/strong&gt;　 　&lt;img src=&#34;http://aimless.jp/blog/wp-content/uploads/2015/01/aws-fg-4.png&#34; alt=&#34;enter image description here&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;このように設定すると、以下の動作になります。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;外部から54.64.192.17へのすべての通信が、AWSによって10.175.1.194にNATされ、さらにFortiGate-VMでNATされてEC2：10.175.2.152に到達する&lt;/li&gt;
+&lt;li&gt;EC2：10.175.2.152から外部へのアクセスは、FortiGateによって10.175.1.194でNATされ、さらにAWSによって54.64.192.17にNATされて外部に到達する。&lt;/li&gt;
+&lt;li&gt;internal_subnetから外部へのアクセスは、FortiGateによって10.175.1.195でNATされ、さらにAWSによって54.65.151.103にNATされて外部に到達する。&lt;/li&gt;
+&lt;li&gt;それ以外の通信はすべて拒否する。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;ipアドレスの制限:ec17bdc7c38ff198df2edaa2953430eb&#34;&gt;IPアドレスの制限&lt;/h2&gt;
+
+&lt;p&gt;　バーチャルIP用のアドレスを確保するためには、ENIにIPアドレスを追加割り当てする必要があります。ただし、ENIに割り当てられるIPアドレスはインスタンスタイプによって上限があります。（&lt;a href=&#34;http://docs.aws.amazon.com/ja_jp/AWSEC2/latest/UserGuide/using-eni.html#AvailableIpPerENI&#34;&gt;参考：インスタンスタイプあたりの ENI ごとのプライベート IP アドレス&lt;/a&gt;）&lt;/p&gt;
+
+&lt;p&gt;　今回利用しているt3.mediumは最大6個になります。EIPはENIのプライベートアドレスに割り当てる必要がありますので、取得できるEIPの数も最大6個になってしまいます。つまり、このt3.mediumのFortiGate-VMを利用すると、最大6個のIPアドレスしか外部公開できなくなります&amp;#8230;インスタンスタイプを上げても最大30個です。これは微妙&amp;#8230;&lt;/p&gt;
+
+&lt;p&gt;![enter image description here][7]&lt;/p&gt;
+
+&lt;p&gt;[7]: &lt;a href=&#34;http://aimless.jp/blog/wp-content/uploads/2015/01/aws-fg-5.png&#34;&gt;http://aimless.jp/blog/wp-content/uploads/2015/01/aws-fg-5.png&lt;/a&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>AWSにFortiGateをデプロイしてみた（ログ出力編）</title>
+      <link>http://aimless.jp/blog/archives/2378</link>
+      <pubDate>Sat, 24 Jan 2015 00:00:00 +0000</pubDate>
+      
+      <guid>http://aimless.jp/blog/archives/2378</guid>
+      <description>
+
+&lt;p&gt;AWS上にデプロイしたForiGate-VMは、デフォルトではログが出力されなかったので、ログを出力するために必要な作業をメモします。&lt;/p&gt;
+
+&lt;h2 id=&#34;初期状態:0369e224a48532743f250f58f50b7a06&#34;&gt;初期状態&lt;/h2&gt;
+
+&lt;p&gt;　デプロイ直後の状況は以下の通りです。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;メモリログが無効になっている&lt;/li&gt;
+&lt;li&gt;ディスクログは有効だが、そもそもディスクにパーティションが作られていない&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;　FortiGate-VMには、マーケットプレイスからポチポチデプロイしたときにデフォルトで選択されているEBSを搭載しているのですが、利用できていません。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;EBS選択画面&lt;/strong&gt; &lt;img src=&#34;http://aimless.jp/blog/wp-content/uploads/2015/01/aws-fg-6.png&#34; alt=&#34;enter image description here&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;FortiGateの管理画面&lt;/strong&gt; &lt;img src=&#34;http://aimless.jp/blog/wp-content/uploads/2015/01/aws-fg-8.png&#34; alt=&#34;enter image description here&#34; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;対処方法:0369e224a48532743f250f58f50b7a06&#34;&gt;対処方法&lt;/h2&gt;
+
+&lt;p&gt;　メモリログを有効にしたい場合はCLIから設定を変更します。ディスクログを有効にする場合は、CLIからディスクをフォーマットします。&lt;/p&gt;
+
+&lt;h2 id=&#34;動作確認:0369e224a48532743f250f58f50b7a06&#34;&gt;動作確認&lt;/h2&gt;
+
+&lt;p&gt;　管理画面上でもディスクを認識するようになりました。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/wp-content/uploads/2015/01/aws-fg-9.png&#34; alt=&#34;enter image description here&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;　ログ確認画面の表示をディスクに切り替えます。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/wp-content/uploads/2015/01/aws-fg-10.png&#34; alt=&#34;enter image description here&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;　無事、ディスクに保存されているログを確認出来るようになりました。&lt;/p&gt;
+
+&lt;p&gt;![enter image description here][5]&lt;/p&gt;
+
+&lt;p&gt;[5]: &lt;a href=&#34;http://aimless.jp/blog/wp-content/uploads/2015/01/aws-fg-11.png&#34;&gt;http://aimless.jp/blog/wp-content/uploads/2015/01/aws-fg-11.png&lt;/a&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>AWSにFortiGateをデプロイしてみた（ネットワーク設定編）</title>
+      <link>http://aimless.jp/blog/archives/2317</link>
+      <pubDate>Fri, 23 Jan 2015 00:00:00 +0000</pubDate>
+      
+      <guid>http://aimless.jp/blog/archives/2317</guid>
+      <description>
+
+&lt;p&gt;いつの日か、AWS上の通信ログを取りたくなる日が来るだろうということで、使い慣れているFortiGateのVM版をAWS上にデプロイしてみました。&lt;/p&gt;
+
+&lt;p&gt;　以前調べた時は、AWSのマーケットプライスで提供されているモデルがBYOL版のみであったため試せなかったのですが、現時点ではライセンス込みのモデルがあるので、気軽に試せます。&lt;/p&gt;
+
+&lt;h2 id=&#34;vpc環境:8dfb55f8e4769f24674df2a1c9f777e6&#34;&gt;VPC環境&lt;/h2&gt;
+
+&lt;p&gt;　FortiGate-VMをデプロイするVPCの環境は以下の通りです。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;CIDR&lt;/strong&gt;&lt;/p&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;項目&lt;/th&gt;
+&lt;th&gt;値&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;VPC CIDR&lt;/td&gt;
+&lt;td&gt;10&amp;#46;175.0.0/16&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;external_subnet&lt;/td&gt;
+&lt;td&gt;10&amp;#46;175.1.0/24&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;internal_subnet&lt;/td&gt;
+&lt;td&gt;10&amp;#46;175.2.0/24&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;&lt;strong&gt;external_subnetのroute-table&lt;/strong&gt;&lt;/p&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Destination&lt;/th&gt;
+&lt;th&gt;Target&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;10&amp;#46;175.0.0/16&lt;/td&gt;
+&lt;td&gt;local&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;0&amp;#46;0.0.0&lt;/td&gt;
+&lt;td&gt;IGW&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;&lt;strong&gt;internal_subnetのroute-table&lt;/strong&gt;&lt;/p&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Destination&lt;/th&gt;
+&lt;th&gt;Target&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;10&amp;#46;175.0.0/16&lt;/td&gt;
+&lt;td&gt;local&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h2 id=&#34;とりあえずnic1個でデプロイ:8dfb55f8e4769f24674df2a1c9f777e6&#34;&gt;とりあえずNIC1個でデプロイ&lt;/h2&gt;
+
+&lt;p&gt;　マーケットプライスからポチポチとデプロイします。とりあえず、一般的なサーバと同様、NIC1個で始めます。&lt;/p&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;パラメータ&lt;/th&gt;
+&lt;th&gt;設定&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;AMI&lt;/td&gt;
+&lt;td&gt;FortiGate-VM&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;instance type&lt;/td&gt;
+&lt;td&gt;m3.medium&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Network&lt;/td&gt;
+&lt;td&gt;VPC&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;subnet&lt;/td&gt;
+&lt;td&gt;external_subnet&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;security group&lt;/td&gt;
+&lt;td&gt;全通信許可&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;　起動後、EIPを作成し、external_subnetのENIに割り当てます。この時点で、ブラウザからENIのグローバルIPアドレスにHTTPSでアクセスすると、ログイン画面が見られるはずです。初期IDとパスワード（admin/インスタンスID）を入力してログインしましょう。&lt;/p&gt;
+
+&lt;p&gt;　ログインすると、FortiGateを触ったことのある人には見慣れた画面が出ます。取りあえずGUIを日本語表示にしましょう。気になる方は、管理アクセスのIPアドレス制限を行いましょう。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/wp-content/uploads/2015/01/aws-1.png&#34; alt=&#34;enter image description here&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;　FortiGate-VMは、バンドル版なんですね。フルUTM機能が使えますので、ファイアウォール以外の使い道もありそうです。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/wp-content/uploads/2015/01/aws-6.png&#34; alt=&#34;enter image description here&#34; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;nicを増やす:8dfb55f8e4769f24674df2a1c9f777e6&#34;&gt;NICを増やす&lt;/h2&gt;
+
+&lt;p&gt;　GUIでインターフェースを確認すると、NICは当然一つしかありません。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/wp-content/uploads/2015/01/aws-3.png&#34; alt=&#34;enter image description here&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;　FWはインターフェースを複数持ってなんぼですので、NICを増やします。マネジメントコンソールでENIを作成し、FortiGate-VMのインスタンスにアタッチします。そして、アタッチしたNICを認識させるためにFortiGateを再起動します。（他の方法はないのか&amp;#8230;）&lt;/p&gt;
+
+&lt;p&gt;　FortiGateがENIを認識すると、IP未設定のインターフェースがリンクアップしますので、GUIでENIに設定したIPアドレスを設定します。これで、NICを二つ持ったNATモードのFortiGateの完成です。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/wp-content/uploads/2015/01/aws-5.png&#34; alt=&#34;enter image description here&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;　なお、AWSのインスタンスは、インスタンスタイプごとに利用できるENIの数が決まっています。（&lt;a href=&#34;http://docs.aws.amazon.com/ja_jp/AWSEC2/latest/UserGuide/using-eni.html#AvailableIpPerENI&#34;&gt;参考：インスタンスタイプあたりの ENI ごとのプライベート IP アドレス&lt;/a&gt;） 今回選択したm3.mediumは最大2です。そのため、GUI的には7ポートまで利用可能な様に見えますが、3つ目のENIをアタッチしようとすると、エラーになります&amp;#8230;m3.mediumだとDMZが作れない&amp;#8230;&lt;/p&gt;
+
+&lt;p&gt;![enter image description here][6]&lt;/p&gt;
+
+&lt;p&gt;　次回は、バーチャルIPを作成し、internal_subnetに設置したインスタンスとインターネット間の通信を実現します。また、複数のバーチャルIPを作成する方法を確認します。&lt;/p&gt;
+
+&lt;p&gt;[6]: &lt;a href=&#34;http://aimless.jp/blog/wp-content/uploads/2015/01/aws-7.png&#34;&gt;http://aimless.jp/blog/wp-content/uploads/2015/01/aws-7.png&lt;/a&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>オンプレのファイアウォールポリシーをAWSに移行する</title>
+      <link>http://aimless.jp/blog/archives/2262</link>
+      <pubDate>Sun, 18 Jan 2015 00:00:00 +0000</pubDate>
+      
+      <guid>http://aimless.jp/blog/archives/2262</guid>
+      <description>
+
+&lt;p&gt;オンプレミスに設置されているサーバをAWSに移行する場合、サーバの通信経路上の存在するファイアウォールのポリシーもAWSへ移行する必要があります。多くの場合、ポリシーの移行先はセキュリティグループになると思います。セキュリティグループはオンプレのFWと実装方法が違いますので、そのまま移行するのは難しいです。&lt;/p&gt;
+
+&lt;p&gt;　自分の備忘の含めて、これまで見つけたいい感じの移行方式をまとめます。&lt;/p&gt;
+
+&lt;h2 id=&#34;移行方式その１:408d74faa089a41a4f7a8379e456ab27&#34;&gt;移行方式その１&lt;/h2&gt;
+
+&lt;h3 id=&#34;オンプレミスのファイアウォールポリシー:408d74faa089a41a4f7a8379e456ab27&#34;&gt;オンプレミスのファイアウォールポリシー&lt;/h3&gt;
+
+&lt;p&gt;　同一システムのWEBサーバ群から、同一システムのDBサーバ群へのDBアクセスの通信を一括で許可するポリシーです。よく見る設定方法だと信じたい。&lt;/p&gt;
+
+&lt;p&gt;| ID | Source         | Dest        | Service | Action |
+| &amp;ndash; | &amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;ndash; | &amp;mdash;&amp;mdash;&amp;mdash;&amp;ndash; | &amp;mdash;&amp;mdash;- | &amp;mdash;&amp;mdash; |
+| n  | WEB1 WEB2 WEB3 | DB1 DB2 DB3 | MySql   | Permit |&lt;/p&gt;
+
+&lt;h3 id=&#34;セキュリティグループの実装方法:408d74faa089a41a4f7a8379e456ab27&#34;&gt;セキュリティグループの実装方法&lt;/h3&gt;
+
+&lt;p&gt;　以下の二つのセキュリティグループを作成します。そして、AWS上に移行したWEB1とWEB2、WEB3に「sg-web-server」を、DB1とDB2、DB3に「sg-db-server」を適用します。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;sg-web-server&lt;/strong&gt;&lt;/p&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Direction&lt;/th&gt;
+&lt;th&gt;Type&lt;/th&gt;
+&lt;th&gt;Protocol&lt;/th&gt;
+&lt;th&gt;Port Range&lt;/th&gt;
+&lt;th&gt;Destination&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;outbound&lt;/td&gt;
+&lt;td&gt;MySQL&lt;/td&gt;
+&lt;td&gt;TCP (6)&lt;/td&gt;
+&lt;td&gt;3306&lt;/td&gt;
+&lt;td&gt;sg-db-server&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;&lt;strong&gt;sg-db-server&lt;/strong&gt;&lt;/p&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Direction&lt;/th&gt;
+&lt;th&gt;Type&lt;/th&gt;
+&lt;th&gt;Protocol&lt;/th&gt;
+&lt;th&gt;Port Range&lt;/th&gt;
+&lt;th&gt;Source&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;inbound&lt;/td&gt;
+&lt;td&gt;MySQL&lt;/td&gt;
+&lt;td&gt;TCP (6)&lt;/td&gt;
+&lt;td&gt;3306&lt;/td&gt;
+&lt;td&gt;sg-web-server&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;　セキュリティグループの「Source/Destination」には、IPアドレスだけではなく、セキュリティグループを選択することができます。この設定を行った場合、「Source/Destination」は、選択したセキュリティグループが適用されているEC2のIPアドレスが利用されます。&lt;/p&gt;
+
+&lt;p&gt;　上記の例ですと、sg-db-serverはDB1とDB2、DB3に適用されていますので、sg-web-serverで許可されるMySQLの宛先アドレスはDB1とDB2、DB3になります。&lt;/p&gt;
+
+&lt;p&gt;　この便利な機能は、オンプレのファイアウォールにおける「グルーピング」の機能だと考えることが出来ます。この機能を利用することで、サーバごとに設定を行う必要があるセキュリティグループを効率的に設定することができます。&lt;/p&gt;
+
+&lt;h2 id=&#34;移行方式その２:408d74faa089a41a4f7a8379e456ab27&#34;&gt;移行方式その２&lt;/h2&gt;
+
+&lt;h3 id=&#34;オンプレミスのファイアウォールポリシー-1:408d74faa089a41a4f7a8379e456ab27&#34;&gt;オンプレミスのファイアウォールポリシー&lt;/h3&gt;
+
+&lt;p&gt;　とあるセグメント内の端末が共通で利用するシステムを許可するポリシーです。これもよく見る設定方法だと信じたい。&lt;/p&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;ID&lt;/th&gt;
+&lt;th&gt;Source&lt;/th&gt;
+&lt;th&gt;Dest&lt;/th&gt;
+&lt;th&gt;Service&lt;/th&gt;
+&lt;th&gt;Action&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;n&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;ANY&lt;/td&gt;
+&lt;td&gt;DNS resolver&lt;/td&gt;
+&lt;td&gt;DNS&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;n+1&lt;/td&gt;
+&lt;td&gt;ANY&lt;/td&gt;
+&lt;td&gt;NTP server&lt;/td&gt;
+&lt;td&gt;NTP&lt;/td&gt;
+&lt;td&gt;Permit&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h3 id=&#34;セキュリティグループの実装方法-1:408d74faa089a41a4f7a8379e456ab27&#34;&gt;セキュリティグループの実装方法&lt;/h3&gt;
+
+&lt;p&gt;　以下のセキュリティグループを作成し、セグメント内に配置するサーバに適用します。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Name:network-service&lt;/strong&gt;&lt;/p&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Direction&lt;/th&gt;
+&lt;th&gt;Type&lt;/th&gt;
+&lt;th&gt;Protocol&lt;/th&gt;
+&lt;th&gt;Port Range&lt;/th&gt;
+&lt;th&gt;Destination&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;outbound&lt;/td&gt;
+&lt;td&gt;DNS (53)&lt;/td&gt;
+&lt;td&gt;UDP (17)&lt;/td&gt;
+&lt;td&gt;53&lt;/td&gt;
+&lt;td&gt;DNS resolver&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;outbound&lt;/td&gt;
+&lt;td&gt;CUstom UDP Rule&lt;/td&gt;
+&lt;td&gt;UDP (17)&lt;/td&gt;
+&lt;td&gt;123&lt;/td&gt;
+&lt;td&gt;NTP server&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;　セキュリティグループは、1つのサーバに複数個適用することができます。そこで、サーバ共通の設定を一つのセキュリティグループに集約することで、メンテナンス性を向上することができます。&lt;/p&gt;
+
+&lt;p&gt;　たとえば、DNS resolverをリプレースしIPアドレスが変更となった場合、上記のセキュリティグループがあれば、このセキュリティグループのDNS resolverのIPアドレスだけを変更するだけでOKです。&lt;/p&gt;
+
+&lt;p&gt;　もし、サーバごとに一つのセキュリティグループを設定しており、そのセキュリティグループでDNS resolverへのDNSを許可していたとしたら、すべてのサーバに適用されているセキュリティグループを変更しなければなりません。&lt;/p&gt;
+
+&lt;h2 id=&#34;最後に:408d74faa089a41a4f7a8379e456ab27&#34;&gt;最後に&lt;/h2&gt;
+
+&lt;p&gt;　セキュリティグループの仕様を利用した移行方式をまとめました。なお、移行にあたって一番大変な作業は通信要件の精査です。俺「このポリシー何？いるの？いらないの？」サーバ担当「昔のことは知らん」みたいなやり取りを繰り返すのはこりごりです。&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Virtual Private Gatewayのベストパス選択アルゴリズムで遊んでみた。</title>
+      <link>http://aimless.jp/blog/archives/1755</link>
+      <pubDate>Sun, 30 Mar 2014 00:00:00 +0000</pubDate>
+      
+      <guid>http://aimless.jp/blog/archives/1755</guid>
+      <description>
+
+&lt;p&gt;仕事でVPC DXに関わっています。その際に、VPCからオンプレ側へのトラフィック設計で不明点があったので、VPC IPSecを利用して自腹で試してみました。&lt;/p&gt;
+
+&lt;p&gt;　VPCのVirtual Private Gateways（VGW）とオンプレ側の複数ルータが接続しており、各ルータがVPCに対して同一経路を広報している場合、VPCからの戻りのトラフィックがどの拠点に流れるかを意図的に設計したくなります。これはVGWにどのルータが広報した経路をベストパスとして選ばせるかという作業であり、BGPにおける経路設計が利用できます。&lt;/p&gt;
+
+&lt;p&gt;　VGWにおけるベストパス選択アルゴリズムは、&lt;a href=&#34;http://docs.aws.amazon.com/AmazonVPC/latest/NetworkAdminGuide/Introduction.html&#34;&gt;公式ドキュメント&lt;/a&gt;の『Configuring Multiple VPN Connections to Your Amazon VPC』に記載されています。 素直に読むと、下記の順番です。一般的なベストパス選択アルゴリズムには含まれているMEDがないのが気になります。&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;ロンゲストマッチ&lt;/li&gt;
+&lt;li&gt;BGPよりもSTATIC&lt;/li&gt;
+&lt;li&gt;AS-PATH&lt;/li&gt;
+&lt;li&gt;ORIGIN&lt;/li&gt;
+&lt;li&gt;ルータID&lt;/li&gt;
+&lt;li&gt;ネイバーのID&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&#34;検証環境:8a801d7caae5205bbd472b545f0f0c21&#34;&gt;検証環境&lt;/h3&gt;
+
+&lt;p&gt;![enter image description here][2]&lt;/p&gt;
+
+&lt;p&gt;　VPCのVGWに対して、2つのVPN Connectionを張ります。設定と動作確認が煩雑になるため、1つのVPN装置が張るVPN Connectionは1つのグローバルIPアドレスのみにします。VPN装置（cisco892JとFortiGate50B）からは、同一経路（192.168.2.0/24）をVPCに対して広報します。&lt;/p&gt;
+
+&lt;p&gt;　この状態でEC2から192.168.2.254へTracerouteを行うことで、VGWがCiscoとFortiGateが広報した経路のどちらをベストパスとして選択するかを確認します。&lt;/p&gt;
+
+&lt;h3 id=&#34;1-そのまま接続してみる:8a801d7caae5205bbd472b545f0f0c21&#34;&gt;1　そのまま接続してみる&lt;/h3&gt;
+
+&lt;p&gt;　特に経路制御をせずにVPNコネクションを確立し、EC2からTracerouteを行います。FortiGate（169.254.252.33）経由になりました。これはORIGINによるものです。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;traceroute to 192.168.2.254 (192.168.2.254), 30 hops max, 60 byte packets
+1 169.254.252.17 (169.254.252.17) 0.335 ms 0.506 ms 0.694 ms
+2 169.254.252.33 (169.254.252.33) 2.939 ms 9.704 ms 3.032 ms
+3 169.254.252.34 (169.254.252.34) 19.684 ms 19.898 ms 19.838 ms
+4 192.168.2.254 (192.168.2.254) 20.345 ms * * 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;　CiscoはBGPに対してconnectedをredistributeしているので、originが?（incomplite）になっています。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Router#show bgp ipv4 unicast neighbors 169.254.252.25 advertised-routes 
+Network Next Hop Metric LocPrf Weight Path
+ *&amp;gt; 192.168.2.0 0.0.0.0 0 32768 ?
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;　一方FortiGateは、BGPのNETWORKコマンドで経路を作っているので、originがi（IGP）になっています。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;(root) # get router info bgp neighbors 169.254.252.33
+Network Next Hop Metric LocPrf Weight Path 
+*&amp;gt; 192.168.2.0 169.254.252.34 100 32768 i 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;　ORIGIN属性はigp、egp、incompliteの順で選ばれるので、FortiGateが広告した192.168.2.0/24がベストパスに選択され、TracerouteがFortiGate経由になります。&lt;/p&gt;
+
+&lt;h3 id=&#34;2-origionをそろえる:8a801d7caae5205bbd472b545f0f0c21&#34;&gt;2　ORIGIONをそろえる&lt;/h3&gt;
+
+&lt;p&gt;　Cisco側のORIGIN属性をIGPに変更してみます。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Router#show bgp ipv4 unicast neighbors 169.254.252.25 advertised-routes 
+Network Next Hop Metric LocPrf Weight Path 
+*&amp;gt; 192.168.2.0 0.0.0.0 0 32768 i
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;　すると、Cisco（169.254.252.25）経由になりました。ORIGINが同じigpになった結果、次の選択基準であるrouter-idによってベストパスが決定したと思われます。（CiscoのほうがルータIDが小さいです。）&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ traceroute 192.168.2.254 traceroute to 192.168.2.254 (192.168.2.254), 30 hops max, 60 byte packets 
+1 169.254.252.17 (169.254.252.17) 2.839 ms 3.039 ms 2.991 ms 
+2 169.254.252.25 (169.254.252.25) 9.339 ms 9.034 ms 2.835 ms 
+3 169.254.252.26 (169.254.252.26) 13.584 ms 
+4 192.168.2.254 (192.168.2.254) 20.392 ms * 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;3-as-pathをprependしてみる:8a801d7caae5205bbd472b545f0f0c21&#34;&gt;3　AS-PATHをPrependしてみる。&lt;/h3&gt;
+
+&lt;p&gt;　router-idでベストパスが選択されている状況で、AS-PATHを使ってみます。Cisco側が広報する経路にAS-PATHを3つ積みます。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;route-map aws-aspath permit 10 
+set as-path prepend 64585 64585 64585 
+
+router bgp 64585 
+address-family ipv4 
+neighbor 169.254.252.25 route-map aws-aspath out
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;　すると、EC2からのTracerouteはFortiGate（169.254.252.33）経由になります。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ traceroute 192.168.2.254 traceroute to 192.168.2.254 (192.168.2.254), 30 hops max, 60 byte packets 
+1 169.254.252.17 (169.254.252.17) 0.337 ms 0.505 ms 0.717 ms 
+2 169.254.252.33 (169.254.252.33) 9.134 ms 5.161 ms 9.263 ms 
+3 169.254.252.34 (169.254.252.34) 17.613 ms 24.352 ms 17.749 ms 
+4 192.168.2.254 (192.168.2.254) 20.646 ms * *
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;4-medを積んでみる:8a801d7caae5205bbd472b545f0f0c21&#34;&gt;4　MEDを積んでみる&lt;/h3&gt;
+
+&lt;p&gt;　AS-PATHではなく、MEDを積んでみましょう。Cisco側を通っている状況でCisco側にMEDを積みます。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;route-map aws-addmed permit 10 
+set metric 10 
+
+router bgp 64585 
+address-family ipv4 
+neighbor 169.254.252.25 route-map aws-addmed out
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;　MEDは値が少ない経路が優先されます。FortiGateが広報する経路のMEDは初期値の0なので、FortiGate（169.254.252.33）経由になります。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ traceroute 192.168.2.254 traceroute to 192.168.2.254 (192.168.2.254), 30 hops max, 60 byte packets 
+1 169.254.252.17 (169.254.252.17) 0.323 ms 0.481 ms 0.692 ms 
+2 169.254.252.33 (169.254.252.33) 9.070 ms 3.027 ms 3.191 ms 
+3 169.254.252.34 (169.254.252.34) 24.657 ms 18.121 ms 18.064 ms 
+4 192.168.2.254 (192.168.2.254) 19.204 ms * *
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;　この状況でFortiGate側でMEDを積んでみましょう。Cisco側の10よりも大きくすればいいので100を積みます。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;config router route-map 
+edit &amp;quot;addmed&amp;quot; 
+config rule 
+edit 100 
+set set-metric 100 
+next 
+end 
+next
+end 
+config router bgp 
+set as 64585 
+config neighbor 
+edit &amp;quot;169.254.252.33&amp;quot; 
+set remote-as 10124 
+set route-map-out &amp;quot;addmed&amp;quot; 
+set send-community6 disable 
+next 
+end 
+end 
+end
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;　結果、Cisco（169.254.252.25）経由に戻ります。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ traceroute 192.168.2.254 traceroute to 192.168.2.254 (192.168.2.254), 30 hops max, 60 byte packets 
+1 169.254.252.17 (169.254.252.17) 0.321 ms 0.500 ms 0.705 ms 
+2 169.254.252.25 (169.254.252.25) 23.050 ms 23.011 ms 22.699 ms 
+3 169.254.252.26 (169.254.252.26) 16.317 ms * *
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;　公式のドキュメントにはMEDの記載がありませんでしたが、MEDによる経路制御も効くようですね。個人的にはAS-PATHがわかりやすくて好きなので、AS-PATHを利用します。&lt;/p&gt;
+
+&lt;p&gt;[2]: &lt;a href=&#34;http://aimless.jp/blog/wp-content/uploads/2014/03/vpc-diag.png&#34;&gt;http://aimless.jp/blog/wp-content/uploads/2014/03/vpc-diag.png&lt;/a&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

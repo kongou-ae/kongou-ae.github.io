@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Sphinx on Aimless</title>
+    <link>http://aimless.jp/categories/sphinx/</link>
+    <description>Recent content in Sphinx on Aimless</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ja</language>
+    <lastBuildDate>Wed, 09 Jul 2014 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://aimless.jp/categories/sphinx/feed/" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>気軽にドキュメントを書く（Sphinx &#43; rst2pdf &#43; LiveReload &#43; docker）</title>
+      <link>http://aimless.jp/blog/archives/2067</link>
+      <pubDate>Wed, 09 Jul 2014 00:00:00 +0000</pubDate>
+      
+      <guid>http://aimless.jp/blog/archives/2067</guid>
+      <description>
+
+&lt;p&gt;本エントリーは、Wordを満足に使いこなせない私が、Wordよりも気軽にドキュメントを書く方法を試行錯誤した結果のメモです。せめて内部用のドキュメントくらいは気軽に書きたいのです。&lt;/p&gt;
+
+&lt;h1 id=&#34;概要図:a272f9313b7feb55abc66d4c9811e04e&#34;&gt;概要図&lt;/h1&gt;
+
+&lt;p&gt;　試行錯誤した結果、下図のような構成になりました。人がやることは、WindowsのターミナルエミュレータからSSH経由でreSTファイルを編集する事だけです。あとは全自動でいい感じな見た目のPDFファイルがChromeに表示されます。&lt;/p&gt;
+
+&lt;p&gt;　&amp;#8230;Wordでいいじゃね？とは思いますが、気のせいだと思います。&lt;/p&gt;
+
+&lt;p&gt;![doc-diag][1]&lt;/p&gt;
+
+&lt;h1 id=&#34;sphinxを使って-文書の内容と見た目を分離する:a272f9313b7feb55abc66d4c9811e04e&#34;&gt;Sphinxを使って、文書の内容と見た目を分離する&lt;/h1&gt;
+
+&lt;p&gt;　ドキュメント作成のめんどくさいところは、想定読者向けに見た目を整える必要があることです。自分が読むだけならメモ帳でいいですが、ドキュメントとして想定読者が存在する場合、ドキュメントの第一印象は見た目が9割。&lt;/p&gt;
+
+&lt;p&gt;　そうはいっても、ドキュメントの最終的な価値は内容で決まるのであり、限りある能力と時間はドキュメントの内容に注力したい。逆に考えると、見た目にかかる労力を自動化できれば、第一印象の9割を気軽に得られるわけです。&lt;/p&gt;
+
+&lt;p&gt;　というわけで、Sphinxを利用して、内容と見た目を分離することにしました。これにより、編集すべきものはreSTなプレーンテキストだけになります。気軽。&lt;/p&gt;
+
+&lt;h1 id=&#34;rst2pdfを使って-見た目を整える:a272f9313b7feb55abc66d4c9811e04e&#34;&gt;rst2pdfを使って、見た目を整える&lt;/h1&gt;
+
+&lt;p&gt;　ドキュメント作成のめんどくさいところは、想定読者が納得する見た目にする必要があることです。見た目とは「ファイル形式」と「文章の体裁」です。&lt;/p&gt;
+
+&lt;p&gt;　上司にreSTなテキストファイルを提出しようものなら、中身を見ずにやり直しを食らうことでしょう。お客様にreSTを変換したHTMLファイルを提出するわけにはいかない。また、段落がそろっていない、表の罫線の太さが違う、フォントがそろっていないといった基本的な体裁が整っていないと、ドキュメントの評価はダダ下がりです。&lt;/p&gt;
+
+&lt;p&gt;　というわけで、rst2pdfを利用して、reSTファイルをPDFにすることにしました。「make pdf」を叩くと、プレーンテキストがPDFになります。気軽。これでファイル形式の問題はクリアです。&lt;/p&gt;
+
+&lt;p&gt;　さらに、rst2pdfのスタイルシートを利用して、文書の体制を細かく指定します。一度スタイルシートを決めてしまえば、次から体裁に悩むことはありません。気軽。これで体裁の問題もクリアです。&lt;/p&gt;
+
+&lt;h1 id=&#34;python-livereloadを使って-操作性を高める:a272f9313b7feb55abc66d4c9811e04e&#34;&gt;python-livereloadを使って、操作性を高める&lt;/h1&gt;
+
+&lt;p&gt;　内容と見た目を分離したデメリットは、内容を変更した際に見た目を再生成する必要があることです。wordであれば、ドキュメントの内容を修正するだけで見た目も修正されますが、Sphinx + rst2pdfを使う場合、reSTを修正した後に「make pdf」をして、さらにPDFを開きなおす必要がある。これはすごくめんどくさい。&lt;/p&gt;
+
+&lt;p&gt;　というわけで、このめんどくさい作業を、python-livereloadで自動化しました。&lt;/p&gt;
+
+&lt;p&gt;　reSTを配置しているディレクトリで以下のスクリプトを起動し、Chromeでlocalhostの35729/tcpでPDFにアクセスします。そして、Chrome拡張のlivereloadで接続します。この状態でreSTまたはrst2pdfのスタイルシートを更新すると、勝手にmake pdfが走り、更にブラウザのPDFファイルがリロードされるようになります。気軽。超便利。&lt;/p&gt;
+
+&lt;h1 id=&#34;dockerを使って-仕組みのポータビリティを高める:a272f9313b7feb55abc66d4c9811e04e&#34;&gt;dockerを使って、仕組みのポータビリティを高める&lt;/h1&gt;
+
+&lt;p&gt;　気軽にドキュメントを書く仕組みができましたが、根本的な問題として、この仕組み自体をWindows環境で作る事が気軽ではありません。PCが変わるたびにこの環境を一から作り直すのはバカみたいです。&lt;/p&gt;
+
+&lt;p&gt;　というわけで、Doeckerを利用してこの仕組みをコンテナにしました。Dockerfileにしたので、Dockerさえ動けば、どの端末でも直ぐにこの仕組みを利用できます。windowsにもboot2dockerがあるので、Docker環境の準備は簡単です。気軽。&lt;/p&gt;
+
+&lt;p&gt;以上、気軽さを求めて試行錯誤した結果でした。&lt;/p&gt;
+
+&lt;p&gt;[1]: &lt;a href=&#34;http://aimless.jp/blog/images/doc-diag.jpg&#34;&gt;http://aimless.jp/blog/images/doc-diag.jpg&lt;/a&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

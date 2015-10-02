@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Virtualization on Aimless</title>
+    <link>http://aimless.jp/categories/virtualization/</link>
+    <description>Recent content in Virtualization on Aimless</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ja</language>
+    <lastBuildDate>Wed, 20 Mar 2013 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://aimless.jp/categories/virtualization/feed/" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>ESXi5.1上の仮想マシンでVT-xを有効にしてみた</title>
+      <link>http://aimless.jp/blog/archives/1589</link>
+      <pubDate>Wed, 20 Mar 2013 00:00:00 +0000</pubDate>
+      
+      <guid>http://aimless.jp/blog/archives/1589</guid>
+      <description>&lt;p&gt;tremaのお勉強をする為に、openvswitchに複数のサーバがぶら下がる環境が欲しかったので、自宅のESXi5.1（5.1.0,838463）上にKVMを構築しました。その際に仮想マシンのVT-x有効化にハマったのでメモしておきます。&lt;/p&gt;
+
+&lt;p&gt;　単純に仮想マシンの設定で「intel VT-xを使用する」的なオプションにチェックをしても、仮想マシン側ではVT-xが有効になりません。仮想マシン（Ubuntu12.10）上の表示結果は下記の通りです。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;@kvmhost:~$ grep vm /proc/cpuinfo
+ flags : fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts mmx fxsr sse sse2 ss syscall nx rdtscp lm constant_tsc arch_perfmon pebs bts nopl xtopology tsc_reliable nonstop_tsc aperfmperf pni pclmulqdq ssse3 cx16 sse4_1 sse4_2 popcnt aes xsave avx hypervisor lahf_lm ida arat epb xsaveopt pln pts dtherm 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;　公式な対応方法は「WebClientで設定を変更する」みたいなのですが、ご自宅にWebClientはない！&lt;/p&gt;
+
+&lt;blockquote cite=&#34;http://communities.vmware.com/docs/DOC-8970&#34;&gt;
+  &lt;p&gt;
+    To enable virtualized HV, use the web client and navigate to the processor settings screen. Check the box next to &amp;#8220;Expose hardware-assisted virtualization to the guest operating system.&amp;#8221; This setting is not available under the traditional C# client.
+  &lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;cite&gt;&lt;a href=&#34;http://communities.vmware.com/docs/DOC-8970&#34;&gt;Running Nested VMs&lt;/a&gt;&lt;/cite&gt;&lt;/p&gt;
+
+&lt;p&gt;　ですが、@xerespmさんに教えて頂いた「&lt;a href=&#34;http://www.virtuallyghetto.com/2012/08/how-to-enable-nested-esxi-other.html&#34; title=&#34;How to Enable Nested ESXi &amp;#038; Other Hypervisors in vSphere 5.1&#34; target=&#34;_blank&#34;&gt;How to Enable Nested ESXi &amp;amp; Other Hypervisors in vSphere 5.1&lt;/a&gt;」の方法を試したところ、上手く行きました。&lt;/p&gt;
+
+&lt;blockquote cite=&#34;http://www.virtuallyghetto.com/2012/08/how-to-enable-nested-esxi-other.html&#34;&gt;
+  &lt;p&gt;
+    A new parameter has been introduced called vhv.enable = &amp;#8220;true&amp;#8221; that is now defined on a per VM basis to provide finer granularity of VHV support. This also allows for better portability between VMware&amp;#8217;s hosted products such as VMware Fusion and Workstation as they also support the vhv.enable parameter.
+  &lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;cite&gt;&lt;a href=&#34;http://www.virtuallyghetto.com/2012/08/how-to-enable-nested-esxi-other.html&#34;&gt;How to Enable Nested ESXi &amp;amp; Other Hypervisors in vSphere 5.1&lt;/a&gt;&lt;/cite&gt;&lt;/p&gt;
+
+&lt;p&gt;　ESXiの/etc/vmware/configに「vhv.enable = &amp;#8220;TRUE&amp;#8221;」を追記すると、仮想マシン（Ubuntu12.10）上のflagにvmxが表示されます。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;@kvmhost:~$ grep vmx /proc/cpuinfo 
+flags : fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts mmx fxsr sse sse2 ss syscall nx rdtscp lm constant_tsc arch_perfmon pebs bts nopl xtopology tsc_reliable nonstop_tsc aperfmperf pni pclmulqdq vmx ssse3 cx16 pcid sse4_1 sse4_2 x2apic popcnt aes xsave avx hypervisor lahf_lm ida arat epb xsaveopt pln pts dtherm tpr_shadow vnmi ept vpid
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>
