@@ -80,17 +80,17 @@
 
 <p>　onePKで対象機器から情報を取得し、取得した情報をローカルで動作するgraphiteに入れます。</p>
 
+<script src="https://gist.github.com/kongou-ae/4b2bbcd3709c752ef6cc.js"></script>
+
 <p>　graphiteに入れた情報を、grafanaでカッコいいグラフにします。</p>
 
-<p>![grafana-graph][2]</p>
+<p><img src="http://aimless.jp/blog/wp-content/uploads/2014/07/20140729_grafana_graph.png" alt="" /></p>
 
 <p>　注釈が「Interface receive rate in bytes per second」なので、トラフィック量にするためにはbyteをbitにする（＝8倍する）必要があると思っていましたが、onePKで取得した値そのままで作成したグラフとMRTGのグラフと比較すると、ほぼ同じ値になっていました。「Interface receive rate in bits per second」の間違いでしょうか。</p>
 
 <p>　一般的なトラフィック量の取得方法は、前回取得したオクテット総数と今回取得したオクテット総数の差分を求めて、それを時間で割る形だと思います。今回のやり方は、取得した値そのものがトラフィック量であり加工する必要がないので、他ツールとの連携が容易かもしれません。</p>
 
 <p>　BGP Service setの実装が待ち遠しいです。</p>
-
-<p>[2]: <a href="http://aimless.jp/blog/wp-content/uploads/2014/07/20140729_grafana_graph.png">http://aimless.jp/blog/wp-content/uploads/2014/07/20140729_grafana_graph.png</a></p>
 
     </article>
     <div class="ad-left">

@@ -69,7 +69,11 @@
     <article>
       <p>Fedora19にyumでインストールしたgraphiteが、Fedora20にアップグレードした時から動かなくなりました。具体的な症状は、WEBでアクセスすると以下のメッセージとともにInternal Server errorになります。</p>
 
-<p>　モジュールがimport errorになる理由は、[Django import error &#8211; no module named django.conf.urls.defaults][1]に記載のある通り、Django1.6からdefaultモジュールが廃止されているためのようです。確かに、Fedora19のpython-djangoは1.5.8、Fedora20のpytho-djangoは1.6.5です。</p>
+<script src="https://gist.github.com/kongou-ae/eaacb63cda337245a72c.js"></script>
+
+<p>　モジュールがimport errorになる理由は、<a href="http://stackoverflow.com/questions/19962736/django-import-error-no-module-named-django-conf-urls-defaults">Django import error &#8211; no module named django.conf.urls.defaults</a>に記載のある通り、Django1.6からdefaultモジュールが廃止されているためのようです。確かに、Fedora19のpython-djangoは1.5.8、Fedora20のpytho-djangoは1.6.5です。</p>
+
+<script src="https://gist.github.com/kongou-ae/981b1eff4ed0e291a791.js"></script>
 
 <p>　Fedora20のyumでインストールできるgraphite-webパッケージはこの変更に追随していないようなので、githubのコミットを元に自分でパッチを当てました。なお、作業中のvimでは以下の2点を手修正しています。</p>
 
@@ -78,9 +82,9 @@
 <li>ファイルのパスが本番環境と異なるので、正しいパスに置換</li>
 </ol>
 
-<p>　パッチ適応後、Internal server errorは解消され、正常にgraphiteの管理画面が表示されるようになりました。</p>
+<script src="https://gist.github.com/kongou-ae/a0651897a40c11ec0bfc.js"></script>
 
-<p>[1]: <a href="http://stackoverflow.com/questions/19962736/django-import-error-no-module-named-django-conf-urls-defaults">http://stackoverflow.com/questions/19962736/django-import-error-no-module-named-django-conf-urls-defaults</a></p>
+<p>　パッチ適応後、Internal server errorは解消され、正常にgraphiteの管理画面が表示されるようになりました。</p>
 
     </article>
     <div class="ad-left">

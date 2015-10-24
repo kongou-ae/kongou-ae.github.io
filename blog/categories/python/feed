@@ -17,7 +17,11 @@
       <guid>http://aimless.jp/blog/archives/2124</guid>
       <description>&lt;p&gt;Fedora19にyumでインストールしたgraphiteが、Fedora20にアップグレードした時から動かなくなりました。具体的な症状は、WEBでアクセスすると以下のメッセージとともにInternal Server errorになります。&lt;/p&gt;
 
-&lt;p&gt;　モジュールがimport errorになる理由は、[Django import error &amp;#8211; no module named django.conf.urls.defaults][1]に記載のある通り、Django1.6からdefaultモジュールが廃止されているためのようです。確かに、Fedora19のpython-djangoは1.5.8、Fedora20のpytho-djangoは1.6.5です。&lt;/p&gt;
+&lt;script src=&#34;https://gist.github.com/kongou-ae/eaacb63cda337245a72c.js&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;　モジュールがimport errorになる理由は、&lt;a href=&#34;http://stackoverflow.com/questions/19962736/django-import-error-no-module-named-django-conf-urls-defaults&#34;&gt;Django import error &amp;#8211; no module named django.conf.urls.defaults&lt;/a&gt;に記載のある通り、Django1.6からdefaultモジュールが廃止されているためのようです。確かに、Fedora19のpython-djangoは1.5.8、Fedora20のpytho-djangoは1.6.5です。&lt;/p&gt;
+
+&lt;script src=&#34;https://gist.github.com/kongou-ae/981b1eff4ed0e291a791.js&#34;&gt;&lt;/script&gt;
 
 &lt;p&gt;　Fedora20のyumでインストールできるgraphite-webパッケージはこの変更に追随していないようなので、githubのコミットを元に自分でパッチを当てました。なお、作業中のvimでは以下の2点を手修正しています。&lt;/p&gt;
 
@@ -26,9 +30,9 @@
 &lt;li&gt;ファイルのパスが本番環境と異なるので、正しいパスに置換&lt;/li&gt;
 &lt;/ol&gt;
 
-&lt;p&gt;　パッチ適応後、Internal server errorは解消され、正常にgraphiteの管理画面が表示されるようになりました。&lt;/p&gt;
+&lt;script src=&#34;https://gist.github.com/kongou-ae/a0651897a40c11ec0bfc.js&#34;&gt;&lt;/script&gt;
 
-&lt;p&gt;[1]: &lt;a href=&#34;http://stackoverflow.com/questions/19962736/django-import-error-no-module-named-django-conf-urls-defaults&#34;&gt;http://stackoverflow.com/questions/19962736/django-import-error-no-module-named-django-conf-urls-defaults&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;　パッチ適応後、Internal server errorは解消され、正常にgraphiteの管理画面が表示されるようになりました。&lt;/p&gt;
 </description>
     </item>
     

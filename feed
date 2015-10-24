@@ -1678,6 +1678,8 @@ sg-b10aecd4,outbound,ALL Traffic,ALL,ALL,0.0.0.0/0
       <guid>http://aimless.jp/blog/archives/2408</guid>
       <description>&lt;p&gt;Amazon Linuxにナレッジ/ノウハウ情報共有サービスのOSS「Lodge」をインストールしたので手順をメモしておきます。取りあえず動かすことが目的です。&lt;/p&gt;
 
+&lt;script src=&#34;https://gist.github.com/kongou-ae/2df0e742ff0590781189.js&#34;&gt;&lt;/script&gt;
+
 &lt;p&gt;　ブラウザから「ec2-xxx-xxx-xxx-xxx.ap-northeast-1.compute.amazonaws.com:3000」にアクセスしてログイン画面が出れば成功です。TCP/3000をセキュリティグループで許可することを忘れずに。&lt;/p&gt;
 
 &lt;p&gt;　&lt;/p&gt;

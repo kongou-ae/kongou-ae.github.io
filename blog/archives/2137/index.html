@@ -67,7 +67,15 @@
     <article>
       <p>onePKで機器にアクセスすると、以下のメッセージが出力されます。私はonePKで1分間隔のトラフィックを取得しているので、機器のログがこのメッセージでいっぱいになっています。</p>
 
+<script src="https://gist.github.com/kongou-ae/09b9a14c88995f9a0cca.js"></script>
+
 <p>　正直、onepkでアクセスしたことを示すログの有用性が見いだせないので、フィルタしました。ファシリティがONEP_BASEであることを条件としているので、アクセスログ以外も消えるかもしれません&#8230;</p>
+
+<pre><code>
+#show running-config | inc logg
+logging discriminator no-oneop facility drops ONEP_BASE
+logging buffered discriminator no-oneop 64585
+</code></pre>
 
 <p>　onepk独自の設定として、no logging event link-status みたいな便利コマンドがあると助かるのですが&#8230;</p>
 

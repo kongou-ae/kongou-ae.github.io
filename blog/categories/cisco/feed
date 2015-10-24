@@ -119,7 +119,15 @@
       <guid>http://aimless.jp/blog/archives/2137</guid>
       <description>&lt;p&gt;onePKで機器にアクセスすると、以下のメッセージが出力されます。私はonePKで1分間隔のトラフィックを取得しているので、機器のログがこのメッセージでいっぱいになっています。&lt;/p&gt;
 
+&lt;script src=&#34;https://gist.github.com/kongou-ae/09b9a14c88995f9a0cca.js&#34;&gt;&lt;/script&gt;
+
 &lt;p&gt;　正直、onepkでアクセスしたことを示すログの有用性が見いだせないので、フィルタしました。ファシリティがONEP_BASEであることを条件としているので、アクセスログ以外も消えるかもしれません&amp;#8230;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;
+#show running-config | inc logg
+logging discriminator no-oneop facility drops ONEP_BASE
+logging buffered discriminator no-oneop 64585
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;　onepk独自の設定として、no logging event link-status みたいな便利コマンドがあると助かるのですが&amp;#8230;&lt;/p&gt;
 </description>

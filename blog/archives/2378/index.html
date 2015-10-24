@@ -80,6 +80,8 @@
 <li>ディスクログは有効だが、そもそもディスクにパーティションが作られていない</li>
 </ul>
 
+<script src="https://gist.github.com/kongou-ae/e3fb5b701e6744553d38.js"></script>
+
 <p>　FortiGate-VMには、マーケットプレイスからポチポチデプロイしたときにデフォルトで選択されているEBSを搭載しているのですが、利用できていません。</p>
 
 <p><strong>EBS選択画面</strong> <img src="http://aimless.jp/blog/wp-content/uploads/2015/01/aws-fg-6.png" alt="enter image description here" /></p>
@@ -89,6 +91,8 @@
 <h2 id="対処方法:0369e224a48532743f250f58f50b7a06">対処方法</h2>
 
 <p>　メモリログを有効にしたい場合はCLIから設定を変更します。ディスクログを有効にする場合は、CLIからディスクをフォーマットします。</p>
+
+<script src="https://gist.github.com/kongou-ae/bf9799c6dfc97a24cf4f.js"></script>
 
 <h2 id="動作確認:0369e224a48532743f250f58f50b7a06">動作確認</h2>
 
@@ -102,9 +106,7 @@
 
 <p>　無事、ディスクに保存されているログを確認出来るようになりました。</p>
 
-<p>![enter image description here][5]</p>
-
-<p>[5]: <a href="http://aimless.jp/blog/wp-content/uploads/2015/01/aws-fg-11.png">http://aimless.jp/blog/wp-content/uploads/2015/01/aws-fg-11.png</a></p>
+<p><img src="http://aimless.jp/blog/wp-content/uploads/2015/01/aws-fg-11.png" alt="enter image description here" /></p>
 
     </article>
     <div class="ad-left">

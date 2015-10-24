@@ -241,13 +241,19 @@ Joined test
 
 &lt;p&gt;　インストーラをダウンロードして実行権限をつけて実行するだけ。簡単です。Bitnamiシリーズは、ドリルではなく穴が欲しい人向けですね。&lt;/p&gt;
 
+&lt;script src=&#34;https://gist.github.com/kongou-ae/fa6314e763f9e0d7e4ff.js&#34;&gt;&lt;/script&gt;
+
 &lt;h1 id=&#34;プラグインのインストール:50ecf5611bfc48aacad363ff09653e25&#34;&gt;プラグインのインストール&lt;/h1&gt;
 
 &lt;p&gt;　本体がすんなりインストールできたので、プライグイン（redmine_knowledgebase）もインストールしました。Bitnami Consoleの存在を知らなかったため、インストールディレクトリ配下の実行ファイルを直接叩いています。&lt;/p&gt;
 
+&lt;script src=&#34;https://gist.github.com/kongou-ae/66e71e5545649dfd2dee.js&#34;&gt;&lt;/script&gt;
+
 &lt;h1 id=&#34;bitnami-consoleを使う:50ecf5611bfc48aacad363ff09653e25&#34;&gt;Bitnami Consoleを使う&lt;/h1&gt;
 
 &lt;p&gt;　環境変数を設定してくれる便利なスクリプトがありました。。。インストールディレクトリは以下のuse_redmineです。実行するとインストールディレクトリ配下のソフトへのパスが通るので、上記の手順の様に実行ファイルを直接叩く必要がありません。&lt;/p&gt;
+
+&lt;script src=&#34;https://gist.github.com/kongou-ae/3034b4d57a7b6fd2d496.js&#34;&gt;&lt;/script&gt;
 </description>
     </item>
     
@@ -259,7 +265,11 @@ Joined test
       <guid>http://aimless.jp/blog/archives/2124</guid>
       <description>&lt;p&gt;Fedora19にyumでインストールしたgraphiteが、Fedora20にアップグレードした時から動かなくなりました。具体的な症状は、WEBでアクセスすると以下のメッセージとともにInternal Server errorになります。&lt;/p&gt;
 
-&lt;p&gt;　モジュールがimport errorになる理由は、[Django import error &amp;#8211; no module named django.conf.urls.defaults][1]に記載のある通り、Django1.6からdefaultモジュールが廃止されているためのようです。確かに、Fedora19のpython-djangoは1.5.8、Fedora20のpytho-djangoは1.6.5です。&lt;/p&gt;
+&lt;script src=&#34;https://gist.github.com/kongou-ae/eaacb63cda337245a72c.js&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;　モジュールがimport errorになる理由は、&lt;a href=&#34;http://stackoverflow.com/questions/19962736/django-import-error-no-module-named-django-conf-urls-defaults&#34;&gt;Django import error &amp;#8211; no module named django.conf.urls.defaults&lt;/a&gt;に記載のある通り、Django1.6からdefaultモジュールが廃止されているためのようです。確かに、Fedora19のpython-djangoは1.5.8、Fedora20のpytho-djangoは1.6.5です。&lt;/p&gt;
+
+&lt;script src=&#34;https://gist.github.com/kongou-ae/981b1eff4ed0e291a791.js&#34;&gt;&lt;/script&gt;
 
 &lt;p&gt;　Fedora20のyumでインストールできるgraphite-webパッケージはこの変更に追随していないようなので、githubのコミットを元に自分でパッチを当てました。なお、作業中のvimでは以下の2点を手修正しています。&lt;/p&gt;
 
@@ -268,9 +278,9 @@ Joined test
 &lt;li&gt;ファイルのパスが本番環境と異なるので、正しいパスに置換&lt;/li&gt;
 &lt;/ol&gt;
 
-&lt;p&gt;　パッチ適応後、Internal server errorは解消され、正常にgraphiteの管理画面が表示されるようになりました。&lt;/p&gt;
+&lt;script src=&#34;https://gist.github.com/kongou-ae/a0651897a40c11ec0bfc.js&#34;&gt;&lt;/script&gt;
 
-&lt;p&gt;[1]: &lt;a href=&#34;http://stackoverflow.com/questions/19962736/django-import-error-no-module-named-django-conf-urls-defaults&#34;&gt;http://stackoverflow.com/questions/19962736/django-import-error-no-module-named-django-conf-urls-defaults&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;　パッチ適応後、Internal server errorは解消され、正常にgraphiteの管理画面が表示されるようになりました。&lt;/p&gt;
 </description>
     </item>
     
