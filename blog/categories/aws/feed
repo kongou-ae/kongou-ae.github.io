@@ -890,6 +890,8 @@ aws_security_group.web-server:
 
 &lt;p&gt;　そこで、業務時間外に対象インスタンスを停止し、始業前に対象インスタンスを開始するスクリプトを書いて、NATインスタンス上のcronで実行してみました。&lt;/p&gt;
 
+&lt;script src=&#34;https://gist.github.com/kongou-ae/039ef45a992393e00418.js&#34;&gt;&lt;/script&gt;
+
 &lt;p&gt;　ちゃんと動いていますが、以下の様な点を修正する必要がありますね。&lt;/p&gt;
 
 &lt;ul&gt;
