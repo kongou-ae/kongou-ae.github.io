@@ -6,8 +6,72 @@
     <description>Recent content in Blogs on Aimless</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja</language>
-    <lastBuildDate>Sun, 27 Sep 2015 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 25 Oct 2015 00:00:00 +0000</lastBuildDate>
     <atom:link href="http://aimless.jp/blog/feed/" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Lambdaファンクションを雑に監視する</title>
+      <link>http://aimless.jp/blog/archives/2681</link>
+      <pubDate>Sun, 25 Oct 2015 00:00:00 +0000</pubDate>
+      
+      <guid>http://aimless.jp/blog/archives/2681</guid>
+      <description>
+
+&lt;h2 id=&#34;lambdaへの切り替え:6d0ff38d6f824570d13427bb9cb52ec6&#34;&gt;Lambdaへの切り替え&lt;/h2&gt;
+
+&lt;p&gt;　Lambdaがスケジュール実行に対応しました。そこで、サーバレスアーキテクチャを実践すべく、conohaで動いている＠ipv6kumaの機能を、AWSに順次お引越ししています。本日時点で、以下のフルルート数とフルルートグラフのツイートはLambdaでお伝えしています。&lt;/p&gt;
+
+&lt;p&gt;&lt;blockquote class=&#34;twitter-tweet&#34; lang=&#34;ja&#34;&gt;&lt;p lang=&#34;ja&#34; dir=&#34;ltr&#34;&gt;2015/10/25の経路数は24457だクマー。昨日と比べて35経路増えたクマ！！ /from Lambda&lt;/p&gt;&amp;mdash; ブイロクマ (@IPv6kuma) &lt;a href=&#34;https://twitter.com/IPv6kuma/status/658221773335334912&#34;&gt;2015, 10月 25&lt;/a&gt;&lt;/blockquote&gt;
+&lt;script async src=&#34;//platform.twitter.com/widgets.js&#34; charset=&#34;utf-8&#34;&gt;&lt;/script&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;blockquote class=&#34;twitter-tweet&#34; lang=&#34;ja&#34;&gt;&lt;p lang=&#34;ja&#34; dir=&#34;ltr&#34;&gt;本日までの経路数をグラフにしたクマ!! &lt;a href=&#34;https://t.co/Z9jHt6yXnT&#34;&gt;https://t.co/Z9jHt6yXnT&lt;/a&gt;&lt;/p&gt;&amp;mdash; ブイロクマ (@IPv6kuma) &lt;a href=&#34;https://twitter.com/IPv6kuma/status/658221776074244097&#34;&gt;2015, 10月 25&lt;/a&gt;&lt;/blockquote&gt;
+&lt;script async src=&#34;//platform.twitter.com/widgets.js&#34; charset=&#34;utf-8&#34;&gt;&lt;/script&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;lambdaを監視する:6d0ff38d6f824570d13427bb9cb52ec6&#34;&gt;Lambdaを監視する&lt;/h2&gt;
+
+&lt;p&gt;　さて、Lambdaファンクションを書いていて気になった事があります。それは『Lambdaファンクションが正しく動作している事をどうやって監視するか』です。&lt;/p&gt;
+
+&lt;p&gt;　現時点での＠ipv6kumaは、エラーハンドリングを書いていません。想定通りに動作した最後の箇所に&lt;code&gt;context.done()&lt;/code&gt;を記載しているだけです。したがって、エラーが起きると&lt;code&gt;context.done()&lt;/code&gt;が呼び出されないので、ログには必ず&lt;code&gt;Process exited before completing request&lt;/code&gt;が出現します。&lt;/p&gt;
+
+&lt;p&gt;　そこで、この文言をcloudwatch logsのMetric Filterを利用して監視することで、Lambdaファンクションが想定通りに動いているかどうかを監視することにしました。&lt;/p&gt;
+
+&lt;h2 id=&#34;設定方法:6d0ff38d6f824570d13427bb9cb52ec6&#34;&gt;設定方法&lt;/h2&gt;
+
+&lt;p&gt;　監視したいログを選択し、&lt;code&gt;Create Metric Filter&lt;/code&gt;を選択。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;../images/2015-10-25-00.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;　&lt;code&gt;Filter Pattern&lt;/code&gt;に&lt;code&gt;Process exited before completing request&lt;/code&gt;を入力して次に進む&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;../images/2015-10-25-01.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;　&lt;code&gt;Metric Name&lt;/code&gt;の欄に、カスタムメトリック名を入力し&lt;code&gt;Save Filter&lt;/code&gt;を押下&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;../images/2015-10-25-02.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;　メトリックフィルターができました。このフィルターに紐づくアラームを作成します。&lt;code&gt;Create Alarm&lt;/code&gt;を押下&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;../images/2015-10-25-03.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;　必要なパラメータを入力します。Metric Filter作成時にMetricを1にしましたので、アラームの閾値は1以上とします。ActionにSNSを通知することで、エラーの発生をメールで通知します。ipv6kuma_errorのサブスクライバーは私の個人アドレスになっています。&lt;/p&gt;
+
+&lt;p&gt;　最後に&lt;code&gt;Create Alarm&lt;/code&gt;を押下&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;../images/2015-10-25-04.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;　アラームつきのMetric Filterができました！&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;../images/2015-10-25-05.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;動作確認:6d0ff38d6f824570d13427bb9cb52ec6&#34;&gt;動作確認&lt;/h2&gt;
+
+&lt;p&gt;　@ipv6kumaはエラーを起こすのが大変なので、別のLambdaファンクションに同様の監視を実装して、&lt;code&gt;Process exited before completing request&lt;/code&gt;を発生させました。&lt;/p&gt;
+
+&lt;p&gt;　少々待つと、CloudwatchのエラーがSNS経由で通知されました。これで@ipv6kumaに何かあった場合、気が付くことができます。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;../images/2015-10-25-06.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>ソフトバンクショップでiPhone 6s Plusに機種変更したら、5137円/月のオプションが付いた</title>
@@ -1667,24 +1731,6 @@ sg-b10aecd4,outbound,ALL Traffic,ALL,ALL,0.0.0.0/0
 &lt;p&gt;　今までpythonで遊んでいましたが、今回は、クロスコンパイルにあこがれてgolangを使ってみました。これはすごいですね。VPSでwindows用にコンパイルしたa2csv.exeが、会社のwindows端末でそのまま動く。pythonで書いたコードを使うために、会社のPCにpythonをインストールしていたのが馬鹿みたいです。。。&lt;/p&gt;
 
 &lt;p&gt;[1]: &lt;a href=&#34;https://github.com/kongou-ae/aws-to-csv&#34;&gt;https://github.com/kongou-ae/aws-to-csv&lt;/a&gt;&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Amazon LinuxにLodgeをインストールした</title>
-      <link>http://aimless.jp/blog/archives/2408</link>
-      <pubDate>Thu, 19 Feb 2015 00:00:00 +0000</pubDate>
-      
-      <guid>http://aimless.jp/blog/archives/2408</guid>
-      <description>&lt;p&gt;Amazon Linuxにナレッジ/ノウハウ情報共有サービスのOSS「Lodge」をインストールしたので手順をメモしておきます。取りあえず動かすことが目的です。&lt;/p&gt;
-
-&lt;script src=&#34;https://gist.github.com/kongou-ae/2df0e742ff0590781189.js&#34;&gt;&lt;/script&gt;
-
-&lt;p&gt;　ブラウザから「ec2-xxx-xxx-xxx-xxx.ap-northeast-1.compute.amazonaws.com:3000」にアクセスしてログイン画面が出れば成功です。TCP/3000をセキュリティグループで許可することを忘れずに。&lt;/p&gt;
-
-&lt;p&gt;　&lt;/p&gt;
-
-&lt;p&gt;　また、TCP/3000でのアクセスは不便だったので、前段にNginx等のリバースプロキシを置いてTCP/80でアクセスできるようにしました。&lt;/p&gt;
 </description>
     </item>
     
