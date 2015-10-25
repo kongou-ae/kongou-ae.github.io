@@ -89,29 +89,29 @@
 
 <p>　監視したいログを選択し、<code>Create Metric Filter</code>を選択。</p>
 
-<p><img src="../images/2015-10-25-00.png" alt="" /></p>
+<p><img src="./images/2015-10-25-00.png" alt="" /></p>
 
 <p>　<code>Filter Pattern</code>に<code>Process exited before completing request</code>を入力して次に進む</p>
 
-<p><img src="../images/2015-10-25-01.png" alt="" /></p>
+<p><img src="./images/2015-10-25-01.png" alt="" /></p>
 
 <p>　<code>Metric Name</code>の欄に、カスタムメトリック名を入力し<code>Save Filter</code>を押下</p>
 
-<p><img src="../images/2015-10-25-02.png" alt="" /></p>
+<p><img src="./images/2015-10-25-02.png" alt="" /></p>
 
 <p>　メトリックフィルターができました。このフィルターに紐づくアラームを作成します。<code>Create Alarm</code>を押下</p>
 
-<p><img src="../images/2015-10-25-03.png" alt="" /></p>
+<p><img src="./images/2015-10-25-03.png" alt="" /></p>
 
 <p>　必要なパラメータを入力します。Metric Filter作成時にMetricを1にしましたので、アラームの閾値は1以上とします。ActionにSNSを通知することで、エラーの発生をメールで通知します。ipv6kuma_errorのサブスクライバーは私の個人アドレスになっています。</p>
 
 <p>　最後に<code>Create Alarm</code>を押下</p>
 
-<p><img src="../images/2015-10-25-04.png" alt="" /></p>
+<p><img src="./images/2015-10-25-04.png" alt="" /></p>
 
 <p>　アラームつきのMetric Filterができました！</p>
 
-<p><img src="../images/2015-10-25-05.png" alt="" /></p>
+<p><img src="./images/2015-10-25-05.png" alt="" /></p>
 
 <h2 id="動作確認:6d0ff38d6f824570d13427bb9cb52ec6">動作確認</h2>
 
@@ -119,7 +119,7 @@
 
 <p>　少々待つと、CloudwatchのエラーがSNS経由で通知されました。これで@ipv6kumaに何かあった場合、気が付くことができます。</p>
 
-<p><img src="../images/2015-10-25-06.png" alt="" /></p>
+<p><img src="./images/2015-10-25-06.png" alt="" /></p>
 
     </article>
     <div class="ad-left">
