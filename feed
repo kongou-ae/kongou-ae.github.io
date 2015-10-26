@@ -6,8 +6,67 @@
     <description>Recent content on Aimless</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja</language>
-    <lastBuildDate>Sun, 25 Oct 2015 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 26 Oct 2015 00:00:00 +0000</lastBuildDate>
     <atom:link href="http://aimless.jp/feed/" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Amazon LinuxにZabbix3.0をインストールしてハマった事</title>
+      <link>http://aimless.jp/blog/archives/2682</link>
+      <pubDate>Mon, 26 Oct 2015 00:00:00 +0000</pubDate>
+      
+      <guid>http://aimless.jp/blog/archives/2682</guid>
+      <description>
+
+&lt;p&gt;Zabbix3.0（アルファ版）のソースが公開されていたので、Amazon Linuxにインストールを試みました。その際にはまったことをメモしておきます。ハマったといっても、マニュアルのRequirementsを読んでからインストールを始めれば、全くハマらないポイントです。。。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://www.zabbix.com/documentation/3.0/&#34;&gt;Zabbix Documentation 3.0&lt;/a&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Amazon Linuxのバージョン：2015.09&lt;/li&gt;
+&lt;li&gt;Zabbixのバージョン：3.0.0 alpha3&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;サポートするphpのバージョンが5-4-0以上である:36b14705263dd1ce094510eba4cf7e4c&#34;&gt;サポートするPHPのバージョンが5.4.0以上である&lt;/h2&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/images/2015-10-26-001.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;　Amazon Linuxで何も考えずに&lt;code&gt;sudo yum install php php-gd php-bcmath php-mysql php-mbstring&lt;/code&gt;すると、インストールされるPHPのバージョンは5.3になります。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;============================================================================================================================
+ Package                       Arch                    Version                             Repository                  Size
+============================================================================================================================
+Installing:
+ php                           x86_64                  5.3.29-1.8.amzn1                    amzn-main                  2.8 M
+ php-bcmath                    x86_64                  5.3.29-1.8.amzn1                    amzn-main                   52 k
+ php-gd                        x86_64                  5.3.29-1.8.amzn1                    amzn-main                  219 k
+ php-mbstring                  x86_64                  5.3.29-1.8.amzn1                    amzn-main                  2.3 M
+ php-mysql                     x86_64                  5.3.29-1.8.amzn1                    amzn-main                  178 k
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;　Zabbix3.0は、php5.3をサポートしていません。php5.4以上をサポートしています。&lt;code&gt;sudo yum install php54 php54-gd php54-bcmath php54-mysql php54-mbstring&lt;/code&gt;でphp5.4をインストールするようにしましょう。&lt;/p&gt;
+
+&lt;h2 id=&#34;php5-4がapache2-4系に依存している:36b14705263dd1ce094510eba4cf7e4c&#34;&gt;php5.4がapache2.4系に依存している&lt;/h2&gt;
+
+&lt;p&gt;　apache2.2がインストールされている場合、php5.3をyum removeし、いざphp5.4系をyum installしようとしても、依存エラーになります。&lt;/p&gt;
+
+&lt;p&gt;　これはphp5.4がapache2.4に依存しているためです。php5.4が必要とするapache2.4が、元々入っているapache2.2と競合してしまうためにエラーとなります。apache2.2系のパッケージを削除してからphp54のインストールを行いましょう。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ sudo yum install php54 php54-gd php54-bcmath php54-mysql php54-mbstring
+Loaded plugins: priorities, update-motd, upgrade-helper
+Resolving Dependencies
+--&amp;gt; Running transaction check
+---&amp;gt; Package php54.x86_64 0:5.4.45-1.75.amzn1 will be installed
+--&amp;gt; Processing Dependency: httpd-mmn = 20120211x86-64 for package: php54-5.4.45-1.75.amzn1.x86_64
+--&amp;gt; Processing Dependency: php54-common(x86-64) = 5.4.45-1.75.amzn1 for package: php54-5.4.45-1.75.amzn1.x86_64
+--&amp;gt; Processing Dependency: php54-cli(x86-64) = 5.4.45-1.75.amzn1 for package: php54-5.4.45-1.75.amzn1.x86_64
+--&amp;gt; Processing Dependency: httpd24 for package: php54-5.4.45-1.75.amzn1.x86_64
+（中略）
+--&amp;gt; Finished Dependency Resolution
+Error: httpd24-tools conflicts with httpd-tools-2.2.31-1.6.amzn1.x86_64
+Error: httpd24 conflicts with httpd-2.2.31-1.6.amzn1.x86_64
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
     
     <item>
       <title>Lambdaファンクションを雑に監視する</title>
@@ -1696,41 +1755,6 @@ aws_security_group.web-server:
 &lt;li&gt;AWS CLIの実行結果が標準出力となり、ec2-userにメールが届いてしまう&lt;/li&gt;
 &lt;li&gt;万が一起動に失敗した場合、他のメンバーに迷惑がかかるので、メール通知したい。&lt;/li&gt;
 &lt;/ul&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>セキュリティグループの詳細をCSV形式で出力する</title>
-      <link>http://aimless.jp/blog/archives/2418</link>
-      <pubDate>Mon, 23 Feb 2015 00:00:00 +0000</pubDate>
-      
-      <guid>http://aimless.jp/blog/archives/2418</guid>
-      <description>&lt;p&gt;セキュリティグループにルールを追加すればするほどマネジメントコンソールでの一覧性が下がるので、全てのルールをCSV形式でエクスポートするコマンドを作ってみました。aws-to-csvです。&lt;/p&gt;
-
-&lt;p&gt;[kongou-ae/aws-to-csv][1]&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;$ ./a2csv securityGroups -r ap-northeast-1 -p private
-GroupID,Direction,Type,Protocol,Port Range,IP Range
-sg-b6822ed3,inbound,ALL ICMP,ICMP(1),ALL,sg-a9822ecc
-sg-b6822ed3,outbound,ALL Traffic,ALL,ALL,0.0.0.0/0
-sg-6ad86e0f,inbound,SSH(22),TCP(6),22,0.0.0.0/0
-sg-6ad86e0f,outbound,ALL Traffic,ALL,ALL,0.0.0.0/0
-sg-f07cdd95,inbound,RDP(3389),TCP(6),3389,192.168.11.1/32
-sg-f07cdd95,outbound,ALL Traffic,ALL,ALL,0.0.0.0/0
-sg-a9822ecc,inbound,ALL Traffic,ALL,ALL,192.168.11.1/32
-sg-a9822ecc,outbound,ALL ICMP,ICMP(1),ALL,sg-b6822ed3
-sg-aa2686cf,inbound,Custom Rrotocol Rule,HOPOPT(0),ALL,sg-6ad86e0f
-sg-aa2686cf,inbound,SSH(22),TCP(6),22,192.168.11.1/32
-sg-aa2686cf,outbound,ALL Traffic,ALL,ALL,0.0.0.0/0
-sg-b10aecd4,inbound,SSH(22),TCP(6),22,0.0.0.0/0
-sg-b10aecd4,outbound,ALL Traffic,ALL,ALL,0.0.0.0/0
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;　セキュリティグループは、APIのレスポンスをそのままCSV形式でエクスポートすると、出力内容がマネジメントコンソールの表示と大きく異なってしまい可読性が低くなります。そこで、APIのレスポンスをあの手この手で細工してからCSV形式で出力するようにしています。&lt;/p&gt;
-
-&lt;p&gt;　今までpythonで遊んでいましたが、今回は、クロスコンパイルにあこがれてgolangを使ってみました。これはすごいですね。VPSでwindows用にコンパイルしたa2csv.exeが、会社のwindows端末でそのまま動く。pythonで書いたコードを使うために、会社のPCにpythonをインストールしていたのが馬鹿みたいです。。。&lt;/p&gt;
-
-&lt;p&gt;[1]: &lt;a href=&#34;https://github.com/kongou-ae/aws-to-csv&#34;&gt;https://github.com/kongou-ae/aws-to-csv&lt;/a&gt;&lt;/p&gt;
 </description>
     </item>
     

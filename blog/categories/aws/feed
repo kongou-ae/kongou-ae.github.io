@@ -6,8 +6,67 @@
     <description>Recent content in Aws on Aimless</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja</language>
-    <lastBuildDate>Sun, 25 Oct 2015 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 26 Oct 2015 00:00:00 +0000</lastBuildDate>
     <atom:link href="http://aimless.jp/categories/aws/feed/" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Amazon LinuxにZabbix3.0をインストールしてハマった事</title>
+      <link>http://aimless.jp/blog/archives/2682</link>
+      <pubDate>Mon, 26 Oct 2015 00:00:00 +0000</pubDate>
+      
+      <guid>http://aimless.jp/blog/archives/2682</guid>
+      <description>
+
+&lt;p&gt;Zabbix3.0（アルファ版）のソースが公開されていたので、Amazon Linuxにインストールを試みました。その際にはまったことをメモしておきます。ハマったといっても、マニュアルのRequirementsを読んでからインストールを始めれば、全くハマらないポイントです。。。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://www.zabbix.com/documentation/3.0/&#34;&gt;Zabbix Documentation 3.0&lt;/a&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Amazon Linuxのバージョン：2015.09&lt;/li&gt;
+&lt;li&gt;Zabbixのバージョン：3.0.0 alpha3&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;サポートするphpのバージョンが5-4-0以上である:36b14705263dd1ce094510eba4cf7e4c&#34;&gt;サポートするPHPのバージョンが5.4.0以上である&lt;/h2&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/images/2015-10-26-001.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;　Amazon Linuxで何も考えずに&lt;code&gt;sudo yum install php php-gd php-bcmath php-mysql php-mbstring&lt;/code&gt;すると、インストールされるPHPのバージョンは5.3になります。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;============================================================================================================================
+ Package                       Arch                    Version                             Repository                  Size
+============================================================================================================================
+Installing:
+ php                           x86_64                  5.3.29-1.8.amzn1                    amzn-main                  2.8 M
+ php-bcmath                    x86_64                  5.3.29-1.8.amzn1                    amzn-main                   52 k
+ php-gd                        x86_64                  5.3.29-1.8.amzn1                    amzn-main                  219 k
+ php-mbstring                  x86_64                  5.3.29-1.8.amzn1                    amzn-main                  2.3 M
+ php-mysql                     x86_64                  5.3.29-1.8.amzn1                    amzn-main                  178 k
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;　Zabbix3.0は、php5.3をサポートしていません。php5.4以上をサポートしています。&lt;code&gt;sudo yum install php54 php54-gd php54-bcmath php54-mysql php54-mbstring&lt;/code&gt;でphp5.4をインストールするようにしましょう。&lt;/p&gt;
+
+&lt;h2 id=&#34;php5-4がapache2-4系に依存している:36b14705263dd1ce094510eba4cf7e4c&#34;&gt;php5.4がapache2.4系に依存している&lt;/h2&gt;
+
+&lt;p&gt;　apache2.2がインストールされている場合、php5.3をyum removeし、いざphp5.4系をyum installしようとしても、依存エラーになります。&lt;/p&gt;
+
+&lt;p&gt;　これはphp5.4がapache2.4に依存しているためです。php5.4が必要とするapache2.4が、元々入っているapache2.2と競合してしまうためにエラーとなります。apache2.2系のパッケージを削除してからphp54のインストールを行いましょう。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ sudo yum install php54 php54-gd php54-bcmath php54-mysql php54-mbstring
+Loaded plugins: priorities, update-motd, upgrade-helper
+Resolving Dependencies
+--&amp;gt; Running transaction check
+---&amp;gt; Package php54.x86_64 0:5.4.45-1.75.amzn1 will be installed
+--&amp;gt; Processing Dependency: httpd-mmn = 20120211x86-64 for package: php54-5.4.45-1.75.amzn1.x86_64
+--&amp;gt; Processing Dependency: php54-common(x86-64) = 5.4.45-1.75.amzn1 for package: php54-5.4.45-1.75.amzn1.x86_64
+--&amp;gt; Processing Dependency: php54-cli(x86-64) = 5.4.45-1.75.amzn1 for package: php54-5.4.45-1.75.amzn1.x86_64
+--&amp;gt; Processing Dependency: httpd24 for package: php54-5.4.45-1.75.amzn1.x86_64
+（中略）
+--&amp;gt; Finished Dependency Resolution
+Error: httpd24-tools conflicts with httpd-tools-2.2.31-1.6.amzn1.x86_64
+Error: httpd24 conflicts with httpd-2.2.31-1.6.amzn1.x86_64
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
     
     <item>
       <title>Lambdaファンクションを雑に監視する</title>
@@ -1701,162 +1760,6 @@ sg-b10aecd4,outbound,ALL Traffic,ALL,ALL,0.0.0.0/0
 &lt;h2 id=&#34;最後に:408d74faa089a41a4f7a8379e456ab27&#34;&gt;最後に&lt;/h2&gt;
 
 &lt;p&gt;　セキュリティグループの仕様を利用した移行方式をまとめました。なお、移行にあたって一番大変な作業は通信要件の精査です。俺「このポリシー何？いるの？いらないの？」サーバ担当「昔のことは知らん」みたいなやり取りを繰り返すのはこりごりです。&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Virtual Private Gatewayのベストパス選択アルゴリズムで遊んでみた。</title>
-      <link>http://aimless.jp/blog/archives/1755</link>
-      <pubDate>Sun, 30 Mar 2014 00:00:00 +0000</pubDate>
-      
-      <guid>http://aimless.jp/blog/archives/1755</guid>
-      <description>
-
-&lt;p&gt;仕事でVPC DXに関わっています。その際に、VPCからオンプレ側へのトラフィック設計で不明点があったので、VPC IPSecを利用して自腹で試してみました。&lt;/p&gt;
-
-&lt;p&gt;　VPCのVirtual Private Gateways（VGW）とオンプレ側の複数ルータが接続しており、各ルータがVPCに対して同一経路を広報している場合、VPCからの戻りのトラフィックがどの拠点に流れるかを意図的に設計したくなります。これはVGWにどのルータが広報した経路をベストパスとして選ばせるかという作業であり、BGPにおける経路設計が利用できます。&lt;/p&gt;
-
-&lt;p&gt;　VGWにおけるベストパス選択アルゴリズムは、&lt;a href=&#34;http://docs.aws.amazon.com/AmazonVPC/latest/NetworkAdminGuide/Introduction.html&#34;&gt;公式ドキュメント&lt;/a&gt;の『Configuring Multiple VPN Connections to Your Amazon VPC』に記載されています。 素直に読むと、下記の順番です。一般的なベストパス選択アルゴリズムには含まれているMEDがないのが気になります。&lt;/p&gt;
-
-&lt;ol&gt;
-&lt;li&gt;ロンゲストマッチ&lt;/li&gt;
-&lt;li&gt;BGPよりもSTATIC&lt;/li&gt;
-&lt;li&gt;AS-PATH&lt;/li&gt;
-&lt;li&gt;ORIGIN&lt;/li&gt;
-&lt;li&gt;ルータID&lt;/li&gt;
-&lt;li&gt;ネイバーのID&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h3 id=&#34;検証環境:8a801d7caae5205bbd472b545f0f0c21&#34;&gt;検証環境&lt;/h3&gt;
-
-&lt;p&gt;![enter image description here][2]&lt;/p&gt;
-
-&lt;p&gt;　VPCのVGWに対して、2つのVPN Connectionを張ります。設定と動作確認が煩雑になるため、1つのVPN装置が張るVPN Connectionは1つのグローバルIPアドレスのみにします。VPN装置（cisco892JとFortiGate50B）からは、同一経路（192.168.2.0/24）をVPCに対して広報します。&lt;/p&gt;
-
-&lt;p&gt;　この状態でEC2から192.168.2.254へTracerouteを行うことで、VGWがCiscoとFortiGateが広報した経路のどちらをベストパスとして選択するかを確認します。&lt;/p&gt;
-
-&lt;h3 id=&#34;1-そのまま接続してみる:8a801d7caae5205bbd472b545f0f0c21&#34;&gt;1　そのまま接続してみる&lt;/h3&gt;
-
-&lt;p&gt;　特に経路制御をせずにVPNコネクションを確立し、EC2からTracerouteを行います。FortiGate（169.254.252.33）経由になりました。これはORIGINによるものです。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;traceroute to 192.168.2.254 (192.168.2.254), 30 hops max, 60 byte packets
-1 169.254.252.17 (169.254.252.17) 0.335 ms 0.506 ms 0.694 ms
-2 169.254.252.33 (169.254.252.33) 2.939 ms 9.704 ms 3.032 ms
-3 169.254.252.34 (169.254.252.34) 19.684 ms 19.898 ms 19.838 ms
-4 192.168.2.254 (192.168.2.254) 20.345 ms * * 
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;　CiscoはBGPに対してconnectedをredistributeしているので、originが?（incomplite）になっています。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;Router#show bgp ipv4 unicast neighbors 169.254.252.25 advertised-routes 
-Network Next Hop Metric LocPrf Weight Path
- *&amp;gt; 192.168.2.0 0.0.0.0 0 32768 ?
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;　一方FortiGateは、BGPのNETWORKコマンドで経路を作っているので、originがi（IGP）になっています。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;(root) # get router info bgp neighbors 169.254.252.33
-Network Next Hop Metric LocPrf Weight Path 
-*&amp;gt; 192.168.2.0 169.254.252.34 100 32768 i 
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;　ORIGIN属性はigp、egp、incompliteの順で選ばれるので、FortiGateが広告した192.168.2.0/24がベストパスに選択され、TracerouteがFortiGate経由になります。&lt;/p&gt;
-
-&lt;h3 id=&#34;2-origionをそろえる:8a801d7caae5205bbd472b545f0f0c21&#34;&gt;2　ORIGIONをそろえる&lt;/h3&gt;
-
-&lt;p&gt;　Cisco側のORIGIN属性をIGPに変更してみます。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;Router#show bgp ipv4 unicast neighbors 169.254.252.25 advertised-routes 
-Network Next Hop Metric LocPrf Weight Path 
-*&amp;gt; 192.168.2.0 0.0.0.0 0 32768 i
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;　すると、Cisco（169.254.252.25）経由になりました。ORIGINが同じigpになった結果、次の選択基準であるrouter-idによってベストパスが決定したと思われます。（CiscoのほうがルータIDが小さいです。）&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;$ traceroute 192.168.2.254 traceroute to 192.168.2.254 (192.168.2.254), 30 hops max, 60 byte packets 
-1 169.254.252.17 (169.254.252.17) 2.839 ms 3.039 ms 2.991 ms 
-2 169.254.252.25 (169.254.252.25) 9.339 ms 9.034 ms 2.835 ms 
-3 169.254.252.26 (169.254.252.26) 13.584 ms 
-4 192.168.2.254 (192.168.2.254) 20.392 ms * 
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;3-as-pathをprependしてみる:8a801d7caae5205bbd472b545f0f0c21&#34;&gt;3　AS-PATHをPrependしてみる。&lt;/h3&gt;
-
-&lt;p&gt;　router-idでベストパスが選択されている状況で、AS-PATHを使ってみます。Cisco側が広報する経路にAS-PATHを3つ積みます。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;route-map aws-aspath permit 10 
-set as-path prepend 64585 64585 64585 
-
-router bgp 64585 
-address-family ipv4 
-neighbor 169.254.252.25 route-map aws-aspath out
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;　すると、EC2からのTracerouteはFortiGate（169.254.252.33）経由になります。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;$ traceroute 192.168.2.254 traceroute to 192.168.2.254 (192.168.2.254), 30 hops max, 60 byte packets 
-1 169.254.252.17 (169.254.252.17) 0.337 ms 0.505 ms 0.717 ms 
-2 169.254.252.33 (169.254.252.33) 9.134 ms 5.161 ms 9.263 ms 
-3 169.254.252.34 (169.254.252.34) 17.613 ms 24.352 ms 17.749 ms 
-4 192.168.2.254 (192.168.2.254) 20.646 ms * *
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;4-medを積んでみる:8a801d7caae5205bbd472b545f0f0c21&#34;&gt;4　MEDを積んでみる&lt;/h3&gt;
-
-&lt;p&gt;　AS-PATHではなく、MEDを積んでみましょう。Cisco側を通っている状況でCisco側にMEDを積みます。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;route-map aws-addmed permit 10 
-set metric 10 
-
-router bgp 64585 
-address-family ipv4 
-neighbor 169.254.252.25 route-map aws-addmed out
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;　MEDは値が少ない経路が優先されます。FortiGateが広報する経路のMEDは初期値の0なので、FortiGate（169.254.252.33）経由になります。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;$ traceroute 192.168.2.254 traceroute to 192.168.2.254 (192.168.2.254), 30 hops max, 60 byte packets 
-1 169.254.252.17 (169.254.252.17) 0.323 ms 0.481 ms 0.692 ms 
-2 169.254.252.33 (169.254.252.33) 9.070 ms 3.027 ms 3.191 ms 
-3 169.254.252.34 (169.254.252.34) 24.657 ms 18.121 ms 18.064 ms 
-4 192.168.2.254 (192.168.2.254) 19.204 ms * *
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;　この状況でFortiGate側でMEDを積んでみましょう。Cisco側の10よりも大きくすればいいので100を積みます。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;config router route-map 
-edit &amp;quot;addmed&amp;quot; 
-config rule 
-edit 100 
-set set-metric 100 
-next 
-end 
-next
-end 
-config router bgp 
-set as 64585 
-config neighbor 
-edit &amp;quot;169.254.252.33&amp;quot; 
-set remote-as 10124 
-set route-map-out &amp;quot;addmed&amp;quot; 
-set send-community6 disable 
-next 
-end 
-end 
-end
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;　結果、Cisco（169.254.252.25）経由に戻ります。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;$ traceroute 192.168.2.254 traceroute to 192.168.2.254 (192.168.2.254), 30 hops max, 60 byte packets 
-1 169.254.252.17 (169.254.252.17) 0.321 ms 0.500 ms 0.705 ms 
-2 169.254.252.25 (169.254.252.25) 23.050 ms 23.011 ms 22.699 ms 
-3 169.254.252.26 (169.254.252.26) 16.317 ms * *
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;　公式のドキュメントにはMEDの記載がありませんでしたが、MEDによる経路制御も効くようですね。個人的にはAS-PATHがわかりやすくて好きなので、AS-PATHを利用します。&lt;/p&gt;
-
-&lt;p&gt;[2]: &lt;a href=&#34;http://aimless.jp/blog/wp-content/uploads/2014/03/vpc-diag.png&#34;&gt;http://aimless.jp/blog/wp-content/uploads/2014/03/vpc-diag.png&lt;/a&gt;&lt;/p&gt;
 </description>
     </item>
     
