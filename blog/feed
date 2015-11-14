@@ -6,8 +6,49 @@
     <description>Recent content in Blogs on Aimless</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja</language>
-    <lastBuildDate>Sat, 14 Nov 2015 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 15 Nov 2015 00:00:00 +0000</lastBuildDate>
     <atom:link href="http://aimless.jp/blog/feed/" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>aws2excelを作ってみた</title>
+      <link>http://aimless.jp/blog/archives/2684</link>
+      <pubDate>Sun, 15 Nov 2015 00:00:00 +0000</pubDate>
+      
+      <guid>http://aimless.jp/blog/archives/2684</guid>
+      <description>
+
+&lt;h2 id=&#34;作ったもの:d4fd824ade6bd5facb61487e58730a29&#34;&gt;作ったもの&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://github.com/kongou-ae/aws2excel&#34;&gt;kongou-ae/aws2excel&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;AWSの構成情報をxlsxファイルに書き出すスクリプトです。出力されるファイルのイメージはREADMEの画像を参照ください。勢いでやっつけているので、一部サービスにのみ対応しています。最終的にはLambdaで動かしてs3にExcelを吐き出す実装にしたい。&lt;/p&gt;
+
+&lt;h2 id=&#34;経緯:d4fd824ade6bd5facb61487e58730a29&#34;&gt;経緯&lt;/h2&gt;
+
+&lt;p&gt;&lt;blockquote class=&#34;twitter-tweet&#34; lang=&#34;ja&#34;&gt;&lt;p lang=&#34;en&#34; dir=&#34;ltr&#34;&gt;&lt;a href=&#34;https://twitter.com/ishikawa84g&#34;&gt;@ishikawa84g&lt;/a&gt; cloud2excel!&lt;/p&gt;&amp;mdash; 前佛 雅人(M.Zembutsu) (@zembutsu) &lt;a href=&#34;https://twitter.com/zembutsu/status/660383609283457024&#34;&gt;2015, 10月 31&lt;/a&gt;&lt;/blockquote&gt;
+&lt;script async src=&#34;//platform.twitter.com/widgets.js&#34; charset=&#34;utf-8&#34;&gt;&lt;/script&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;blockquote class=&#34;twitter-tweet&#34; lang=&#34;ja&#34;&gt;&lt;p lang=&#34;ja&#34; dir=&#34;ltr&#34;&gt;&lt;a href=&#34;https://twitter.com/ishikawa84g&#34;&gt;@ishikawa84g&lt;/a&gt; 残念ながら夢の中のお話です…&lt;/p&gt;&amp;mdash; 前佛 雅人(M.Zembutsu) (@zembutsu) &lt;a href=&#34;https://twitter.com/zembutsu/status/660384559700176896&#34;&gt;2015, 10月 31&lt;/a&gt;&lt;/blockquote&gt;
+&lt;script async src=&#34;//platform.twitter.com/widgets.js&#34; charset=&#34;utf-8&#34;&gt;&lt;/script&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;blockquote class=&#34;twitter-tweet&#34; lang=&#34;ja&#34;&gt;&lt;p lang=&#34;ja&#34; dir=&#34;ltr&#34;&gt;&lt;a href=&#34;https://twitter.com/ishikawa84g&#34;&gt;@ishikawa84g&lt;/a&gt; ごめんなさい…ごめんなさいｗ&lt;/p&gt;&amp;mdash; 前佛 雅人(M.Zembutsu) (@zembutsu) &lt;a href=&#34;https://twitter.com/zembutsu/status/660384991096868865&#34;&gt;2015, 10月 31&lt;/a&gt;&lt;/blockquote&gt;
+&lt;script async src=&#34;//platform.twitter.com/widgets.js&#34; charset=&#34;utf-8&#34;&gt;&lt;/script&gt;&lt;/p&gt;
+
+&lt;p&gt;自分もワクワクしながらcloud2excelを検索しまして、、、無いのであれば、勉強がてら作ってみようということで作ってみました。&lt;/p&gt;
+
+&lt;h2 id=&#34;実装:d4fd824ade6bd5facb61487e58730a29&#34;&gt;実装&lt;/h2&gt;
+
+&lt;p&gt;aws-sdkを利用してAPIを叩き必要な情報を取得し、その情報をExcel に書き出しているだけです。Excelへの書き出しは&lt;a href=&#34;https://github.com/guyonroche/exceljs&#34;&gt;guyonroche/exceljs&lt;/a&gt;を使いました。&lt;/p&gt;
+
+&lt;h2 id=&#34;雑感:d4fd824ade6bd5facb61487e58730a29&#34;&gt;雑感&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://github.com/guyonroche/exceljs&#34;&gt;guyonroche/exceljs&lt;/a&gt;を見つけたのが今回の最大の収穫です。配列やオブジェクトの情報を、かなり簡単に表形式でExcelに書き出すことができます。さらに、&lt;a href=&#34;https://github.com/guyonroche/exceljs&#34;&gt;guyonroche/exceljs&lt;/a&gt;は、Excelからの読み込みもできるようなので、Infrastrucrture as Excelが実現できます。Excelでパラメータシートを作り、そこにパラメータを書くとAWS上にインスタンスができる。なんという黒魔術。やりませんけど。。。&lt;/p&gt;
+
+&lt;p&gt;また、Node.jsの非同期処理に苦戦しました。async.jsを使っており期待する動作はしているものの、正しい使い方かどうか不安です。Node.js（というかJavascript）を体系的に学びたい。&lt;/p&gt;
+
+&lt;p&gt;今後は、issueにもある通り、コードを分割してメンテナンス性を高め、ELBやRDSなどメジャーなサービスに対応しようと思います。仕事の本業はAWSではないので、プライベートで淡々とメンテしていきます。&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>リーダーな私が意識している事</title>
@@ -19,17 +60,17 @@
 
 &lt;p&gt;リーダと呼ばれるポジションに就き、5名のメンバーと一緒に仕事を行うこと3年、ふと「昔と比べると丸くなったなー」と思ったので、今意識している事をメモしておきます。社内研修や書籍、聖杯問答など、人を導くということについて色々な角度で学んだことを自分なりに消化した結果です。実際にできていることもあれば、中々できないこともあるので、今一度意識しなおして、半年くらい経ったら見返したい。&lt;/p&gt;
 
-&lt;h1 id=&#34;信じて任せる:cfff3a3a77bc1035e507c0bd778c73d2&#34;&gt;信じて任せる&lt;/h1&gt;
+&lt;h2 id=&#34;信じて任せる:cfff3a3a77bc1035e507c0bd778c73d2&#34;&gt;信じて任せる&lt;/h2&gt;
 
 &lt;p&gt;大原則として、メンバーを信じることにしています。また、メンバーを信じているということを、心の中で思っているだけでなくメンバーの前で明言します。「信じてるよ」と。メンバーを信じでいますので、能動的に仕事を回しているメンバーに対しては、仕事の細部に口を出すことはしません。信じて任せます。&lt;/p&gt;
 
-&lt;h1 id=&#34;放置しない:cfff3a3a77bc1035e507c0bd778c73d2&#34;&gt;放置しない&lt;/h1&gt;
+&lt;h2 id=&#34;放置しない:cfff3a3a77bc1035e507c0bd778c73d2&#34;&gt;放置しない&lt;/h2&gt;
 
 &lt;p&gt;信じると放置するは違うと考えています。リーダである私は、チームとして与えられたミッションをクリアすることで評価されます。そのためには、自分のメンバーが成果を出すことが必要不可欠です。チームに与えられているミッションは、自分の力だけで解決できる量をとうに超えています。従って、信じていると宣言する一方で、メンバーの成果が出ていることを確認し、必要に応じて軌道修正を行うことを意識しています。&lt;/p&gt;
 
 &lt;p&gt;例えば、週次ミーティングでの進捗報告や、メーリングリストに流れるメンバーのメールでのやりとりで、メンバーのアウトプットの有無や質を確認し、期待する成果に届いていない場合は声をかけます。困っているようであれば自分の仕事を止めて助け、悩んでいるようであれば一緒に悩みます。すべての変更作業について、私の承認が必要なプロセスにしているのも、放置しないの一環です。信じているし任せますが、最終的な責任まで放棄する気はありません。&lt;/p&gt;
 
-&lt;h1 id=&#34;メンバーに決めさせる:cfff3a3a77bc1035e507c0bd778c73d2&#34;&gt;メンバーに決めさせる&lt;/h1&gt;
+&lt;h2 id=&#34;メンバーに決めさせる:cfff3a3a77bc1035e507c0bd778c73d2&#34;&gt;メンバーに決めさせる&lt;/h2&gt;
 
 &lt;p&gt;リーダになった当初、リーダの仕事は決める事だと思っていましたが、何から何まで決めるのは止めました。特に、メンバーのタスクであれば、メンバーに決めてもらうことにしています。決められないのであれば、メンバーの悩みや迷いを聴いた上で、整理した上で再提示し、解決へのヒントを与える。こんな地味な事を繰り返し、メンバーに決めてもらう事を意識しています。&lt;/p&gt;
 
@@ -37,13 +78,13 @@
 
 &lt;p&gt;一方で、メンバーが悩んでどうしても決められない場合や、チームとしての決断が必要な場合は、即判断します。リーダですから。&lt;/p&gt;
 
-&lt;h1 id=&#34;ほめる:cfff3a3a77bc1035e507c0bd778c73d2&#34;&gt;ほめる&lt;/h1&gt;
+&lt;h2 id=&#34;ほめる:cfff3a3a77bc1035e507c0bd778c73d2&#34;&gt;ほめる&lt;/h2&gt;
 
 &lt;p&gt;仕事だからやって当然という考えは捨てました。仕事はツライ。だからこそ、頑張ってくれたメンバーはしっかり褒める。メールだけでなく、言葉で、他のメンバーのいる場で褒めます。「さすが」「完璧」といった簡易な言葉でも構わないので、ほめることを意識しています。&lt;/p&gt;
 
 &lt;p&gt;作業直前で手順の誤りに気がついた部下が相談に来たら、皆さんはどうしますか。「何やってんの、、」と怒りを示していませんか？私は褒めます。「作業する前に気がついてよかったじゃん。よく気がついたよ。ありがとね」と。怒っても仕方ない。&lt;/p&gt;
 
-&lt;h1 id=&#34;感情を表に出す:cfff3a3a77bc1035e507c0bd778c73d2&#34;&gt;感情を表に出す&lt;/h1&gt;
+&lt;h2 id=&#34;感情を表に出す:cfff3a3a77bc1035e507c0bd778c73d2&#34;&gt;感情を表に出す&lt;/h2&gt;
 
 &lt;p&gt;あえて感情を表に出すことにしています。私が人間臭い人が好きだからです。ただし、自分の負の感情は除く。負の感情はメンバーのいないところで発散します。&lt;/p&gt;
 
@@ -53,19 +94,19 @@
 
 &lt;p&gt;しょうもない雑談と笑いも大事にしています。仕事の合間の雑談、楽しいでしょ。こういうの大事。&lt;/p&gt;
 
-&lt;h1 id=&#34;やり方ではなくゴールを指示する:cfff3a3a77bc1035e507c0bd778c73d2&#34;&gt;やり方ではなくゴールを指示する&lt;/h1&gt;
+&lt;h2 id=&#34;やり方ではなくゴールを指示する:cfff3a3a77bc1035e507c0bd778c73d2&#34;&gt;やり方ではなくゴールを指示する&lt;/h2&gt;
 
 &lt;p&gt;仕事の細かいやり方を指示することはやめました。やり方はメンバーでも考えられるのですから（むしろメンバーの方が詳細に考えらえる事の方が多い）、やり方ではなく、私が期待する成果のあり姿を明確に伝える事を意識しています。「この仕事をお願いします。こーやって、あーやって、こうやってください」ではなく「この仕事をお願いします。成果物はこんなイメージ」であったり「この仕事をお願いします。○○できるようにするのがゴール」といったイメージです。&lt;/p&gt;
 
-&lt;h1 id=&#34;門戸を開く:cfff3a3a77bc1035e507c0bd778c73d2&#34;&gt;門戸を開く&lt;/h1&gt;
+&lt;h2 id=&#34;門戸を開く:cfff3a3a77bc1035e507c0bd778c73d2&#34;&gt;門戸を開く&lt;/h2&gt;
 
 &lt;p&gt;「何かあったら相談してね」「出かけるけど、何かあったら携帯ならしてね」は口癖になりました。明言することで、相談や緊急時の連絡が増えたような気がしています。相談や緊急連絡が増えると自分の仕事は止まりますが、リーダというものは、こういうものだと割り切ることにしました。チームとして成果が出ればいいよ。ゆえに、リーダ以外の業務は、メンバーが退社した17時以降が本番です。&lt;/p&gt;
 
-&lt;h1 id=&#34;チームである事を口にし続ける:cfff3a3a77bc1035e507c0bd778c73d2&#34;&gt;チームである事を口にし続ける&lt;/h1&gt;
+&lt;h2 id=&#34;チームである事を口にし続ける:cfff3a3a77bc1035e507c0bd778c73d2&#34;&gt;チームである事を口にし続ける&lt;/h2&gt;
 
 &lt;p&gt;自分とメンバーの事を「○○チーム」と呼ぶことを意識しています。私たちは個ではなくチームであること、つまり仲間であることを自分とメンバーに意識づけられればと思ってあえて言い続けています。最大の効果は、自分がチームのリーダであることを常に自分に意識づけし続けられることかもしれません。&lt;/p&gt;
 
-&lt;h1 id=&#34;最後に:cfff3a3a77bc1035e507c0bd778c73d2&#34;&gt;最後に&lt;/h1&gt;
+&lt;h2 id=&#34;最後に:cfff3a3a77bc1035e507c0bd778c73d2&#34;&gt;最後に&lt;/h2&gt;
 
 &lt;p&gt;　リーダーって何なんだろうなー。&lt;/p&gt;
 </description>
@@ -1742,58 +1783,6 @@ aws_security_group.web-server:
 &lt;p&gt;　![][3]&lt;/p&gt;
 
 &lt;p&gt;[3]: &lt;a href=&#34;http://aimless.jp/blog/wp-content/uploads/2015/03/2015-03-22-03.png&#34;&gt;http://aimless.jp/blog/wp-content/uploads/2015/03/2015-03-22-03.png&lt;/a&gt;&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Terraformのroot_block_deviceを使う</title>
-      <link>http://aimless.jp/blog/archives/2439</link>
-      <pubDate>Mon, 09 Mar 2015 00:00:00 +0000</pubDate>
-      
-      <guid>http://aimless.jp/blog/archives/2439</guid>
-      <description>
-
-&lt;p&gt;Terraformのroot_block_deviceで躓いたのでメモ。&lt;/p&gt;
-
-&lt;h2 id=&#34;やりたいこと:bf37395249d323f0a481b0db49ec8488&#34;&gt;やりたいこと&lt;/h2&gt;
-
-&lt;p&gt;　Terraformを利用して、10Gのルートデバイスと20Gのブロックデバイスを持ったt2.microのインスタンスを起動する&lt;/p&gt;
-
-&lt;h2 id=&#34;やったこと:bf37395249d323f0a481b0db49ec8488&#34;&gt;やったこと&lt;/h2&gt;
-
-&lt;p&gt;　クレデンシャルを記載したtfファイルを作成する&lt;/p&gt;
-
-&lt;script src=&#34;https://gist.github.com/kongou-ae/a993635d9521162fe6b4.js&#34;&gt;&lt;/script&gt;
-
-&lt;p&gt;　リソース作成の処理を記載したtfファイルを作成する&lt;/p&gt;
-
-&lt;script src=&#34;https://gist.github.com/kongou-ae/ccb5844778b3d1880f11.js&#34;&gt;&lt;/script&gt;
-
-&lt;p&gt;　処理で利用する変数ファイルをまとめて定義するtfファイルを作成する&lt;/p&gt;
-
-&lt;script src=&#34;https://gist.github.com/kongou-ae/effeb26ef16f22c18386.js&#34;&gt;&lt;/script&gt;
-
-&lt;p&gt;　terraform実行時に渡す変数をまとめたtfファイルを作成する&lt;/p&gt;
-
-&lt;script src=&#34;https://gist.github.com/kongou-ae/4bbc36de4c64ea1c4fe0.js&#34;&gt;&lt;/script&gt;
-
-&lt;p&gt;　terraformする。&lt;/p&gt;
-
-&lt;script src=&#34;https://gist.github.com/kongou-ae/4b8f40fe3a91b6a288c1.js&#34;&gt;&lt;/script&gt;
-
-&lt;h2 id=&#34;失敗談:bf37395249d323f0a481b0db49ec8488&#34;&gt;失敗談&lt;/h2&gt;
-
-&lt;p&gt;　ebs_root_device_nameの値をAMIのルートデバイス名と異なる値にしたところ、root_block_deviceのパラメータが追加のブロックデバイスとして判断されてしまった。&lt;/p&gt;
-
-&lt;p&gt;　たとえば、Amazon Linuxに対してebs_root_device_nameを指定しないと、デフォルト値である/dev/sda1が利用されてしまい、ルートデバイスはAMIのデフォルト、そのほかにブロックデバイスが追加で2個EBSが作成されてしまう。&lt;/p&gt;
-
-&lt;p&gt;　&lt;/p&gt;
-
-&lt;h3 id=&#34;失敗の事例:bf37395249d323f0a481b0db49ec8488&#34;&gt;失敗の事例&lt;/h3&gt;
-
-&lt;p&gt;　ebs_root_device_nameを指定せずにterraformしたログは以下の通り。terraform plan ではルートデバイス1個、ブロックデバイス1個となっているが、terraform applyしてみると、block_device.# = 2になっている。&lt;/p&gt;
-
-&lt;script src=&#34;https://gist.github.com/kongou-ae/7ae35971fa5a2c8a17e0.js&#34;&gt;&lt;/script&gt;
 </description>
     </item>
     
