@@ -564,7 +564,7 @@ v1.0, 2014-01-01
 :imagesdir: resources/images/
 
 
-== はじめに 
+== はじめに
 
 &lt;/code&gt;&lt;/pre&gt;
 
@@ -626,7 +626,7 @@ v1.0, 2014-01-01
 
 &lt;p&gt;ヘッダの右に画像が表示されました。ただしverso_content_rightにはimageを指定していないので、右ページには画像が出ますが、左ページには画像が出ません。&lt;/p&gt;
 
-&lt;p&gt;![ヘッダーに画像][8]&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/wp-content/uploads/2015/07/asciidoctor_header_image.png&#34; alt=&#34;ヘッダーに画像&#34; /&gt;&lt;/p&gt;
 
 &lt;h2 id=&#34;フォントを指定する:0276447e54b8cc1adc3ebe7f7301ea42&#34;&gt;フォントを指定する&lt;/h2&gt;
 
@@ -701,8 +701,6 @@ base:
 &lt;/ul&gt;&lt;/li&gt;
 &lt;li&gt;必要最低限に装飾したPDFを作る分にはもってこいかも&lt;/li&gt;
 &lt;/ul&gt;
-
-&lt;p&gt;[8]: &lt;a href=&#34;http://aimless.jp/blog/wp-content/uploads/2015/07/asciidoctor_header_image.png&#34;&gt;http://aimless.jp/blog/wp-content/uploads/2015/07/asciidoctor_header_image.png&lt;/a&gt;&lt;/p&gt;
 </description>
     </item>
     
