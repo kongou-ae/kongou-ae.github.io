@@ -6,8 +6,173 @@
     <description>Recent content on Aimless</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja</language>
-    <lastBuildDate>Sun, 15 Nov 2015 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 23 Nov 2015 00:00:00 +0000</lastBuildDate>
     <atom:link href="http://aimless.jp/feed/" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>RedPenにスペルチェック機能を追加する</title>
+      <link>http://aimless.jp/blog/archives/2685</link>
+      <pubDate>Mon, 23 Nov 2015 00:00:00 +0000</pubDate>
+      
+      <guid>http://aimless.jp/blog/archives/2685</guid>
+      <description>
+
+&lt;h2 id=&#34;前置き:6a8429973c6a1dee2b4aa041f6e841a8&#34;&gt;前置き&lt;/h2&gt;
+
+&lt;p&gt;もともとこのブログはWordpressで運用していました。ですが、アウトプットすることが目的であってCMSを運用することは目的ではありませんので、HUGO + Github Pagesの構成に切り替えました。&lt;/p&gt;
+
+&lt;p&gt;切り替えに伴い、ブログ用のGithubリポジトリにMarkdownをPushすると、CircleCIがHUGOを使ってブログをビルドし、HTMLをGithub PagesにPushする、という仕組みにしました。&lt;/p&gt;
+
+&lt;h2 id=&#34;文章をテストする:6a8429973c6a1dee2b4aa041f6e841a8&#34;&gt;文章をテストする&lt;/h2&gt;
+
+&lt;p&gt;ブログを公開するプロセスにCircleCIがいますので、ブログの文章に対してCIを行うことがでいます。何をするか考えた結果、文章をテストすることにしました。ブログ用のGithubリポジトリにPushされたMarkdownをCircleCIでテストし、誤記や文法の誤りなどがあればテスト失敗とみなしビルドを行わない。こうすることで、ブログに誤った情報を含むエントリーが乗ってしまう可能性を減らすことができます。&lt;/p&gt;
+
+&lt;p&gt;文章をテストするツールを探してみると、&lt;a href=&#34;https://github.com/textlint/textlint&#34;&gt;textlint/textlint&lt;/a&gt;と&lt;a href=&#34;https://github.com/redpen-cc/redpen/&#34;&gt;redpen-cc/redpen&lt;/a&gt;が見つかりました。asciidocとasciidocter-pdfを利用した気軽なドキュメント作成を模索していることもありますので、今回はasciidocをサポートするRedPenを使うことにします。&lt;/p&gt;
+
+&lt;h2 id=&#34;実践:6a8429973c6a1dee2b4aa041f6e841a8&#34;&gt;実践&lt;/h2&gt;
+
+&lt;p&gt;UTM製品であるフォーティゲートの正しいスペルは「FortiGate」です。FortigateやFroutigateではありません。ネットワークエンジニアとして、ネットワーク機器のスペルを間違えるのは恥ずかしい。そこでRedPenに、自分が指定するキーワードを利用したスペルチェック機能を実装します。&lt;/p&gt;
+
+&lt;p&gt;RedPenはJavaScriptを利用した機能拡張をサポートしています。「&lt;a href=&#34;http://www.clear-code.com/blog/2015/8/29.html&#34;&gt;RedPenのValidatorをJavaScript で書くには&lt;/a&gt;」を参考に、JavaScriptによる機能拡張を実装します。&lt;/p&gt;
+
+&lt;p&gt;スペルチェックについては編集距離を利用します。編集距離を求める関数は「&lt;a href=&#34;http://lostlinksearch.net/blog/2012/12/javascript%E3%81%A7%E7%B7%A8%E9%9B%86%E8%B7%9D%E9%9B%A2%EF%BC%88%E3%83%AC%E3%83%BC%E3%83%99%E3%83%B3%E3%82%B7%E3%83%A5%E3%82%BF%E3%82%A4%E3%83%B3%E8%B7%9D%E9%9B%A2%EF%BC%89%E3%82%92%E8%A8%88%E7%AE%97/&#34;&gt;JavaScriptで編集距離（レーベンシュタイン距離）を計算する&lt;/a&gt;
+」をそのまま使わせていただきます。&lt;/p&gt;
+
+&lt;p&gt;以下コードの通り、RedPenが検知した名詞とスペルチェックの確認対象との編集距離を求め、0ではなく3以下であればスペルミスとみなします。編集距離を３としたのは勢いです。適当な値はこれから模索していきます。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;function validateSentence(sentence) {
+
+  var levenshteinDistance = function(a, b) {
+    var matrix = new Array(a.length + 1);
+    for (var i = 0; i &amp;lt; a.length + 1; i++) {
+      matrix[i] = new Array(b.length + 1);
+    }
+
+    for (var i = 0; i &amp;lt; a.length + 1; i++) {
+      matrix[i][0] = i;
+    }
+
+    for (var j = 0; j &amp;lt; b.length + 1; j++) {
+      matrix[0][j] = j;
+    }
+
+    for (var i = 1; i &amp;lt; a.length + 1; i++) {
+      for (var j = 1; j &amp;lt; b.length + 1; j++) {
+        var x = a[i - 1] == b[j -1] ? 0 : 1;
+        matrix[i][j] = Math.min(
+          matrix[i - 1][j] + 1,
+          matrix[i][j - 1] + 1,
+          matrix[i - 1][j- 1] + x
+        );
+      }
+    }
+
+    return matrix[a.length][b.length];
+  }
+
+
+  console = {
+      log: print,
+      warn: print,
+      error: print
+  };
+
+  var checkKeywordArray = [
+    &#39;FortiGate&#39;,
+    &#39;メルセデスベンツ&#39;,
+    &#39;BIG-IP&#39;,
+    &#39;インデックス&#39;,
+    &#39;JavaScript&#39;
+  ]
+
+  for (var i = 0; i &amp;lt; sentence.tokens.length; i++) {
+    // 名詞だけを対象に
+    if (sentence.tokens[i].tags[0] == &#39;名詞&#39;) {
+      for (var j=0; j &amp;lt; checkKeywordArray.length; j++) {
+        //console.log(&#39;checking : &#39; + sentence.tokens[i].surface + &#39; and &#39; + checkKeywordArray[j])
+        var dist = levenshteinDistance(sentence.tokens[i].surface,checkKeywordArray[j])        
+        //console.log(sentence.tokens[i].surface +&#39; is &#39; + dist)
+        if (dist &amp;lt;= 3 &amp;amp;&amp;amp; dist != 0){
+          addError(sentence.tokens[i].surface + &#39;はスペルミスの可能性があります&#39;, sentence);
+        }
+      }
+    }  
+  }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;JavaScriptを利用したvalidatorをRedPenのコンフィグで有効にします。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ cat conf/redpen-conf-ja-custom.xml                                   
+&amp;lt;redpen-conf lang=&amp;quot;ja&amp;quot;&amp;gt;
+    &amp;lt;validators&amp;gt;
+        &amp;lt;validator name=&amp;quot;SentenceLength&amp;quot;&amp;gt;
+            &amp;lt;property name=&amp;quot;max_len&amp;quot; value=&amp;quot;100&amp;quot;/&amp;gt;
+        &amp;lt;/validator&amp;gt;
+        &amp;lt;validator name=&amp;quot;KatakanaEndHyphen&amp;quot;/&amp;gt;
+        &amp;lt;validator name=&amp;quot;SectionLength&amp;quot;&amp;gt;
+            &amp;lt;property name=&amp;quot;max_num&amp;quot; value=&amp;quot;1500&amp;quot;/&amp;gt;
+        &amp;lt;/validator&amp;gt;
+        &amp;lt;validator name=&amp;quot;ParagraphNumber&amp;quot;/&amp;gt;
+        &amp;lt;validator name=&amp;quot;SuccessiveWord&amp;quot; /&amp;gt;
+        &amp;lt;validator name=&amp;quot;JavaScript&amp;quot; /&amp;gt;　　
+    &amp;lt;/validators&amp;gt;
+&amp;lt;/redpen-conf&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;テストするMarkdownは以下の通りです。あえて誤記をまぜます。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ more test.md
+
+## どうだー
+
+インデックスは正しいです
+
+インデデクスは間違っています
+
+メルセデスベンスは間違っています
+
+メルセデスベンツは正しいです
+
+FortiGateは正しいです
+
+Fortigateは間違っています
+
+Frotigateも間違っています
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;テストします。間違ったスペルのセンテンスだけをエラーとして検知していますね。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;redpen-distribution-1.4.1]$ bin/redpen -c conf/redpen-conf-ja-custom.xml -f markdown test.md
+[2015-11-23 18:55:02.902][INFO ] cc.redpen.Main - Configuration file: /home/aimless/study/document/redpen/redpen-distribution-1.4.1/conf/redpen-conf-ja-custom.xml
+[2015-11-23 18:55:02.910][INFO ] cc.redpen.ConfigurationLoader - Loading config from specified config file: &amp;quot;/home/aimless/study/document/redpen/redpen-distribution-1.4.1/conf/redpen-conf-ja-custom.xml&amp;quot;
+[2015-11-23 18:55:02.921][INFO ] cc.redpen.ConfigurationLoader - Succeeded to load configuration file
+[2015-11-23 18:55:02.921][INFO ] cc.redpen.ConfigurationLoader - Language is set to &amp;quot;ja&amp;quot;
+[2015-11-23 18:55:02.921][WARN ] cc.redpen.ConfigurationLoader - No type configuration...
+[2015-11-23 18:55:02.922][INFO ] cc.redpen.ConfigurationLoader - No &amp;quot;symbols&amp;quot; block found in the configuration
+[2015-11-23 18:55:02.990][INFO ] cc.redpen.config.SymbolTable - &amp;quot;ja&amp;quot; is specified.
+[2015-11-23 18:55:02.990][INFO ] cc.redpen.config.SymbolTable - &amp;quot;normal&amp;quot; type is specified
+[2015-11-23 18:55:03.497][INFO ] cc.redpen.parser.SentenceExtractor - &amp;quot;[。, ？, ！]&amp;quot; are added as a end of sentence characters
+[2015-11-23 18:55:03.498][INFO ] cc.redpen.parser.SentenceExtractor - &amp;quot;[’, ”]&amp;quot; are added as a right quotation characters
+[2015-11-23 18:55:03.512][INFO ] cc.redpen.validator.Validator - max_len is set to 100
+[2015-11-23 18:55:03.515][INFO ] cc.redpen.validator.Validator - max_num is set to 1500
+[2015-11-23 18:55:03.516][INFO ] cc.redpen.validator.Validator - max_num is not set. Use default value of 5
+[2015-11-23 18:55:03.519][INFO ] cc.redpen.validator.JavaScriptValidator - JavaScript validators directory: /home/aimless/study/document/redpen/redpen-distribution-1.4.1/js
+test.md:1: ValidationError[ParagraphNumber], The number of paragraphs exceeds the maximum of 7. at line: どうだー
+test.md:5: ValidationError[JavaScript], [spellcheck.js] インデデクスはスペルミスの可能性があります at line: インデデクスは間違っています
+test.md:7: ValidationError[JavaScript], [spellcheck.js] メルセデスベンスはスペルミスの可能性があります at line: メルセデスベンスは間違っています
+test.md:13: ValidationError[JavaScript], [spellcheck.js] Fortigateはスペルミスの可能性があります at line: Fortigateは間違っています
+test.md:15: ValidationError[JavaScript], [spellcheck.js] Frotigateはスペルミスの可能性があります at line: Frotigateも間違っています
+
+[2015-11-23 18:55:04.483][ERROR] cc.redpen.Main - The number of errors &amp;quot;5&amp;quot; is larger than specified (limit is &amp;quot;1&amp;quot;).
+[aimless@dev redpen-distribution-1.4.1]$
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;所感:6a8429973c6a1dee2b4aa041f6e841a8&#34;&gt;所感&lt;/h2&gt;
+
+&lt;p&gt;RedPenを利用したスペルチェックがローカル環境で動くことを確認しました。JavaScriptでチェック項目を拡張できるのがいいですね。次はスペルチェック用辞書の単語を増やした上で、CircleCI上で動作させてみようと思います。&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>aws2excelを作ってみた</title>
@@ -1318,469 +1483,6 @@ i-xxxxxxxx:OutOfService,i-xxxxxxxx:OutOfService
 &lt;p&gt;　こんな世界も悪くないんじゃないかなと考え、仮説を検証中です。「気軽にドキュメントを書く」と「ドキュメントを中心とした運用改善」を実現するためのmd-kumihanというツールはできたので、次は自分のチームで勝手に実践だ。&lt;/p&gt;
 
 &lt;p&gt;[5]: &lt;a href=&#34;https://github.com/kongou-ae/md-kumihan/blob/master/pdf/test.pdf&#34;&gt;https://github.com/kongou-ae/md-kumihan/blob/master/pdf/test.pdf&lt;/a&gt;&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Terraformでセキュリティグループを管理する</title>
-      <link>http://aimless.jp/blog/archives/2481</link>
-      <pubDate>Sun, 22 Mar 2015 00:00:00 +0000</pubDate>
-      
-      <guid>http://aimless.jp/blog/archives/2481</guid>
-      <description>
-
-&lt;p&gt;Terraformによるセキュリティグループ管理に関するメモ。&lt;/p&gt;
-
-&lt;p&gt;　Terraformのバージョンアップにより、タグ付けやegressのルールが使えるようになったので、マネジメントコンソールと同じ事ができるようになっています。&lt;/p&gt;
-
-&lt;table&gt;
-&lt;thead&gt;
-&lt;tr&gt;
-&lt;th&gt;version&lt;/th&gt;
-&lt;th&gt;IMPROVEMENTS&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
-
-&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td&gt;0.3.7 (February 19, 2015)&lt;/td&gt;
-&lt;td&gt;provider/aws: Security group support egress rules. [GH-856]&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;0.3.1 (October 21, 2014)&lt;/td&gt;
-&lt;td&gt;providers/aws: Support tags for security groups.&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;h2 id=&#34;ファイル構成:29a47d36f0cb88ad8f2feca5cd4e2d83&#34;&gt;ファイル構成&lt;/h2&gt;
-
-&lt;pre&gt;&lt;code&gt;$ ls                                               
-var.tf　　  　terraform.tfvars        web-sg.tf
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;　tfファイルで利用する変数を定義するためのファイル&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;$  cat var.tf                                      
-variable &#34;access_key&#34; {}
-variable &#34;secret_key&#34; {}
-variable &#34;region&#34; {}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;　tfファイルで利用する変数に値を代入するためのファイル&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;$ cat terraform.tfvars 
-#-------------------------------------$
-# credential$
-#-------------------------------------$
-
-access_key = &#34;YOUR_ACCESS_KEY&#34;
-secret_key = &#34;YOUR_SECRET_KEY&#34;
-
-#-------------------------------------
-# region
-#-------------------------------------
-#
-region = &#34;ap-northeast-1&#34;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;　実際の処理を書いたファイル。WEBサーバ向けにHTTPを全許可するセキュリティグループを作ります。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;$ cat web-sg.tf 
-provider &#34;aws&#34; {
-    access_key = &#34;${var.access_key}&#34;
-    secret_key = &#34;${var.secret_key}&#34;
-    region = &#34;${var.region}&#34;
-}
-
-resource &#34;aws_security_group&#34; &#34;web-server&#34; {
-  name = &#34;web-server-sg&#34;
-  description = &#34;Allow traffic of webserver&#34;
-
-  ingress {
-      from_port = 80 
-      to_port = 80
-      protocol = &#34;tcp&#34;
-      cidr_blocks = [&#34;0.0.0.0/0&#34;]
-  }
-  vpc_id = &#34;vpc-d01806b2&#34;
-  tags {
-    Name = &#34;web-server&#34;
-    Made = &#34;terraform&#34;
-  }
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;セキュリティグループの作成:29a47d36f0cb88ad8f2feca5cd4e2d83&#34;&gt;セキュリティグループの作成&lt;/h2&gt;
-
-&lt;p&gt;まずは&lt;code&gt;terraform plan&lt;/code&gt;&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;$ terraform plan
-Refreshing Terraform state prior to plan...
-
-
-The Terraform execution plan has been generated and is shown below.
-Resources are shown in alphabetical order for quick scanning. Green resources
-will be created (or destroyed and then created if an existing resource
-exists), yellow resources are being changed in-place, and red resources
-will be destroyed.
-
-Note: You didn&amp;#039;t specify an &#34;-out&#34; parameter to save this plan, so when
-&#34;apply&#34; is called, Terraform can&amp;#039;t guarantee this is what will execute.
-
-+ aws_security_group.web-server
-    description:                          &#34;&#34; =&amp;gt; &#34;Allow traffic of webserver&#34;
-    egress.#:                             &#34;&#34; =&amp;gt; &#34;&amp;lt;computed&amp;gt;&#34;
-    ingress.#:                            &#34;&#34; =&amp;gt; &#34;1&#34;
-    ingress.2603706321.cidr_blocks.#:     &#34;&#34; =&amp;gt; &#34;1&#34;
-    ingress.2603706321.cidr_blocks.0:     &#34;&#34; =&amp;gt; &#34;0.0.0.0/0&#34;
-    ingress.2603706321.from_port:         &#34;&#34; =&amp;gt; &#34;80&#34;
-    ingress.2603706321.protocol:          &#34;&#34; =&amp;gt; &#34;tcp&#34;
-    ingress.2603706321.security_groups.#: &#34;&#34; =&amp;gt; &#34;0&#34;
-    ingress.2603706321.self:              &#34;&#34; =&amp;gt; &#34;0&#34;
-    ingress.2603706321.to_port:           &#34;&#34; =&amp;gt; &#34;80&#34;
-    name:                                 &#34;&#34; =&amp;gt; &#34;web-server-sg&#34;
-    owner_id:                             &#34;&#34; =&amp;gt; &#34;&amp;lt;computed&amp;gt;&#34;
-    tags.#:                               &#34;&#34; =&amp;gt; &#34;2&#34;
-    tags.Made:                            &#34;&#34; =&amp;gt; &#34;terraform&#34;
-    tags.Name:                            &#34;&#34; =&amp;gt; &#34;web-server&#34;
-    vpc_id:                               &#34;&#34; =&amp;gt; &#34;vpc-d01806b2&#34;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;　問題なさそうなので&lt;code&gt;terraform apply&lt;/code&gt;&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;$ terraform apply
-aws_security_group.web-server: Creating...
-  description:                          &#34;&#34; =&amp;gt; &#34;Allow traffic of webserver&#34;
-  egress.#:                             &#34;&#34; =&amp;gt; &#34;&amp;lt;computed&amp;gt;&#34;
-  ingress.#:                            &#34;&#34; =&amp;gt; &#34;1&#34;
-  ingress.2603706321.cidr_blocks.#:     &#34;&#34; =&amp;gt; &#34;1&#34;
-  ingress.2603706321.cidr_blocks.0:     &#34;&#34; =&amp;gt; &#34;0.0.0.0/0&#34;
-  ingress.2603706321.from_port:         &#34;&#34; =&amp;gt; &#34;80&#34;
-  ingress.2603706321.protocol:          &#34;&#34; =&amp;gt; &#34;tcp&#34;
-  ingress.2603706321.security_groups.#: &#34;&#34; =&amp;gt; &#34;0&#34;
-  ingress.2603706321.self:              &#34;&#34; =&amp;gt; &#34;0&#34;
-  ingress.2603706321.to_port:           &#34;&#34; =&amp;gt; &#34;80&#34;
-  name:                                 &#34;&#34; =&amp;gt; &#34;web-server-sg&#34;
-  owner_id:                             &#34;&#34; =&amp;gt; &#34;&amp;lt;computed&amp;gt;&#34;
-  tags.#:                               &#34;&#34; =&amp;gt; &#34;2&#34;
-  tags.Made:                            &#34;&#34; =&amp;gt; &#34;terraform&#34;
-  tags.Name:                            &#34;&#34; =&amp;gt; &#34;web-server&#34;
-  vpc_id:                               &#34;&#34; =&amp;gt; &#34;vpc-d01806b2&#34;
-aws_security_group.web-server: Creation complete
-
-Apply complete! Resources: 1 added, 0 changed, 0 destroyed.
-
-The state of your infrastructure has been saved to the path
-below. This state is required to modify and destroy your
-infrastructure, so keep it safe. To inspect the complete state
-use the `terraform show` command.
-
-State path: terraform.tfstate
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;　&lt;code&gt;1 added&lt;/code&gt;となっています。&lt;code&gt;terraform show&lt;/code&gt;で今の状態を確認します。sg-8a53d6efができました。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;$ terraform show                                                                         
-aws_security_group.web-server:
-  id = sg-8a53d6ef
-  description = Allow traffic of webserver
-  egress.# = 1
-  egress.1965070075.cidr_blocks.# = 1
-  egress.1965070075.cidr_blocks.0 = 0.0.0.0/0
-  egress.1965070075.from_port = 0
-  egress.1965070075.protocol = -1
-  egress.1965070075.security_groups.# = 0
-  egress.1965070075.self = false
-  egress.1965070075.to_port = 0
-  ingress.# = 1
-  ingress.2603706321.cidr_blocks.# = 1
-  ingress.2603706321.cidr_blocks.0 = 0.0.0.0/0
-  ingress.2603706321.from_port = 80
-  ingress.2603706321.protocol = tcp
-  ingress.2603706321.security_groups.# = 0
-  ingress.2603706321.self = false
-  ingress.2603706321.to_port = 80
-  name = web-server-sg
-  owner_id = MY_AWS_ACCOUNT_NUMBER
-  tags.# = 2
-  tags.Made = terraform
-  tags.Name = web-server
-  vpc_id = vpc-d01806b2
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;　マネジメントコンソールでも、Terraformの指示通りのセキュリティグループが作成されたことが確認できます。&lt;/p&gt;
-
-&lt;p&gt;　&lt;img src=&#34;http://aimless.jp/blog/wp-content/uploads/2015/03/2015-03-22-01.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-
-&lt;h2 id=&#34;ルールの追加-inbound:29a47d36f0cb88ad8f2feca5cd4e2d83&#34;&gt;ルールの追加（Inbound）&lt;/h2&gt;
-
-&lt;p&gt;　inboundにHTTPSを追加してみましょう。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;$ cat web-sg.tf 
-provider &#34;aws&#34; {
-    access_key = &#34;${var.access_key}&#34;
-    secret_key = &#34;${var.secret_key}&#34;
-    region = &#34;${var.region}&#34;
-}
-
-resource &#34;aws_security_group&#34; &#34;web-server&#34; {
-  name = &#34;web-server-sg&#34;
-  description = &#34;Allow traffic of webserver&#34;
-
-  ingress {
-      from_port = 80 
-      to_port = 80
-      protocol = &#34;tcp&#34;
-      cidr_blocks = [&#34;0.0.0.0/0&#34;]
-  }
-  ingress {
-      from_port = 443
-      to_port = 443
-      protocol = &#34;tcp&#34;
-      cidr_blocks = [&#34;0.0.0.0/0&#34;]
-  }
-  vpc_id = &#34;vpc-d01806b2&#34;
-  tags {
-    Name = &#34;web-server&#34;
-    Made = &#34;terraform&#34;
-  }
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;　tfファイルを編集後、&lt;code&gt;terraform plan&lt;/code&gt;からの&lt;code&gt;terraform apply&lt;/code&gt;、&lt;code&gt;terraform show&lt;/code&gt;&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;$ terraform plan
-Refreshing Terraform state prior to plan...
-
-aws_security_group.web-server: Refreshing state... (ID: sg-8a53d6ef)
-
-The Terraform execution plan has been generated and is shown below.
-Resources are shown in alphabetical order for quick scanning. Green resources
-will be created (or destroyed and then created if an existing resource
-exists), yellow resources are being changed in-place, and red resources
-will be destroyed.
-
-Note: You didn&amp;#039;t specify an &#34;-out&#34; parameter to save this plan, so when
-&#34;apply&#34; is called, Terraform can&amp;#039;t guarantee this is what will execute.
-
-~ aws_security_group.web-server
-    ingress.#:                            &#34;1&#34; =&amp;gt; &#34;2&#34;
-    ingress.2603706321.cidr_blocks.#:     &#34;1&#34; =&amp;gt; &#34;1&#34;
-    ingress.2603706321.cidr_blocks.0:     &#34;0.0.0.0/0&#34; =&amp;gt; &#34;0.0.0.0/0&#34;
-    ingress.2603706321.from_port:         &#34;80&#34; =&amp;gt; &#34;80&#34;
-    ingress.2603706321.protocol:          &#34;tcp&#34; =&amp;gt; &#34;tcp&#34;
-    ingress.2603706321.security_groups.#: &#34;0&#34; =&amp;gt; &#34;0&#34;
-    ingress.2603706321.self:              &#34;0&#34; =&amp;gt; &#34;0&#34;
-    ingress.2603706321.to_port:           &#34;80&#34; =&amp;gt; &#34;80&#34;
-    ingress.4089093546.cidr_blocks.#:     &#34;0&#34; =&amp;gt; &#34;1&#34;
-    ingress.4089093546.cidr_blocks.0:     &#34;&#34; =&amp;gt; &#34;0.0.0.0/0&#34;
-    ingress.4089093546.from_port:         &#34;&#34; =&amp;gt; &#34;443&#34;
-    ingress.4089093546.protocol:          &#34;&#34; =&amp;gt; &#34;tcp&#34;
-    ingress.4089093546.security_groups.#: &#34;0&#34; =&amp;gt; &#34;0&#34;
-    ingress.4089093546.self:              &#34;&#34; =&amp;gt; &#34;0&#34;
-    ingress.4089093546.to_port:           &#34;&#34; =&amp;gt; &#34;443&#34;
-
-
-$ 
-$ terraform apply
-aws_security_group.web-server: Refreshing state... (ID: sg-8a53d6ef)
-aws_security_group.web-server: Modifying...
-  ingress.#:                            &#34;1&#34; =&amp;gt; &#34;2&#34;
-  ingress.2603706321.cidr_blocks.#:     &#34;1&#34; =&amp;gt; &#34;1&#34;
-  ingress.2603706321.cidr_blocks.0:     &#34;0.0.0.0/0&#34; =&amp;gt; &#34;0.0.0.0/0&#34;
-  ingress.2603706321.from_port:         &#34;80&#34; =&amp;gt; &#34;80&#34;
-  ingress.2603706321.protocol:          &#34;tcp&#34; =&amp;gt; &#34;tcp&#34;
-  ingress.2603706321.security_groups.#: &#34;0&#34; =&amp;gt; &#34;0&#34;
-  ingress.2603706321.self:              &#34;0&#34; =&amp;gt; &#34;0&#34;
-  ingress.2603706321.to_port:           &#34;80&#34; =&amp;gt; &#34;80&#34;
-  ingress.4089093546.cidr_blocks.#:     &#34;0&#34; =&amp;gt; &#34;1&#34;
-  ingress.4089093546.cidr_blocks.0:     &#34;&#34; =&amp;gt; &#34;0.0.0.0/0&#34;
-  ingress.4089093546.from_port:         &#34;&#34; =&amp;gt; &#34;443&#34;
-  ingress.4089093546.protocol:          &#34;&#34; =&amp;gt; &#34;tcp&#34;
-  ingress.4089093546.security_groups.#: &#34;0&#34; =&amp;gt; &#34;0&#34;
-  ingress.4089093546.self:              &#34;&#34; =&amp;gt; &#34;0&#34;
-  ingress.4089093546.to_port:           &#34;&#34; =&amp;gt; &#34;443&#34;
-aws_security_group.web-server: Modifications complete
-
-Apply complete! Resources: 0 added, 1 changed, 0 destroyed.
-
-The state of your infrastructure has been saved to the path
-below. This state is required to modify and destroy your
-infrastructure, so keep it safe. To inspect the complete state
-use the `terraform show` command.
-
-State path: terraform.tfstate
-$ 
-$ terraform show
-aws_security_group.web-server:
-  id = sg-8a53d6ef
-  description = Allow traffic of webserver
-  egress.# = 1
-  egress.1965070075.cidr_blocks.# = 1
-  egress.1965070075.cidr_blocks.0 = 0.0.0.0/0
-  egress.1965070075.from_port = 0
-  egress.1965070075.protocol = -1
-  egress.1965070075.security_groups.# = 0
-  egress.1965070075.self = false
-  egress.1965070075.to_port = 0
-  ingress.# = 2
-  ingress.2603706321.cidr_blocks.# = 1
-  ingress.2603706321.cidr_blocks.0 = 0.0.0.0/0
-  ingress.2603706321.from_port = 80
-  ingress.2603706321.protocol = tcp
-  ingress.2603706321.security_groups.# = 0
-  ingress.2603706321.self = false
-  ingress.2603706321.to_port = 80
-  ingress.4089093546.cidr_blocks.# = 1
-  ingress.4089093546.cidr_blocks.0 = 0.0.0.0/0
-  ingress.4089093546.from_port = 443
-  ingress.4089093546.protocol = tcp
-  ingress.4089093546.security_groups.# = 0
-  ingress.4089093546.self = false
-  ingress.4089093546.to_port = 443
-  name = web-server-sg
-  owner_id = MY_AWS_ACCOUNT_NUMBER
-  tags.# = 2
-  tags.Made = terraform
-  tags.Name = web-server
-  vpc_id = vpc-d01806b2
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;　&lt;code&gt;1 changed&lt;/code&gt;となっています。既存のリソースに変更が発生しました。マネジメントコンソール上で確認すると、inboundにHTTPSが増えています。&lt;/p&gt;
-
-&lt;p&gt;　&lt;img src=&#34;http://aimless.jp/blog/wp-content/uploads/2015/03/2015-03-22-02.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-
-&lt;h2 id=&#34;ルールの追加-outbound:29a47d36f0cb88ad8f2feca5cd4e2d83&#34;&gt;ルールの追加（Outbound）&lt;/h2&gt;
-
-&lt;p&gt;　新たにサポートされたegressも使ってみます。sg-2da11148がNATインスタンスに適用されている体で、sg-2da11148向けのOutbound全通信を許可するルールを追加します。&lt;/p&gt;
-
-&lt;p&gt;　許可対象にセキュリティグループを利用する時は、&lt;code&gt;cidr_blocks&lt;/code&gt;ではなく&lt;code&gt;security_groups&lt;/code&gt;を利用します。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;$ cat web-sg.tf 
-provider &#34;aws&#34; {
-    access_key = &#34;${var.access_key}&#34;
-    secret_key = &#34;${var.secret_key}&#34;
-    region = &#34;${var.region}&#34;
-}
-
-resource &#34;aws_security_group&#34; &#34;web-server&#34; {
-  name = &#34;web-server-sg&#34;
-  description = &#34;Allow traffic of webserver&#34;
-
-  ingress {
-      from_port = 80 
-      to_port = 80
-      protocol = &#34;tcp&#34;
-      cidr_blocks = [&#34;0.0.0.0/0&#34;]
-  }
-  ingress {
-      from_port = 443
-      to_port = 443
-      protocol = &#34;tcp&#34;
-      cidr_blocks = [&#34;0.0.0.0/0&#34;]
-  }
-  egress {
-      from_port = 0
-      to_port = 65535
-      protocol = &#34;-1&#34;
-      security_groups = [&#34;sg-2da11148&#34;]
-  }
-  vpc_id = &#34;vpc-d01806b2&#34;
-  tags {
-    Name = &#34;web-server&#34;
-    Made = &#34;terraform&#34;
-  }
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;　tfファイルを編集後、&lt;code&gt;terraform plan&lt;/code&gt;からの&lt;code&gt;terraform apply&lt;/code&gt;、&lt;code&gt;terraform show&lt;/code&gt;&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;$  terraform plan
-Refreshing Terraform state prior to plan...
-
-aws_security_group.web-server: Refreshing state... (ID: sg-8a53d6ef)
-
-The Terraform execution plan has been generated and is shown below.
-Resources are shown in alphabetical order for quick scanning. Green resources
-will be created (or destroyed and then created if an existing resource
-exists), yellow resources are being changed in-place, and red resources
-will be destroyed.
-
-Note: You didn&amp;#039;t specify an &#34;-out&#34; parameter to save this plan, so when
-&#34;apply&#34; is called, Terraform can&amp;#039;t guarantee this is what will execute.
-
-~ aws_security_group.web-server
-    egress.2221449193.cidr_blocks.#:              &#34;0&#34; =&amp;gt; &#34;0&#34;
-    egress.2221449193.from_port:                  &#34;&#34; =&amp;gt; &#34;0&#34;
-    egress.2221449193.protocol:                   &#34;&#34; =&amp;gt; &#34;-1&#34;
-    egress.2221449193.security_groups.#:          &#34;0&#34; =&amp;gt; &#34;1&#34;
-    egress.2221449193.security_groups.1429001686: &#34;&#34; =&amp;gt; &#34;sg-2da11148&#34;
-    egress.2221449193.self:                       &#34;&#34; =&amp;gt; &#34;0&#34;
-    egress.2221449193.to_port:                    &#34;&#34; =&amp;gt; &#34;65535&#34;
-
-
-$ terraform apply
-aws_security_group.web-server: Refreshing state... (ID: sg-8a53d6ef)
-aws_security_group.web-server: Modifying...
-  egress.2221449193.cidr_blocks.#:              &#34;0&#34; =&amp;gt; &#34;0&#34;
-  egress.2221449193.from_port:                  &#34;&#34; =&amp;gt; &#34;0&#34;
-  egress.2221449193.protocol:                   &#34;&#34; =&amp;gt; &#34;-1&#34;
-  egress.2221449193.security_groups.#:          &#34;0&#34; =&amp;gt; &#34;1&#34;
-  egress.2221449193.security_groups.1429001686: &#34;&#34; =&amp;gt; &#34;sg-2da11148&#34;
-  egress.2221449193.self:                       &#34;&#34; =&amp;gt; &#34;0&#34;
-  egress.2221449193.to_port:                    &#34;&#34; =&amp;gt; &#34;65535&#34;
-aws_security_group.web-server: Modifications complete
-
-Apply complete! Resources: 0 added, 1 changed, 0 destroyed.
-
-The state of your infrastructure has been saved to the path
-below. This state is required to modify and destroy your
-infrastructure, so keep it safe. To inspect the complete state
-use the `terraform show` command.
-
-State path: terraform.tfstate
-$ terraform show
-aws_security_group.web-server:
-  id = sg-8a53d6ef
-  description = Allow traffic of webserver
-  egress.# = 1
-  egress.2221449193.cidr_blocks.# = 0
-  egress.2221449193.from_port = 0
-  egress.2221449193.protocol = -1
-  egress.2221449193.security_groups.# = 1
-  egress.2221449193.security_groups.1429001686 = sg-2da11148
-  egress.2221449193.self = false
-  egress.2221449193.to_port = 65535
-  ingress.# = 2
-  ingress.2603706321.cidr_blocks.# = 1
-  ingress.2603706321.cidr_blocks.0 = 0.0.0.0/0
-  ingress.2603706321.from_port = 80
-  ingress.2603706321.protocol = tcp
-  ingress.2603706321.security_groups.# = 0
-  ingress.2603706321.self = false
-  ingress.2603706321.to_port = 80
-  ingress.4089093546.cidr_blocks.# = 1
-  ingress.4089093546.cidr_blocks.0 = 0.0.0.0/0
-  ingress.4089093546.from_port = 443
-  ingress.4089093546.protocol = tcp
-  ingress.4089093546.security_groups.# = 0
-  ingress.4089093546.self = false
-  ingress.4089093546.to_port = 443
-  name = web-server-sg
-  owner_id = MY_AWS_ACCOUNT_NUMBER
-  tags.# = 2
-  tags.Made = terraform
-  tags.Name = web-server
-  vpc_id = vpc-d01806b2
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;　1 changed　となっています。既存のリソースに変更が発生しています。マネジメントコンソール上で確認すると、outboundにsg-2da11148向けのALL Trafficが増えています。&lt;/p&gt;
-
-&lt;p&gt;　![][3]&lt;/p&gt;
-
-&lt;p&gt;[3]: &lt;a href=&#34;http://aimless.jp/blog/wp-content/uploads/2015/03/2015-03-22-03.png&#34;&gt;http://aimless.jp/blog/wp-content/uploads/2015/03/2015-03-22-03.png&lt;/a&gt;&lt;/p&gt;
 </description>
     </item>
     

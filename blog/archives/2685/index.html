@@ -1,0 +1,287 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+
+  
+  <meta charset="UTF-8">
+  <title>
+    RedPenにスペルチェック機能を追加する | Aimless
+  </title>
+
+
+  
+  <meta name="viewport" content="width=device-width,user-scalable=no,maximum-scale=1,initial-scale=1">
+
+
+  
+  <link rel="stylesheet" href="/css/sanitize.css">
+  <link rel="stylesheet" href="/css/responsive.css">
+  <link rel="stylesheet" href="/css/highlight_monokai.css">
+  <link rel="stylesheet" href="/css/theme.css">
+  <link rel="stylesheet" href="/css/custom.css">
+
+
+  
+  <script src="/js/less.js" type="text/javascript"></script>
+
+  
+<link href="/feed" rel="alternate" type="application/rss+xml" title="RSSフィード">
+
+</head>
+
+
+
+<body>
+<div class="container">
+
+  
+  <header role="banner">
+    <div class="row gutters">
+      <div id="site-title" class="col span_6">
+        <h1><a href="/blog/">Aimless</a></h1>
+        <h2>Powered by aimless emotion</h2>
+      </div>
+      <div id="social" class="col span_6">
+        <ul>
+          <li><a href="https://twitter.com/kongou_ae" target="_blank">Twitter</a></li>
+          
+          <li><a href="https://github.com/kongou-ae" target="_blank">GitHub</a></li>
+        </ul>
+      </div>
+    </div>
+  </header>
+
+
+  
+  <main id="single" role="main">
+    <div class="article-header">
+      <h1>RedPenにスペルチェック機能を追加する</h1>
+      <div class="meta">
+        Nov 23, 2015 &nbsp;
+        
+          #<a href="/blog/categories/uncategorized">uncategorized</a>&nbsp;
+        
+        <a href='http://b.hatena.ne.jp/entry/http://aimless.jp/blog/archives/2685/'><img src='http://b.hatena.ne.jp/entry/image/http://aimless.jp/blog/archives/2685/' alt='' /></a>
+      </div>
+    </div>
+    <article>
+      
+
+<h2 id="前置き:6a8429973c6a1dee2b4aa041f6e841a8">前置き</h2>
+
+<p>もともとこのブログはWordpressで運用していました。ですが、アウトプットすることが目的であってCMSを運用することは目的ではありませんので、HUGO + Github Pagesの構成に切り替えました。</p>
+
+<p>切り替えに伴い、ブログ用のGithubリポジトリにMarkdownをPushすると、CircleCIがHUGOを使ってブログをビルドし、HTMLをGithub PagesにPushする、という仕組みにしました。</p>
+
+<h2 id="文章をテストする:6a8429973c6a1dee2b4aa041f6e841a8">文章をテストする</h2>
+
+<p>ブログを公開するプロセスにCircleCIがいますので、ブログの文章に対してCIを行うことがでいます。何をするか考えた結果、文章をテストすることにしました。ブログ用のGithubリポジトリにPushされたMarkdownをCircleCIでテストし、誤記や文法の誤りなどがあればテスト失敗とみなしビルドを行わない。こうすることで、ブログに誤った情報を含むエントリーが乗ってしまう可能性を減らすことができます。</p>
+
+<p>文章をテストするツールを探してみると、<a href="https://github.com/textlint/textlint">textlint/textlint</a>と<a href="https://github.com/redpen-cc/redpen/">redpen-cc/redpen</a>が見つかりました。asciidocとasciidocter-pdfを利用した気軽なドキュメント作成を模索していることもありますので、今回はasciidocをサポートするRedPenを使うことにします。</p>
+
+<h2 id="実践:6a8429973c6a1dee2b4aa041f6e841a8">実践</h2>
+
+<p>UTM製品であるフォーティゲートの正しいスペルは「FortiGate」です。FortigateやFroutigateではありません。ネットワークエンジニアとして、ネットワーク機器のスペルを間違えるのは恥ずかしい。そこでRedPenに、自分が指定するキーワードを利用したスペルチェック機能を実装します。</p>
+
+<p>RedPenはJavaScriptを利用した機能拡張をサポートしています。「<a href="http://www.clear-code.com/blog/2015/8/29.html">RedPenのValidatorをJavaScript で書くには</a>」を参考に、JavaScriptによる機能拡張を実装します。</p>
+
+<p>スペルチェックについては編集距離を利用します。編集距離を求める関数は「<a href="http://lostlinksearch.net/blog/2012/12/javascript%E3%81%A7%E7%B7%A8%E9%9B%86%E8%B7%9D%E9%9B%A2%EF%BC%88%E3%83%AC%E3%83%BC%E3%83%99%E3%83%B3%E3%82%B7%E3%83%A5%E3%82%BF%E3%82%A4%E3%83%B3%E8%B7%9D%E9%9B%A2%EF%BC%89%E3%82%92%E8%A8%88%E7%AE%97/">JavaScriptで編集距離（レーベンシュタイン距離）を計算する</a>
+」をそのまま使わせていただきます。</p>
+
+<p>以下コードの通り、RedPenが検知した名詞とスペルチェックの確認対象との編集距離を求め、0ではなく3以下であればスペルミスとみなします。編集距離を３としたのは勢いです。適当な値はこれから模索していきます。</p>
+
+<pre><code>function validateSentence(sentence) {
+
+  var levenshteinDistance = function(a, b) {
+    var matrix = new Array(a.length + 1);
+    for (var i = 0; i &lt; a.length + 1; i++) {
+      matrix[i] = new Array(b.length + 1);
+    }
+
+    for (var i = 0; i &lt; a.length + 1; i++) {
+      matrix[i][0] = i;
+    }
+
+    for (var j = 0; j &lt; b.length + 1; j++) {
+      matrix[0][j] = j;
+    }
+
+    for (var i = 1; i &lt; a.length + 1; i++) {
+      for (var j = 1; j &lt; b.length + 1; j++) {
+        var x = a[i - 1] == b[j -1] ? 0 : 1;
+        matrix[i][j] = Math.min(
+          matrix[i - 1][j] + 1,
+          matrix[i][j - 1] + 1,
+          matrix[i - 1][j- 1] + x
+        );
+      }
+    }
+
+    return matrix[a.length][b.length];
+  }
+
+
+  console = {
+      log: print,
+      warn: print,
+      error: print
+  };
+
+  var checkKeywordArray = [
+    'FortiGate',
+    'メルセデスベンツ',
+    'BIG-IP',
+    'インデックス',
+    'JavaScript'
+  ]
+
+  for (var i = 0; i &lt; sentence.tokens.length; i++) {
+    // 名詞だけを対象に
+    if (sentence.tokens[i].tags[0] == '名詞') {
+      for (var j=0; j &lt; checkKeywordArray.length; j++) {
+        //console.log('checking : ' + sentence.tokens[i].surface + ' and ' + checkKeywordArray[j])
+        var dist = levenshteinDistance(sentence.tokens[i].surface,checkKeywordArray[j])        
+        //console.log(sentence.tokens[i].surface +' is ' + dist)
+        if (dist &lt;= 3 &amp;&amp; dist != 0){
+          addError(sentence.tokens[i].surface + 'はスペルミスの可能性があります', sentence);
+        }
+      }
+    }  
+  }
+}
+</code></pre>
+
+<p>JavaScriptを利用したvalidatorをRedPenのコンフィグで有効にします。</p>
+
+<pre><code>$ cat conf/redpen-conf-ja-custom.xml                                   
+&lt;redpen-conf lang=&quot;ja&quot;&gt;
+    &lt;validators&gt;
+        &lt;validator name=&quot;SentenceLength&quot;&gt;
+            &lt;property name=&quot;max_len&quot; value=&quot;100&quot;/&gt;
+        &lt;/validator&gt;
+        &lt;validator name=&quot;KatakanaEndHyphen&quot;/&gt;
+        &lt;validator name=&quot;SectionLength&quot;&gt;
+            &lt;property name=&quot;max_num&quot; value=&quot;1500&quot;/&gt;
+        &lt;/validator&gt;
+        &lt;validator name=&quot;ParagraphNumber&quot;/&gt;
+        &lt;validator name=&quot;SuccessiveWord&quot; /&gt;
+        &lt;validator name=&quot;JavaScript&quot; /&gt;　　
+    &lt;/validators&gt;
+&lt;/redpen-conf&gt;
+</code></pre>
+
+<p>テストするMarkdownは以下の通りです。あえて誤記をまぜます。</p>
+
+<pre><code>$ more test.md
+
+## どうだー
+
+インデックスは正しいです
+
+インデデクスは間違っています
+
+メルセデスベンスは間違っています
+
+メルセデスベンツは正しいです
+
+FortiGateは正しいです
+
+Fortigateは間違っています
+
+Frotigateも間違っています
+</code></pre>
+
+<p>テストします。間違ったスペルのセンテンスだけをエラーとして検知していますね。</p>
+
+<pre><code>redpen-distribution-1.4.1]$ bin/redpen -c conf/redpen-conf-ja-custom.xml -f markdown test.md
+[2015-11-23 18:55:02.902][INFO ] cc.redpen.Main - Configuration file: /home/aimless/study/document/redpen/redpen-distribution-1.4.1/conf/redpen-conf-ja-custom.xml
+[2015-11-23 18:55:02.910][INFO ] cc.redpen.ConfigurationLoader - Loading config from specified config file: &quot;/home/aimless/study/document/redpen/redpen-distribution-1.4.1/conf/redpen-conf-ja-custom.xml&quot;
+[2015-11-23 18:55:02.921][INFO ] cc.redpen.ConfigurationLoader - Succeeded to load configuration file
+[2015-11-23 18:55:02.921][INFO ] cc.redpen.ConfigurationLoader - Language is set to &quot;ja&quot;
+[2015-11-23 18:55:02.921][WARN ] cc.redpen.ConfigurationLoader - No type configuration...
+[2015-11-23 18:55:02.922][INFO ] cc.redpen.ConfigurationLoader - No &quot;symbols&quot; block found in the configuration
+[2015-11-23 18:55:02.990][INFO ] cc.redpen.config.SymbolTable - &quot;ja&quot; is specified.
+[2015-11-23 18:55:02.990][INFO ] cc.redpen.config.SymbolTable - &quot;normal&quot; type is specified
+[2015-11-23 18:55:03.497][INFO ] cc.redpen.parser.SentenceExtractor - &quot;[。, ？, ！]&quot; are added as a end of sentence characters
+[2015-11-23 18:55:03.498][INFO ] cc.redpen.parser.SentenceExtractor - &quot;[’, ”]&quot; are added as a right quotation characters
+[2015-11-23 18:55:03.512][INFO ] cc.redpen.validator.Validator - max_len is set to 100
+[2015-11-23 18:55:03.515][INFO ] cc.redpen.validator.Validator - max_num is set to 1500
+[2015-11-23 18:55:03.516][INFO ] cc.redpen.validator.Validator - max_num is not set. Use default value of 5
+[2015-11-23 18:55:03.519][INFO ] cc.redpen.validator.JavaScriptValidator - JavaScript validators directory: /home/aimless/study/document/redpen/redpen-distribution-1.4.1/js
+test.md:1: ValidationError[ParagraphNumber], The number of paragraphs exceeds the maximum of 7. at line: どうだー
+test.md:5: ValidationError[JavaScript], [spellcheck.js] インデデクスはスペルミスの可能性があります at line: インデデクスは間違っています
+test.md:7: ValidationError[JavaScript], [spellcheck.js] メルセデスベンスはスペルミスの可能性があります at line: メルセデスベンスは間違っています
+test.md:13: ValidationError[JavaScript], [spellcheck.js] Fortigateはスペルミスの可能性があります at line: Fortigateは間違っています
+test.md:15: ValidationError[JavaScript], [spellcheck.js] Frotigateはスペルミスの可能性があります at line: Frotigateも間違っています
+
+[2015-11-23 18:55:04.483][ERROR] cc.redpen.Main - The number of errors &quot;5&quot; is larger than specified (limit is &quot;1&quot;).
+[aimless@dev redpen-distribution-1.4.1]$
+</code></pre>
+
+<h2 id="所感:6a8429973c6a1dee2b4aa041f6e841a8">所感</h2>
+
+<p>RedPenを利用したスペルチェックがローカル環境で動くことを確認しました。JavaScriptでチェック項目を拡張できるのがいいですね。次はスペルチェック用辞書の単語を増やした上で、CircleCI上で動作させてみようと思います。</p>
+
+    </article>
+    <div class="ad-left">
+    <iframe src="http://rcm-fe.amazon-adsystem.com/e/cm?t=kongou00-22&o=9&p=12&l=bn1&mode=books-jp&browse=466298&fc1=000000&lt1=_blank&lc1=3366FF&bg1=FFFFFF&f=ifr" marginwidth="0" marginheight="0" width="300" height="250" border="0" frameborder="0" style="border:none;" scrolling="no"></iframe>
+
+</div>
+<div class="ad-right">
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    
+    <ins class="adsbygoogle"
+         style="display:inline-block;width:336px;height:280px"
+         data-ad-client="ca-pub-6172178439361228"
+         data-ad-slot="8988676513"></ins>
+    <script>
+    (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+</div>
+
+    
+ <aside><div id="disqus_thread"></div></aside> 
+
+<script type="text/javascript">
+     
+    var disqus_shortname = 'aimlessjpblog';
+
+     
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+  </main>
+
+
+  
+  <footer role="contentinfo">
+    <div style="text-align:center;">
+      
+      Written by kongou_ae
+    </div>
+  </footer>
+
+
+</div>
+
+<script src="/js/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+<script>
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-1736780-2', 'auto');
+	ga('send', 'pageview');
+</script>
+
+</body>
+</html>
+
