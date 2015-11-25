@@ -70,8 +70,11 @@
 
 <h2 id="はじめに:fdefdb4df80f925e79defa0315e73418">はじめに</h2>
 
-<p><a href="http://aimless.jp/blog/archives/2685/">RedPenにスペルチェック機能を追加する</a>の続きです。CircleCI上でRedPenを動かしてみました。
-&gt; RedPenを利用したスペルチェックがローカル環境で動くことを確認しました。JavaScriptでチェック項目を拡張できるのがいいですね。次はスペルチェック用辞書の単語を増やした上で、CircleCI上で動作させてみようと思います。</p>
+<p><a href="http://aimless.jp/blog/archives/2685/">RedPenにスペルチェック機能を追加する</a>の続きです。CircleCI上でRedPenを動かしてみました。</p>
+
+<blockquote>
+<p>RedPenを利用したスペルチェックがローカル環境で動くことを確認しました。JavaScriptでチェック項目を拡張できるのがいいですね。次はスペルチェック用辞書の単語を増やした上で、CircleCI上で動作させてみようと思います。</p>
+</blockquote>
 
 <h2 id="コンテナの仕込み:fdefdb4df80f925e79defa0315e73418">コンテナの仕込み</h2>
 
@@ -95,13 +98,13 @@ dependencies:
 
 <p><img src="http://aimless.jp/blog/images/20151125-01.png" alt="" /></p>
 
-<p>circle.yml上でテスト方法を定義する必要があるのですが、「直近の変更が.mdファイルの時だけテストを実行する」という書き方が分かりませんでした。しこで、circle.ymlでは「直近の変更が.mdファイルの時だけテストを実行する」というスクリプトを実行することにしました。</p>
+<p>circle.yml上でテスト方法を定義する必要があるのですが、「直近の変更が.mdファイルの時だけテストを実行する」という書き方が分かりませんでした。そこで、circle.ymlでは「直近の変更が.mdファイルの時だけテストを実行する」というスクリプトを実行することにしました。</p>
 
 <p>今回は以下のテストスクリプトを利用します。主に2つの作業を行っています。</p>
 
 <ol>
 <li>ブログ用リポジトリからダウンロードしたRedPenの設定ファイルと独自JavaScriptを、RedPen指定のディレクトリに移動する</li>
-<li><code>git diff</code>で直近の変更の差分からファイル名のみ取得し、そのファイル名が.mdであればRedPenによるテストを実行するスクリプトです。</li>
+<li><code>git diff</code>で直近の変更の差分からファイル名のみ取得し、そのファイル名が.mdであればそのファイルに対してRedPenによるテストを実行するスクリプトです。</li>
 </ol>
 
 <pre><code>#!/bin/sh
@@ -118,11 +121,19 @@ else
 fi
 </code></pre>
 
+<p>そして、circle.ymlのテストの項目でスクリプトの実行を定義します。</p>
+
+<pre><code>test:
+  post:
+      - chmod 744 test-redpen.sh
+      - bash ./test-redpen.sh
+</code></pre>
+
 <h3 id="実行:fdefdb4df80f925e79defa0315e73418">実行</h3>
 
-<p>さて、試してみます。書きかけのこのエントリをブログ用リポジトリにプッシュしてみます。slackから通知があるまで、艦これでもやりつつ待ちます。</p>
+<p>さて、試してみます。書きかけのこのエントリをブログ用リポジトリにプッシュしてみます。slackからテスト結果の通知があるまで、艦これでもやりつつ待ちます。</p>
 
-<p>テストが失敗しました。RedPenによるチェックによって、以下4点のエラーが出ました。</p>
+<p>テストは失敗しました。RedPenのチェックによって、以下4点のエラーが出ました。</p>
 
 <ol>
 <li>RedPenはスペルミスの可能性があります</li>
@@ -155,7 +166,11 @@ fi
   }
 </code></pre>
 
-<p>再度プッシュします。無事テストが通りました。</p>
+<p>再度プッシュします。無事テストが通り、エントリが公開されました。</p>
+
+<p><img src="http://aimless.jp/blog/images/20151125-04.png" alt="" /></p>
+
+<p><img src="http://aimless.jp/blog/images/20151125-05.png" alt="" /></p>
 
 <h2 id="所感:fdefdb4df80f925e79defa0315e73418">所感</h2>
 
