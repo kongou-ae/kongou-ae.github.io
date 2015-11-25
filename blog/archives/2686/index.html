@@ -1,0 +1,186 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+
+  
+  <meta charset="UTF-8">
+  <title>
+    CircleCIでRedPenを動かす | Aimless
+  </title>
+
+
+  
+  <meta name="viewport" content="width=device-width,user-scalable=no,maximum-scale=1,initial-scale=1">
+
+
+  
+  <link rel="stylesheet" href="/css/sanitize.css">
+  <link rel="stylesheet" href="/css/responsive.css">
+  <link rel="stylesheet" href="/css/highlight_monokai.css">
+  <link rel="stylesheet" href="/css/theme.css">
+  <link rel="stylesheet" href="/css/custom.css">
+
+
+  
+  <script src="/js/less.js" type="text/javascript"></script>
+
+  
+<link href="/feed" rel="alternate" type="application/rss+xml" title="RSSフィード">
+
+</head>
+
+
+
+<body>
+<div class="container">
+
+  
+  <header role="banner">
+    <div class="row gutters">
+      <div id="site-title" class="col span_6">
+        <h1><a href="/blog/">Aimless</a></h1>
+        <h2>Powered by aimless emotion</h2>
+      </div>
+      <div id="social" class="col span_6">
+        <ul>
+          <li><a href="https://twitter.com/kongou_ae" target="_blank">Twitter</a></li>
+          
+          <li><a href="https://github.com/kongou-ae" target="_blank">GitHub</a></li>
+        </ul>
+      </div>
+    </div>
+  </header>
+
+
+  
+  <main id="single" role="main">
+    <div class="article-header">
+      <h1>CircleCIでRedPenを動かす</h1>
+      <div class="meta">
+        Nov 25, 2015 &nbsp;
+        
+          #<a href="/blog/categories/uncategorized">uncategorized</a>&nbsp;
+        
+        <a href='http://b.hatena.ne.jp/entry/http://aimless.jp/blog/archives/2686/'><img src='http://b.hatena.ne.jp/entry/image/http://aimless.jp/blog/archives/2686/' alt='' /></a>
+      </div>
+    </div>
+    <article>
+      
+
+<h2 id="はじめに:fdefdb4df80f925e79defa0315e73418">はじめに</h2>
+
+<p><a href="http://aimless.jp/blog/archives/2685/">RedPenにスペルチェック機能を追加する</a>の続きです。CircleCI上でRedpenを動かしてみました。
+&gt; RedPenを利用したスペルチェックがローカル環境で動くことを確認しました。JavaScriptでチェック項目を拡張できるのがいいですね。次はスペルチェック用辞書の単語を増やした上で、CircleCI上で動作させてみようと思います。</p>
+
+<h2 id="コンテナの仕込み:fdefdb4df80f925e79defa0315e73418">コンテナの仕込み</h2>
+
+<p>CircleCIのコンテナでRedPenを動かさなければなりません。RedPenはJava 1.8が必要なのでcircle.ymの<code>machine</code>の箇所に追加します。また、RedPenそのものをダウンロードしなければなりませんので、<code>dependencies</code>の箇所でアーカイブのダウンロードと展開、削除を行います。</p>
+
+<pre><code class="language-circle.yml">machine:
+  timezone: Asia/Tokyo
+  java:
+    version: oraclejdk8
+
+dependencies:
+  pre:
+    - wget https://github.com/redpen-cc/redpen/releases/download/v1.4.1/redpen-1.4.1.tar.gz
+    - tar xvf redpen-1.4.1.tar.gz
+    - rm redpen-1.4.1.tar.gz
+</code></pre>
+
+<h2 id="テストの仕込み:fdefdb4df80f925e79defa0315e73418">テストの仕込み</h2>
+
+<p>RedPenで独自Javascriptを利用するためには、設定ファイルとJavascriptファイルが必要です。せっかくなので、これらもリポジトリで管理します。ブログ用リポジトリにRedpenの設定ファイルとスペルチェック用Javascriptを配置します。</p>
+
+<p><img src="http://aimless.jp/blog/images/20151125-01.png" alt="" /></p>
+
+<p>circle.yml上で「直近の変更が.mdファイルの時だけテストを実行する」という書き方がわからなかったので、circle.ymlでは「直近の変更が.mdファイルの時だけテストを実行する」というスクリプトを実行することにしました。</p>
+
+<p>今回は以下のテストスクリプトを利用します。主に2つの作業を行っています。</p>
+
+<ol>
+<li>ブログ用リポジトリからダウンロードしたRedPenの設定ファイルと独自Javascriptを、RedPen指定のディレクトリに移動する</li>
+<li><code>git diff</code>で直近の変更の差分からファイル名のみ取得し、そのファイル名が.mdであればRedPenによるテストを実行するスクリプトです。</li>
+</ol>
+
+<pre><code>#!/bin/sh
+mv redpen/blog.xml redpen-*/conf
+mv redpen/spellCheck.js redpen-*/js
+
+filename=`git diff HEAD^ HEAD --name-only`
+
+if [[ $filename =~ .*\.md$ ]] ;then
+    echo &quot;start to test $filename....&quot;
+    redpen-*/bin/redpen -c redpen-*/conf/blog.xml -f markdown $filename
+else
+    echo &quot;$filename is not markdown. The test will not be performed.&quot;
+fi
+</code></pre>
+
+<h3 id="実行:fdefdb4df80f925e79defa0315e73418">実行</h3>
+
+<p>試してみましょう。書きかけのこのエントリーをブログ用リポジトリにプッシュしてみます。</p>
+
+    </article>
+    <div class="ad-left">
+    <iframe src="http://rcm-fe.amazon-adsystem.com/e/cm?t=kongou00-22&o=9&p=12&l=bn1&mode=books-jp&browse=466298&fc1=000000&lt1=_blank&lc1=3366FF&bg1=FFFFFF&f=ifr" marginwidth="0" marginheight="0" width="300" height="250" border="0" frameborder="0" style="border:none;" scrolling="no"></iframe>
+
+</div>
+<div class="ad-right">
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    
+    <ins class="adsbygoogle"
+         style="display:inline-block;width:336px;height:280px"
+         data-ad-client="ca-pub-6172178439361228"
+         data-ad-slot="8988676513"></ins>
+    <script>
+    (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+</div>
+
+    
+ <aside><div id="disqus_thread"></div></aside> 
+
+<script type="text/javascript">
+     
+    var disqus_shortname = 'aimlessjpblog';
+
+     
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+  </main>
+
+
+  
+  <footer role="contentinfo">
+    <div style="text-align:center;">
+      
+      Written by kongou_ae
+    </div>
+  </footer>
+
+
+</div>
+
+<script src="/js/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+<script>
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-1736780-2', 'auto');
+	ga('send', 'pageview');
+</script>
+
+</body>
+</html>
+

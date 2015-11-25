@@ -6,8 +6,72 @@
     <description>Recent content in Uncategorized on Aimless</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja</language>
-    <lastBuildDate>Mon, 23 Nov 2015 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 25 Nov 2015 00:00:00 +0000</lastBuildDate>
     <atom:link href="http://aimless.jp/categories/uncategorized/feed/" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>CircleCIでRedPenを動かす</title>
+      <link>http://aimless.jp/blog/archives/2686</link>
+      <pubDate>Wed, 25 Nov 2015 00:00:00 +0000</pubDate>
+      
+      <guid>http://aimless.jp/blog/archives/2686</guid>
+      <description>
+
+&lt;h2 id=&#34;はじめに:fdefdb4df80f925e79defa0315e73418&#34;&gt;はじめに&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://aimless.jp/blog/archives/2685/&#34;&gt;RedPenにスペルチェック機能を追加する&lt;/a&gt;の続きです。CircleCI上でRedpenを動かしてみました。
+&amp;gt; RedPenを利用したスペルチェックがローカル環境で動くことを確認しました。JavaScriptでチェック項目を拡張できるのがいいですね。次はスペルチェック用辞書の単語を増やした上で、CircleCI上で動作させてみようと思います。&lt;/p&gt;
+
+&lt;h2 id=&#34;コンテナの仕込み:fdefdb4df80f925e79defa0315e73418&#34;&gt;コンテナの仕込み&lt;/h2&gt;
+
+&lt;p&gt;CircleCIのコンテナでRedPenを動かさなければなりません。RedPenはJava 1.8が必要なのでcircle.ymの&lt;code&gt;machine&lt;/code&gt;の箇所に追加します。また、RedPenそのものをダウンロードしなければなりませんので、&lt;code&gt;dependencies&lt;/code&gt;の箇所でアーカイブのダウンロードと展開、削除を行います。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-circle.yml&#34;&gt;machine:
+  timezone: Asia/Tokyo
+  java:
+    version: oraclejdk8
+
+dependencies:
+  pre:
+    - wget https://github.com/redpen-cc/redpen/releases/download/v1.4.1/redpen-1.4.1.tar.gz
+    - tar xvf redpen-1.4.1.tar.gz
+    - rm redpen-1.4.1.tar.gz
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;テストの仕込み:fdefdb4df80f925e79defa0315e73418&#34;&gt;テストの仕込み&lt;/h2&gt;
+
+&lt;p&gt;RedPenで独自Javascriptを利用するためには、設定ファイルとJavascriptファイルが必要です。せっかくなので、これらもリポジトリで管理します。ブログ用リポジトリにRedpenの設定ファイルとスペルチェック用Javascriptを配置します。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/images/20151125-01.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;circle.yml上で「直近の変更が.mdファイルの時だけテストを実行する」という書き方がわからなかったので、circle.ymlでは「直近の変更が.mdファイルの時だけテストを実行する」というスクリプトを実行することにしました。&lt;/p&gt;
+
+&lt;p&gt;今回は以下のテストスクリプトを利用します。主に2つの作業を行っています。&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;ブログ用リポジトリからダウンロードしたRedPenの設定ファイルと独自Javascriptを、RedPen指定のディレクトリに移動する&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;git diff&lt;/code&gt;で直近の変更の差分からファイル名のみ取得し、そのファイル名が.mdであればRedPenによるテストを実行するスクリプトです。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;pre&gt;&lt;code&gt;#!/bin/sh
+mv redpen/blog.xml redpen-*/conf
+mv redpen/spellCheck.js redpen-*/js
+
+filename=`git diff HEAD^ HEAD --name-only`
+
+if [[ $filename =~ .*\.md$ ]] ;then
+    echo &amp;quot;start to test $filename....&amp;quot;
+    redpen-*/bin/redpen -c redpen-*/conf/blog.xml -f markdown $filename
+else
+    echo &amp;quot;$filename is not markdown. The test will not be performed.&amp;quot;
+fi
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;実行:fdefdb4df80f925e79defa0315e73418&#34;&gt;実行&lt;/h3&gt;
+
+&lt;p&gt;試してみましょう。書きかけのこのエントリーをブログ用リポジトリにプッシュしてみます。&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>RedPenにスペルチェック機能を追加する</title>
