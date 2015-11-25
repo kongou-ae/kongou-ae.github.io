@@ -69,40 +69,42 @@ fi
 
 &lt;h3 id=&#34;実行:fdefdb4df80f925e79defa0315e73418&#34;&gt;実行&lt;/h3&gt;
 
-&lt;p&gt;試してみましょう。書きかけのこのエントリをブログ用リポジトリにプッシュしてみます。slackから通知があるまで、艦これでもやりつつ待ちます。&lt;/p&gt;
+&lt;p&gt;さて、試してみます。書きかけのこのエントリをブログ用リポジトリにプッシュしてみます。slackから通知があるまで、艦これでもやりつつ待ちます。&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;C:\hugo\aimless.jp [master +1 ~0 -1 !]&amp;gt; git add content/blog/archives/2015-11-25-post-2686.md
-C:\hugo\aimless.jp [master +1 ~0 -0 | +0 ~0 -1]&amp;gt; git commit -m &amp;quot;release 2686&amp;quot;
-[master c37a1b3] release 2686
- 1 file changed, 63 insertions(+)
- create mode 100644 content/blog/archives/2015-11-25-post-2686.md
-C:\hugo\aimless.jp [master +0 ~0 -1]&amp;gt; git push origin master
-Counting objects: 10, done.
-Delta compression using up to 4 threads.
-Compressing objects: 100% (6/6), done.
-Writing objects: 100% (6/6), 1.88 KiB | 0 bytes/s, done.
-Total 6 (delta 2), reused 0 (delta 0)
-To https://github.com/kongou-ae/blog.git
-   ec474a3..c37a1b3  master -&amp;gt; master
-C:\hugo\aimless.jp [master +0 ~0 -1]&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;テストが失敗しました。RedPenによるチェックによって、以下4点のエラーが出ました。&lt;/p&gt;
 
-&lt;p&gt;テストが失敗しました。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/images/20151125-02.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;結果を見てみましょう。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/images/20151125-03.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;以下4項目で怒られていますので直して再プッシュします。&lt;/p&gt;
-
-&lt;ul&gt;
+&lt;ol&gt;
 &lt;li&gt;RedPenはスペルミスの可能性があります&lt;/li&gt;
 &lt;li&gt;JavaScriptはスペルミスの可能性があります&lt;/li&gt;
 &lt;li&gt;The length of the sentence (116) exceeds the maximum of 100. at line&lt;/li&gt;
-&lt;li&gt;Found invalid Katakana end-hypen &amp;ldquo;エントリ&amp;rdquo;&lt;/li&gt;
-&lt;/ul&gt;
+&lt;li&gt;Found invalid Katakana end-hypen &amp;ldquo;エントリー&amp;rdquo;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/images/20151125-02.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/images/20151125-03.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;リトライ:fdefdb4df80f925e79defa0315e73418&#34;&gt;リトライ&lt;/h2&gt;
+
+&lt;p&gt;4項目を修正しまして再プッシュしましたが、再びエラーです。&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;The number of paragraphs exceeds the maximum of 6. at line: 実行&lt;/li&gt;
+&lt;li&gt;The length of the sentence (109) exceeds the maximum of 100. at line: &amp;mdash;title: CircleCIでRedPenを動かすauthor: kongou_aelayout: postdate: 2015-11-25url: /blog/archives/2686categories:&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;1つ目のエラーを見ると、1セクションあたりのパラグラフが多いことが原因のようです。そこで、文章の構成を変更しパラグラフの数を減らします。&lt;/p&gt;
+
+&lt;p&gt;2つ目のエラーを見ると、1センテンスあたりの文字数が100を超えていることが原因のようです。しかｓ、怒られた箇所はHUGOの設定箇所のため変更できません。仕方がないので最大文字数を120に増やすことにします。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;redpen-conf lang=&amp;quot;ja&amp;quot;&amp;gt;
+    &amp;lt;validators&amp;gt;
+        &amp;lt;validator name=&amp;quot;SentenceLength&amp;quot;&amp;gt;
+            &amp;lt;property name=&amp;quot;max_len&amp;quot; value=&amp;quot;120&amp;quot;/&amp;gt;
+        &amp;lt;/validator&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;再度プッシュします。無事テストが通りました。&lt;/p&gt;
 </description>
     </item>
     
