@@ -19,7 +19,7 @@
 
 &lt;h2 id=&#34;はじめに:fdefdb4df80f925e79defa0315e73418&#34;&gt;はじめに&lt;/h2&gt;
 
-&lt;p&gt;&lt;a href=&#34;http://aimless.jp/blog/archives/2685/&#34;&gt;RedPenにスペルチェック機能を追加する&lt;/a&gt;の続きです。CircleCI上でRedpenを動かしてみました。
+&lt;p&gt;&lt;a href=&#34;http://aimless.jp/blog/archives/2685/&#34;&gt;RedPenにスペルチェック機能を追加する&lt;/a&gt;の続きです。CircleCI上でRedPenを動かしてみました。
 &amp;gt; RedPenを利用したスペルチェックがローカル環境で動くことを確認しました。JavaScriptでチェック項目を拡張できるのがいいですね。次はスペルチェック用辞書の単語を増やした上で、CircleCI上で動作させてみようと思います。&lt;/p&gt;
 
 &lt;h2 id=&#34;コンテナの仕込み:fdefdb4df80f925e79defa0315e73418&#34;&gt;コンテナの仕込み&lt;/h2&gt;
@@ -33,35 +33,35 @@
 
 dependencies:
   pre:
-    - wget https://github.com/redpen-cc/redpen/releases/download/v1.4.1/redpen-1.4.1.tar.gz
-    - tar xvf redpen-1.4.1.tar.gz
-    - rm redpen-1.4.1.tar.gz
+    - wget https://github.com/RedPen-cc/RedPen/releases/download/v1.4.1/RedPen-1.4.1.tar.gz
+    - tar xvf RedPen-1.4.1.tar.gz
+    - rm RedPen-1.4.1.tar.gz
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;h2 id=&#34;テストの仕込み:fdefdb4df80f925e79defa0315e73418&#34;&gt;テストの仕込み&lt;/h2&gt;
 
-&lt;p&gt;RedPenで独自Javascriptを利用するためには、設定ファイルとJavascriptファイルが必要です。せっかくなので、これらもリポジトリで管理します。ブログ用リポジトリにRedpenの設定ファイルとスペルチェック用Javascriptを配置します。&lt;/p&gt;
+&lt;p&gt;RedPenで独自JavaScriptを利用するためには、設定ファイルとJavaScriptファイルが必要です。せっかくなので、これらもリポジトリで管理します。ブログ用リポジトリにRedPenの設定ファイルとスペルチェック用JavaScriptを配置します。&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/images/20151125-01.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
 
-&lt;p&gt;circle.yml上で「直近の変更が.mdファイルの時だけテストを実行する」という書き方がわからなかったので、circle.ymlでは「直近の変更が.mdファイルの時だけテストを実行する」というスクリプトを実行することにしました。&lt;/p&gt;
+&lt;p&gt;circle.yml上でテスト方法を定義する必要があるのですが、「直近の変更が.mdファイルの時だけテストを実行する」という書き方が分かりませんでした。しこで、circle.ymlでは「直近の変更が.mdファイルの時だけテストを実行する」というスクリプトを実行することにしました。&lt;/p&gt;
 
 &lt;p&gt;今回は以下のテストスクリプトを利用します。主に2つの作業を行っています。&lt;/p&gt;
 
 &lt;ol&gt;
-&lt;li&gt;ブログ用リポジトリからダウンロードしたRedPenの設定ファイルと独自Javascriptを、RedPen指定のディレクトリに移動する&lt;/li&gt;
+&lt;li&gt;ブログ用リポジトリからダウンロードしたRedPenの設定ファイルと独自JavaScriptを、RedPen指定のディレクトリに移動する&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;git diff&lt;/code&gt;で直近の変更の差分からファイル名のみ取得し、そのファイル名が.mdであればRedPenによるテストを実行するスクリプトです。&lt;/li&gt;
 &lt;/ol&gt;
 
 &lt;pre&gt;&lt;code&gt;#!/bin/sh
-mv redpen/blog.xml redpen-*/conf
-mv redpen/spellCheck.js redpen-*/js
+mv RedPen/blog.xml RedPen-*/conf
+mv RedPen/spellCheck.js RedPen-*/js
 
 filename=`git diff HEAD^ HEAD --name-only`
 
 if [[ $filename =~ .*\.md$ ]] ;then
     echo &amp;quot;start to test $filename....&amp;quot;
-    redpen-*/bin/redpen -c redpen-*/conf/blog.xml -f markdown $filename
+    RedPen-*/bin/RedPen -c RedPen-*/conf/blog.xml -f markdown $filename
 else
     echo &amp;quot;$filename is not markdown. The test will not be performed.&amp;quot;
 fi
@@ -69,7 +69,40 @@ fi
 
 &lt;h3 id=&#34;実行:fdefdb4df80f925e79defa0315e73418&#34;&gt;実行&lt;/h3&gt;
 
-&lt;p&gt;試してみましょう。書きかけのこのエントリーをブログ用リポジトリにプッシュしてみます。&lt;/p&gt;
+&lt;p&gt;試してみましょう。書きかけのこのエントリをブログ用リポジトリにプッシュしてみます。slackから通知があるまで、艦これでもやりつつ待ちます。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;C:\hugo\aimless.jp [master +1 ~0 -1 !]&amp;gt; git add content/blog/archives/2015-11-25-post-2686.md
+C:\hugo\aimless.jp [master +1 ~0 -0 | +0 ~0 -1]&amp;gt; git commit -m &amp;quot;release 2686&amp;quot;
+[master c37a1b3] release 2686
+ 1 file changed, 63 insertions(+)
+ create mode 100644 content/blog/archives/2015-11-25-post-2686.md
+C:\hugo\aimless.jp [master +0 ~0 -1]&amp;gt; git push origin master
+Counting objects: 10, done.
+Delta compression using up to 4 threads.
+Compressing objects: 100% (6/6), done.
+Writing objects: 100% (6/6), 1.88 KiB | 0 bytes/s, done.
+Total 6 (delta 2), reused 0 (delta 0)
+To https://github.com/kongou-ae/blog.git
+   ec474a3..c37a1b3  master -&amp;gt; master
+C:\hugo\aimless.jp [master +0 ~0 -1]&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;テストが失敗しました。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/images/20151125-02.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;結果を見てみましょう。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/images/20151125-03.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;以下4項目で怒られていますので直して再プッシュします。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;RedPenはスペルミスの可能性があります&lt;/li&gt;
+&lt;li&gt;JavaScriptはスペルミスの可能性があります&lt;/li&gt;
+&lt;li&gt;The length of the sentence (116) exceeds the maximum of 100. at line&lt;/li&gt;
+&lt;li&gt;Found invalid Katakana end-hypen &amp;ldquo;エントリ&amp;rdquo;&lt;/li&gt;
+&lt;/ul&gt;
 </description>
     </item>
     
