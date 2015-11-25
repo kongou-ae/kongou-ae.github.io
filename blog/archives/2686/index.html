@@ -128,7 +128,7 @@ fi
 <li>RedPenはスペルミスの可能性があります</li>
 <li>JavaScriptはスペルミスの可能性があります</li>
 <li>The length of the sentence (116) exceeds the maximum of 100. at line</li>
-<li>Found invalid Katakana end-hypen &ldquo;エントリー&rdquo;</li>
+<li>Found invalid Katakana end-hypen &ldquo;エントリ&rdquo;</li>
 </ol>
 
 <p><img src="http://aimless.jp/blog/images/20151125-02.png" alt="" /></p>
@@ -146,13 +146,13 @@ fi
 
 <p>1つ目のエラーを見ると、1セクションあたりのパラグラフが多いことが原因のようです。そこで、文章の構成を変更しパラグラフの数を減らします。</p>
 
-<p>2つ目のエラーを見ると、1センテンスあたりの文字数が100を超えていることが原因のようです。しかｓ、怒られた箇所はHUGOの設定箇所のため変更できません。仕方がないので最大文字数を120に増やすことにします。</p>
+<p>2つ目のエラーを見ると、1センテンスあたりの文字数が100を超えていることが原因のようです。しかし、怒られた箇所はHUGOの設定箇所のため、記載方法を変更できません。仕方がないので、標準の<code>SentenceLength</code>の変則版を自前で実装します。JavaScriptによる拡張、便利。</p>
 
-<pre><code>&lt;redpen-conf lang=&quot;ja&quot;&gt;
-    &lt;validators&gt;
-        &lt;validator name=&quot;SentenceLength&quot;&gt;
-            &lt;property name=&quot;max_len&quot; value=&quot;120&quot;/&gt;
-        &lt;/validator&gt;
+<pre><code>  // HUGOの設定以外のセンテンスに対して、100文字を超えているかどうかチェック
+  if (sentence.content.match(/^---title.*categories:$/)){
+  } else if (sentence.content.length &gt; 100){
+    addError('このセンテンスは100文字を超えています', sentence);
+  }
 </code></pre>
 
 <p>再度プッシュします。無事テストが通りました。</p>
