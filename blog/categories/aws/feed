@@ -371,7 +371,7 @@ write_token(resp.next_forward_token)
 
 &lt;p&gt;　投入後のデータ一覧は以下の通りです。19:25:47以前のログが重複登録されることなく、19:25:47以降のログが増えました！！！&lt;/p&gt;
 
-&lt;p&gt;![投入済みデータ][4]&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/wp-content/uploads/2015/06/002.png&#34; alt=&#34;投入済みデータ&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;　それっぽく動いたスクリプトは以下の通りです。cronで回してみてみようと思います。&lt;/p&gt;
 
@@ -458,8 +458,6 @@ resp.events.each {|event|
     end
 }
 &lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;[4]: &lt;a href=&#34;http://aimless.jp/blog/wp-content/uploads/2015/06/002.png&#34;&gt;http://aimless.jp/blog/wp-content/uploads/2015/06/002.png&lt;/a&gt;&lt;/p&gt;
 </description>
     </item>
     
@@ -984,9 +982,7 @@ aws_security_group.web-server:
 
 &lt;p&gt;　1 changed　となっています。既存のリソースに変更が発生しています。マネジメントコンソール上で確認すると、outboundにsg-2da11148向けのALL Trafficが増えています。&lt;/p&gt;
 
-&lt;p&gt;　![][3]&lt;/p&gt;
-
-&lt;p&gt;[3]: &lt;a href=&#34;http://aimless.jp/blog/wp-content/uploads/2015/03/2015-03-22-03.png&#34;&gt;http://aimless.jp/blog/wp-content/uploads/2015/03/2015-03-22-03.png&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;　&lt;img src=&#34;http://aimless.jp/blog/wp-content/uploads/2015/03/2015-03-22-03.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
 </description>
     </item>
     
@@ -1073,7 +1069,7 @@ aws_security_group.web-server:
       <guid>http://aimless.jp/blog/archives/2418</guid>
       <description>&lt;p&gt;セキュリティグループにルールを追加すればするほどマネジメントコンソールでの一覧性が下がるので、全てのルールをCSV形式でエクスポートするコマンドを作ってみました。aws-to-csvです。&lt;/p&gt;
 
-&lt;p&gt;[kongou-ae/aws-to-csv][1]&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://github.com/kongou-ae/aws-to-csv&#34;&gt;kongou-ae/aws-to-csv&lt;/a&gt;&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;$ ./a2csv securityGroups -r ap-northeast-1 -p private
 GroupID,Direction,Type,Protocol,Port Range,IP Range
@@ -1095,8 +1091,6 @@ sg-b10aecd4,outbound,ALL Traffic,ALL,ALL,0.0.0.0/0
 &lt;p&gt;　セキュリティグループは、APIのレスポンスをそのままCSV形式でエクスポートすると、出力内容がマネジメントコンソールの表示と大きく異なってしまい可読性が低くなります。そこで、APIのレスポンスをあの手この手で細工してからCSV形式で出力するようにしています。&lt;/p&gt;
 
 &lt;p&gt;　今までpythonで遊んでいましたが、今回は、クロスコンパイルにあこがれてgolangを使ってみました。これはすごいですね。VPSでwindows用にコンパイルしたa2csv.exeが、会社のwindows端末でそのまま動く。pythonで書いたコードを使うために、会社のPCにpythonをインストールしていたのが馬鹿みたいです。。。&lt;/p&gt;
-
-&lt;p&gt;[1]: &lt;a href=&#34;https://github.com/kongou-ae/aws-to-csv&#34;&gt;https://github.com/kongou-ae/aws-to-csv&lt;/a&gt;&lt;/p&gt;
 </description>
     </item>
     
@@ -1428,9 +1422,7 @@ sg-b10aecd4,outbound,ALL Traffic,ALL,ALL,0.0.0.0/0
 
 &lt;p&gt;　今回利用しているt3.mediumは最大6個になります。EIPはENIのプライベートアドレスに割り当てる必要がありますので、取得できるEIPの数も最大6個になってしまいます。つまり、このt3.mediumのFortiGate-VMを利用すると、最大6個のIPアドレスしか外部公開できなくなります&amp;#8230;インスタンスタイプを上げても最大30個です。これは微妙&amp;#8230;&lt;/p&gt;
 
-&lt;p&gt;![enter image description here][7]&lt;/p&gt;
-
-&lt;p&gt;[7]: &lt;a href=&#34;http://aimless.jp/blog/wp-content/uploads/2015/01/aws-fg-5.png&#34;&gt;http://aimless.jp/blog/wp-content/uploads/2015/01/aws-fg-5.png&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/wp-content/uploads/2015/01/aws-fg-5.png&#34; alt=&#34;enter image description here&#34; /&gt;&lt;/p&gt;
 </description>
     </item>
     
@@ -1632,11 +1624,9 @@ sg-b10aecd4,outbound,ALL Traffic,ALL,ALL,0.0.0.0/0
 
 &lt;p&gt;　なお、AWSのインスタンスは、インスタンスタイプごとに利用できるENIの数が決まっています。（&lt;a href=&#34;http://docs.aws.amazon.com/ja_jp/AWSEC2/latest/UserGuide/using-eni.html#AvailableIpPerENI&#34;&gt;参考：インスタンスタイプあたりの ENI ごとのプライベート IP アドレス&lt;/a&gt;） 今回選択したm3.mediumは最大2です。そのため、GUI的には7ポートまで利用可能な様に見えますが、3つ目のENIをアタッチしようとすると、エラーになります&amp;#8230;m3.mediumだとDMZが作れない&amp;#8230;&lt;/p&gt;
 
-&lt;p&gt;![enter image description here][6]&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/wp-content/uploads/2015/01/aws-7.png&#34; alt=&#34;enter image description here&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;　次回は、バーチャルIPを作成し、internal_subnetに設置したインスタンスとインターネット間の通信を実現します。また、複数のバーチャルIPを作成する方法を確認します。&lt;/p&gt;
-
-&lt;p&gt;[6]: &lt;a href=&#34;http://aimless.jp/blog/wp-content/uploads/2015/01/aws-7.png&#34;&gt;http://aimless.jp/blog/wp-content/uploads/2015/01/aws-7.png&lt;/a&gt;&lt;/p&gt;
 </description>
     </item>
     

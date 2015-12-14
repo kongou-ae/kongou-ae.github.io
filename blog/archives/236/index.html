@@ -74,7 +74,7 @@
 
 <p>インターネットの経済学みたいな話になりますが、トランジットはフルルートを貰えるだけあって利用料金が高い。そこで下図の様に、InternetExchange経由で別ASと直接Peeringを行い、経路情報をやりとりします。そして、トランジットとPeerから同じ経路を受け取った場合に、Peerの経路を優先する様に設定します。</p>
 
-<p>![bgp][1]</p>
+<p><img src="http://aimless.jp/blog/images/bgp.png" alt="bgp" /></p>
 
 <p>InternetExchange経由でトラフィックをやりとりするのにも当然費用がかかりますが、大概トランジットを利用するよりも安くなります。こうする事でデータセンタの通信コストを下げます。データセンタ事業者からすれば、大量の通信が発生するコンテンツプロバイダとは、是非IX経由でpeeringしたいところです。</p>
 
@@ -154,8 +154,6 @@ Origin codes: i - IGP, e - EGP, ? - incomplete
                     2001:**:**:fc::6
                                                   400      0 645** 645** 645** ?
 </code></pre>
-
-<p>[1]: <a href="http://aimless.jp/blog/images/bgp.png">http://aimless.jp/blog/images/bgp.png</a></p>
 
     </article>
     <div class="ad-left">

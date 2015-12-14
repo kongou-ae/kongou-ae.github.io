@@ -78,11 +78,9 @@
 
 <p>　kibana3を利用すると下図のようなログビュアーが作れます。非管理者に通信ログを見せたい場合などに使えるかも？通信内容を集計したグラフなんかも作れるのでしょうか？（elasticsearchとkibana3は現在勉強中なので、実現可否は不明瞭。）</p>
 
-<p>![kibana3-fortigate.png][2]</p>
+<p><img src="http://aimless.jp/blog/images/kibana3-fortigate.png" alt="kibana3-fortigate.png" /></p>
 
 <p>　現在の実装ではsyslogで飛んできたログをなんでも処理しますので、fluent-plugin-fortigate-traffic-logという名前にも関わらずeventログやUTMログも処理されてしまいます。type=trafficの時のみ処理する形にすればいいと思うので、そのうち直したいです。</p>
-
-<p>[2]: <a href="http://aimless.jp/blog/images/kibana3-fortigate.png">http://aimless.jp/blog/images/kibana3-fortigate.png</a></p>
 
     </article>
     <div class="ad-left">

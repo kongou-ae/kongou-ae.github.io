@@ -70,7 +70,7 @@
 
 <p>とある方とIPIPトンネルを掘ってOSPF over IPSecをやろうと頑張っておりますが、上手くいかなかったので自宅で検証しています。自宅の検証環境はこんな感じです。OCNのPPPoEとGMO固定IPがあるので、疑似的にグローバルIP間でのトンネル堀り検証が出来ます。</p>
 
-<p>![nwdiag oof IPIP tunnel][1]</p>
+<p><img src="http://aimless.jp/blog/images/nwdiag.png" alt="nwdiag oof IPIP tunnel" /></p>
 
 <h3 id="lanだと上手くいくのに:8806f1b340cd4b27cc12e773e0fa59cc">LANだと上手くいくのに・・・</h3>
 
@@ -137,8 +137,6 @@ Neighbor ID     Pri   State           Dead Time   Address
 <h3 id="グローバルだと全然だめ:8806f1b340cd4b27cc12e773e0fa59cc">グローバルだと全然だめ・・・</h3>
 
 <p>　いけそうな設定が確認できたの同様の設定をグローバルIPでやってみたのですが、全く上手くいきません。何よりもIPIPトンネルが開通しません（互いのトンネルIPにPingが飛ばない）・・・。なんとなーくRTX側のNAT Descriptorが怪しそうなので引き続き検証します。</p>
-
-<p>[1]: <a href="http://aimless.jp/blog/images/nwdiag.png">http://aimless.jp/blog/images/nwdiag.png</a></p>
 
     </article>
     <div class="ad-left">

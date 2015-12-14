@@ -99,15 +99,13 @@
 
 <p>　2つ目のルール（上図ルール4）の詳細は下記の通りです。sslall_group内のユーザがトンネル接続した時に割り当てられるIPアドレスから、LAN内の192.168.2.0/24に対してTELNETとICMPを許可します。Fortigateから見ると、トンネル接続用のIPアドレスはssl.root（SSLVPNトンネルインターフェース）の先にいますので、WANではなくssl.rootを選択します。</p>
 
-<p>![sslvpn-policy-detail2][4]</p>
+<p><img src="http://aimless.jp/blog/images/sslvpn-policy-detail2.png" alt="sslvpn-policy-detail2" /></p>
 
 <h3 id="forticlientの設定:483e536bcb93d01cf7c3b5a7bcb27b43">FortiClientの設定</h3>
 
 <p>　これでブラウザ経由でのトンネル接続が可能になります。なお、FortigateにはFortiClinetと呼ばれるクライアントソフトがあります。昔はFortiClientそのものが一般公開されていたように記憶していますが、現在はFortiClient Liteしか一般公開されていないみたいです。これを使うための特殊な設定は不要です。クライアントを入れてアクセス先を指定すれば普通に繋がります。</p>
 
 <p>　クライアントインストール時に「IE6じゃ動かないからIE8以上にしてねー（意訳）」という注意が出ますので、素直に従ってください。本当にIE6では動きませんでした。</p>
-
-<p>[4]: <a href="http://aimless.jp/blog/images/sslvpn-policy-detail2.png">http://aimless.jp/blog/images/sslvpn-policy-detail2.png</a></p>
 
     </article>
     <div class="ad-left">

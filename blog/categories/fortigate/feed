@@ -319,9 +319,7 @@
 
 &lt;p&gt;　今回利用しているt3.mediumは最大6個になります。EIPはENIのプライベートアドレスに割り当てる必要がありますので、取得できるEIPの数も最大6個になってしまいます。つまり、このt3.mediumのFortiGate-VMを利用すると、最大6個のIPアドレスしか外部公開できなくなります&amp;#8230;インスタンスタイプを上げても最大30個です。これは微妙&amp;#8230;&lt;/p&gt;
 
-&lt;p&gt;![enter image description here][7]&lt;/p&gt;
-
-&lt;p&gt;[7]: &lt;a href=&#34;http://aimless.jp/blog/wp-content/uploads/2015/01/aws-fg-5.png&#34;&gt;http://aimless.jp/blog/wp-content/uploads/2015/01/aws-fg-5.png&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/wp-content/uploads/2015/01/aws-fg-5.png&#34; alt=&#34;enter image description here&#34; /&gt;&lt;/p&gt;
 </description>
     </item>
     
@@ -523,11 +521,9 @@
 
 &lt;p&gt;　なお、AWSのインスタンスは、インスタンスタイプごとに利用できるENIの数が決まっています。（&lt;a href=&#34;http://docs.aws.amazon.com/ja_jp/AWSEC2/latest/UserGuide/using-eni.html#AvailableIpPerENI&#34;&gt;参考：インスタンスタイプあたりの ENI ごとのプライベート IP アドレス&lt;/a&gt;） 今回選択したm3.mediumは最大2です。そのため、GUI的には7ポートまで利用可能な様に見えますが、3つ目のENIをアタッチしようとすると、エラーになります&amp;#8230;m3.mediumだとDMZが作れない&amp;#8230;&lt;/p&gt;
 
-&lt;p&gt;![enter image description here][6]&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/wp-content/uploads/2015/01/aws-7.png&#34; alt=&#34;enter image description here&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;　次回は、バーチャルIPを作成し、internal_subnetに設置したインスタンスとインターネット間の通信を実現します。また、複数のバーチャルIPを作成する方法を確認します。&lt;/p&gt;
-
-&lt;p&gt;[6]: &lt;a href=&#34;http://aimless.jp/blog/wp-content/uploads/2015/01/aws-7.png&#34;&gt;http://aimless.jp/blog/wp-content/uploads/2015/01/aws-7.png&lt;/a&gt;&lt;/p&gt;
 </description>
     </item>
     
@@ -707,10 +703,8 @@
 &lt;li&gt;&lt;a href=&#34;http://e-publishing.jp/contents/koutantech/aidd02_01.pdf&#34;&gt;暗号化、認証、証明&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;http://www.tama200x.com/blog/?p=565&#34;&gt;[SSL] SSLサーバ証明書について考える&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;http://itpro.nikkeibp.co.jp/article/COLUMN/20071002/283518/?ST=selfup&#34;&gt;図解で学ぶネットワークの基礎：SSL編&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://www.ipa.go.jp/security/rfc/RFC2459JA.html#041&#34;&gt;インターネットX.509 PKI &amp;#8211; 証明書と CRL のプロファイル&lt;/a&gt; [電子証明書のデータ形式 &amp;#8211; RFC3289 X.509 Public Key Infrastructure Certificate and CRL Profile][7]&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.ipa.go.jp/security/rfc/RFC2459JA.html#041&#34;&gt;インターネットX.509 PKI &amp;#8211; 証明書と CRL のプロファイル&lt;/a&gt; &lt;a href=&#34;http://www.trustss.co.jp/smnDataFormat410.html&#34;&gt;電子証明書のデータ形式 &amp;#8211; RFC3289 X.509 Public Key Infrastructure Certificate and CRL Profile&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
-
-&lt;p&gt;[7]: &lt;a href=&#34;http://www.trustss.co.jp/smnDataFormat410.html&#34;&gt;http://www.trustss.co.jp/smnDataFormat410.html&lt;/a&gt;&lt;/p&gt;
 </description>
     </item>
     
@@ -1346,9 +1340,7 @@
 
 &lt;h1 id=&#34;cisco:3197b1351379e2f9e723d5ccc5720427&#34;&gt;Cisco&lt;/h1&gt;
 
-&lt;p&gt;　絶賛調査中のようです。[Multiple Vulnerabilities in OpenSSL Affecting Cisco Products][5] 　HeartBleedの影響を受けた製品と、今回の脆弱性の内容を踏まえると、ASA,Aironetあたりが対象になるのかも。&lt;/p&gt;
-
-&lt;p&gt;[5]: &lt;a href=&#34;http://tools.cisco.com/security/center/content/CiscoSecurityAdvisory/cisco-sa-20140605-openssl&#34;&gt;http://tools.cisco.com/security/center/content/CiscoSecurityAdvisory/cisco-sa-20140605-openssl&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;　絶賛調査中のようです。&lt;a href=&#34;http://tools.cisco.com/security/center/content/CiscoSecurityAdvisory/cisco-sa-20140605-openssl&#34;&gt;Multiple Vulnerabilities in OpenSSL Affecting Cisco Products&lt;/a&gt; 　HeartBleedの影響を受けた製品と、今回の脆弱性の内容を踏まえると、ASA,Aironetあたりが対象になるのかも。&lt;/p&gt;
 </description>
     </item>
     
@@ -1366,7 +1358,7 @@
 
 &lt;h3 id=&#34;1-イベントログ:ebf3516eebc182a649a4479679bacc27&#34;&gt;1．イベントログ&lt;/h3&gt;
 
-&lt;p&gt;[FortiGate® Log Message Reference][1]より。41000（成功）はよく見るけど、42000（失敗）は見たことがない。&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;http://docs.fortinet.com/uploaded/files/1745/fortigate-lmr-40-mr3.pdf&#34;&gt;FortiGate® Log Message Reference&lt;/a&gt;より。41000（成功）はよく見るけど、42000（失敗）は見たことがない。&lt;/p&gt;
 
 &lt;blockquote&gt;
 &lt;p&gt;Event-pattern Event-pattern logs are recorded whenever an administrator updates virus, IPS, and antispam databases from the FortiGuard network. 41000 41001&lt;/p&gt;
@@ -1410,8 +1402,6 @@
 &lt;/blockquote&gt;
 
 &lt;p&gt;デフォルトの設定だと、FortiGateは1日1回FortiGuardのサーバにアクセスし定義ファイルを更新する。そのため、1日1回下記のOIDにアクセスし、取得したあたいが前回値と同一であれば定義ファイルが更新できていないことになる。※定義ファイルが作られていないというケースもありうるが。。。&lt;/p&gt;
-
-&lt;p&gt;[1]: &lt;a href=&#34;http://docs.fortinet.com/uploaded/files/1745/fortigate-lmr-40-mr3.pdf&#34;&gt;http://docs.fortinet.com/uploaded/files/1745/fortigate-lmr-40-mr3.pdf&lt;/a&gt;&lt;/p&gt;
 </description>
     </item>
     
@@ -1431,11 +1421,9 @@
 
 &lt;p&gt;　kibana3を利用すると下図のようなログビュアーが作れます。非管理者に通信ログを見せたい場合などに使えるかも？通信内容を集計したグラフなんかも作れるのでしょうか？（elasticsearchとkibana3は現在勉強中なので、実現可否は不明瞭。）&lt;/p&gt;
 
-&lt;p&gt;![kibana3-fortigate.png][2]&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/images/kibana3-fortigate.png&#34; alt=&#34;kibana3-fortigate.png&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;　現在の実装ではsyslogで飛んできたログをなんでも処理しますので、fluent-plugin-fortigate-traffic-logという名前にも関わらずeventログやUTMログも処理されてしまいます。type=trafficの時のみ処理する形にすればいいと思うので、そのうち直したいです。&lt;/p&gt;
-
-&lt;p&gt;[2]: &lt;a href=&#34;http://aimless.jp/blog/images/kibana3-fortigate.png&#34;&gt;http://aimless.jp/blog/images/kibana3-fortigate.png&lt;/a&gt;&lt;/p&gt;
 </description>
     </item>
     
@@ -1475,7 +1463,7 @@ end
 
 &lt;p&gt;　作成したアドレスオブジェクトを利用してルールを作成します。これによりLAN内の端末はFortigateが日本と判断するIPアドレスにしかアクセスできなくなります。&lt;/p&gt;
 
-&lt;p&gt;![fortigate-geoip-02][2]&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/images/geoip-forti-02.png&#34; alt=&#34;fortigate-geoip-02&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;　どうやってIPアドレスと国を紐づけているのかなと調べて見たら、マニュアルに書いてありました。FortiGuardからデータを入手してローカルに持っているみたいです。&lt;/p&gt;
 
@@ -1513,8 +1501,6 @@ Country name:JP Total IP Range:1337
  (root) # diagnose firewall ipgeo ip2country 8.8.8.8                                
 8.8.8.8 is not in kernel ip-country DB
 &lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;[2]: &lt;a href=&#34;http://aimless.jp/blog/images/geoip-forti-02.png&#34;&gt;http://aimless.jp/blog/images/geoip-forti-02.png&lt;/a&gt;&lt;/p&gt;
 </description>
     </item>
     
@@ -1552,11 +1538,9 @@ Country name:JP Total IP Range:1337
 
 &lt;p&gt;　二要素認証を設定した際に入力したEmailアドレスにTokenCodeが送信されていますので、これを入力するといつものWEBポータルにつながります。&lt;/p&gt;
 
-&lt;p&gt;![EmailでのTokenCode][5]&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/images/forti-ssl03.png&#34; alt=&#34;EmailでのTokenCode&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;　携帯のメアドにTokenCodeを送るようにすれば、かなり簡単に二要素認証を実現できますね。&lt;/p&gt;
-
-&lt;p&gt;[5]: &lt;a href=&#34;http://aimless.jp/blog/images/forti-ssl03.png&#34;&gt;http://aimless.jp/blog/images/forti-ssl03.png&lt;/a&gt;&lt;/p&gt;
 </description>
     </item>
     
@@ -1572,11 +1556,9 @@ Country name:JP Total IP Range:1337
 
 &lt;p&gt;　冷やした方がいいんだろうなぁと思いつつも、この2台の為にエアコンを導入するくらいならサーバが欲しい。というわけで、USB扇風機で風を当ててみました。両機器とも温度を確認できない？ので数値的な比較はできないのですが、触ってみた感じですとちょっと冷たくなった気がします。今年の夏はこれで乗り切りたい。。。&lt;/p&gt;
 
-&lt;p&gt;![usbfan][1]&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/images/usbfan.png&#34; alt=&#34;usbfan&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;　USB扇風機はCisco892JのUSBポートで給電しています。Cisco892JのUSBポートマジ便利。&lt;/p&gt;
-
-&lt;p&gt;[1]: &lt;a href=&#34;http://aimless.jp/blog/images/usbfan.png&#34;&gt;http://aimless.jp/blog/images/usbfan.png&lt;/a&gt;&lt;/p&gt;
 </description>
     </item>
     
@@ -1617,15 +1599,13 @@ Country name:JP Total IP Range:1337
 
 &lt;p&gt;　2つ目のルール（上図ルール4）の詳細は下記の通りです。sslall_group内のユーザがトンネル接続した時に割り当てられるIPアドレスから、LAN内の192.168.2.0/24に対してTELNETとICMPを許可します。Fortigateから見ると、トンネル接続用のIPアドレスはssl.root（SSLVPNトンネルインターフェース）の先にいますので、WANではなくssl.rootを選択します。&lt;/p&gt;
 
-&lt;p&gt;![sslvpn-policy-detail2][4]&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/images/sslvpn-policy-detail2.png&#34; alt=&#34;sslvpn-policy-detail2&#34; /&gt;&lt;/p&gt;
 
 &lt;h3 id=&#34;forticlientの設定:483e536bcb93d01cf7c3b5a7bcb27b43&#34;&gt;FortiClientの設定&lt;/h3&gt;
 
 &lt;p&gt;　これでブラウザ経由でのトンネル接続が可能になります。なお、FortigateにはFortiClinetと呼ばれるクライアントソフトがあります。昔はFortiClientそのものが一般公開されていたように記憶していますが、現在はFortiClient Liteしか一般公開されていないみたいです。これを使うための特殊な設定は不要です。クライアントを入れてアクセス先を指定すれば普通に繋がります。&lt;/p&gt;
 
 &lt;p&gt;　クライアントインストール時に「IE6じゃ動かないからIE8以上にしてねー（意訳）」という注意が出ますので、素直に従ってください。本当にIE6では動きませんでした。&lt;/p&gt;
-
-&lt;p&gt;[4]: &lt;a href=&#34;http://aimless.jp/blog/images/sslvpn-policy-detail2.png&#34;&gt;http://aimless.jp/blog/images/sslvpn-policy-detail2.png&lt;/a&gt;&lt;/p&gt;
 </description>
     </item>
     

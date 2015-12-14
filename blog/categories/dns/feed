@@ -39,7 +39,7 @@
 
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;http://cosmonote.blogspot.com/2014/01/dns-1292503525112925035250.html&#34;&gt;DNS Serverの変更で高速化 [129.250.35.251,129.250.35.250]&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;[Public DNSを設定したらやっぱり速くなりました][4]&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://staku.designbits.jp/public-dns/&#34;&gt;Public DNSを設定したらやっぱり速くなりました&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;p&gt;　NTT Americaの公開連絡先に「129.250.35.250/251はPublic DNSですかー？」という失礼な質問をメールで行った結果、NOCの中の人から「These are resolvers for NTT customers only.」との回答を受領しました。つまりこれらのDNSサーバは、NTTのお客様限定のキャッシュDNSサーバであり、Public DNSではありません。&lt;/p&gt;
@@ -56,8 +56,6 @@
 &lt;li&gt;サービス提供者がPublic DNSだと宣言しているキャッシュDNSサーバ&lt;/li&gt;
 &lt;li&gt;自分でキャッシュDNSサーバを建てる。&lt;/li&gt;
 &lt;/ul&gt;
-
-&lt;p&gt;[4]: &lt;a href=&#34;http://staku.designbits.jp/public-dns/&#34;&gt;http://staku.designbits.jp/public-dns/&lt;/a&gt;&lt;/p&gt;
 </description>
     </item>
     
@@ -529,7 +527,7 @@
       <pubDate>Thu, 05 Jun 2014 00:00:00 +0000</pubDate>
       
       <guid>http://aimless.jp/blog/archives/2007</guid>
-      <description>&lt;p&gt;[xvideosが突然見れなくなった場合はDNSサーバーを変更しよう][1]を踏まえて、色々と調べたのでメモ。&lt;/p&gt;
+      <description>&lt;p&gt;&lt;a href=&#34;http://dobonkai.hatenablog.com/entry/xvideos/%E7%AA%81%E7%84%B6%E8%A6%8B%E3%82%8C%E3%81%AA%E3%81%8F%E3%81%AA%E3%81%A3%E3%81%9F/DNS%E3%82%B5%E3%83%BC%E3%83%90%E3%83%BC/%E5%A4%89%E6%9B%B4&#34;&gt;xvideosが突然見れなくなった場合はDNSサーバーを変更しよう&lt;/a&gt;を踏まえて、色々と調べたのでメモ。&lt;/p&gt;
 
 &lt;p&gt;　アクセス出来ない理由は、『Google Public DNSが、国内？からのwww.xvideos.comに関する問い合わせに対して、正しくないAレコードを返すから』の様に見えます。ただし、なぜそんな動作になるのかは不明。&lt;/p&gt;
 
@@ -656,8 +654,6 @@ xvideos.com.    295     IN      A       141.0.174.34
 &lt;li&gt;PCのhostsファイルに正しいAレコードのIPアドレスを設定する&lt;/li&gt;
 &lt;li&gt;自前でキャッシュDNSサーバを運営する（PCにunboundを入れるのが気軽だと思います）&lt;/li&gt;
 &lt;/ul&gt;
-
-&lt;p&gt;[1]: &lt;a href=&#34;http://dobonkai.hatenablog.com/entry/xvideos/%E7%AA%81%E7%84%B6%E8%A6%8B%E3%82%8C%E3%81%AA%E3%81%8F%E3%81%AA%E3%81%A3%E3%81%9F/DNS%E3%82%B5%E3%83%BC%E3%83%90%E3%83%BC/%E5%A4%89%E6%9B%B4&#34;&gt;http://dobonkai.hatenablog.com/entry/xvideos/%E7%AA%81%E7%84%B6%E8%A6%8B%E3%82%8C%E3%81%AA%E3%81%8F%E3%81%AA%E3%81%A3%E3%81%9F/DNS%E3%82%B5%E3%83%BC%E3%83%90%E3%83%BC/%E5%A4%89%E6%9B%B4&lt;/a&gt;&lt;/p&gt;
 </description>
     </item>
     
@@ -691,7 +687,7 @@ xvideos.com.    295     IN      A       141.0.174.34
 
 &lt;h1 id=&#34;テスト環境:782d2c12b6f857f3610e1363aeeb61ba&#34;&gt;テスト環境&lt;/h1&gt;
 
-&lt;p&gt;![テスト環境][1]&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/images/test_diagram.png&#34; alt=&#34;テスト環境&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;　DNSプリフェッチが大量に記載されたウェブページを用意します。&lt;/p&gt;
 
@@ -733,8 +729,6 @@ xvideos.com.    295     IN      A       141.0.174.34
 &lt;h1 id=&#34;結論:782d2c12b6f857f3610e1363aeeb61ba&#34;&gt;結論&lt;/h1&gt;
 
 &lt;p&gt;　WEBページにアクセスすると一気に70000件のDNS問い合わせが行われることを期待したのですが、そんな馬鹿な実装をしているブラウザはありませんでした。DNSプリフェッチでNAT箱は殺せない模様。 　もしかしたら、Safariやoperaだと一気にDNSクエリを投げてくれるのかしら。&lt;/p&gt;
-
-&lt;p&gt;[1]: &lt;a href=&#34;http://aimless.jp/blog/images/test_diagram.png&#34;&gt;http://aimless.jp/blog/images/test_diagram.png&lt;/a&gt;&lt;/p&gt;
 </description>
     </item>
     
@@ -780,7 +774,7 @@ INFO [b10-cmdctl.cmdctl]: CMDCTL_EXITING exiting
 
 &lt;p&gt;　Tunnel Broker管理画面の『rDNS Delegations』欄に、権限移譲してほしいDNSサーバのホスト名を入力します。BIND9のプライマリと、BIND10のセカンダリDNSを登録しました。&lt;/p&gt;
 
-&lt;p&gt;![HE&amp;rsquo;s rDNS][1]&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/images/rDNS_of_HE.png&#34; alt=&#34;HE&#39;s rDNS&#34; /&gt;&lt;/p&gt;
 
 &lt;h3 id=&#34;プライマリ-bind9-を設定する:257ab340aabbd3110eab36a4c8d84da0&#34;&gt;　プライマリ（BIND9）を設定する&lt;/h3&gt;
 
@@ -868,8 +862,6 @@ x.x.0.0.0.0.0.0.0.0.0.0.0.0.0.0.3.5.0.0.1.e.d.f.0.7.4.0.1.0.0.2.ip6.arpa. 3600 I
 1.e.d.f.0.7.4.0.1.0.0.2.ip6.arpa. 3600 IN NS    dns1.aimless.jp.
 1.e.d.f.0.7.4.0.1.0.0.2.ip6.arpa. 3600 IN NS    dns4.aimless.jp.
 &lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;[1]: &lt;a href=&#34;http://aimless.jp/blog/images/rDNS_of_HE.png&#34;&gt;http://aimless.jp/blog/images/rDNS_of_HE.png&lt;/a&gt;&lt;/p&gt;
 </description>
     </item>
     
@@ -1071,7 +1063,7 @@ x.x.0.0.0.0.0.0.0.0.0.0.0.0.0.0.3.5.0.0.1.e.d.f.0.7.4.0.1.0.0.2.ip6.arpa. 3600 I
       <guid>http://aimless.jp/blog/archives/1642</guid>
       <description>&lt;p&gt;&lt;a href=&#34;http://aimless.jp/blog/blog/archives/1634&#34; title=&#34;BIND10の統計情報&#34; target=&#34;_blank&#34;&gt;「BIND10の統計情報」&lt;/a&gt;に記載したb10-stats-httpdを利用して、BIND10の統計情報をZABBIXでグラフ化してみました。なお、監視対象のBIND10がしがないドメインのセカンダリDNSのため、描画されるグラフは全く面白くありません。。。&lt;/p&gt;
 
-&lt;p&gt;![BIND10 Stats][1]&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://dns4.aimless.jp/zabbinavi/10087/534_daily.png&#34; alt=&#34;BIND10 Stats&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;　グラフ化したい項目をb10-stats-httpd経由で取得するスクリプトを作ります。下記は第二引数に「.1.3.6.1.4.1.2021.255.1」を与えられるとrequest.v4のvalueを、「.1.3.6.1.4.1.2021.255.2」を与えられるとrequest.v6のvalueを取得するスクリプトです。（改行コードが）&lt;/p&gt;
 
@@ -1082,8 +1074,6 @@ x.x.0.0.0.0.0.0.0.0.0.0.0.0.0.0.3.5.0.0.1.e.d.f.0.7.4.0.1.0.0.2.ip6.arpa. 3600 I
 &lt;p&gt;&lt;pre&gt;&lt;code&gt;&lt;/p&gt;
 
 &lt;p&gt;　ZABBIXで「.1.3.6.1.4.1.2021.255.1」と「.1.3.6.1.4.1.2021.255.2」を監視するアイテムを作成し、それらを利用した複合グラフを作成すれば完成です。&lt;/p&gt;
-
-&lt;p&gt;[1]: &lt;a href=&#34;http://dns4.aimless.jp/zabbinavi/10087/534_daily.png&#34;&gt;http://dns4.aimless.jp/zabbinavi/10087/534_daily.png&lt;/a&gt;&lt;/p&gt;
 </description>
     </item>
     
@@ -1296,7 +1286,7 @@ dns4.aimless.jp
 
 &lt;h3 id=&#34;登録画面:c7ba77dd01a5da1e7cd6427b246d95d1&#34;&gt;登録画面&lt;/h3&gt;
 
-&lt;p&gt;![gehirn-console][2]&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/images/gehirn2.png&#34; alt=&#34;gehirn-console&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;　GUIでぽちぽちする形で登録できます。登録出来る内容は、NS、A、AAAA、MX、CNAME、TXT、SRVです。ただし、GehirnDNSのDNSサーバがIPv4にしか対応していないので、AAAAは実質無駄かなと思います。また、RRSIGとDNSKEYに対応していないのでDNSSECは未対応です。なお、ゾーン転送に関する設定画面が存在しないため、セカンダリとしての使い方は出来ないと思います。&lt;/p&gt;
 
@@ -1315,8 +1305,6 @@ dns4.aimless.jp
 &lt;h3 id=&#34;勝手なまとめ:c7ba77dd01a5da1e7cd6427b246d95d1&#34;&gt;勝手なまとめ&lt;/h3&gt;
 
 &lt;p&gt;　APIでアクセスできるDNSって珍しいような気がします。そういった利用をしたい方にはお勧めかもしれません。&lt;/p&gt;
-
-&lt;p&gt;[2]: &lt;a href=&#34;http://aimless.jp/blog/images/gehirn2.png&#34;&gt;http://aimless.jp/blog/images/gehirn2.png&lt;/a&gt;&lt;/p&gt;
 </description>
     </item>
     

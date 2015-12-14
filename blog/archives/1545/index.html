@@ -76,7 +76,7 @@
 
 <p>　Ciscoルータと世代管理システムの間に、rsyslogとlogsurfer、RANSIDを挟みます。設定変更を示すログがsyslogで飛んできたら、RANSIDが対象機器のリポジトリを自動更新します。あとは、ViewVCでリポジトリにアクセスして作業による差分を確認するだけ！</p>
 
-<p>![rancid diagram][1]</p>
+<p><img src="http://aimless.jp/blog/images/diagram.png" alt="rancid diagram" /></p>
 
 <h3 id="rsyslog:44f15c9e6fba689af041d66dd834bfd8">rsyslog</h3>
 
@@ -109,8 +109,6 @@ if ( $FROMHOST-IP == 'xxx.xxx.xxx.xxx' ) and ($syslogfacility-text == 'local3' )
 <p>　この仕組みは、rsyslogとlogsurfer、RANSIDが同一マシン上で稼働している必要があります。その為、既存環境に追加するには少々自由度が低いです。また、管理対象が増えた際にスケールさせるのが大変です。この仕組みで複数台を管理しようとすると、その分のログファイルとlogsurferのプロセスが必要になります。ちゃんと動くのか不安です。。。</p>
 
 <p>　そうはいっても、RANCIDを利用すると色々と楽ができそうなので、もう少し触ってみようと思います。</p>
-
-<p>[1]: <a href="http://aimless.jp/blog/images/diagram.png">http://aimless.jp/blog/images/diagram.png</a></p>
 
     </article>
     <div class="ad-left">

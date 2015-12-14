@@ -96,7 +96,7 @@ tunnel select 11
 
 <p>RTXからCiscoにPingを打つと、Ciscoから返ってきたReplyにDestinationUnreachable・・・</p>
 
-<p>![ICMPfromRTX][3]</p>
+<p><img src="http://aimless.jp/blog/images/ICMPfromRTX.png" alt="ICMPfromRTX" /></p>
 
 <p>　Network Unreachableって事はRTXに経路がないって事になるけど、トンネル用セグメントはshow ip route の結果にちゃんと載っている。なぜNetwork　Unreachable・・・。もう分らないよ・・・。</p>
 
@@ -105,8 +105,6 @@ Destination         Gateway          Interface       Kind  Additional Info.
 default             -                    PP[01]    static  
 172.16.16.4/30      -                TUNNEL[11]  implicit  
 </code></pre>
-
-<p>[3]: <a href="http://aimless.jp/blog/images/ICMPfromRTX.png">http://aimless.jp/blog/images/ICMPfromRTX.png</a></p>
 
     </article>
     <div class="ad-left">

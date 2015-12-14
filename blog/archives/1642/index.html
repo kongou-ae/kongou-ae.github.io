@@ -68,7 +68,7 @@
     <article>
       <p><a href="http://aimless.jp/blog/blog/archives/1634" title="BIND10の統計情報" target="_blank">「BIND10の統計情報」</a>に記載したb10-stats-httpdを利用して、BIND10の統計情報をZABBIXでグラフ化してみました。なお、監視対象のBIND10がしがないドメインのセカンダリDNSのため、描画されるグラフは全く面白くありません。。。</p>
 
-<p>![BIND10 Stats][1]</p>
+<p><img src="http://dns4.aimless.jp/zabbinavi/10087/534_daily.png" alt="BIND10 Stats" /></p>
 
 <p>　グラフ化したい項目をb10-stats-httpd経由で取得するスクリプトを作ります。下記は第二引数に「.1.3.6.1.4.1.2021.255.1」を与えられるとrequest.v4のvalueを、「.1.3.6.1.4.1.2021.255.2」を与えられるとrequest.v6のvalueを取得するスクリプトです。（改行コードが）</p>
 
@@ -79,8 +79,6 @@
 <p><pre><code></p>
 
 <p>　ZABBIXで「.1.3.6.1.4.1.2021.255.1」と「.1.3.6.1.4.1.2021.255.2」を監視するアイテムを作成し、それらを利用した複合グラフを作成すれば完成です。</p>
-
-<p>[1]: <a href="http://dns4.aimless.jp/zabbinavi/10087/534_daily.png">http://dns4.aimless.jp/zabbinavi/10087/534_daily.png</a></p>
 
     </article>
     <div class="ad-left">

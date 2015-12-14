@@ -72,7 +72,7 @@
 
 <p>　2年前は、MRTデータをbgpdumpでテキストに吐き出してから、お手製スクリプトを通してexabgpのコンフィグに書き換えました。大変でした。</p>
 
-<p>　IPv4のフルルートを扱うにあたって、改めて実現方法を模索したところ、githubにて[mrtparse][2]というツールを見つけました。</p>
+<p>　IPv4のフルルートを扱うにあたって、改めて実現方法を模索したところ、githubにて<a href="https://github.com/YoshiyukiYamauchi/mrtparse">mrtparse</a>というツールを見つけました。</p>
 
 <p>　このツールに含まれている「exabgp_conf.py」を利用すると、特定のMRTデータを利用してexabgpのコンフィグを標準出力してくれます。neighborの設定と経路のNext-hopは「exabgp_conf.py」内にベタ書きされていますので、必要に応じて事前に「exabgp_conf.py」を変更しておく必要があります。</p>
 
@@ -126,8 +126,6 @@ Neighbor        Spk    AS MsgRcvd MsgSent   TblVer  InQ OutQ  Up/Down  St/PfxRcd
 
 RP/0/0/CPU0:aimless-XRv#
 </code></pre>
-
-<p>[2]: <a href="https://github.com/YoshiyukiYamauchi/mrtparse">https://github.com/YoshiyukiYamauchi/mrtparse</a></p>
 
     </article>
     <div class="ad-left">

@@ -74,7 +74,7 @@
 
 <p><img src="http://dns3.aimless.jp/images/bgproute2.png" alt="bgproute" /></p>
 
-<p>![bgproute][2]</p>
+<p><img src="http://dns3.aimless.jp/images/bgproute3.png" alt="bgproute" /></p>
 
 <p>　Cisco892Jのshow ipv6 route summryで出力されるBGPのネットワーク数をグラフにしています。IPv6のBGP経路数を直接取得できるOIDが見つからなかったため、下記のスクリプトを利用して経路数をCactiに渡しています。ルータにtelnetしてコマンド直打ち⇒必要な部分だけ正規表現で抽出という感じです。</p>
 
@@ -100,8 +100,6 @@ tn.close
 @result = @result.gsub(/ /,"")
 print @result
 </code></pre>
-
-<p>[2]: <a href="http://dns3.aimless.jp/images/bgproute3.png">http://dns3.aimless.jp/images/bgproute3.png</a></p>
 
     </article>
     <div class="ad-left">

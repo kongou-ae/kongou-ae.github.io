@@ -211,11 +211,9 @@
 
 <p>　なお、AWSのインスタンスは、インスタンスタイプごとに利用できるENIの数が決まっています。（<a href="http://docs.aws.amazon.com/ja_jp/AWSEC2/latest/UserGuide/using-eni.html#AvailableIpPerENI">参考：インスタンスタイプあたりの ENI ごとのプライベート IP アドレス</a>） 今回選択したm3.mediumは最大2です。そのため、GUI的には7ポートまで利用可能な様に見えますが、3つ目のENIをアタッチしようとすると、エラーになります&#8230;m3.mediumだとDMZが作れない&#8230;</p>
 
-<p>![enter image description here][6]</p>
+<p><img src="http://aimless.jp/blog/wp-content/uploads/2015/01/aws-7.png" alt="enter image description here" /></p>
 
 <p>　次回は、バーチャルIPを作成し、internal_subnetに設置したインスタンスとインターネット間の通信を実現します。また、複数のバーチャルIPを作成する方法を確認します。</p>
-
-<p>[6]: <a href="http://aimless.jp/blog/wp-content/uploads/2015/01/aws-7.png">http://aimless.jp/blog/wp-content/uploads/2015/01/aws-7.png</a></p>
 
     </article>
     <div class="ad-left">

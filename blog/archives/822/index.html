@@ -76,7 +76,7 @@
 
 <h3 id="構成:0ecfaf1648e96b5088714d13894c3da2">構成</h3>
 
-<p>![route-server-ipv4][1]</p>
+<p><img src="http://aimless.jp/blog/images/route-server-ipv4.png" alt="route-server-ipv4" /></p>
 
 <p>　経路交換サーバ用のCisco892Jと、CentOS（quagga+openNHRP）です。実際の経路交換サーバは同一セグメント内にあるなーということで、mGREとNHRPを使って強引に同一セグメントにしました。トラフィックは経路交換サーバを経由してしますのでそれほど意味はありません。。</p>
 
@@ -164,8 +164,6 @@ Total number of prefixes 2
 <h3 id="今後の予定:0ecfaf1648e96b5088714d13894c3da2">今後の予定</h3>
 
 <p>　IPv6でも動作確認をして、IHANet内に経路交換サーバを立てられればなと思います。問題はopenNHRPがIPv6で動作しないので今の環境では動作確認が出来ないことと、IHANet内にCiscoルータが接続できるIXが存在しない事ですね・・mGREなL2?IXを立てても需要がなさそうだし・・・</p>
-
-<p>[1]: <a href="http://aimless.jp/blog/images/route-server-ipv4.png">http://aimless.jp/blog/images/route-server-ipv4.png</a></p>
 
     </article>
     <div class="ad-left">

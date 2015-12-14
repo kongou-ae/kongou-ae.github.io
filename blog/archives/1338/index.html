@@ -72,7 +72,7 @@
 
 <p><a href="http://aimless.jp/blog/blog/archives/1326" title="BGP Multipath" target="_blank">前回</a>の続きです。Multipathを使うことで2本のリンクをDualActiveに使うことができそうです。ですがDualActiveにはちょっと問題があります。2本の合計トラフィックが1本を超えた時点で、別の代替経路に切り替えなければいけない事です。</p>
 
-<p>![bgp-eem][1]</p>
+<p><img src="http://aimless.jp/blog/images/BGP-EEM.png" alt="bgp-eem" /></p>
 
 <p>　よくある？マルチホーミングの構成です。ASαと100M×2で接続している状態で2本合計のトラフィックが120Mになった場合を想定します。この状態で100Mが1本が死んだ場合、障害に伴う経路の変更は発生しない為、引き続きASαに120Mbpsが流れてしまいます。そうするとASα向けの通信で輻輳が発生してしまいます。</p>
 
@@ -198,8 +198,6 @@ B     192.168.2.0/24 [20/0] via 10.0.2.1, 00:02:36
 </code></pre>
 
 <p>　EEMのタイミングとBGPのホールドダウンタイマを合わせたりと微調整が必要な気がしますが、想定通り動きました。フルルートを食べてる時にちゃんと動くのかは要検証です。</p>
-
-<p>[1]: <a href="http://aimless.jp/blog/images/BGP-EEM.png">http://aimless.jp/blog/images/BGP-EEM.png</a></p>
 
     </article>
     <div class="ad-left">

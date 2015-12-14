@@ -75,9 +75,7 @@ job: {
 
 &lt;p&gt;　Graphタブを利用することで、取得したメトリクスのグラフを描画することが可能です。データの抽出は&lt;a href=&#34;http://prometheus.io/docs/querying/basics/#querying-prometheus&#34;&gt;QUERY LANGUAGE&lt;/a&gt;を利用する必要があります。&lt;/p&gt;
 
-&lt;p&gt;![prometheus_node_metric_graph][6]&lt;/p&gt;
-
-&lt;p&gt;[6]: &lt;a href=&#34;http://aimless.jp/blog/wp-content/uploads/2015/05/prometheus_node_metric_graph.png&#34;&gt;http://aimless.jp/blog/wp-content/uploads/2015/05/prometheus_node_metric_graph.png&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/wp-content/uploads/2015/05/prometheus_node_metric_graph.png&#34; alt=&#34;prometheus_node_metric_graph&#34; /&gt;&lt;/p&gt;
 </description>
     </item>
     
@@ -150,9 +148,7 @@ prometheus, version 0.13.2 (branch: HEAD, revision: f4d90a1)
   go version:       1.4.2
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;![GUI][2]&lt;/p&gt;
-
-&lt;p&gt;[2]: &lt;a href=&#34;http://aimless.jp/blog/wp-content/uploads/2015/05/Prometheus_GUI.png&#34;&gt;http://aimless.jp/blog/wp-content/uploads/2015/05/Prometheus_GUI.png&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/wp-content/uploads/2015/05/Prometheus_GUI.png&#34; alt=&#34;GUI&#34; /&gt;&lt;/p&gt;
 </description>
     </item>
     
@@ -221,9 +217,7 @@ Joined test
 
 &lt;p&gt;@つきでhubotに&lt;code&gt;ping&lt;/code&gt;や&lt;code&gt;date&lt;/code&gt;すると、ちゃんと答えます。&lt;/p&gt;
 
-&lt;p&gt;![hubot response][4]&lt;/p&gt;
-
-&lt;p&gt;[4]: &lt;a href=&#34;http://aimless.jp/blog/wp-content/uploads/2015/05/SnapCrab_NoName_2015-5-2_23-12-0_No-00.png&#34;&gt;http://aimless.jp/blog/wp-content/uploads/2015/05/SnapCrab_NoName_2015-5-2_23-12-0_No-00.png&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/wp-content/uploads/2015/05/SnapCrab_NoName_2015-5-2_23-12-0_No-00.png&#34; alt=&#34;hubot response&#34; /&gt;&lt;/p&gt;
 </description>
     </item>
     

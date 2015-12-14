@@ -89,7 +89,7 @@
 
 <h3 id="検証環境:8a801d7caae5205bbd472b545f0f0c21">検証環境</h3>
 
-<p>![enter image description here][2]</p>
+<p><img src="http://aimless.jp/blog/wp-content/uploads/2014/03/vpc-diag.png" alt="enter image description here" /></p>
 
 <p>　VPCのVGWに対して、2つのVPN Connectionを張ります。設定と動作確認が煩雑になるため、1つのVPN装置が張るVPN Connectionは1つのグローバルIPアドレスのみにします。VPN装置（cisco892JとFortiGate50B）からは、同一経路（192.168.2.0/24）をVPCに対して広報します。</p>
 
@@ -215,8 +215,6 @@ end
 </code></pre>
 
 <p>　公式のドキュメントにはMEDの記載がありませんでしたが、MEDによる経路制御も効くようですね。個人的にはAS-PATHがわかりやすくて好きなので、AS-PATHを利用します。</p>
-
-<p>[2]: <a href="http://aimless.jp/blog/wp-content/uploads/2014/03/vpc-diag.png">http://aimless.jp/blog/wp-content/uploads/2014/03/vpc-diag.png</a></p>
 
     </article>
     <div class="ad-left">

@@ -21,7 +21,7 @@
 
 &lt;p&gt;&lt;img src=&#34;http://dns3.aimless.jp/images/bgproute2.png&#34; alt=&#34;bgproute&#34; /&gt;&lt;/p&gt;
 
-&lt;p&gt;![bgproute][2]&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://dns3.aimless.jp/images/bgproute3.png&#34; alt=&#34;bgproute&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;　Cisco892Jのshow ipv6 route summryで出力されるBGPのネットワーク数をグラフにしています。IPv6のBGP経路数を直接取得できるOIDが見つからなかったため、下記のスクリプトを利用して経路数をCactiに渡しています。ルータにtelnetしてコマンド直打ち⇒必要な部分だけ正規表現で抽出という感じです。&lt;/p&gt;
 
@@ -47,8 +47,6 @@ tn.close
 @result = @result.gsub(/ /,&#34;&#34;)
 print @result
 &lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;[2]: &lt;a href=&#34;http://dns3.aimless.jp/images/bgproute3.png&#34;&gt;http://dns3.aimless.jp/images/bgproute3.png&lt;/a&gt;&lt;/p&gt;
 </description>
     </item>
     
@@ -183,7 +181,7 @@ SNMPv2-SMI::mib-2.15.4.0 = IpAddress: 36.2.xxx.xxx
 
 &lt;h3 id=&#34;経路情報の準備:f1ff86de82d9f4089c5525dc9e58f1c5&#34;&gt;経路情報の準備&lt;/h3&gt;
 
-&lt;p&gt;　[route-views6.oregon-ix.net][1]が公開しているIPv6のMRTデータを利用します。&lt;/p&gt;
+&lt;p&gt;　&lt;a href=&#34;http://archive.routeviews.org/route-views6/bgpdata/&#34;&gt;route-views6.oregon-ix.net&lt;/a&gt;が公開しているIPv6のMRTデータを利用します。&lt;/p&gt;
 
 &lt;h3 id=&#34;bgpdumpのインストール:f1ff86de82d9f4089c5525dc9e58f1c5&#34;&gt;bgpdumpのインストール&lt;/h3&gt;
 
@@ -262,8 +260,6 @@ exabgp
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;　それっぽい数の経路をexabgpから受信している事が分ります。Cisco892JでもIPv6のフルルートは喰えるみたいですね。どこかのトランジット業者様で、個人向けにIPIPトンネル越しでIPv6のフルルートをくれる方がいらっしゃいましたらご連絡ください。。。&lt;/p&gt;
-
-&lt;p&gt;[1]: &lt;a href=&#34;http://archive.routeviews.org/route-views6/bgpdata/&#34;&gt;http://archive.routeviews.org/route-views6/bgpdata/&lt;/a&gt;&lt;/p&gt;
 </description>
     </item>
     
@@ -279,7 +275,7 @@ exabgp
 
 &lt;p&gt;インターネットの経済学みたいな話になりますが、トランジットはフルルートを貰えるだけあって利用料金が高い。そこで下図の様に、InternetExchange経由で別ASと直接Peeringを行い、経路情報をやりとりします。そして、トランジットとPeerから同じ経路を受け取った場合に、Peerの経路を優先する様に設定します。&lt;/p&gt;
 
-&lt;p&gt;![bgp][1]&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/images/bgp.png&#34; alt=&#34;bgp&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;InternetExchange経由でトラフィックをやりとりするのにも当然費用がかかりますが、大概トランジットを利用するよりも安くなります。こうする事でデータセンタの通信コストを下げます。データセンタ事業者からすれば、大量の通信が発生するコンテンツプロバイダとは、是非IX経由でpeeringしたいところです。&lt;/p&gt;
 
@@ -359,8 +355,6 @@ Origin codes: i - IGP, e - EGP, ? - incomplete
                     2001:**:**:fc::6
                                                   400      0 645** 645** 645** ?
 &lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;[1]: &lt;a href=&#34;http://aimless.jp/blog/images/bgp.png&#34;&gt;http://aimless.jp/blog/images/bgp.png&lt;/a&gt;&lt;/p&gt;
 </description>
     </item>
     

@@ -693,7 +693,7 @@ Error: httpd24 conflicts with httpd-2.2.31-1.6.amzn1.x86_64
 
 &lt;h2 id=&#34;実現方法:273ca993f084584514ef76dff312aa4b&#34;&gt;実現方法&lt;/h2&gt;
 
-&lt;p&gt;　[Redmine CORS][1]を使い、RedmineをCORSに対応させる&lt;/p&gt;
+&lt;p&gt;　&lt;a href=&#34;https://github.com/mavimo/redmine_cors&#34;&gt;Redmine CORS&lt;/a&gt;を使い、RedmineをCORSに対応させる&lt;/p&gt;
 
 &lt;h2 id=&#34;やってみたこと:273ca993f084584514ef76dff312aa4b&#34;&gt;やってみたこと&lt;/h2&gt;
 
@@ -771,8 +771,6 @@ end
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;　なお、書き換えた後に気が付いたのですが、Redmine CORSをRedmine3.0で動作させるためのプルリクエストが出てますね。。。&lt;/p&gt;
-
-&lt;p&gt;[1]: &lt;a href=&#34;https://github.com/mavimo/redmine_cors&#34;&gt;https://github.com/mavimo/redmine_cors&lt;/a&gt;&lt;/p&gt;
 </description>
     </item>
     
@@ -1122,7 +1120,7 @@ write_token(resp.next_forward_token)
 
 &lt;p&gt;　投入後のデータ一覧は以下の通りです。19:25:47以前のログが重複登録されることなく、19:25:47以降のログが増えました！！！&lt;/p&gt;
 
-&lt;p&gt;![投入済みデータ][4]&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/wp-content/uploads/2015/06/002.png&#34; alt=&#34;投入済みデータ&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;　それっぽく動いたスクリプトは以下の通りです。cronで回してみてみようと思います。&lt;/p&gt;
 
@@ -1209,8 +1207,6 @@ resp.events.each {|event|
     end
 }
 &lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;[4]: &lt;a href=&#34;http://aimless.jp/blog/wp-content/uploads/2015/06/002.png&#34;&gt;http://aimless.jp/blog/wp-content/uploads/2015/06/002.png&lt;/a&gt;&lt;/p&gt;
 </description>
     </item>
     
@@ -1280,9 +1276,7 @@ job: {
 
 &lt;p&gt;　Graphタブを利用することで、取得したメトリクスのグラフを描画することが可能です。データの抽出は&lt;a href=&#34;http://prometheus.io/docs/querying/basics/#querying-prometheus&#34;&gt;QUERY LANGUAGE&lt;/a&gt;を利用する必要があります。&lt;/p&gt;
 
-&lt;p&gt;![prometheus_node_metric_graph][6]&lt;/p&gt;
-
-&lt;p&gt;[6]: &lt;a href=&#34;http://aimless.jp/blog/wp-content/uploads/2015/05/prometheus_node_metric_graph.png&#34;&gt;http://aimless.jp/blog/wp-content/uploads/2015/05/prometheus_node_metric_graph.png&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/wp-content/uploads/2015/05/prometheus_node_metric_graph.png&#34; alt=&#34;prometheus_node_metric_graph&#34; /&gt;&lt;/p&gt;
 </description>
     </item>
     
@@ -1355,9 +1349,7 @@ prometheus, version 0.13.2 (branch: HEAD, revision: f4d90a1)
   go version:       1.4.2
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;![GUI][2]&lt;/p&gt;
-
-&lt;p&gt;[2]: &lt;a href=&#34;http://aimless.jp/blog/wp-content/uploads/2015/05/Prometheus_GUI.png&#34;&gt;http://aimless.jp/blog/wp-content/uploads/2015/05/Prometheus_GUI.png&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/wp-content/uploads/2015/05/Prometheus_GUI.png&#34; alt=&#34;GUI&#34; /&gt;&lt;/p&gt;
 </description>
     </item>
     
@@ -1426,9 +1418,7 @@ Joined test
 
 &lt;p&gt;@つきでhubotに&lt;code&gt;ping&lt;/code&gt;や&lt;code&gt;date&lt;/code&gt;すると、ちゃんと答えます。&lt;/p&gt;
 
-&lt;p&gt;![hubot response][4]&lt;/p&gt;
-
-&lt;p&gt;[4]: &lt;a href=&#34;http://aimless.jp/blog/wp-content/uploads/2015/05/SnapCrab_NoName_2015-5-2_23-12-0_No-00.png&#34;&gt;http://aimless.jp/blog/wp-content/uploads/2015/05/SnapCrab_NoName_2015-5-2_23-12-0_No-00.png&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/wp-content/uploads/2015/05/SnapCrab_NoName_2015-5-2_23-12-0_No-00.png&#34; alt=&#34;hubot response&#34; /&gt;&lt;/p&gt;
 </description>
     </item>
     

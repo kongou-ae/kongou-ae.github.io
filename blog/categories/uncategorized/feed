@@ -748,7 +748,7 @@ base:
 
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;https://github.com/kongou-ae/md-kumihan&#34;&gt;md-kumihan&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://raw.githubusercontent.com/kongou-ae/md-kumihan/master/src/test.md&#34;&gt;このMarkdown&lt;/a&gt;が、コマンド一つで[このPDF][5]になります。&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://raw.githubusercontent.com/kongou-ae/md-kumihan/master/src/test.md&#34;&gt;このMarkdown&lt;/a&gt;が、コマンド一つで&lt;a href=&#34;https://github.com/kongou-ae/md-kumihan/blob/master/pdf/test.pdf&#34;&gt;このPDF&lt;/a&gt;になります。&lt;/li&gt;
 &lt;li&gt;md-kumihanをGialabのリポジトリ上に配置し、ローカルでMarkdownを編集してPushすると、gitlab上のgit-hookやCIツールでPDFを自動ビルド、さらにリポジトリのwikiページにpdfへのリンクを作成とかもできます。&lt;/li&gt;
 &lt;/ul&gt;&lt;/li&gt;
 &lt;/ul&gt;
@@ -766,8 +766,6 @@ base:
 &lt;p&gt;　運用の仕組み＝ドキュメントですから、運用の問題点はドキュメントの問題、運用改善のゴールはドキュメントの改定です。運用の問題点は、随時ドキュメントのIssueとして起票し、対応方法を検討し実践していく。問題点の改善が完了したら、改善点を反映させるためのWIP Marge Requestを作り、ドキュメントの改定作業を実施する。運用改善のタスクが、対応するドキュメントのリポジトリを中心にして回っていく。これが「ドキュメントを中心とした運用改善」です。&lt;/p&gt;
 
 &lt;p&gt;　こんな世界も悪くないんじゃないかなと考え、仮説を検証中です。「気軽にドキュメントを書く」と「ドキュメントを中心とした運用改善」を実現するためのmd-kumihanというツールはできたので、次は自分のチームで勝手に実践だ。&lt;/p&gt;
-
-&lt;p&gt;[5]: &lt;a href=&#34;https://github.com/kongou-ae/md-kumihan/blob/master/pdf/test.pdf&#34;&gt;https://github.com/kongou-ae/md-kumihan/blob/master/pdf/test.pdf&lt;/a&gt;&lt;/p&gt;
 </description>
     </item>
     

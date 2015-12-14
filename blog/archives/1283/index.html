@@ -80,7 +80,7 @@
 
 <p>　作成したアドレスオブジェクトを利用してルールを作成します。これによりLAN内の端末はFortigateが日本と判断するIPアドレスにしかアクセスできなくなります。</p>
 
-<p>![fortigate-geoip-02][2]</p>
+<p><img src="http://aimless.jp/blog/images/geoip-forti-02.png" alt="fortigate-geoip-02" /></p>
 
 <p>　どうやってIPアドレスと国を紐づけているのかなと調べて見たら、マニュアルに書いてありました。FortiGuardからデータを入手してローカルに持っているみたいです。</p>
 
@@ -118,8 +118,6 @@ Country name:JP Total IP Range:1337
  (root) # diagnose firewall ipgeo ip2country 8.8.8.8                                
 8.8.8.8 is not in kernel ip-country DB
 </code></pre>
-
-<p>[2]: <a href="http://aimless.jp/blog/images/geoip-forti-02.png">http://aimless.jp/blog/images/geoip-forti-02.png</a></p>
 
     </article>
     <div class="ad-left">
