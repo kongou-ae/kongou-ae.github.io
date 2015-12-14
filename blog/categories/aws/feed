@@ -6,8 +6,57 @@
     <description>Recent content in Aws on Aimless</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja</language>
-    <lastBuildDate>Sun, 15 Nov 2015 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 15 Dec 2015 00:00:00 +0000</lastBuildDate>
     <atom:link href="http://aimless.jp/categories/aws/feed/" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Amazon WorkSpacesのRemember Me機能を使う</title>
+      <link>http://aimless.jp/blog/archives/2015-12-15-aws-workspaces-with-remember-me</link>
+      <pubDate>Tue, 15 Dec 2015 00:00:00 +0000</pubDate>
+      
+      <guid>http://aimless.jp/blog/archives/2015-12-15-aws-workspaces-with-remember-me</guid>
+      <description>
+
+&lt;p&gt;Amazon WorkSpacesへの憧れが止まりません。BYOD＋WorkSpacesで仕事がしたい。とはいえ、古きSIerである弊社において、いきなりBYODはレベルが高すぎます。そこで、自宅からのリモートアクセス用途として会社に対してWorkSpacesを提案することにしました。そのために色々と調べたのでメモしておきます。&lt;/p&gt;
+
+&lt;h2 id=&#34;mfaの罠:31f38dca8007ccf1ee688b8fda274f87&#34;&gt;MFAの罠&lt;/h2&gt;
+
+&lt;p&gt;　AD ConnectorとRADIUSサーバによる多要素認証を使ってみて気が付いたのですが、WorkSpacesクライアントは多要素認証を使っていても認証情報を記憶します。多要素認証でログインした後に一旦切断しても、以下の画面になりボタン一つで簡単に再接続ができます。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://media.amazonwebservices.com/blog/2015/ws_client_reconnect_2.png&#34; alt=&#34;https://media.amazonwebservices.com/blog/2015/ws_client_reconnect_2.png&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;　認証情報を保存する機能は便利なのですが、社外に配置するPCで利用するWorkSpacesクライアントには認証情報を保存したくありません。誰が触るかわかりませんので。&lt;/p&gt;
+
+&lt;h2 id=&#34;remember-meの無効化:31f38dca8007ccf1ee688b8fda274f87&#34;&gt;Remember Meの無効化&lt;/h2&gt;
+
+&lt;p&gt;　ドキュメントを調べたところ、ぴったりな機能がありました。Remember Meの無効化です。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://docs.aws.amazon.com/ja_jp/workspaces/latest/adminguide/osx_client_help.htm&#34;&gt;Amazon WorkSpaces クライアントのヘルプ&lt;/a&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Amazon WorkSpaces 管理者が [Remember Me] 機能を無効にしていない場合、それ以降 WorkSpace に簡単に接続できるように、自分の認証情報を安全に保存しておくかどうかを確認するメッセージが表示されます。認証情報は、ユーザーの Kerberos チケットの最大有効期間が終了するまで安全にキャッシュに保存されます。
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;現時点で、Remember Meの無効化はサポートにお願いする必要があります。マネジメントコンソールでは無効にできません。&lt;/p&gt;
+
+&lt;h2 id=&#34;remember-me無効後の動作:31f38dca8007ccf1ee688b8fda274f87&#34;&gt;Remember Me無効後の動作&lt;/h2&gt;
+
+&lt;p&gt;WorkSpacesクライアントを切断します。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/images/2015-12-15-002.png&#34; alt=&#34;http://aimless.jp/blog/images/2015-12-15-002.png&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;切断後の画面がRecconectになりません。IDとパスワード、ワンタイムパスワードを入力する画面に戻りました。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/images/2015-12-15-003.png&#34; alt=&#34;http://aimless.jp/blog/images/2015-12-15-003.png&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;WorkSpacesクライアントのオプション設定でもRemember Meを有効にすることができなくなります。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/images/2015-12-15-004.png&#34; alt=&#34;http://aimless.jp/blog/images/2015-12-15-004.png&#34; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;所感:31f38dca8007ccf1ee688b8fda274f87&#34;&gt;所感&lt;/h2&gt;
+
+&lt;p&gt;WorkSpacesはどこでもどんな端末でも使えるのが最大のメリットだと思います。ですが、どこでも使える端末に社内ネットワークにアクセスするための認証情報を保存するのはリスクがあります。Remember Meの無効化は、利便性とセキュリティを両立させる良いオプションだと思います。&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>aws2excelを作ってみた</title>
@@ -1472,161 +1521,6 @@ sg-b10aecd4,outbound,ALL Traffic,ALL,ALL,0.0.0.0/0
 &lt;p&gt;　無事、ディスクに保存されているログを確認出来るようになりました。&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/wp-content/uploads/2015/01/aws-fg-11.png&#34; alt=&#34;enter image description here&#34; /&gt;&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>AWSにFortiGateをデプロイしてみた（ネットワーク設定編）</title>
-      <link>http://aimless.jp/blog/archives/2317</link>
-      <pubDate>Fri, 23 Jan 2015 00:00:00 +0000</pubDate>
-      
-      <guid>http://aimless.jp/blog/archives/2317</guid>
-      <description>
-
-&lt;p&gt;いつの日か、AWS上の通信ログを取りたくなる日が来るだろうということで、使い慣れているFortiGateのVM版をAWS上にデプロイしてみました。&lt;/p&gt;
-
-&lt;p&gt;　以前調べた時は、AWSのマーケットプライスで提供されているモデルがBYOL版のみであったため試せなかったのですが、現時点ではライセンス込みのモデルがあるので、気軽に試せます。&lt;/p&gt;
-
-&lt;h2 id=&#34;vpc環境:8dfb55f8e4769f24674df2a1c9f777e6&#34;&gt;VPC環境&lt;/h2&gt;
-
-&lt;p&gt;　FortiGate-VMをデプロイするVPCの環境は以下の通りです。&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;CIDR&lt;/strong&gt;&lt;/p&gt;
-
-&lt;table&gt;
-&lt;thead&gt;
-&lt;tr&gt;
-&lt;th&gt;項目&lt;/th&gt;
-&lt;th&gt;値&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
-
-&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td&gt;VPC CIDR&lt;/td&gt;
-&lt;td&gt;10&amp;#46;175.0.0/16&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;external_subnet&lt;/td&gt;
-&lt;td&gt;10&amp;#46;175.1.0/24&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;internal_subnet&lt;/td&gt;
-&lt;td&gt;10&amp;#46;175.2.0/24&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;p&gt;&lt;strong&gt;external_subnetのroute-table&lt;/strong&gt;&lt;/p&gt;
-
-&lt;table&gt;
-&lt;thead&gt;
-&lt;tr&gt;
-&lt;th&gt;Destination&lt;/th&gt;
-&lt;th&gt;Target&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
-
-&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td&gt;10&amp;#46;175.0.0/16&lt;/td&gt;
-&lt;td&gt;local&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;0&amp;#46;0.0.0&lt;/td&gt;
-&lt;td&gt;IGW&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;p&gt;&lt;strong&gt;internal_subnetのroute-table&lt;/strong&gt;&lt;/p&gt;
-
-&lt;table&gt;
-&lt;thead&gt;
-&lt;tr&gt;
-&lt;th&gt;Destination&lt;/th&gt;
-&lt;th&gt;Target&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
-
-&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td&gt;10&amp;#46;175.0.0/16&lt;/td&gt;
-&lt;td&gt;local&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;h2 id=&#34;とりあえずnic1個でデプロイ:8dfb55f8e4769f24674df2a1c9f777e6&#34;&gt;とりあえずNIC1個でデプロイ&lt;/h2&gt;
-
-&lt;p&gt;　マーケットプライスからポチポチとデプロイします。とりあえず、一般的なサーバと同様、NIC1個で始めます。&lt;/p&gt;
-
-&lt;table&gt;
-&lt;thead&gt;
-&lt;tr&gt;
-&lt;th&gt;パラメータ&lt;/th&gt;
-&lt;th&gt;設定&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
-
-&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td&gt;AMI&lt;/td&gt;
-&lt;td&gt;FortiGate-VM&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;instance type&lt;/td&gt;
-&lt;td&gt;m3.medium&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;Network&lt;/td&gt;
-&lt;td&gt;VPC&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;subnet&lt;/td&gt;
-&lt;td&gt;external_subnet&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;security group&lt;/td&gt;
-&lt;td&gt;全通信許可&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;p&gt;　起動後、EIPを作成し、external_subnetのENIに割り当てます。この時点で、ブラウザからENIのグローバルIPアドレスにHTTPSでアクセスすると、ログイン画面が見られるはずです。初期IDとパスワード（admin/インスタンスID）を入力してログインしましょう。&lt;/p&gt;
-
-&lt;p&gt;　ログインすると、FortiGateを触ったことのある人には見慣れた画面が出ます。取りあえずGUIを日本語表示にしましょう。気になる方は、管理アクセスのIPアドレス制限を行いましょう。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/wp-content/uploads/2015/01/aws-1.png&#34; alt=&#34;enter image description here&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;　FortiGate-VMは、バンドル版なんですね。フルUTM機能が使えますので、ファイアウォール以外の使い道もありそうです。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/wp-content/uploads/2015/01/aws-6.png&#34; alt=&#34;enter image description here&#34; /&gt;&lt;/p&gt;
-
-&lt;h2 id=&#34;nicを増やす:8dfb55f8e4769f24674df2a1c9f777e6&#34;&gt;NICを増やす&lt;/h2&gt;
-
-&lt;p&gt;　GUIでインターフェースを確認すると、NICは当然一つしかありません。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/wp-content/uploads/2015/01/aws-3.png&#34; alt=&#34;enter image description here&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;　FWはインターフェースを複数持ってなんぼですので、NICを増やします。マネジメントコンソールでENIを作成し、FortiGate-VMのインスタンスにアタッチします。そして、アタッチしたNICを認識させるためにFortiGateを再起動します。（他の方法はないのか&amp;#8230;）&lt;/p&gt;
-
-&lt;p&gt;　FortiGateがENIを認識すると、IP未設定のインターフェースがリンクアップしますので、GUIでENIに設定したIPアドレスを設定します。これで、NICを二つ持ったNATモードのFortiGateの完成です。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/wp-content/uploads/2015/01/aws-5.png&#34; alt=&#34;enter image description here&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;　なお、AWSのインスタンスは、インスタンスタイプごとに利用できるENIの数が決まっています。（&lt;a href=&#34;http://docs.aws.amazon.com/ja_jp/AWSEC2/latest/UserGuide/using-eni.html#AvailableIpPerENI&#34;&gt;参考：インスタンスタイプあたりの ENI ごとのプライベート IP アドレス&lt;/a&gt;） 今回選択したm3.mediumは最大2です。そのため、GUI的には7ポートまで利用可能な様に見えますが、3つ目のENIをアタッチしようとすると、エラーになります&amp;#8230;m3.mediumだとDMZが作れない&amp;#8230;&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/wp-content/uploads/2015/01/aws-7.png&#34; alt=&#34;enter image description here&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;　次回は、バーチャルIPを作成し、internal_subnetに設置したインスタンスとインターネット間の通信を実現します。また、複数のバーチャルIPを作成する方法を確認します。&lt;/p&gt;
 </description>
     </item>
     
