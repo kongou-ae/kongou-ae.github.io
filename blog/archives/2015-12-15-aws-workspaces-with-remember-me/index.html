@@ -72,7 +72,7 @@
 
 <h2 id="mfaの罠:31f38dca8007ccf1ee688b8fda274f87">MFAの罠</h2>
 
-<p>　AD ConnectorとRADIUSサーバによる多要素認証を使ってみて気が付いたのですが、WorkSpacesクライアントは多要素認証を使っていても認証情報を記憶します。多要素認証でログインした後に一旦切断しても、以下の画面になりボタン一つで簡単に再接続ができます。</p>
+<p>AD ConnectorとRADIUSサーバによる多要素認証を使ってみて気が付いたのですが、WorkSpacesクライアントは多要素認証を使っていても認証情報を記憶します。多要素認証でログインした後に一旦切断しても、以下の画面になりボタン一つで簡単に再接続ができます。</p>
 
 <p><img src="https://media.amazonwebservices.com/blog/2015/ws_client_reconnect_2.png" alt="https://media.amazonwebservices.com/blog/2015/ws_client_reconnect_2.png" /></p>
 
@@ -80,12 +80,13 @@
 
 <h2 id="remember-meの無効化:31f38dca8007ccf1ee688b8fda274f87">Remember Meの無効化</h2>
 
-<p>　ドキュメントを調べたところ、ぴったりな機能がありました。Remember Meの無効化です。</p>
+<p>ドキュメントを調べたところ、ぴったりな機能がありました。Remember Meの無効化です。</p>
 
 <p><a href="http://docs.aws.amazon.com/ja_jp/workspaces/latest/adminguide/osx_client_help.htm">Amazon WorkSpaces クライアントのヘルプ</a></p>
 
-<pre><code>Amazon WorkSpaces 管理者が [Remember Me] 機能を無効にしていない場合、それ以降 WorkSpace に簡単に接続できるように、自分の認証情報を安全に保存しておくかどうかを確認するメッセージが表示されます。認証情報は、ユーザーの Kerberos チケットの最大有効期間が終了するまで安全にキャッシュに保存されます。
-</code></pre>
+<blockquote>
+<p>Amazon WorkSpaces 管理者が [Remember Me] 機能を無効にしていない場合、それ以降 WorkSpace に簡単に接続できるように、自分の認証情報を安全に保存しておくかどうかを確認するメッセージが表示されます。認証情報は、ユーザーの Kerberos チケットの最大有効期間が終了するまで安全にキャッシュに保存されます。</p>
+</blockquote>
 
 <p>現時点で、Remember Meの無効化はサポートにお願いする必要があります。マネジメントコンソールでは無効にできません。</p>
 
