@@ -6,8 +6,77 @@
     <description>Recent content in Aws on Aimless</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja</language>
-    <lastBuildDate>Tue, 15 Dec 2015 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 23 Jan 2016 00:00:00 +0000</lastBuildDate>
     <atom:link href="http://aimless.jp/categories/aws/feed/" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Amazon WorkSpacesを不便にする</title>
+      <link>http://aimless.jp/blog/archives/2016-01-23-inconvenient-workspaces</link>
+      <pubDate>Sat, 23 Jan 2016 00:00:00 +0000</pubDate>
+      
+      <guid>http://aimless.jp/blog/archives/2016-01-23-inconvenient-workspaces</guid>
+      <description>
+
+&lt;p&gt;WorkSpacesは大変気軽です。ですが、リモートアクセス用途での導入を検討した場合、あまりにも気軽に社内LANにアクセスできてしまうことが問題となります。標準の設定のまま利用者に使わせると、社内LANに新たなリスクを生み出すことになります。&lt;/p&gt;
+
+&lt;p&gt;もう少し不便にすることでセキュリティを高められないか、と考え、WorkSpacesのセキュリティや監査に関する機能を調査したのでメモします。
+なお多要素認証については当たり前なので触れません。&lt;/p&gt;
+
+&lt;h2 id=&#34;認証情報の記憶を無効化する:052ae81a42bf391414298e21d62dd7a3&#34;&gt;認証情報の記憶を無効化する&lt;/h2&gt;
+
+&lt;p&gt;WorkSpacesクライアントは、認証情報を記憶する機能（Remember Me）があります。これを利用することで、次回以降のログインにおいてIDとパスワードの入力が不要となります。多要素認証を使っている場合、多要素認証のパスワードも記憶します。&lt;/p&gt;
+
+&lt;p&gt;この機能は大変便利ですが、社外からのリモートアクセス用途の場合、第三者による不正利用のリスクが生まれます。この機能は利用しているDirectory Service単位で無効にすることができます。詳細は&lt;a href=&#34;http://aimless.jp/blog/archives/2015-12-15-aws-workspaces-with-remember-me/&#34;&gt;Amazon WorkSpacesのRemember Me機能を使う&lt;/a&gt;を参照ください。&lt;/p&gt;
+
+&lt;h2 id=&#34;利用状況を記録する:052ae81a42bf391414298e21d62dd7a3&#34;&gt;利用状況を記録する&lt;/h2&gt;
+
+&lt;p&gt;リモートアクセス用途の場合、有事の際に備えて、いつ誰が使っていたかをロギングできることが望ましいでしょう。&lt;/p&gt;
+
+&lt;p&gt;AWSでロギングといえばCloudTrailですが、WorkSpacesの利用状況はCloudTrailでロギングされません。WorkSpacesクライアントがWorkSpacesに接続する際にAPI Callが行われないからです。そのかわり、CloudWatchの以下メトリックに利用状況に関するデータが保存されています。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;ConnectionFailure&lt;/li&gt;
+&lt;li&gt;ConnectionSuccess&lt;/li&gt;
+&lt;li&gt;InSessionLatency&lt;/li&gt;
+&lt;li&gt;SessionDisconnect&lt;/li&gt;
+&lt;li&gt;SessionLaunchTime&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;CloudWatchにはWorkSpaces単位でメトリックが保存されます。原則、WorkSpacesは1ユーザ1端末ですので、いつ誰がWorkSpacesを利用したかが記録されていると言ってもいいでしょう。ただし、CloudWatchのデータは2週間しか保存されませんので、長期間の保存（例えば13か月分）が必要な場合は、APIを利用して外部のサーバにデータを記録しなけばなりません。&lt;/p&gt;
+
+&lt;p&gt;なお、現時点で、どこから（送信元IPアドレス）と、どの端末（WorkSpacesクライアントがインストールされている環境）からを調べることはできません。実装されるとうれしいです。&lt;/p&gt;
+
+&lt;h2 id=&#34;情報漏えいを防ぐ:052ae81a42bf391414298e21d62dd7a3&#34;&gt;情報漏えいを防ぐ&lt;/h2&gt;
+
+&lt;p&gt;デフォルトのAmazon WorkSpacesは、クリップボードのリダイレクトが有効になっています。WorkSpacesでコピーしたものを、WorkSpacesクライアントが動作するPCにペーストすることができます。リモートアクセス用途でWorkSpacesを利用している場合、技術的には、悪意あるユーザが情報を漏洩させることができます。&lt;/p&gt;
+
+&lt;p&gt;Amazon WorkSpacesがAD ConnectorによってActive Directoryの管理下にある場合、グループポリシを利用して以下の機能を制限することができます。これにより、WorkSpaces内のデータを外部に持ち出されるリスクを極小化することができます。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;クリップボードによるコピペ&lt;a href=&#34;http://docs.aws.amazon.com/workspaces/latest/adminguide/group_policy.html#gp_clipboard&#34;&gt;(Clipboard Redirection)&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;ローカルプリンタを利用した印刷&lt;a href=&#34;http://docs.aws.amazon.com/workspaces/latest/adminguide/group_policy.html#gp_local_printers&#34;&gt;(Local Printer Support)&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;不要なセッションを積極的に切断する:052ae81a42bf391414298e21d62dd7a3&#34;&gt;不要なセッションを積極的に切断する&lt;/h2&gt;
+
+&lt;p&gt;WorkSpacesクライアントは、ネットワークが切れない限りセッションを維持します。所謂アイドルタイムアウトがないようです。リモートアクセス用途の場合、使っていないのに社内LANへのアクセス口が有効になっていることはリスクです。&lt;/p&gt;
+
+&lt;p&gt;現時点で、アイドルタイムアウトの設定は、WorkSpacesのサービス単体では実装できません。ただし、WorkSpacesがAD ConnectorによってActive Directoryの管理下にある場合、グループポリシによってアイドルタイムアウトの設定を行うことが可能です。具体的な設定は以下URLを参照ください。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://technet.microsoft.com/ja-jp/library/cc758177%28v=ws.10%29.aspx&#34;&gt;切断されたセッション、アクティブなセッション、およびアイドル状態のセッションに対するタイムアウト値を設定する&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;まとめ:052ae81a42bf391414298e21d62dd7a3&#34;&gt;まとめ&lt;/h2&gt;
+
+&lt;p&gt;これまでの設定を実施すると、以下のようなWorkSpacesが完成します。かなり不便になりました。ですが、WorkSpacesをリモートアクセス用途で使う場合のリスクを大幅に軽減することができました。満足。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;利用するたびに、多要素認証でログインする必要がある&lt;/li&gt;
+&lt;li&gt;いつ使ったか、モニタリングできる&lt;/li&gt;
+&lt;li&gt;画面転送しかできない&lt;/li&gt;
+&lt;li&gt;使っていないと、接続が切れる&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
     
     <item>
       <title>Amazon WorkSpacesのRemember Me機能を使う</title>
@@ -1473,55 +1542,6 @@ sg-b10aecd4,outbound,ALL Traffic,ALL,ALL,0.0.0.0/0
 &lt;p&gt;　今回利用しているt3.mediumは最大6個になります。EIPはENIのプライベートアドレスに割り当てる必要がありますので、取得できるEIPの数も最大6個になってしまいます。つまり、このt3.mediumのFortiGate-VMを利用すると、最大6個のIPアドレスしか外部公開できなくなります&amp;#8230;インスタンスタイプを上げても最大30個です。これは微妙&amp;#8230;&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/wp-content/uploads/2015/01/aws-fg-5.png&#34; alt=&#34;enter image description here&#34; /&gt;&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>AWSにFortiGateをデプロイしてみた（ログ出力編）</title>
-      <link>http://aimless.jp/blog/archives/2378</link>
-      <pubDate>Sat, 24 Jan 2015 00:00:00 +0000</pubDate>
-      
-      <guid>http://aimless.jp/blog/archives/2378</guid>
-      <description>
-
-&lt;p&gt;AWS上にデプロイしたForiGate-VMは、デフォルトではログが出力されなかったので、ログを出力するために必要な作業をメモします。&lt;/p&gt;
-
-&lt;h2 id=&#34;初期状態:0369e224a48532743f250f58f50b7a06&#34;&gt;初期状態&lt;/h2&gt;
-
-&lt;p&gt;　デプロイ直後の状況は以下の通りです。&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;メモリログが無効になっている&lt;/li&gt;
-&lt;li&gt;ディスクログは有効だが、そもそもディスクにパーティションが作られていない&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;script src=&#34;https://gist.github.com/kongou-ae/e3fb5b701e6744553d38.js&#34;&gt;&lt;/script&gt;
-
-&lt;p&gt;　FortiGate-VMには、マーケットプレイスからポチポチデプロイしたときにデフォルトで選択されているEBSを搭載しているのですが、利用できていません。&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;EBS選択画面&lt;/strong&gt; &lt;img src=&#34;http://aimless.jp/blog/wp-content/uploads/2015/01/aws-fg-6.png&#34; alt=&#34;enter image description here&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;FortiGateの管理画面&lt;/strong&gt; &lt;img src=&#34;http://aimless.jp/blog/wp-content/uploads/2015/01/aws-fg-8.png&#34; alt=&#34;enter image description here&#34; /&gt;&lt;/p&gt;
-
-&lt;h2 id=&#34;対処方法:0369e224a48532743f250f58f50b7a06&#34;&gt;対処方法&lt;/h2&gt;
-
-&lt;p&gt;　メモリログを有効にしたい場合はCLIから設定を変更します。ディスクログを有効にする場合は、CLIからディスクをフォーマットします。&lt;/p&gt;
-
-&lt;script src=&#34;https://gist.github.com/kongou-ae/bf9799c6dfc97a24cf4f.js&#34;&gt;&lt;/script&gt;
-
-&lt;h2 id=&#34;動作確認:0369e224a48532743f250f58f50b7a06&#34;&gt;動作確認&lt;/h2&gt;
-
-&lt;p&gt;　管理画面上でもディスクを認識するようになりました。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/wp-content/uploads/2015/01/aws-fg-9.png&#34; alt=&#34;enter image description here&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;　ログ確認画面の表示をディスクに切り替えます。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/wp-content/uploads/2015/01/aws-fg-10.png&#34; alt=&#34;enter image description here&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;　無事、ディスクに保存されているログを確認出来るようになりました。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/wp-content/uploads/2015/01/aws-fg-11.png&#34; alt=&#34;enter image description here&#34; /&gt;&lt;/p&gt;
 </description>
     </item>
     
