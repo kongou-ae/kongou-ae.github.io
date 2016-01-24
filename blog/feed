@@ -6,8 +6,159 @@
     <description>Recent content in Blogs on Aimless</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja</language>
-    <lastBuildDate>Sat, 23 Jan 2016 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 24 Jan 2016 00:00:00 +0000</lastBuildDate>
     <atom:link href="http://aimless.jp/blog/feed/" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>sumologicを使ってVPC Flow Logsを可視化する</title>
+      <link>http://aimless.jp/blog/archives/2016-01-24-analysing-vpcflowlogs-by-sumologic</link>
+      <pubDate>Sun, 24 Jan 2016 00:00:00 +0000</pubDate>
+      
+      <guid>http://aimless.jp/blog/archives/2016-01-24-analysing-vpcflowlogs-by-sumologic</guid>
+      <description>
+
+&lt;h2 id=&#34;vpc-flow-logsを可視化したい:d7ed45000ec743b096ff53f4eb6f2750&#34;&gt;VPC FLow Logsを可視化したい&lt;/h2&gt;
+
+&lt;p&gt;検証環境のVPC Flow Logsを収集、調査、分析するためにElasticSearch Serviceを利用していましたが、利用料をケチるためにt2.microで動かしていたため動作が遅く困っていました。オンプレミスで十分なリソースを積んだElasticSearchを立ててもよかったのですが、目的はログを分析することであって、ElasticSearchを運用することではありません。&lt;/p&gt;
+
+&lt;p&gt;そこで、VPC FLow Logsに対応しており、無料プランのあるログ分析SaaSを調べたところ、&lt;a href=&#34;https://www.sumologic.com/&#34;&gt;sumologic&lt;/a&gt;が見つかりました。Re:Invent2015の会場で相撲を取っていたあのsumologicです。&lt;/p&gt;
+
+&lt;p&gt;参考：&lt;a href=&#34;https://www.youtube.com/watch?v=WLuH-Rht3nw&#34;&gt;Sumo wrestling, presented by SumoLogic @ AWS re:Invent2015 Game 3&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;トライアル期間を利用して、さらっと触ってみた結果をメモしておきます。&lt;/p&gt;
+
+&lt;p&gt;なお、現時点でのプランが30日トライアルのため、sumologicの全機能が利用できる状況です。30日後にフリープランになった場合、このエントリーに記載したことの何ができなくなるのか少々不安です。30日後に確認します。（参考：&lt;a href=&#34;https://www.sumologic.com/pricing/&#34;&gt;Pricing&lt;/a&gt;）&lt;/p&gt;
+
+&lt;h2 id=&#34;sumologicにログを転送する仕組み:d7ed45000ec743b096ff53f4eb6f2750&#34;&gt;SumoLogicにログを転送する仕組み&lt;/h2&gt;
+
+&lt;p&gt;sumologicにログを転送する方法は2つあります。&lt;/p&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;方法&lt;/th&gt;
+&lt;th&gt;詳細&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;installed Collector&lt;/td&gt;
+&lt;td&gt;自前のサーバ上にインストールするコレクター。サーバにエージェントが常駐する&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Hosted Collector&lt;/td&gt;
+&lt;td&gt;sumologic上にホストされているコレクター。サーバにエージェントをインストールする必要なし&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;詳細は&lt;a href=&#34;https://service.sumologic.com/help/Default.htm#Difference_between_Collectors.htm%3FTocPath%3DSending%2520Data%7CCollectors%7C_____1&#34;&gt;What&amp;rsquo;s the difference between Collector types?&lt;/a&gt;を参照ください。&lt;/p&gt;
+
+&lt;p&gt;Hosted CollectorはデフォルトでAWSの以下サービスに対応しています。残念なことに、現時点でVPC Flow Logsには未対応です。（VPC Flow LogsをS3に吐き出せば、そのログを取得できるかもしれません）&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;S3&lt;/li&gt;
+&lt;li&gt;ELB&lt;/li&gt;
+&lt;li&gt;CloudFront&lt;/li&gt;
+&lt;li&gt;CloudTrail&lt;/li&gt;
+&lt;li&gt;Config&lt;/li&gt;
+&lt;li&gt;S3 Audit&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/images/2016-01-24-001.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;sumologicにvpc-flow-logsを送る方法:d7ed45000ec743b096ff53f4eb6f2750&#34;&gt;sumologicにVPC Flow Logsを送る方法&lt;/h2&gt;
+
+&lt;p&gt;公式のヘルプ(&lt;a href=&#34;https://service.sumologic.com/help/Default.htm#Collecting_Amazon_VPC_Flow_Logs.htm%3FTocPath%3DApps%7CSumo%2520Logic%2520App%2520for%2520Amazon%2520VPC%2520Flow%2520Logs%7C_____1&#34;&gt;Collecting Amazon VPC Flow Logs&lt;/a&gt;)に従い、installed Collectorを利用したログ転送を試したのですが、以下のエラーが出てしまい上手く行きませんでした。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;2016-01-22 17:39:29,994 10946 [pool-2-thread-4] INFO com.amazonaws.internal.DefaultServiceEndpointBuilder  - {logs, ap-southeast-1} was not found in region metadata, trying to construct an endpoint using the standard pattern for this region: &#39;logs.ap-southeast-1.amazonaws.com&#39;.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;そこで今回は、sumologicのgithubリポジトリで公開されているLambdaファンクション（&lt;a href=&#34;https://github.com/SumoLogic/sumologic-aws-lambda/tree/master/cloudwatchlogs&#34;&gt;SumoLogic/sumologic-aws-lambda&lt;/a&gt;）を利用することにしました。このLambdaファンクションは、VPC Flow Logsに特化したものではなく、sumologicのAPIを利用してCloudWatch Logsをsumologicに送るものです。そのため、VPC Flow Logs以外でも利用可能です。&lt;/p&gt;
+
+&lt;p&gt;なお、sumologicのAPI（Collector Management API）は、PROFESSIONALプラン以上で利用可能です。そのため、FREEプランでは利用できません。。。&lt;/p&gt;
+
+&lt;h2 id=&#34;sumologicにログを送る:d7ed45000ec743b096ff53f4eb6f2750&#34;&gt;sumologicにログを送る&lt;/h2&gt;
+
+&lt;p&gt;Hosted Collectorを作成します。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/images/2016-01-24-002.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/images/2016-01-24-003.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;作成したHosted Collectorに、HTTPSでデータを投入できるAPIエンドポイントを追加します。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/images/2016-01-24-008.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/images/2016-01-24-009.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/images/2016-01-24-007.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/images/2016-01-24-004.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;作成したエンドポイントの情報を元に&lt;a href=&#34;https://github.com/SumoLogic/sumologic-aws-lambda/tree/master/cloudwatchlogs&#34;&gt;SumoLogic/sumologic-aws-lambda&lt;/a&gt;の内容を修正して、Lambdaファンクションを作ります。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/images/2016-01-24-005.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;最後に、作成したLambdaファンクションをVPC Flow LogsのSubscriptionに追加します。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/images/2016-01-24-006.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;ログを可視化する:d7ed45000ec743b096ff53f4eb6f2750&#34;&gt;ログを可視化する&lt;/h2&gt;
+
+&lt;p&gt;sumologicには標準でVPC Flow Logsを可視化するAppsが用意されています。とりあえずこれを利用します。FREEプランになっても使えるかは要確認です。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/images/2016-01-24-010.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Appには複数のダッシュボードとクエリが定義されています。とりあえずActivityなるダッシュボードを見てみます。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/images/2016-01-24-011.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/images/2016-01-24-012.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;超カッコいい。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/images/2016-01-24-013.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;ログを検索する:d7ed45000ec743b096ff53f4eb6f2750&#34;&gt;ログを検索する&lt;/h2&gt;
+
+&lt;p&gt;独自のクエリ言語を利用して、ログを検索することができます。&lt;/p&gt;
+
+&lt;p&gt;取り込んだVPC Flow Logsを送信元IPアドレスで限定して、送信元IPアドレスと宛先IPアドレスで分類して転送バイトを合計、さらに合計値でソートしてみます。アウト方向の転送量が多い通信を特定するクエリをイメージしています。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;_sourceCategory=xxxx_vpcflowlogs message
+| json &amp;quot;message&amp;quot;,&amp;quot;logStream&amp;quot;,&amp;quot;logGroup&amp;quot;
+| parse field=message &amp;quot;* * * * * * * * * * * * * *&amp;quot; as version,accountID,interfaceID,src_ip,dest_ip,src_port,dest_port,Protocol,Packets,bytes,StartSample,EndSample,Action,status
+| where src_ip = &amp;quot;172.20.0.10&amp;quot;
+| sum(bytes) group by src_ip,dest_ip
+| sort by _sum
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;クエリの結果が、下の方に表示されています。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/images/2016-01-24-014.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;結果をCSVでダウンロードすることもできます。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/images/2016-01-24-015.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;結果をグラフにすることもできます。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/images/2016-01-24-016.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;さらに結果をダッシュボードに追加することもできます。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/images/2016-01-24-017.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/images/2016-01-24-018.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;雑な所感:d7ed45000ec743b096ff53f4eb6f2750&#34;&gt;雑な所感&lt;/h2&gt;
+
+&lt;p&gt;有料のSaaSだけあってかなり使いやすいです。また、Hosted Collectorを利用することで、サーバレスでAWSの各種ログを収集・分析することができます。今後、AWSのログを保存・分析するための基盤のお仕事があった場合、検討候補にしたいと思います。&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>Amazon WorkSpacesを不便にする</title>
@@ -1396,79 +1547,6 @@ job: {
 &lt;p&gt;　Graphタブを利用することで、取得したメトリクスのグラフを描画することが可能です。データの抽出は&lt;a href=&#34;http://prometheus.io/docs/querying/basics/#querying-prometheus&#34;&gt;QUERY LANGUAGE&lt;/a&gt;を利用する必要があります。&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/wp-content/uploads/2015/05/prometheus_node_metric_graph.png&#34; alt=&#34;prometheus_node_metric_graph&#34; /&gt;&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Amazon LinuxでPrometheusを動かしてみた</title>
-      <link>http://aimless.jp/blog/archives/2586</link>
-      <pubDate>Sat, 09 May 2015 00:00:00 +0000</pubDate>
-      
-      <guid>http://aimless.jp/blog/archives/2586</guid>
-      <description>&lt;p&gt;Prometheusを試してみようと思いインストール方法を調べた結果、バイナリファイルが公開されていることがわかりました。バイナリファイルを利用すると、さくっと動いたのでメモしておきます。必要な手順は以下の通りです。&lt;/p&gt;
-
-&lt;ol&gt;
-&lt;li&gt;tarballのダウンロードと解凍&lt;/li&gt;
-&lt;li&gt;prometheus.confの作成（&lt;a href=&#34;http://prometheus.io/docs/introduction/getting_started/#configuring-prometheus-to-monitor-itself&#34;&gt;GETTING STARTEDの内容をままコピペ&lt;/a&gt;）&lt;/li&gt;
-&lt;li&gt;prometheusの起動&lt;/li&gt;
-&lt;li&gt;HTTPで9090ポートにアクセス&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;pre&gt;&lt;code&gt;[ec2-user@ip-10-175-10-126 ~]$ wget https://github.com/prometheus/prometheus/releases/download/0.13.2/prometheus-0.13.2.linux-amd64.tar.gz
---2015-05-09 12:07:12--  https://github.com/prometheus/prometheus/releases/download/0.13.2/prometheus-0.13.2.linux-amd64.tar.gz
-Resolving github.com (github.com)... 192.30.252.131
-Connecting to github.com (github.com)|192.30.252.131|:443... connected.
-HTTP request sent, awaiting response... 302 Found
-Location: https://s3.amazonaws.com/github-cloud/releases/6838921/b318dbf0-f3e7-11e4-8be7-d3716d1f32e5.gz?response-content-disposition=attachment%3B%20filename%3Dprometheus-0.13.2.linux-amd64.tar.gz&amp;response-content-type=application/octet-stream&amp;AWSAccessKeyId=AKIAISTNZFOVBIJMK3TQ&amp;Expires=1431173292&amp;Signature=J5eC%2F4n8UDnReRDLitzGezZLj88%3D [following]
---2015-05-09 12:07:13--  https://s3.amazonaws.com/github-cloud/releases/6838921/b318dbf0-f3e7-11e4-8be7-d3716d1f32e5.gz?response-content-disposition=attachment%3B%20filename%3Dprometheus-0.13.2.linux-amd64.tar.gz&amp;response-content-type=application/octet-stream&amp;AWSAccessKeyId=AKIAISTNZFOVBIJMK3TQ&amp;Expires=1431173292&amp;Signature=J5eC%2F4n8UDnReRDLitzGezZLj88%3D
-Resolving s3.amazonaws.com (s3.amazonaws.com)... 54.231.244.8
-Connecting to s3.amazonaws.com (s3.amazonaws.com)|54.231.244.8|:443... connected.
-HTTP request sent, awaiting response... 200 OK
-Length: 6796769 (6.5M) [application/octet-stream]
-Saving to: ‘prometheus-0.13.2.linux-amd64.tar.gz’
-
-prometheus-0.13.2.linux-am 100%[==========================================&amp;gt;]   6.48M  1.89MB/s   in 3.4s   
-
-2015-05-09 12:07:17 (1.89 MB/s) - ‘prometheus-0.13.2.linux-amd64.tar.gz’ saved [6796769/6796769]
-
-[ec2-user@ip-10-175-10-126 ~]$ tar xzvf prometheus-0.13.2.linux-amd64.tar.gz 
-prometheus
-tools/rule_checker/rule_checker
-consoles/
-consoles/haproxy.html
-consoles/cassandra.html
-consoles/haproxy-frontend.html
-consoles/index.html.example
-consoles/node-overview.html
-consoles/federation_template_example.txt
-consoles/aws_elb.html
-consoles/aws_redshift-cluster.html
-consoles/node-cpu.html
-consoles/index.html
-consoles/node-disk.html
-consoles/haproxy-backends.html
-consoles/aws_redshift.html
-consoles/cloudwatch.html
-consoles/aws_elasticache.html
-consoles/haproxy-backend.html
-consoles/node.html
-consoles/haproxy-frontends.html
-console_libraries/
-console_libraries/prom.lib
-console_libraries/menu.lib
-[ec2-user@ip-10-175-10-126 ~]$ ls
-console_libraries  consoles  prometheus  prometheus-0.13.2.linux-amd64.tar.gz  tools
-
-[ec2-user@ip-10-175-10-126 ~]$ touch prometheus.conf                                                        
-[ec2-user@ip-10-175-10-126 ~]$ vim prometheus.conf 
-[ec2-user@ip-10-175-10-126 ~]$ ./prometheus 
-prometheus, version 0.13.2 (branch: HEAD, revision: f4d90a1)
-  build user:       fish@localhost
-  build date:       20150506-12:01:47
-  go version:       1.4.2
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/wp-content/uploads/2015/05/Prometheus_GUI.png&#34; alt=&#34;GUI&#34; /&gt;&lt;/p&gt;
 </description>
     </item>
     
