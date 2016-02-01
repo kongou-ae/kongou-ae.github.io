@@ -6,8 +6,142 @@
     <description>Recent content in Aws on Aimless</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja</language>
-    <lastBuildDate>Sun, 24 Jan 2016 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 02 Feb 2016 00:00:00 +0000</lastBuildDate>
     <atom:link href="http://aimless.jp/categories/aws/feed/" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>flowlogs-readerを使って、VPC Flow Logsをコマンドラインで操作する</title>
+      <link>http://aimless.jp/blog/archives/2016-02-02-retrieving-aws-vpc-flow-logs-using-flowlogs-reader</link>
+      <pubDate>Tue, 02 Feb 2016 00:00:00 +0000</pubDate>
+      
+      <guid>http://aimless.jp/blog/archives/2016-02-02-retrieving-aws-vpc-flow-logs-using-flowlogs-reader</guid>
+      <description>
+
+&lt;p&gt;VPC Flow Logsを分析、可視化する方法を模索しており、以下のツール・サービスを試しました。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;sumologic&lt;/li&gt;
+&lt;li&gt;Splunk&lt;/li&gt;
+&lt;li&gt;ElasticSearch&lt;/li&gt;
+&lt;li&gt;ElasticSearch Service&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;どれも素晴らしいツールなのですが、気軽にログを調査する、集計するといった用途で使うには少々大がかりです。もっと気軽なツールはないかとGithubをさまよった結果、&lt;a href=&#34;https://github.com/obsrvbl/flowlogs-reader&#34;&gt;obsrvbl/flowlogs-reader&lt;/a&gt;というツールを見つけたので試してみました。&lt;/p&gt;
+
+&lt;h2 id=&#34;インストール:ca10f760ffb323fafc126a34735ccb7a&#34;&gt;インストール&lt;/h2&gt;
+
+&lt;p&gt;READMEに書いてある通りです。ソースからインストールしてみました。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;git clone https://github.com/obsrvbl/flowlogs-reader.git
+cd flowlogs-reader
+pyenv exec python setup.py develop
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;基本操作:ca10f760ffb323fafc126a34735ccb7a&#34;&gt;基本操作&lt;/h2&gt;
+
+&lt;p&gt;READMEに従って、&lt;code&gt;flowlogs_reader logGroupName&lt;/code&gt;を実行してみます。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ pyenv exec flowlogs_reader VPCFlowLogGroup
+
+Traceback (most recent call last):
+（中略）
+botocore.exceptions.ClientError: An error occurred (ResourceNotFoundException) when calling the FilterLogEvents operation: The specified log group does not exist.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;そんなロググループはないと怒られました。これはリージョンを指定していないことが原因です。デフォルトのリージョンはus-east-1になっていますが、私のAWSアカウントのus-east-1にはlogGroupNameというVPC Flow Logsが存在しません。東京リージョンにはlogGroupNameというVPC Flow Logsが存在していますので、&lt;code&gt;--region&lt;/code&gt;で東京リージョンを指定します。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ pyenv exec flowlogs_reader VPCFlowLogGroup --region ap-northeast-1       
+2 743065858817 eni-63444414 54.245.120.220 172.20.0.10 443 51378 6 13 1982 1454337327 1454337447 ACCEPT OK       
+2 743065858817 eni-63444414 103.246.150.154 172.20.0.10 443 47354 6 10 1223 1454337327 1454337447 ACCEPT OK      
+2 743065858817 eni-63444414 27.0.2.250 172.20.0.10 443 50540 6 10 935 1454337327 1454337387 ACCEPT OK
+2 743065858817 eni-63444414 172.20.0.10 103.246.150.154 47354 443 6 12 1501 1454337327 1454337447 ACCEPT OK
+2 743065858817 eni-63444414 172.20.0.10 27.0.2.250 50539 443 6 12 1501 1454337327 1454337387 ACCEPT OK
+2 743065858817 eni-63444414 172.20.0.10 27.0.2.250 50540 443 6 12 1501 1454337327 1454337387 ACCEPT OK
+2 743065858817 eni-63444414 195.99.212.67 172.20.0.10 53 57627 17 1 77 1454337327 1454337387 REJECT OK
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;出ました！なにこれすごい！&lt;/p&gt;
+
+&lt;h3 id=&#34;時間指定:ca10f760ffb323fafc126a34735ccb7a&#34;&gt;時間指定&lt;/h3&gt;
+
+&lt;p&gt;&lt;code&gt;-s&lt;/code&gt;と&lt;code&gt;-e&lt;/code&gt;オプションを使うことで、抽出する範囲を限定することができます。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ pyenv exec flowlogs_reader VPCFlowLogGroup --region ap-northeast-1 -s &#39;2016-02-01 10:59:00&#39; -e &#39;2016-02-01 11:00:00&#39;
+2 743065858817 eni-63444414 172.20.0.10 103.246.150.154 44589 443 6 12 1501 1454324362 1454324415 ACCEPT OK
+2 743065858817 eni-63444414 103.246.150.154 172.20.0.10 443 44589 6 10 935 1454324362 1454324415 ACCEPT OK
+2 743065858817 eni-63444414 103.246.150.154 172.20.0.10 443 44591 6 10 935 1454324362 1454324415 ACCEPT OK
+2 743065858817 eni-63444414 54.245.120.220 172.20.0.10 443 48618 6 7 1079 1454324362 1454324415 ACCEPT OK
+2 743065858817 eni-63444414 172.20.0.10 103.246.150.154 44591 443 6 12 1501 1454324362 1454324415 ACCEPT OK
+2 743065858817 eni-63444414 172.20.0.10 103.246.150.154 44592 443 6 6 313 1454324362 1454324415 ACCEPT OK
+2 743065858817 eni-63444414 103.246.150.154 172.20.0.10 443 44588 6 9 895 1454324362 1454324415 ACCEPT OK
+2 743065858817 eni-63444414 103.246.150.154 172.20.0.10 443 44592 6 4 306 1454324362 1454324415 ACCEPT OK
+2 743065858817 eni-63444414 172.20.0.10 54.245.120.220 48618 443 6 11 2232 1454324362 1454324415 ACCEPT OK
+2 743065858817 eni-63444414 172.20.0.10 103.246.150.154 44588 443 6 12 1501 1454324362 1454324415 ACCEPT OK
+2 743065858817 eni-98fccfd1 104.216.59.132 172.20.0.106 57664 6379 6 1 40 1454324381 1454324411 REJECT OK
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;おおお、すごい。VPC Flow Logs内のstartをもとにフィルタリングしてるようです。&lt;/p&gt;
+
+&lt;h2 id=&#34;ipアドレスで抽出:ca10f760ffb323fafc126a34735ccb7a&#34;&gt;IPアドレスで抽出&lt;/h2&gt;
+
+&lt;p&gt;&lt;code&gt;findip&lt;/code&gt;を利用することで、IPアドレスを利用したログの抽出が可能です。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ pyenv exec flowlogs_reader VPCFlowLogGroup findip 54.245.120.220 --region
+ ap-northeast-1 -s &#39;2016-02-01 10:59:00&#39; -e &#39;2016-02-01 11:00:00&#39;                                                
+2 743065858817 eni-63444414 54.245.120.220 172.20.0.10 443 48618 6 7 1079 1454324362 1454324415 ACCEPT OK
+2 743065858817 eni-63444414 172.20.0.10 54.245.120.220 48618 443 6 11 2232 1454324362 1454324415 ACCEPT OK
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;awkで処理する:ca10f760ffb323fafc126a34735ccb7a&#34;&gt;AWKで処理する&lt;/h2&gt;
+
+&lt;p&gt;VPC Flow Logsの内容が標準出力されるということは、AWKで自由に編集できるということです。&lt;/p&gt;
+
+&lt;p&gt;まずは、VPC Flow Logsの時刻をJSTに変換、かつ不要なフィールドを削除することで可読性を向上してみます。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ pyenv exec flowlogs_reader VPCFlowLogGroup --region ap-northeast-1 -s &#39;2016-02-01 10:59:00&#39; -e &#39;2016-02-01 11:00:00&#39; | awk -F&amp;quot; &amp;quot; &#39;{print strftime(&amp;quot;%F %T %Z&amp;quot;,$11) &amp;quot; &amp;quot; $4 &amp;quot; &amp;quot; $5 &amp;quot; &amp;quot; $6 &amp;quot; &amp;quot;
+ $7 &amp;quot; &amp;quot; $10 &amp;quot; &amp;quot; $13}&#39;
+2016-02-01 19:59:22 JST 172.20.0.10 103.246.150.154 44589 443 1501 ACCEPT
+2016-02-01 19:59:22 JST 103.246.150.154 172.20.0.10 443 44589 935 ACCEPT
+2016-02-01 19:59:22 JST 103.246.150.154 172.20.0.10 443 44591 935 ACCEPT
+2016-02-01 19:59:22 JST 54.245.120.220 172.20.0.10 443 48618 1079 ACCEPT
+2016-02-01 19:59:22 JST 172.20.0.10 103.246.150.154 44591 443 1501 ACCEPT
+2016-02-01 19:59:22 JST 172.20.0.10 103.246.150.154 44592 443 313 ACCEPT
+2016-02-01 19:59:22 JST 103.246.150.154 172.20.0.10 443 44588 895 ACCEPT
+2016-02-01 19:59:22 JST 103.246.150.154 172.20.0.10 443 44592 306 ACCEPT
+2016-02-01 19:59:22 JST 172.20.0.10 54.245.120.220 48618 443 2232 ACCEPT
+2016-02-01 19:59:22 JST 172.20.0.10 103.246.150.154 44588 443 1501 ACCEPT
+2016-02-01 19:59:41 JST 104.216.59.132 172.20.0.106 57664 6379 40 REJECT
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;すごく見やすくなりました。一般的なファイアウォールのログのようです。この形式であればトラブルシュートが簡単ですね。&lt;/p&gt;
+
+&lt;p&gt;どのようなデータを得られるかは、分析の要件をシェル芸で実装できるかどうか次第です。私はシェル芸力が赤ちゃんレベルなので、Google先生に聞きながら、172.20.0.10からのOutbound通信を、通信量が多いホスト順に集計するワンライナーを書いてみました。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ pyenv exec flowlogs_reader VPCFlowLogGroup --region ap-northeast-1 | awk -F&amp;quot; &amp;quot; &#39;{if($4 ~ /^172.20.0.10$/) print $4 &amp;quot; &amp;quot; $5 &amp;quot; &amp;quot; $6 &amp;quot; &amp;quot; $7 &amp;quot; &amp;quot; $10}&#39; | awk -F &amp;quot; &amp;quot; &#39;{ arr[$2] += $5 } END {for
+ (i in arr) {print arr[i] &amp;quot;\t&amp;quot; i } }&#39; | sort -nr
+1953728 xxx.246.150.182
+1513154 xxx.0.2.250
+1403416 xxx.2.107.75
+585957  xxx.246.150.154
+230835  xxx.245.91.49
+99516   xxx.245.231.247
+68348   xxx.214.251.251
+59299   xxx.112.97.146
+29665   xxx.245.120.220
+2657    xxx.32.102.213
+1368    xxx.7.236.66
+684     xxx.106.180.168
+228     xxx.7.154.29
+228     xxx.250.35.250
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;おお、できたっぽい！&lt;/p&gt;
+
+&lt;h2 id=&#34;所感:ca10f760ffb323fafc126a34735ccb7a&#34;&gt;所感&lt;/h2&gt;
+
+&lt;p&gt;過去触ってきた各種サービスは、VPC Flow Logsを継続的に保管し、傾向を分析、可視化するにはもってこいです。ですが、トラブルシュートなどのスポット用途でログを見たい、分析したいという用途には少々オーバースペックです。そんな人には、&lt;a href=&#34;https://github.com/obsrvbl/flowlogs-reader&#34;&gt;obsrvbl/flowlogs-reader&lt;/a&gt;をお勧めします。気軽ですよ。&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>sumologicを使ってVPC Flow Logsを可視化する</title>
@@ -1379,108 +1513,6 @@ sg-b10aecd4,outbound,ALL Traffic,ALL,ALL,0.0.0.0/0
 &lt;p&gt;　&lt;/p&gt;
 
 &lt;p&gt;　また、TCP/3000でのアクセスは不便だったので、前段にNginx等のリバースプロキシを置いてTCP/80でアクセスできるようにしました。&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>AWS上のオンデマンドなUTM製品を比較する</title>
-      <link>http://aimless.jp/blog/archives/2399</link>
-      <pubDate>Mon, 16 Feb 2015 00:00:00 +0000</pubDate>
-      
-      <guid>http://aimless.jp/blog/archives/2399</guid>
-      <description>&lt;p&gt;イマイチ使いどころが見つけられないAWS上のUTM製品について、オンデマンド版（ライセンスこみで使えるAMI）の費用を比較しました。&lt;/p&gt;
-
-&lt;p&gt;　なお、AWS上には、Barracuda NG FirewallやPaloalto VM-Seriesもあるのですが、これらはオンデマンド版が存在せずBYOL版のみのため、記載していません。オンデマンド版があれば、評価しやすいのに。。。&lt;/p&gt;
-
-&lt;table&gt;
-&lt;thead&gt;
-&lt;tr&gt;
-&lt;th&gt;インスタンスタイプ&lt;/th&gt;
-&lt;th&gt;FortiGate-VM&lt;/th&gt;
-&lt;th&gt;CheckPoint VA&lt;/th&gt;
-&lt;th&gt;sophos-UTM 9&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
-
-&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td&gt;t1.micro&lt;/td&gt;
-&lt;td&gt;&amp;#8211;&lt;/td&gt;
-&lt;td&gt;&amp;#8211;&lt;/td&gt;
-&lt;td&gt;$0.02/hr&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;t1.small&lt;/td&gt;
-&lt;td&gt;&amp;#8211;&lt;/td&gt;
-&lt;td&gt;&amp;#8211;&lt;/td&gt;
-&lt;td&gt;$0.264/hr&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;m3.medium&lt;/td&gt;
-&lt;td&gt;$0.37/hr&lt;/td&gt;
-&lt;td&gt;–&lt;/td&gt;
-&lt;td&gt;$0.42/hr&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;m3.large&lt;/td&gt;
-&lt;td&gt;$0.95/hr&lt;/td&gt;
-&lt;td&gt;–&lt;/td&gt;
-&lt;td&gt;$0.84/hr&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;m3.xlarge&lt;/td&gt;
-&lt;td&gt;$2.13/hr&lt;/td&gt;
-&lt;td&gt;–&lt;/td&gt;
-&lt;td&gt;$1.68/hr&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;m3.2xlarge&lt;/td&gt;
-&lt;td&gt;$4.49/hr&lt;/td&gt;
-&lt;td&gt;–&lt;/td&gt;
-&lt;td&gt;$3.36/hr&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;c3.large&lt;/td&gt;
-&lt;td&gt;$0.835/hr&lt;/td&gt;
-&lt;td&gt;$1.815/hr&lt;/td&gt;
-&lt;td&gt;$0.525/hr&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;c3.xlarge&lt;/td&gt;
-&lt;td&gt;$1.87/hr&lt;/td&gt;
-&lt;td&gt;$2.80/hr&lt;/td&gt;
-&lt;td&gt;$1.05/hr&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;c3.2xlarge&lt;/td&gt;
-&lt;td&gt;$3.95/hr&lt;/td&gt;
-&lt;td&gt;$4.86/hr&lt;/td&gt;
-&lt;td&gt;$2.10/hr&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;c3.4xlarge&lt;/td&gt;
-&lt;td&gt;–&lt;/td&gt;
-&lt;td&gt;$6.483/hr&lt;/td&gt;
-&lt;td&gt;$4.20/hr&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;c3.8xlarge&lt;/td&gt;
-&lt;td&gt;–&lt;/td&gt;
-&lt;td&gt;$8.688/hr&lt;/td&gt;
-&lt;td&gt;$8.40/hr&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
 </description>
     </item>
     
