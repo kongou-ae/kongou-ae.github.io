@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Asciidoc on Aimless</title>
+    <link>http://aimless.jp/categories/asciidoc/</link>
+    <description>Recent content in Asciidoc on Aimless</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ja</language>
+    <lastBuildDate>Sun, 07 Feb 2016 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://aimless.jp/categories/asciidoc/feed/" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>asciidoctor-pdfで複数行のフッタを作る</title>
+      <link>http://aimless.jp/blog/archives/2016-02-07-build-multiple-line-footer-by-asciidoctor-pdf</link>
+      <pubDate>Sun, 07 Feb 2016 00:00:00 +0000</pubDate>
+      
+      <guid>http://aimless.jp/blog/archives/2016-02-07-build-multiple-line-footer-by-asciidoctor-pdf</guid>
+      <description>
+
+&lt;p&gt;会社のWordテンプレのフッターが複数行なので、asciidoctor-pdfで複数行のフッタを出力する方法を調べました。&lt;/p&gt;
+
+&lt;h2 id=&#34;テーマファイルの書き方:2493613cc362f0c0ba05912c0cc3a509&#34;&gt;テーマファイルの書き方&lt;/h2&gt;
+
+&lt;p&gt;今回は、PDFのフッタにページ番号とコピーライトをつけます。その場合、テーマファイルを以下のように記載します。参考：&lt;a href=&#34;https://github.com/asciidoctor/asciidoctor-pdf/blob/master/docs/theming-guide.adoc#running-header--footer&#34;&gt;Running header &amp;amp; footer&lt;/a&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;footer:
+  font_size: $base_font_size_small
+  font_color: $base_font_color
+  border_color: dddddd
+  border_width: 0.25
+  height: 25mm
+  padding: [3mm,0,0,0]
+  vertical_align: top
+  recto_content:
+    center: |
+        {page-number} / {page-count} +
+        Copyright &amp;amp;#169; hogehoge company CO.,LTD. All right reserved.
+  verso_content: |
+        {page-number} / {page-count} +
+        Copyright &amp;amp;#169; hogehoge company CO.,LTD. All right reserved.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;pdf出力:2493613cc362f0c0ba05912c0cc3a509&#34;&gt;PDF出力&lt;/h2&gt;
+
+&lt;p&gt;asciidoctor-pdfでビルドする際に上記のテーマファイルを利用すると、以下のPDFが生成されます。やりたいことができました。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/images/2016-02-07-001.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

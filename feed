@@ -6,8 +6,47 @@
     <description>Recent content on Aimless</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja</language>
-    <lastBuildDate>Tue, 02 Feb 2016 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 07 Feb 2016 00:00:00 +0000</lastBuildDate>
     <atom:link href="http://aimless.jp/feed/" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>asciidoctor-pdfで複数行のフッタを作る</title>
+      <link>http://aimless.jp/blog/archives/2016-02-07-build-multiple-line-footer-by-asciidoctor-pdf</link>
+      <pubDate>Sun, 07 Feb 2016 00:00:00 +0000</pubDate>
+      
+      <guid>http://aimless.jp/blog/archives/2016-02-07-build-multiple-line-footer-by-asciidoctor-pdf</guid>
+      <description>
+
+&lt;p&gt;会社のWordテンプレのフッターが複数行なので、asciidoctor-pdfで複数行のフッタを出力する方法を調べました。&lt;/p&gt;
+
+&lt;h2 id=&#34;テーマファイルの書き方:2493613cc362f0c0ba05912c0cc3a509&#34;&gt;テーマファイルの書き方&lt;/h2&gt;
+
+&lt;p&gt;今回は、PDFのフッタにページ番号とコピーライトをつけます。その場合、テーマファイルを以下のように記載します。参考：&lt;a href=&#34;https://github.com/asciidoctor/asciidoctor-pdf/blob/master/docs/theming-guide.adoc#running-header--footer&#34;&gt;Running header &amp;amp; footer&lt;/a&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;footer:
+  font_size: $base_font_size_small
+  font_color: $base_font_color
+  border_color: dddddd
+  border_width: 0.25
+  height: 25mm
+  padding: [3mm,0,0,0]
+  vertical_align: top
+  recto_content:
+    center: |
+        {page-number} / {page-count} +
+        Copyright &amp;amp;#169; hogehoge company CO.,LTD. All right reserved.
+  verso_content: |
+        {page-number} / {page-count} +
+        Copyright &amp;amp;#169; hogehoge company CO.,LTD. All right reserved.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;pdf出力:2493613cc362f0c0ba05912c0cc3a509&#34;&gt;PDF出力&lt;/h2&gt;
+
+&lt;p&gt;asciidoctor-pdfでビルドする際に上記のテーマファイルを利用すると、以下のPDFが生成されます。やりたいことができました。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/images/2016-02-07-001.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>flowlogs-readerを使って、VPC Flow Logsをコマンドラインで操作する</title>
@@ -1386,231 +1425,6 @@ base:
 &lt;/ul&gt;&lt;/li&gt;
 &lt;li&gt;必要最低限に装飾したPDFを作る分にはもってこいかも&lt;/li&gt;
 &lt;/ul&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>VPC FLow Logsを継続的にElasticSearchに投入する</title>
-      <link>http://aimless.jp/blog/archives/2617</link>
-      <pubDate>Sun, 14 Jun 2015 00:00:00 +0000</pubDate>
-      
-      <guid>http://aimless.jp/blog/archives/2617</guid>
-      <description>
-
-&lt;p&gt;VPC FLow Logsのリリース直後から、クラメソさんの「&lt;a href=&#34;http://dev.classmethod.jp/cloud/aws/vpc-flow-logs-visualized-kibana4/&#34;&gt;VPC Flow LogsをElasticsearch + Kibana4で可視化する&lt;/a&gt;」と同じことを考えていました。週末に試行錯誤した結果をアウトプットします。&lt;/p&gt;
-
-&lt;h2 id=&#34;ログの取り方:879fe74068b1e39f8423ed492442144f&#34;&gt;ログの取り方&lt;/h2&gt;
-
-&lt;p&gt;　AWS SDK for Ruby を利用してClodWatch Logsを取得する方法は以下の様になります。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;# coding: utf-8
-
-require &amp;#039;aws-sdk-core&amp;#039;
-
-cloudwatchlogs = Aws::CloudWatchLogs::Client.new(region: region )
-
-# cloudwatchlogs.get_log_eventsのオプションを定義
-options = {
-    log_group_name: log_group_name,
-    log_stream_name: log_stream_name,
-}
-
-# ログを取得
-resp = cloudwatchlogs.get_log_events(options)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;　ただし、この方法でログを取得した場合、指定したlog_streamに格納されている大量のデータがレスポンスとして帰ってきます。デフォルトでは最大で1M Byte分のログが取得するようです。&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&#34;http://docs.aws.amazon.com/sdkforruby/api/Aws/CloudWatchLogs/Client.html#get_log_events-instance_method&#34;&gt;Class: Aws::CloudWatchLogs::Client&lt;/a&gt;&lt;/p&gt;
-
-&lt;blockquote&gt;
-&lt;p&gt;By default, this operation returns as much log events as can fit in a response size of 1MB, up to 10,000 log events.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;　したがって、このコードを継続的に実行すると、最初から1M byte分のログを繰り返し取得してしまいます。これでは意味がありません。実行時には、前回実行分以降のログを取得してほしい。これを実現する方法が、&lt;code&gt;get_log_events&lt;/code&gt;の&lt;code&gt;next_token&lt;/code&gt;オプションです。&lt;/p&gt;
-
-&lt;h2 id=&#34;増分ログの取り方:879fe74068b1e39f8423ed492442144f&#34;&gt;増分ログの取り方&lt;/h2&gt;
-
-&lt;p&gt;　&lt;code&gt;get_log_events&lt;/code&gt;のレスポンスには&lt;code&gt;next_forward_token&lt;/code&gt;と&lt;code&gt;next_backward_token&lt;/code&gt;が含まれています。これらは取得結果の次のページの位置を示しています。より新しいログの位置は名前的に&lt;code&gt;next_forward_token&lt;/code&gt;が保持しているっぽいです。&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&#34;http://docs.aws.amazon.com/sdkforruby/api/Aws/CloudWatchLogs/Client.html#get_log_events-instance_method&#34;&gt;Class: Aws::CloudWatchLogs::Client&lt;/a&gt;&lt;/p&gt;
-
-&lt;blockquote&gt;
-&lt;p&gt;resp.events #=&amp;gt; Array&lt;/p&gt;
-
-&lt;p&gt;resp.events[0].timestamp #=&amp;gt; Integer&lt;/p&gt;
-
-&lt;p&gt;resp.events[0].message #=&amp;gt; String&lt;/p&gt;
-
-&lt;p&gt;resp.events[0].ingestion_time #=&amp;gt; Integer&lt;/p&gt;
-
-&lt;p&gt;resp.next_forward_token #=&amp;gt; String&lt;/p&gt;
-
-&lt;p&gt;resp.next_backward_token #=&amp;gt; String&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;　そこで、このtokenを利用して&lt;code&gt;get_log_events&lt;/code&gt;を実行するように、スクリプトを変更します。tokenの値は、fluentdっぽくstateファイルを作り、そこに書き込んでおきます。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;# coding: utf-8
-
-require &amp;#039;aws-sdk-core&amp;#039;
-require &amp;#039;fileutils&amp;#039;
-
-region = &amp;#039;ap-northeast-1&amp;#039;
-log_group_name = &amp;#039;VPCFLowLog&amp;#039;
-log_stream_name = &amp;#039;eni-xxxxxxxx-all&amp;#039;
-@state_file = Dir.pwd + &#34;/&#34; + log_group_name + &#34;.&#34; + log_stream_name + &#34;.state&#34;
-
-# トークンをstateファイルに書き込む
-def write_token(token)
-    File.open(@state_file,&#34;w&#34;) do |file|
-        file.puts(token)
-    end
-end
-
-# トークンをstateファイルから読み込む
-def read_token
-    if File.exist?(@state_file) then
-        return File.read(@state_file).chomp
-    else
-        return 
-    end
-end
-
-cloudwatchlogs = Aws::CloudWatchLogs::Client.new(region: region )
-
-# cloudwatchlogs.get_log_eventsのオプションを定義
-options = {
-    log_group_name: log_group_name,
-    log_stream_name: log_stream_name,
-}
-
-# もしstateファイルから前回のtokenが取得できたら、そのtokenをオプションに追加
-if read_token != nil  then
-    options[:next_token] = read_token
-end
-
-# ログを取得
-resp = cloudwatchlogs.get_log_events(options)
-
-# 取得したログからtokenを保存
-write_token(resp.next_forward_token)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;動作確認:879fe74068b1e39f8423ed492442144f&#34;&gt;動作確認&lt;/h2&gt;
-
-&lt;p&gt;　ElasticSearchに投入済みのデータは以下の通りです。19:25:47までのログが格納されています。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/wp-content/uploads/2015/06/001.png&#34; alt=&#34;投入済みデータ&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;　&lt;code&gt;next_token&lt;/code&gt;をつけて&lt;code&gt;get_log_events&lt;/code&gt;したデータをElasticSearchに投入します。投入時のログは以下の通りです。19:28:40のデータ以降がElasticSearchに投入されていることがわかります。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;2015-06-14 19:38:36 +0900: &amp;gt; {&#34;@timestamp&#34;:&#34;2015-06-14 19:28:40&#34;,&#34;version&#34;:&#34;2&#34;,&#34;account-id&#34;:&#34;250369693989&#34;,&#34;interface-id&#34;:&#34;eni-f5a92c83&#34;,&#34;srcaddr&#34;:&#34;157.7.235.92&#34;,&#34;dstaddr&#34;:&#34;10.175.10.97&#34;,&#34;srcport&#34;:&#34;123&#34;,&#34;dstport&#34;:&#34;123&#34;,&#34;protocol&#34;:&#34;17&#34;,&#34;packets&#34;:&#34;1&#34;,&#34;bytes&#34;:&#34;76&#34;,&#34;start&#34;:&#34;1434277720&#34;,&#34;end&#34;:&#34;1434277760&#34;,&#34;action&#34;:&#34;ACCEPT&#34;,&#34;log-status&#34;:&#34;OK&#34;}
-2015-06-14 19:38:36 +0900: &amp;lt; {&#34;_index&#34;:&#34;aws&#34;,&#34;_type&#34;:&#34;vpcflowlog&#34;,&#34;_id&#34;:&#34;AU3xpkmyyQj6bWWoL4TA&#34;,&#34;_version&#34;:1,&#34;created&#34;:true}
-2015-06-14 19:38:36 +0900: POST http://localhost:9200/aws/vpcflowlog [status:201, request:0.004s, query:n/a]
-2015-06-14 19:38:36 +0900: &amp;gt; {&#34;@timestamp&#34;:&#34;2015-06-14 19:28:40&#34;,&#34;version&#34;:&#34;2&#34;,&#34;account-id&#34;:&#34;250369693989&#34;,&#34;interface-id&#34;:&#34;eni-f5a92c83&#34;,&#34;srcaddr&#34;:&#34;10.175.10.97&#34;,&#34;dstaddr&#34;:&#34;157.7.235.92&#34;,&#34;srcport&#34;:&#34;123&#34;,&#34;dstport&#34;:&#34;123&#34;,&#34;protocol&#34;:&#34;17&#34;,&#34;packets&#34;:&#34;1&#34;,&#34;bytes&#34;:&#34;76&#34;,&#34;start&#34;:&#34;1434277720&#34;,&#34;end&#34;:&#34;1434277760&#34;,&#34;action&#34;:&#34;ACCEPT&#34;,&#34;log-status&#34;:&#34;OK&#34;}
-2015-06-14 19:38:36 +0900: &amp;lt; {&#34;_index&#34;:&#34;aws&#34;,&#34;_type&#34;:&#34;vpcflowlog&#34;,&#34;_id&#34;:&#34;AU3xpkm4yQj6bWWoL4TB&#34;,&#34;_version&#34;:1,&#34;created&#34;:true}
-2015-06-14 19:38:36 +0900: POST http://localhost:9200/aws/vpcflowlog [status:201, request:0.003s, query:n/a]
-2015-06-14 19:38:36 +0900: &amp;gt; {&#34;@timestamp&#34;:&#34;2015-06-14 19:28:40&#34;,&#34;version&#34;:&#34;2&#34;,&#34;account-id&#34;:&#34;250369693989&#34;,&#34;interface-id&#34;:&#34;eni-f5a92c83&#34;,&#34;srcaddr&#34;:&#34;162.255.180.213&#34;,&#34;dstaddr&#34;:&#34;10.175.10.97&#34;,&#34;srcport&#34;:&#34;1982&#34;,&#34;dstport&#34;:&#34;445&#34;,&#34;protocol&#34;:&#34;6&#34;,&#34;packets&#34;:&#34;2&#34;,&#34;bytes&#34;:&#34;96&#34;,&#34;start&#34;:&#34;1434277720&#34;,&#34;end&#34;:&#34;1434277760&#34;,&#34;action&#34;:&#34;REJECT&#34;,&#34;log-status&#34;:&#34;OK&#34;}
-2015-06-14 19:38:36 +0900: &amp;lt; {&#34;_index&#34;:&#34;aws&#34;,&#34;_type&#34;:&#34;vpcflowlog&#34;,&#34;_id&#34;:&#34;AU3xpkm9yQj6bWWoL4TC&#34;,&#34;_version&#34;:1,&#34;created&#34;:true}
-2015-06-14 19:38:36 +0900: POST http://localhost:9200/aws/vpcflowlog [status:201, request:0.003s, query:n/a]
-（中略）
-2015-06-14 19:38:36 +0900: &amp;gt; {&#34;@timestamp&#34;:&#34;2015-06-14 19:35:22&#34;,&#34;version&#34;:&#34;2&#34;,&#34;account-id&#34;:&#34;250369693989&#34;,&#34;interface-id&#34;:&#34;eni-f5a92c83&#34;,&#34;srcaddr&#34;:&#34;10.175.10.97&#34;,&#34;dstaddr&#34;:&#34;46.17.98.184&#34;,&#34;srcport&#34;:&#34;22&#34;,&#34;dstport&#34;:&#34;27530&#34;,&#34;protocol&#34;:&#34;6&#34;,&#34;packets&#34;:&#34;1&#34;,&#34;bytes&#34;:&#34;48&#34;,&#34;start&#34;:&#34;1434278122&#34;,&#34;end&#34;:&#34;1434278181&#34;,&#34;action&#34;:&#34;ACCEPT&#34;,&#34;log-status&#34;:&#34;OK&#34;}
-2015-06-14 19:38:36 +0900: &amp;lt; {&#34;_index&#34;:&#34;aws&#34;,&#34;_type&#34;:&#34;vpcflowlog&#34;,&#34;_id&#34;:&#34;AU3xpkoQyQj6bWWoL4TY&#34;,&#34;_version&#34;:1,&#34;created&#34;:true}
-2015-06-14 19:38:36 +0900: POST http://localhost:9200/aws/vpcflowlog [status:201, request:0.002s, query:n/a]
-2015-06-14 19:38:36 +0900: &amp;gt; {&#34;@timestamp&#34;:&#34;2015-06-14 19:36:55&#34;,&#34;version&#34;:&#34;2&#34;,&#34;account-id&#34;:&#34;250369693989&#34;,&#34;interface-id&#34;:&#34;eni-f5a92c83&#34;,&#34;srcaddr&#34;:&#34;199.203.59.117&#34;,&#34;dstaddr&#34;:&#34;10.175.10.97&#34;,&#34;srcport&#34;:&#34;26600&#34;,&#34;dstport&#34;:&#34;80&#34;,&#34;protocol&#34;:&#34;6&#34;,&#34;packets&#34;:&#34;1&#34;,&#34;bytes&#34;:&#34;48&#34;,&#34;start&#34;:&#34;1434278215&#34;,&#34;end&#34;:&#34;1434278241&#34;,&#34;action&#34;:&#34;REJECT&#34;,&#34;log-status&#34;:&#34;OK&#34;}
-2015-06-14 19:38:36 +0900: &amp;lt; {&#34;_index&#34;:&#34;aws&#34;,&#34;_type&#34;:&#34;vpcflowlog&#34;,&#34;_id&#34;:&#34;AU3xpkoTyQj6bWWoL4TZ&#34;,&#34;_version&#34;:1,&#34;created&#34;:true}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;　投入後のデータ一覧は以下の通りです。19:25:47以前のログが重複登録されることなく、19:25:47以降のログが増えました！！！&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/wp-content/uploads/2015/06/002.png&#34; alt=&#34;投入済みデータ&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;　それっぽく動いたスクリプトは以下の通りです。cronで回してみてみようと思います。&lt;/p&gt;
-
-&lt;p&gt;　&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;# coding: utf-8
-
-require &#34;json&#34;
-require &amp;#039;aws-sdk-core&amp;#039;
-require &amp;#039;elasticsearch&amp;#039;
-require &amp;#039;fileutils&amp;#039;
-
-region = &amp;#039;ap-northeast-1&amp;#039;
-log_group_name = &amp;#039;VPCFLowLog&amp;#039;
-log_stream_name = &amp;#039;eni-xxxxxxxx-all&amp;#039;
-@state_file = Dir.pwd + &#34;/&#34; + log_group_name + &#34;.&#34; + log_stream_name + &#34;.state&#34;
-
-# トークンをstateファイルに書き込む
-def write_token(token)
-    File.open(@state_file,&#34;w&#34;) do |file|
-        file.puts(token)
-    end
-end
-
-# トークンをstateファイルから読み込む
-def read_token
-    if File.exist?(@state_file) then
-        return File.read(@state_file).chomp
-    else
-        return 
-    end
-end
-
-cloudwatchlogs = Aws::CloudWatchLogs::Client.new(region: region )
-
-# cloudwatchlogs.get_log_eventsのオプションを定義
-options = {
-    log_group_name: log_group_name,
-    log_stream_name: log_stream_name,
-}
-
-# もしstateファイルから前回のtokenが取得できたら、そのtokenをオプションに追加
-if read_token != nil  then
-    options[:next_token] = read_token
-end
-
-# ログを取得
-resp = cloudwatchlogs.get_log_events(options)
-
-# 取得したログからtokenを保存
-write_token(resp.next_forward_token)
-
-hash = {}
-message_elements = Array.new()
-
-message_field = [
-    &#34;version&#34;,
-    &#34;account-id&#34;,
-    &#34;interface-id&#34;,
-    &#34;srcaddr&#34;,
-    &#34;dstaddr&#34;,
-    &#34;srcport&#34;,
-    &#34;dstport&#34;,
-    &#34;protocol&#34;,
-    &#34;packets&#34;,
-    &#34;bytes&#34;,
-    &#34;start&#34;,
-    &#34;end&#34;,
-    &#34;action&#34;,
-    &#34;log-status&#34;]
-
-resp.events.each {|event|
-
-    hash[&#34;@timestamp&#34;] = Time.at(event.timestamp/1000.0).strftime(&amp;#039;%Y-%m-%d %H:%M:%S&amp;#039;)
-    message_elements = event.message.split(&#34; &#34;)
-    message_elements.each.with_index(0)  {|element,i|
-        hash[message_field[i]] = element
-    }
-
-    # BytesとPacketsをInteger型にすると、NODATAの時の-が型エラーになるので、捨てる
-    if hash[&#34;log-status&#34;] != &#34;NODATA&#34; then
-        client = Elasticsearch::Client.new(hosts: &#34;localhost:9200&#34;,log: true)
-        client.index(index:&#34;aws&#34;, type:&#34;vpcflowlog&#34;, body:hash.to_json)
-    end
-}
-&lt;/code&gt;&lt;/pre&gt;
 </description>
     </item>
     
