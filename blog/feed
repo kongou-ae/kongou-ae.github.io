@@ -6,8 +6,99 @@
     <description>Recent content in Blogs on Aimless</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja</language>
-    <lastBuildDate>Sun, 07 Feb 2016 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 09 Feb 2016 00:00:00 +0000</lastBuildDate>
     <atom:link href="http://aimless.jp/blog/feed/" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>RedPenで「開いた（平仮名）のほうが読みやすくなる表現一覧」をチェックする</title>
+      <link>http://aimless.jp/blog/archives/2016-02-09-check-the-readable-expression-by-redpen</link>
+      <pubDate>Tue, 09 Feb 2016 00:00:00 +0000</pubDate>
+      
+      <guid>http://aimless.jp/blog/archives/2016-02-09-check-the-readable-expression-by-redpen</guid>
+      <description>
+
+&lt;p&gt;RedPenのJavaScript拡張を利用して、&lt;a href=&#34;http://www.danshihack.com/2015/06/04/junp/twitter-editter-kana.html&#34;&gt;プロの編集が教える「開いた（平仮名）のほうが読みやすくなる表現一覧」が超勉強になると話題&lt;/a&gt;に乗っている修正事項をチェックしてみました。&lt;/p&gt;
+
+&lt;h2 id=&#34;javascript拡張:168337d188fe34a2b2c2d8d61b97e765&#34;&gt;Javascript拡張&lt;/h2&gt;
+
+&lt;p&gt;表現一覧から、日常で使ってしまいそうな表現だけをチェックするようにします。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ cat js/easyReadCheck.js
+function validateSentence(sentence) {
+
+  var checkKeywordObj = {
+    &#39;更に&#39; : &#39;さらに&#39;,
+    &#39;殆ど&#39; : &#39;ほとんど&#39;,
+    &#39;下さい&#39; : &#39;ください&#39;,
+    &#39;何時か&#39; : &#39;いつか&#39;,
+    &#39;事&#39; : &#39;こと&#39;,
+    &#39;何時か&#39; : &#39;いつか&#39;,
+    &#39;何処か&#39; : &#39;どこか&#39;,
+    &#39;何故か&#39; : &#39;なぜか&#39;,
+    &#39;後で&#39; : &#39;あとで&#39;,
+    &#39;出来るだけ&#39; : &#39;できるだけ&#39;,
+    &#39;ひと通り&#39; : &#39;ひととおり&#39;,
+    &#39;丁度&#39; : &#39;ちょうど&#39;,
+    &#39;時間が経つ&#39; : &#39;時間がたつ&#39;,
+    &#39;何でも&#39; : &#39;なんでも&#39;,
+  }
+
+  // 各センテンスに対して、checkKeywordObj分処理を実施
+  for (var i = 0; i &amp;lt; Object.keys(checkKeywordObj).length; i++) {
+    // キーワードを正規表現にセット
+    var regex = new RegExp(Object.keys(checkKeywordObj)[i])
+    // もしセンテンスの文章がcheckKeywordObjにマッチしたら
+    if ( sentence.content.match(regex) ){
+      // そのセンテンスが自然言語処理された結果を総当たり
+      for (var j = 0; j &amp;lt; sentence.tokens.length; j++) {
+        // 自然言語解析の結果とキーワードが一致したらエラーメッセージを出力
+        if ( sentence.tokens[j].surface == Object.keys(checkKeywordObj)[i] ){
+          addError(&#39;「&#39; + sentence.tokens[j].surface + &#39;」を「&#39; + checkKeywordObj[Object.keys(checkKeywordObj)[i]] + &#39;」に修正してください&#39;, sentence);            
+        }
+      }
+    }
+  }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;テストしてみる:168337d188fe34a2b2c2d8d61b97e765&#34;&gt;テストしてみる&lt;/h2&gt;
+
+&lt;p&gt;以下の文章をテストしてみます。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;ごはんの事である。何時かご飯を食べて下さい。
+
+あなたはご飯を食べる事が出来ます。更に、ラーメンを食べることもできます。
+
+事件は会議室で起きてるんじゃない。現場で起きているんだ。
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;ちゃんとエラーになりました。ブログをデプロイしているCircleCIでも使おう。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;[2016-02-09 01:05:48.540][INFO ] cc.redpen.Main - Configuration file: /home/aimless/study/document/redpen/redpen-distribution-1.4.1/conf/blog.xml
+[2016-02-09 01:05:48.549][INFO ] cc.redpen.ConfigurationLoader - Loading config from specified config file: &amp;quot;/home/aimless/study/document/redpen/redpen-distribution-1.4.1/conf/blog.xml&amp;quot;
+[2016-02-09 01:05:48.562][INFO ] cc.redpen.ConfigurationLoader - Succeeded to load configuration file
+[2016-02-09 01:05:48.563][INFO ] cc.redpen.ConfigurationLoader - Language is set to &amp;quot;ja&amp;quot;
+[2016-02-09 01:05:48.563][WARN ] cc.redpen.ConfigurationLoader - No type configuration...
+[2016-02-09 01:05:48.564][INFO ] cc.redpen.ConfigurationLoader - No &amp;quot;symbols&amp;quot; block found in the configuration
+[2016-02-09 01:05:48.637][INFO ] cc.redpen.config.SymbolTable - &amp;quot;ja&amp;quot; is specified.
+[2016-02-09 01:05:48.638][INFO ] cc.redpen.config.SymbolTable - &amp;quot;normal&amp;quot; type is specified
+[2016-02-09 01:05:49.178][INFO ] cc.redpen.parser.SentenceExtractor - &amp;quot;[。, ？, ！]&amp;quot; are added as a end of sentence characters
+[2016-02-09 01:05:49.178][INFO ] cc.redpen.parser.SentenceExtractor - &amp;quot;[’, ”]&amp;quot; are added as a right quotation characters
+[2016-02-09 01:05:49.193][INFO ] cc.redpen.validator.Validator - max_num is set to 1500
+[2016-02-09 01:05:49.195][INFO ] cc.redpen.validator.Validator - max_num is not set. Use default value of 5
+[2016-02-09 01:05:49.198][INFO ] cc.redpen.validator.JavaScriptValidator - JavaScript validators directory: /home/aimless/study/document/redpen/redpen-distribution-1.4.1/js
+test2.md:1: ValidationError[ParagraphNumber], The number of paragraphs exceeds the maximum of 7. at line: 実行
+test2.md:12: ValidationError[JavaScript], [spellCheck.js] Fortigateはスペルミスの可能性があります at line: Fortigate
+test2.md:14: ValidationError[JavaScript], [spellCheck.js] Javascriptはスペルミスの可能性があります at line: Javascript
+test2.md:16: ValidationError[JavaScript], [easyReadCheck.js] 「事」を「こと」に修正してください at line: ごはんの事である。
+test2.md:16: ValidationError[JavaScript], [easyReadCheck.js] 「下さい」を「ください」に修正してください at line: 何時かご飯を食べて下さい。
+test2.md:18: ValidationError[JavaScript], [easyReadCheck.js] 「事」を「こと」に修正してください at line: あなたはご飯を食べる事が出来ます。
+test2.md:18: ValidationError[JavaScript], [easyReadCheck.js] 「更に」を「さらに」に修正してください at line: 更に、ラーメンを食べることもできます。
+
+[2016-02-09 01:05:50.390][ERROR] cc.redpen.Main - The number of errors &amp;quot;7&amp;quot; is larger than specified (limit is &amp;quot;1&amp;quot;).
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
     
     <item>
       <title>asciidoctor-pdfで複数行のフッタを作る</title>
@@ -1214,217 +1305,6 @@ end
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;　なお、書き換えた後に気が付いたのですが、Redmine CORSをRedmine3.0で動作させるためのプルリクエストが出てますね。。。&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>asciidocをPDFに変換してみた（asciidoctor-pdf）</title>
-      <link>http://aimless.jp/blog/archives/2641</link>
-      <pubDate>Wed, 01 Jul 2015 00:00:00 +0000</pubDate>
-      
-      <guid>http://aimless.jp/blog/archives/2641</guid>
-      <description>
-
-&lt;p&gt;&lt;a href=&#34;http://aimless.jp/blog/blog/archives/2506&#34;&gt;気軽にドキュメントを書く&lt;/a&gt;シリーズです。&lt;/p&gt;
-
-&lt;p&gt;asciidocで書き、asciidoctor-pdfでさくっとPDFにするというソリューションがあるようなので試行錯誤を繰り返した結果、&lt;a href=&#34;https://gist.githubusercontent.com/kongou-ae/a3df7fb5aedf644acd72/raw/3227df201731519db0974813c1ff1f49dff19cc3/README.adoc&#34;&gt;この.adoc&lt;/a&gt;を&lt;a href=&#34;http://aimless.jp/blog/wp-content/uploads/2015/07/README.pdf&#34;&gt;このPDF&lt;/a&gt;に変換できるようになりました。&lt;/p&gt;
-
-&lt;p&gt;使い方ではまった箇所をメモしておきます。&lt;/p&gt;
-
-&lt;h2 id=&#34;インストール:0276447e54b8cc1adc3ebe7f7301ea42&#34;&gt;インストール&lt;/h2&gt;
-
-&lt;p&gt;githubのREADMEに書いてある通り、gemでインストールするだけ。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;$ gem install --pre asciidoctor-pdf
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;デフォルトのテーマでpdfに変換する:0276447e54b8cc1adc3ebe7f7301ea42&#34;&gt;デフォルトのテーマでPDFに変換する&lt;/h2&gt;
-
-&lt;p&gt;asciidoctor-pdfコマンドを利用します。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;$ asciidoctor-pdf basic-example.adoc
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;自作テーマを利用してpdfに変換する:0276447e54b8cc1adc3ebe7f7301ea42&#34;&gt;自作テーマを利用してPDFに変換する&lt;/h2&gt;
-
-&lt;p&gt;&lt;a href=&#34;https://github.com/asciidoctor/asciidoctor-pdf/blob/master/docs/theming-guide.adoc&#34;&gt;Asciidoctor PDF Theming Guide&lt;/a&gt;に記載されている通り、自分なりのテーマを作ることができます。テーマを自作するにあたっては、&lt;a href=&#34;https://github.com/asciidoctor/asciidoctor-pdf/blob/master/data/themes/default-theme.yml&#34;&gt;デフォルトテーマ&lt;/a&gt;の記載内容が参考になります。&lt;/p&gt;
-
-&lt;p&gt;今回は&lt;a href=&#34;https://gist.github.com/kongou-ae/46291f86c53d959271a7&#34;&gt;basic-theme.yml&lt;/a&gt;を作りました。ファイルはresources/themes配下に配置されています。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;$ tree
-.
-|-- build.sh
-|-- README.adoc
-|-- README.pdf
-|-- README.pdfmarks
-`-- resources
-    |-- fonts
-    |-- images
-    `-- themes
-        |-- basic-theme.yml
-        `-- header-img-10mm.png
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;自作テーマを利用するためには、asciidoctor-pdfコマンドの-aオプションで、pdf-stylesdirとpdf-styleを指定します。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;asciidoctor-pdf -a pdf-stylesdir=/resources/themes -a pdf-style=basic README.adoc
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;ページ番号を振る:0276447e54b8cc1adc3ebe7f7301ea42&#34;&gt;ページ番号を振る&lt;/h2&gt;
-
-&lt;p&gt;ヘッダーとフッターにページ番号を振ることができます。今回は、.adocに:pagenums:を設定した上で、テーマファイルにページ番号の具体的なスタイルを記載します。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;$ more README.adoc                                                                                   
-= ほげほげサービス仕様書
-ほげほげ株式会社 &amp;lt;doc.writer@example.jp&amp;gt;
-v1.0, 2014-01-01
-:toc:
-:toc-title: 目次
-:figure-caption: 図
-:table-caption: 表
-:toclevels: 2
-:pagenums:
-:sectnums:
-:imagesdir: resources/images/
-
-
-== はじめに
-
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;今回はフッターの真ん中にページ番号を表示してみましょう。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;footer:
-  font_size: $base_font_size_small
-  font_color: $base_font_color
-  border_color: dddddd
-  border_width: 0.25
-  height: 25mm
-  padding: [3mm,0,0,0]
-  valign: top
-  recto_content:
-    center: &amp;#039;{page-number} / {page-count}&amp;#039;
-  verso_content:
-    center: &amp;#039;{page-number} / {page-count}&amp;#039;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;このようにフッターにページ番号が表示されます。今回はフッターにページ番号を付与しましたが、ヘッダーに付与することも可能です。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/wp-content/uploads/2015/07/asciidoctor_page_number.png&#34; alt=&#34;フッタ&#34; /&gt;&lt;/p&gt;
-
-&lt;h2 id=&#34;ヘッダーやフッターに画像を追加する:0276447e54b8cc1adc3ebe7f7301ea42&#34;&gt;ヘッダーやフッターに画像を追加する&lt;/h2&gt;
-
-&lt;p&gt;ヘッダーやフッターに画像を追加することが可能です。まずは。追加したい画像をテーマと同じディレクトリに配置します。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;$ tree
-.
-|-- build.sh
-|-- README.adoc
-|-- README.pdf
-|-- README.pdfmarks
-`-- resources
-    |-- fonts
-    |-- images
-    `-- themes
-        |-- basic-theme.yml
-        `-- header-img-10mm.png
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;そして、以下の様に設定します。今回はrecto_content_rightに画像を表示します。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;header:
-  font_size: $base_font_size_small
-  font_color: $base_font_color
-  border_color: dddddd
-  border_width: 0.25
-  height: 25mm
-  padding: [0,0,3mm,0]
-  valign: bottom
-  image_valign: 50
-  recto_content:
-    left: &amp;#039;{document-title}&amp;#039;
-    right: image:header-img-10mm.png[width=&#34;75&#34;]
-  verso_content:
-    left: &amp;#039;{document-title}&amp;#039;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;ヘッダの右に画像が表示されました。ただしverso_content_rightにはimageを指定していないので、右ページには画像が出ますが、左ページには画像が出ません。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/wp-content/uploads/2015/07/asciidoctor_header_image.png&#34; alt=&#34;ヘッダーに画像&#34; /&gt;&lt;/p&gt;
-
-&lt;h2 id=&#34;フォントを指定する:0276447e54b8cc1adc3ebe7f7301ea42&#34;&gt;フォントを指定する&lt;/h2&gt;
-
-&lt;p&gt;デフォルトでは以下3種類のフォントが利用可能です。これら以外のフォントを利用することも可能です。&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;NotoSerif&lt;/li&gt;
-&lt;li&gt;Mplus1mn&lt;/li&gt;
-&lt;li&gt;Mplus1pMultilingual&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Mplus1pMultilingual　にはboldがないので、migmix-1pを利用してみましょう。&lt;/p&gt;
-
-&lt;p&gt;今回はresources/fonts配下にフォントを配置します。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;$ tree                                                                                   
-.
-|-- build.sh
-|-- README.adoc
-|-- README.pdf
-|-- README.pdfmarks
-`-- resources
-    |-- fonts
-    |   `-- migmix-1p
-    |       |-- ipag00303
-    |       |   |-- IPA_Font_License_Agreement_v1.0.txt
-    |       |   `-- Readme_ipag00303.txt
-    |       |-- migmix-1p-bold.ttf
-    |       |-- migmix-1p-regular.ttf
-    |       `-- migmix-README.txt
-    |-- images
-    `-- themes
-        |-- basic-theme.yml
-        `-- header-img-10mm.png
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;テーマファイルでmigmixを使うことを宣言します。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;font:
-  catalog:
-    migmix:
-      normal: migmix-1p/migmix-1p-regular.ttf
-      bold: migmix-1p/migmix-1p-bold.ttf
-      italic: migmix-1p/migmix-1p-regular.ttf
-      bold_italic: migmix-1p/migmix-1p-bold.ttf
-  fallbacks:
-    - migmix                                                                                                               
-page:
-  background_color: ffffff
-  layout: portrait
-  margin: [30mm, 30mm, 30mm, 30mm]
-  size: A4
-base:
-  font_color: 000000
-  font_family: migmix
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;asciidoctor-pdfコマンドの-aオプションでpdf-fontsdirを指定します。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;asciidoctor-pdf -a pdf-stylesdir=/resources/themes -a pdf-style=basic -a pdf-fontsdir=/resources/fonts README.adoc
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;所感:0276447e54b8cc1adc3ebe7f7301ea42&#34;&gt;所感&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;PDFは綺麗に描画された。&lt;/li&gt;
-&lt;li&gt;描画に至るまでの準備が簡単&lt;/li&gt;
-&lt;li&gt;テーマのスタイルファイルは独自形式なので、CSSでの装飾と比べると自由度は狭い。
-
-&lt;ul&gt;
-&lt;li&gt;たとえば、現在の私の力では、テーブルの横幅を縮めることができない。[width=&amp;#8221;50&amp;#8243;]で表の横幅が50%になるはずなのだが、PDFに表示される表の横幅は100%になってしまいまう&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;必要最低限に装飾したPDFを作る分にはもってこいかも&lt;/li&gt;
-&lt;/ul&gt;
 </description>
     </item>
     
