@@ -68,13 +68,13 @@
     <article>
       
 
-<h2 id="vpc-flow-logsを集計する:d0bfa746f19592eaf28db7706d4dafcb">VPC FLow Logsを集計する</h2>
+<h2 id="vpc-flow-logsを集計する:320ff6ce6994bb2aaced8a03bd0f5215">VPC FLow Logsを集計する</h2>
 
 <p><a href="http://aimless.jp/blog/archives/2016-02-02-retrieving-aws-vpc-flow-logs-using-flowlogs-reader/">flowlogs-readerを使って、VPC Flow Logsをコマンドラインで操作する</a>にて、flowlogs-readerの標準出力をawkで集計する方法を紹介しました。</p>
 
-<p>ですが、この方法は自分が意図するシェル芸を考えることが大変です。もう少しスマートなやり方はないものかと考えた結果、Apache Drillを使う方法を思いついたので試してみました。</p>
+<p>ですが、この方法は、自分が意図するシェル芸を考えることが大変です。もう少しスマートなやり方はないものかと考えた結果、Apache Drillを使う方法を思いついたので試してみました。</p>
 
-<h2 id="apache-drillのインストール:d0bfa746f19592eaf28db7706d4dafcb">Apache Drillのインストール</h2>
+<h2 id="apache-drillのインストール:320ff6ce6994bb2aaced8a03bd0f5215">Apache Drillのインストール</h2>
 
 <p>とりあえず使うことを目的としますので、tar.gzをダウンロードして解凍するだけにします。</p>
 
@@ -121,7 +121,7 @@ OpenJDK 64-Bit Server VM warning: INFO: os::commit_memory(0x00000006e0000000, 14
 # /tmp/jvm-10501/hs_error.log
 </code></pre>
 
-<h2 id="集計元データの作成:d0bfa746f19592eaf28db7706d4dafcb">集計元データの作成</h2>
+<h2 id="集計元データの作成:320ff6ce6994bb2aaced8a03bd0f5215">集計元データの作成</h2>
 
 <p>flowlogs-readerの標準出力をawkでCSV形式にします。</p>
 
@@ -161,7 +161,7 @@ time,srcaddr,dstaddr,srcport,dstport,protocol,bytes,result
 <pre><code>sed -i -e &quot;s/-/0/g&quot; /home/xxxxxxxx/result.csvh  
 </code></pre>
 
-<h2 id="集計してみる:d0bfa746f19592eaf28db7706d4dafcb">集計してみる</h2>
+<h2 id="集計してみる:320ff6ce6994bb2aaced8a03bd0f5215">集計してみる</h2>
 
 <p>とりあえずselectしてみましょう。CSVH形式にすると追加したヘッダがカラムになります。これならば集計できますね。</p>
 
@@ -246,7 +246,7 @@ time,srcaddr,dstaddr,srcport,dstport,protocol,bytes,result
 24 rows selected (0.714 seconds)
 </code></pre>
 
-<h2 id="所感:d0bfa746f19592eaf28db7706d4dafcb">所感</h2>
+<h2 id="所感:320ff6ce6994bb2aaced8a03bd0f5215">所感</h2>
 
 <p>VPC Flow Logsを分析する手法として、Apache Drillを試しました。CSVファイルに対してmysqlライクなクエリを投げられるのが大変便利だなと思いました。Apache Drillを使っても自分がやりたいことをクエリにしなければなりませんが、シェル芸のワンライナーを考えるよりもmysqlライクなクエリを考える方が簡単です。</p>
 
