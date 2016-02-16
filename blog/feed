@@ -6,8 +6,68 @@
     <description>Recent content in Blogs on Aimless</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja</language>
-    <lastBuildDate>Sun, 14 Feb 2016 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 16 Feb 2016 00:00:00 +0000</lastBuildDate>
     <atom:link href="http://aimless.jp/blog/feed/" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>asciidoctor-pdfでそれっぽい表紙を作る</title>
+      <link>http://aimless.jp/blog/archives/2016-02-16-titlepage-of-pdffile-created-by-asciidoctorpdf</link>
+      <pubDate>Tue, 16 Feb 2016 00:00:00 +0000</pubDate>
+      
+      <guid>http://aimless.jp/blog/archives/2016-02-16-titlepage-of-pdffile-created-by-asciidoctorpdf</guid>
+      <description>
+
+&lt;h2 id=&#34;デフォルトの表紙:5feccf674ee677e899c7266b1cf01563&#34;&gt;デフォルトの表紙&lt;/h2&gt;
+
+&lt;p&gt;asciidoctor-pdfでは、H1と以下2行をもとに表紙が生成されます。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;= ウルトラスペシャル ハイパーギガンティックサービス サービス仕様書: ミラクルマジカル編
+ほげほげ株式会社 &amp;lt;doc.writer@example.jp&amp;gt;
+v1.0, 2014-01-01
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;テーマをカスタマイズせずにPDFを生成すると、以下のような形になります。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/images/2016-02-16-001.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;テーマファイルを使って表紙をカスタマイズする:5feccf674ee677e899c7266b1cf01563&#34;&gt;テーマファイルを使って表紙をカスタマイズする&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://github.com/asciidoctor/asciidoctor-pdf/blob/master/docs/theming-guide.adoc#title-page&#34;&gt;テーマファイルのコンフィグ例&lt;/a&gt;をもとに、表紙をカスタマイズしてみます。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;title_page:
+  align: center
+  title_top: 40%
+  title_font_size: $heading_h1_font_size
+  title_font_color: 000000
+  title_line_height: 0.9
+  subtitle_font_size: $heading_h3_font_size
+  subtitle_line_height: 3
+  authors_margin_top: $base_font_size * 3
+  authors_font_size: $base_font_size_large
+  authors_font_color: 181818
+  revision_margin_top: $base_font_size * 3
+  logo_image: image:889.png[scaledwidth=25%]
+  logo_top: 75%
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;かっこよくなりました。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/images/2016-02-16-002.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;タイトルの改行位置を調整する:5feccf674ee677e899c7266b1cf01563&#34;&gt;タイトルの改行位置を調整する&lt;/h2&gt;
+
+&lt;p&gt;タイトルが変な位置で改行されてしまっているので修正します。H1の文字列をで区切ることで、PDFのタイトルを任意の位置で改行することができます。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt; = ウルトラスペシャル ハイパーギガンティック エターナルフォースサービス サービス仕様書: ミラクルマジカル編
+ほげほげ株式会社 &amp;lt;doc.writer@example.jp&amp;gt;
+v1.0, 2014-01-01
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/images/2016-02-16-003.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;狙った位置でタイトルが改行されました。可読性を向上させることができました。&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>Apache Drill を使ってVPC Flow Logsを集計する</title>
@@ -1341,69 +1401,6 @@ Error: httpd24 conflicts with httpd-2.2.31-1.6.amzn1.x86_64
 &lt;p&gt;　お店の方は「いらなければ全部変更してくださいね」「（説明資料をマーキングしたうえで）これを外してくださいね」ときちんと説明してくれました。また、説明資料にはオプションサービスの解約方法がしっかり書いてありました。そのため、いらいないサービスを押し付けられたにも関わらず、お店の印象は悪くないという不思議。気持ちよく儀式を終えることができました。&lt;/p&gt;
 
 &lt;p&gt;　「100発撃てば1発はあたる」と思ってやっているんでしょうが、この儀式、いったい誰の指示なんでしょうね。&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>API Gateway &#43; Lambdaを使って、マルチクラウド管理APIを作る</title>
-      <link>http://aimless.jp/blog/archives/2679</link>
-      <pubDate>Sat, 18 Jul 2015 00:00:00 +0000</pubDate>
-      
-      <guid>http://aimless.jp/blog/archives/2679</guid>
-      <description>&lt;p&gt;「単一のREST APIで複数のクラウドを操作できたら便利だろうなー」と思い調べてみたところ、以下のようなライブラリを見つけました。&lt;/p&gt;
-
-&lt;table&gt;
-&lt;thead&gt;
-&lt;tr&gt;
-&lt;th&gt;言語&lt;/th&gt;
-&lt;th&gt;ライブラリ&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
-
-&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td&gt;Ruby&lt;/td&gt;
-&lt;td&gt;DeltaCloud&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;Python&lt;/td&gt;
-&lt;td&gt;libcloud&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;Node.js&lt;/td&gt;
-&lt;td&gt;pkgcloud&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;Golang&lt;/td&gt;
-&lt;td&gt;Gophercloud&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;p&gt;　ライブラリによってサポートするクラウドプロバイダーが異なり、さらに管理できるサービスと管理できないサービスがあります。どれか一つのライブラリと心中するのは、少々リスクだと思いました。&lt;/p&gt;
-
-&lt;p&gt;　「何か他にいい方法はないかなー」と調べていたところに、Amazon API Gatewayがリリースされました。API Gatewayを利用すると、API Gateway経由でLambdaを実行することができます。LambdaではNode.jsとjavaが動きます。主要なクラウドにはNode.jsやjavaのSDKが存在します。つまり、API Gatewayを利用すれば、自分のやりたいことができる、マルチクラウド管理APIを作れそうな気がしました。&lt;/p&gt;
-
-&lt;p&gt;　というわけで実践。AzureとAWSのインスタンス情報をまとめて返すAPIを作ってみます。&lt;/p&gt;
-
-&lt;p&gt;　API Gatewayでは、/computeがGETされた場合にLambdaファンクションを発火するようにします。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/wp-content/uploads/2015/07/api_gateway_setting.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;　そして、対応するLambdaファンクションでは以下のコードを動かします。SDKを利用して各クラウドのインスタンス情報を取得し配列に格納し、その配列を返すスクリプトです。&lt;/p&gt;
-
-&lt;p&gt;　とりあえずということで、認証情報の扱いは適当です。AWSの認証情報はコード内にベタ書きします。Azureの証明書は、lambdaファンクションのZIPに含めます。実際のところは、API Gatewayにアクセスする際のHTTPヘッダに認証情報を含め、Lambdaファンクションに渡す方法がカッコいいと思います。&lt;/p&gt;
-
-&lt;script src=&#34;https://gist.github.com/kongou-ae/ad0b1366da2ee5efbbaa.js&#34;&gt;&lt;/script&gt;
-
-&lt;p&gt;　ブラウザでAPI Gatewayの/computeにアクセスすると、以下のJSONが返ってきます。AzureとAWSのインスタンス情報が一つのJSONのレスポンスになっています。いい感じですね。このレスポンスをJavascriptでいい感じに表示するHTMLを作ってS3に配置すれば、サーバレスのマルチクラウド管理ポータルが作れるかも？&lt;/p&gt;
-
-&lt;script src=&#34;https://gist.github.com/kongou-ae/825a49a087311e0814ad.js&#34;&gt;&lt;/script&gt;
-
-&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/wp-content/uploads/2015/07/result_of_api.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
 </description>
     </item>
     
