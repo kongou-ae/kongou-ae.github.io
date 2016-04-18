@@ -6,8 +6,34 @@
     <description>Recent content on Aimless</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja</language>
-    <lastBuildDate>Tue, 16 Feb 2016 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 18 Apr 2016 00:00:00 +0000</lastBuildDate>
     <atom:link href="http://aimless.jp/feed/" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Gmailを使ってZabbix3.0のアラートメールを送る</title>
+      <link>http://aimless.jp/blog/archives/2016-04-18-sending-zabbix-alert-mail-by-gmail</link>
+      <pubDate>Mon, 18 Apr 2016 00:00:00 +0000</pubDate>
+      
+      <guid>http://aimless.jp/blog/archives/2016-04-18-sending-zabbix-alert-mail-by-gmail</guid>
+      <description>
+
+&lt;p&gt;Zabbix3.0からメールの暗号化方式にSTARTTLSとSSL/TLSが選択できるようになったようです。（&lt;a href=&#34;https://www.zabbix.com/documentation/3.0/manual/config/notifications/media/email&#34;&gt;参考：1 E-mail&lt;/a&gt;）&lt;/p&gt;
+
+&lt;p&gt;というわけで、GmailのSMTPサーバを使ってアラートメールを送信してみました。SMTP heloは適当です。&lt;/p&gt;
+
+&lt;h3 id=&#34;設定:bf42c88477c8d52859eb3bfe8b32c7a6&#34;&gt;設定&lt;/h3&gt;
+
+&lt;p&gt;管理＞メディアタイプから以下の通り設定します。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/images/2016-04-18-001.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;動作確認:bf42c88477c8d52859eb3bfe8b32c7a6&#34;&gt;動作確認&lt;/h3&gt;
+
+&lt;p&gt;無事メールが届きました。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/images/2016-04-18-002.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>asciidoctor-pdfでそれっぽい表紙を作る</title>
@@ -1303,104 +1329,6 @@ Error: httpd24 conflicts with httpd-2.2.31-1.6.amzn1.x86_64
 &lt;p&gt;　少々待つと、CloudwatchのエラーがSNS経由で通知されました。これで@ipv6kumaに何かあった場合、気が付くことができます。&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/images/2015-10-25-06.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>ソフトバンクショップでiPhone 6s Plusに機種変更したら、5137円/月のオプションが付いた</title>
-      <link>http://aimless.jp/blog/archives/2680</link>
-      <pubDate>Sun, 27 Sep 2015 00:00:00 +0000</pubDate>
-      
-      <guid>http://aimless.jp/blog/archives/2680</guid>
-      <description>
-
-&lt;p&gt;iPhone 6s Plusに機種変更しました。画面が大きいのはいいことです。&lt;/p&gt;
-
-&lt;p&gt;　さて、&lt;a href=&#34;http://akimotoshoji.blog.jp/archives/51481475.html&#34;&gt;iPhone6sの機種変で、ソフトバンクに3500円/月のオプション加入を迫られたwww&lt;/a&gt;を見て、「そういえば私もかなりのオプションサービスに加入したなぁ」と思ったのでメモ。&lt;/p&gt;
-
-&lt;h2 id=&#34;加入したオプション一覧:ce8ce68010b7d182bf86a7b0486be8f5&#34;&gt;加入したオプション一覧&lt;/h2&gt;
-
-&lt;table&gt;
-&lt;thead&gt;
-&lt;tr&gt;
-&lt;th&gt;サービス名&lt;/th&gt;
-&lt;th&gt;月額料金&lt;/th&gt;
-&lt;th&gt;備考&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
-
-&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td&gt;あんしん保証パックプラス&lt;/td&gt;
-&lt;td&gt;￥702&lt;/td&gt;
-&lt;td&gt;機種変更前も契約。機種変更後も利用&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;基本パック&lt;/td&gt;
-&lt;td&gt;￥540&lt;/td&gt;
-&lt;td&gt;機種変更前も契約。機種変更後も利用&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;機種変更先取りプログラム&lt;/td&gt;
-&lt;td&gt;￥324&lt;/td&gt;
-&lt;td&gt;&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;オススメコンテンツ&lt;/td&gt;
-&lt;td&gt;￥324&lt;/td&gt;
-&lt;td&gt;ことりっぷ、ライフレンジャー、music.jpのパック&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;とく放題（m）&lt;/td&gt;
-&lt;td&gt;￥637&lt;/td&gt;
-&lt;td&gt;&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;UULA&lt;/td&gt;
-&lt;td&gt;￥504&lt;/td&gt;
-&lt;td&gt;&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;アニメ放題&lt;/td&gt;
-&lt;td&gt;￥540&lt;/td&gt;
-&lt;td&gt;&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;ブック放題&lt;/td&gt;
-&lt;td&gt;￥540&lt;/td&gt;
-&lt;td&gt;&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;NETFLIX&lt;/td&gt;
-&lt;td&gt;￥1026&lt;/td&gt;
-&lt;td&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;p&gt;　さらに、速度維持の仕組みが「制限モード」から「快適モード」に変更になりました。「快適モード」だと、「3日で1Gバイト」の制限に引っかかった場合に、￥2500/2Gの権利が自動的に購入されます。つまり、この現代においてパケ死するモードです。&lt;/p&gt;
-
-&lt;h2 id=&#34;対応:ce8ce68010b7d182bf86a7b0486be8f5&#34;&gt;対応&lt;/h2&gt;
-
-&lt;p&gt;　契約時に不要なオプションがつくのは儀式だと思っているので、お店の方と「今日家に帰ってすぐに全部解約してもいいんですよね？」「お店としては10月1日以降だとありがたいのですが・・・」というやり取りをしたうえで、不要なオプションは全部解約＆速度維持を制限モードに変更しました。&lt;/p&gt;
-
-&lt;p&gt;　解約の手続きをお客様センターのオペレータさんにお願いしようと思ったのですが、オペレータさんの対応時間が20時までであり、帰宅したのが20時を過ぎていたため、MySoftbankで手続きを行いました。大変でした。&lt;/p&gt;
-
-&lt;p&gt;　唯一、NETFLIXだけが、解約手続きをしたはずなのに、My Softbankのオプションサービス一覧に居続けています。これは、NETFLIXの契約が請求期間の最終日にキャンセルになる関係だと信じたい。&lt;/p&gt;
-
-&lt;h2 id=&#34;感想:ce8ce68010b7d182bf86a7b0486be8f5&#34;&gt;感想&lt;/h2&gt;
-
-&lt;p&gt;　お店の方は「いらなければ全部変更してくださいね」「（説明資料をマーキングしたうえで）これを外してくださいね」ときちんと説明してくれました。また、説明資料にはオプションサービスの解約方法がしっかり書いてありました。そのため、いらいないサービスを押し付けられたにも関わらず、お店の印象は悪くないという不思議。気持ちよく儀式を終えることができました。&lt;/p&gt;
-
-&lt;p&gt;　「100発撃てば1発はあたる」と思ってやっているんでしょうが、この儀式、いったい誰の指示なんでしょうね。&lt;/p&gt;
 </description>
     </item>
     

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Zabbix on Aimless</title>
+    <link>http://aimless.jp/categories/zabbix/</link>
+    <description>Recent content in Zabbix on Aimless</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ja</language>
+    <lastBuildDate>Mon, 18 Apr 2016 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://aimless.jp/categories/zabbix/feed/" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Gmailを使ってZabbix3.0のアラートメールを送る</title>
+      <link>http://aimless.jp/blog/archives/2016-04-18-sending-zabbix-alert-mail-by-gmail</link>
+      <pubDate>Mon, 18 Apr 2016 00:00:00 +0000</pubDate>
+      
+      <guid>http://aimless.jp/blog/archives/2016-04-18-sending-zabbix-alert-mail-by-gmail</guid>
+      <description>
+
+&lt;p&gt;Zabbix3.0からメールの暗号化方式にSTARTTLSとSSL/TLSが選択できるようになったようです。（&lt;a href=&#34;https://www.zabbix.com/documentation/3.0/manual/config/notifications/media/email&#34;&gt;参考：1 E-mail&lt;/a&gt;）&lt;/p&gt;
+
+&lt;p&gt;というわけで、GmailのSMTPサーバを使ってアラートメールを送信してみました。SMTP heloは適当です。&lt;/p&gt;
+
+&lt;h3 id=&#34;設定:bf42c88477c8d52859eb3bfe8b32c7a6&#34;&gt;設定&lt;/h3&gt;
+
+&lt;p&gt;管理＞メディアタイプから以下の通り設定します。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/images/2016-04-18-001.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;動作確認:bf42c88477c8d52859eb3bfe8b32c7a6&#34;&gt;動作確認&lt;/h3&gt;
+
+&lt;p&gt;無事メールが届きました。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/images/2016-04-18-002.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>
