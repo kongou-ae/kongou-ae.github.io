@@ -6,8 +6,91 @@
     <description>Recent content in Redpen on Aimless</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja</language>
-    <lastBuildDate>Tue, 09 Feb 2016 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 25 Apr 2016 00:00:00 +0000</lastBuildDate>
     <atom:link href="http://aimless.jp/categories/redpen/feed/" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>CircleCIのテストをスキップする</title>
+      <link>http://aimless.jp/blog/archives/2016-04-25-skipping-test-by-circleci</link>
+      <pubDate>Mon, 25 Apr 2016 00:00:00 +0000</pubDate>
+      
+      <guid>http://aimless.jp/blog/archives/2016-04-25-skipping-test-by-circleci</guid>
+      <description>
+
+&lt;h2 id=&#34;テストをスキップしたい時もある:4ea3f16a74861147e21314ea9d30e344&#34;&gt;テストをスキップしたい時もある&lt;/h2&gt;
+
+&lt;p&gt;下図のようなデプロイメントプロセスでブログを書いています。CircleCIを中心としたプロセスで、それなりに便利なのですが、ブログを公開するためにはRedPenのテストに合格しなければなりません。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/images/2016-04-25-001.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;RedPenのJavaScript拡張を利用したスペルチェックのロジックがイマイチなのか、前回のエントリ作成時に「Email」を「Gmail」や「Emacs」のスペルミスと判定する悲劇が起きました。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;2016-04-18-sending-zabbix-alert-mail-by-gmail.md:17: ValidationError[JavaScript], [spellCheck.js] Emailはスペルミスの可能性があります。Emacsではありませんか？ at line: 管理＞メディアタイプ＞Emailから以下の通り設定します。
+2016-04-18-sending-zabbix-alert-mail-by-gmail.md:17: ValidationError[JavaScript], [spellCheck.js] Emailはスペルミスの可能性があります。Gmailではありませんか？ at line: 管理＞メディアタイプ＞Emailから以下の通り設定します。
+
+[2016-04-18 23:50:47.809][ERROR] cc.redpen.Main - The number of errors &amp;quot;2&amp;quot; is larger than specified (limit is &amp;quot;1&amp;quot;).
+
+bash ./test-redpen.sh returned exit code 1
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;本来はテストを直すべきなのですが、「テストをスキップしたいことがあるだろう」ということで、任意のコミットについてCircleCIでのテストをスキップする仕組みを実装しました。&lt;/p&gt;
+
+&lt;h2 id=&#34;circleci標準のスキップ機能:4ea3f16a74861147e21314ea9d30e344&#34;&gt;CircleCI標準のスキップ機能&lt;/h2&gt;
+
+&lt;p&gt;CircleCIに標準実装されている機能は&lt;code&gt;[skip ci]&lt;/code&gt;です。コミットログに&lt;code&gt;[skip ci]&lt;/code&gt;を含めるとCircleCIによる処理が行われません。&lt;/p&gt;
+
+&lt;p&gt;私の場合、③テストだけをスキップしたいので、&lt;code&gt;[skip ci]&lt;/code&gt;はやりすぎです。CircleCIによる処理が行われない場合、HUGOによるビルトやGitHub Pagesへの公開がなされないためです。&lt;/p&gt;
+
+&lt;h2 id=&#34;実装:4ea3f16a74861147e21314ea9d30e344&#34;&gt;実装&lt;/h2&gt;
+
+&lt;p&gt;そこでテスト実行のスクリプトに、コミットメッセージに応じた条件分岐を追加することにしました。&lt;/p&gt;
+
+&lt;p&gt;直近のコミットメッセージは&lt;code&gt;git log -n 1 --oneline --pretty=format:&amp;quot;%s&amp;quot;&lt;/code&gt;で取得できます。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;PS C:\Hugo\aimless.jp&amp;gt; git log -n 1 --oneline
+bbe9a63 add image
+PS C:\Hugo\aimless.jp&amp;gt; git log -n 1 --oneline --pretty=format:&amp;quot;%s&amp;quot;
+add image
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;このコマンドの結果を利用してテスト実行のスクリプトを分岐させることで、コミットメッセージに応じてテストがスキップされるようにします。テスト実行のスクリプトを以下のようにすると、コミットメッセージに&lt;code&gt;[skip test]&lt;/code&gt;が含まれていると、RedPenによるテストが実行されません。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!/bin/sh
+mv redpen/blog.xml redpen-*/conf
+mv redpen/*.js redpen-*/js
+
+
+filename=`git diff HEAD^ HEAD --name-only`
+
+commitMassage=`git log -n 1 --oneline --pretty=format:&amp;quot;%s&amp;quot;`
+
+if [[ $filename =~ .*\.md$ ]] ;then
+    if [[ &amp;quot;$commitMassage&amp;quot; =~ \[&amp;quot;skip test&amp;quot;\] ]]; then
+        echo &amp;quot;redpen test is skipped.&amp;quot;
+    else
+        echo &amp;quot;start to test $filename....&amp;quot;
+        redpen-*/bin/redpen -c redpen-*/conf/blog.xml -f markdown $filename
+    fi
+else
+    echo &amp;quot;$filename is not markdown. Redpen test is skipped.&amp;quot;
+fi
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;動作確認:4ea3f16a74861147e21314ea9d30e344&#34;&gt;動作確認&lt;/h2&gt;
+
+&lt;p&gt;コミットメッセージを「update」とすると、CircleCIによってRedPenのテストが実行されます。ひらがなにしたほうが読みやすい表現に関するエラーがでています。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/images/2016-04-25-002.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;コミットメッセージを「update [skip test]」とすると、CircleCIによるRedPenのテストは実行されません。そのかわりに、スクリプトで設定した&lt;code&gt;redpen test is skipped.&lt;/code&gt;が表示されます。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/images/2016-04-25-003.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;まとめ:4ea3f16a74861147e21314ea9d30e344&#34;&gt;まとめ&lt;/h2&gt;
+
+&lt;p&gt;任意のコミットメッセージによって、CircleCIが実行するテスト用スクリプトを分岐させてみました。CIツールが実行する処理を、個々のコマンドを実行する形ではなく、個々のコマンドをまとめたスクリプトを実行する形にすると、コミットメッセージに応じてCIツールのテストの処理を分岐させることができます。これはテストに限らず、いろいろなシーンで活用できそうです。&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>RedPenで「開いた（平仮名）のほうが読みやすくなる表現一覧」をチェックする</title>
