@@ -104,7 +104,7 @@ PS C:\Hugo\aimless.jp&gt; git log -n 1 --oneline --pretty=format:&quot;%s&quot;
 add image
 </code></pre>
 
-<p>このコマンドの結果を利用してテスト実行のスクリプトを分岐させることで、コミットメッセージに応じてテストがスキップされるようにします。テスト実行のスクリプトを以下のようにすると、コミットメッセージに<code>[skip test]</code>が含まれていると、RedPenによるテストが実行されません。</p>
+<p>このコマンドの結果を利用してテスト実行のスクリプトを分岐させることで、コミットメッセージに応じてテストがスキップされるようにします。テスト実行のスクリプトを以下のようにすると、コミットメッセージに<code>[skip test]</code>が含まれている場合、RedPenによるテストが実行されません。</p>
 
 <pre><code>#!/bin/sh
 mv redpen/blog.xml redpen-*/conf
