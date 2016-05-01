@@ -6,8 +6,92 @@
     <description>Recent content in Blogs on Aimless</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja</language>
-    <lastBuildDate>Mon, 25 Apr 2016 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 01 May 2016 00:00:00 +0000</lastBuildDate>
     <atom:link href="http://aimless.jp/blog/feed/" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Pandocの力を借りて、RedPenでWordファイルをテストする</title>
+      <link>http://aimless.jp/blog/archives/2016-05-01-testing-docx-by-pandoc-and-redpen</link>
+      <pubDate>Sun, 01 May 2016 00:00:00 +0000</pubDate>
+      
+      <guid>http://aimless.jp/blog/archives/2016-05-01-testing-docx-by-pandoc-and-redpen</guid>
+      <description>
+
+&lt;h2 id=&#34;経緯:2f134639a43ab886b880c1e34ff1c11b&#34;&gt;経緯&lt;/h2&gt;
+
+&lt;p&gt;textlintとRedPenのどちらを使うかを悩み、「会社で使うWindowsのPCにインストールしやすいから」という理由でRedPenを選んでから、数か月がたちました。そんな中、昨日、自分の頭の中に神が降りてきました。&lt;/p&gt;
+
+&lt;p&gt;&lt;blockquote class=&#34;twitter-tweet&#34; data-lang=&#34;ja&#34;&gt;&lt;p lang=&#34;ja&#34; dir=&#34;ltr&#34;&gt;RedPenがWordに対応していなくて困ったが、PandocをかませてWordをmarkdownにすればいいだけだった。&lt;/p&gt;&amp;mdash; こんごー@頑張らないために頑張る (@kongou_ae) &lt;a href=&#34;https://twitter.com/kongou_ae/status/725997053277409281&#34;&gt;2016年4月29日&lt;/a&gt;&lt;/blockquote&gt;
+&lt;script async src=&#34;//platform.twitter.com/widgets.js&#34; charset=&#34;utf-8&#34;&gt;&lt;/script&gt;&lt;/p&gt;
+
+&lt;p&gt;RedPenはWordファイルに対応していません。ですが、Pandocを使ってWordファイルをMarkdownに変換すれば、RedPenでWordファイルの内容をテストできます。なぜ今まで思いつかなかった。&lt;/p&gt;
+
+&lt;h2 id=&#34;実践:2f134639a43ab886b880c1e34ff1c11b&#34;&gt;実践&lt;/h2&gt;
+
+&lt;p&gt;Pandocはインストーラを使ってインストールします。RedPenはGitHubで配布されている圧縮ファイルをCドライブ直下に展開します。&lt;/p&gt;
+
+&lt;p&gt;PandocとRedPenをそれぞれコマンドラインで実行するのは大変なので、一連の処理をバッチにまとめます。バッチに渡したファイルの拡張子が&lt;code&gt;.docx&lt;/code&gt;であったら、Pandocを使って中間ファイル&lt;code&gt;tmp.md&lt;/code&gt;に変換したうえでRedPenによる検査を実施します。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;@echo off
+set PANDOCROOT=C:\Users\xxxxxx\AppData\Local\Pandoc
+set REDPENROOT=C:\redpen-distribution-1.5.2
+set PROJECTROOT=%~dp0
+set FILENAME=%1
+set FILETYPE=%~x1
+
+IF &amp;quot;%1&amp;quot; EQU &amp;quot;&amp;quot; (
+  echo ファイルを指定してください
+  exit 1
+)
+
+IF %FILETYPE% EQU .docx (
+  rem convert word to markdown
+  cd %PROJECTROOT%
+  %PANDOCROOT%\pandoc.exe -f docx -t markdown %FILENAME% -o tmp\tmp.md
+
+  rem test by redpen
+  %REDPENROOT%\bin\redpen -c %REDPENROOT%\conf\redpen-conf-ja-new.xml %PROJECTROOT%\tmp\tmp.md
+  del tmp\tmp.md
+  exit 0
+) ELSE IF %FILETYPE% EQU .md (
+  rem test by redpen
+  %REDPENROOT%\bin\redpen -c %REDPENROOT%\conf\redpen-conf-ja-new.xml %PROJECTROOT%\%FILENAME%
+  exit 0
+) ELSE (
+  echo .docxか.mdのファイルを引数に指定してください。
+  exit 1
+)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;バッチファイルを使ってWordファイルをテストしてみます。RedPenによる検査が実施され、エラーを検出しています。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;PS C:\pandoc-redpen&amp;gt; .\test.bat .\test.docx
+[2016-05-01 20:13:33.382][INFO ] cc.redpen.Main - Configuration file: C:\redpen-distribution-1.5.2\conf\redpen-conf-ja-new.xml
+[2016-05-01 20:13:33.417][INFO ] cc.redpen.config.ConfigurationLoader - Loading config from specified config file: &amp;quot;C:\redpen-distribution-1.5.2\conf\redpen-conf-ja-new.xml&amp;quot;
+[2016-05-01 20:13:33.466][INFO ] cc.redpen.config.ConfigurationLoader - Succeeded to load configuration file
+[2016-05-01 20:13:33.468][INFO ] cc.redpen.config.ConfigurationLoader - Language is set to &amp;quot;ja&amp;quot;
+[2016-05-01 20:13:33.472][WARN ] cc.redpen.config.ConfigurationLoader - No variant configuration...
+[2016-05-01 20:13:33.480][INFO ] cc.redpen.config.ConfigurationLoader - No &amp;quot;symbols&amp;quot; block found in the configuration
+[2016-05-01 20:13:33.503][INFO ] cc.redpen.config.SymbolTable - &amp;quot;ja&amp;quot; is specified.
+[2016-05-01 20:13:33.507][INFO ] cc.redpen.config.SymbolTable - &amp;quot;zenkaku&amp;quot; variant is specified
+[2016-05-01 20:13:35.883][INFO ] cc.redpen.parser.SentenceExtractor - &amp;quot;[。, ？, ！]&amp;quot; are added as a end of sentence characters
+[2016-05-01 20:13:35.886][INFO ] cc.redpen.parser.SentenceExtractor - &amp;quot;[’, ”]&amp;quot; are added as a right quotation characters
+[2016-05-01 20:13:36.165][INFO ] cc.redpen.validator.JavaScriptValidator - JavaScript validators directory: js
+tmp.md:0: ValidationError[ParagraphNumber], セクション内のパラグラフ数が最大の&amp;quot;46&amp;quot;を超えています at line:
+tmp.md:1: ValidationError[JavaScript], [termsValidator0.js] 文書規約違反(MyCompany)です。「事」を修正してください。（正：こと　誤：事） at line: ごはんの事である。
+tmp.md:1: ValidationError[JavaScript], [jtfStyleGuideValidator.js] 文書規約違反(JTF-2.2.1)です。「何時」を修正してください。（正：いつ　誤：何時） at line: 何時かご飯を食べて下さい。
+（中略）
+[2016-05-01 20:13:41.233][ERROR] cc.redpen.Main - The number of errors &amp;quot;45&amp;quot; is larger than specified (limit is &amp;quot;1&amp;quot;).
+PS C:\pandoc-redpen&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;所感:2f134639a43ab886b880c1e34ff1c11b&#34;&gt;所感&lt;/h2&gt;
+
+&lt;p&gt;Pandocを利用することで、RedPenが対応していないフォーマットのドキュメントを検査することができました。&lt;/p&gt;
+
+&lt;p&gt;最近対応したプロジェクトでは、「Excelに定義されている文書規約に沿って提案書を書き、レビューではその文書規約どおりであることを手作業で確認する」という地獄を体験しました。この無意味な地獄をPandocとRedPenの合わせ技で乗り切れるように仕込みをしようと思います。&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>CircleCIのテストをスキップする</title>
@@ -1289,65 +1373,6 @@ test.md:15: ValidationError[JavaScript], [spellcheck.js] Frotigateはスペル�
 &lt;h2 id=&#34;最後に:cfff3a3a77bc1035e507c0bd778c73d2&#34;&gt;最後に&lt;/h2&gt;
 
 &lt;p&gt;　リーダーって何なんだろうなー。&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Amazon LinuxにZabbix3.0をインストールしてハマった事</title>
-      <link>http://aimless.jp/blog/archives/2682</link>
-      <pubDate>Mon, 26 Oct 2015 00:00:00 +0000</pubDate>
-      
-      <guid>http://aimless.jp/blog/archives/2682</guid>
-      <description>
-
-&lt;p&gt;Zabbix3.0（アルファ版）のソースが公開されていたので、Amazon Linuxにインストールを試みました。その際にはまったことをメモしておきます。ハマったといっても、マニュアルのRequirementsを読んでからインストールを始めれば、全くハマらないポイントです。。。&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&#34;https://www.zabbix.com/documentation/3.0/&#34;&gt;Zabbix Documentation 3.0&lt;/a&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Amazon Linuxのバージョン：2015.09&lt;/li&gt;
-&lt;li&gt;Zabbixのバージョン：3.0.0 alpha3&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&#34;サポートするphpのバージョンが5-4-0以上である:36b14705263dd1ce094510eba4cf7e4c&#34;&gt;サポートするPHPのバージョンが5.4.0以上である&lt;/h2&gt;
-
-&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/images/2015-10-26-001.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;　Amazon Linuxで何も考えずに&lt;code&gt;sudo yum install php php-gd php-bcmath php-mysql php-mbstring&lt;/code&gt;すると、インストールされるPHPのバージョンは5.3になります。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;============================================================================================================================
- Package                       Arch                    Version                             Repository                  Size
-============================================================================================================================
-Installing:
- php                           x86_64                  5.3.29-1.8.amzn1                    amzn-main                  2.8 M
- php-bcmath                    x86_64                  5.3.29-1.8.amzn1                    amzn-main                   52 k
- php-gd                        x86_64                  5.3.29-1.8.amzn1                    amzn-main                  219 k
- php-mbstring                  x86_64                  5.3.29-1.8.amzn1                    amzn-main                  2.3 M
- php-mysql                     x86_64                  5.3.29-1.8.amzn1                    amzn-main                  178 k
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;　Zabbix3.0は、php5.3をサポートしていません。php5.4以上をサポートしています。&lt;code&gt;sudo yum install php54 php54-gd php54-bcmath php54-mysql php54-mbstring&lt;/code&gt;でphp5.4をインストールするようにしましょう。&lt;/p&gt;
-
-&lt;h2 id=&#34;php5-4がapache2-4系に依存している:36b14705263dd1ce094510eba4cf7e4c&#34;&gt;php5.4がapache2.4系に依存している&lt;/h2&gt;
-
-&lt;p&gt;　apache2.2がインストールされている場合、php5.3をyum removeし、いざphp5.4系をyum installしようとしても、依存エラーになります。&lt;/p&gt;
-
-&lt;p&gt;　これはphp5.4がapache2.4に依存しているためです。php5.4が必要とするapache2.4が、元々入っているapache2.2と競合してしまうためにエラーとなります。apache2.2系のパッケージを削除してからphp54のインストールを行いましょう。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;$ sudo yum install php54 php54-gd php54-bcmath php54-mysql php54-mbstring
-Loaded plugins: priorities, update-motd, upgrade-helper
-Resolving Dependencies
---&amp;gt; Running transaction check
----&amp;gt; Package php54.x86_64 0:5.4.45-1.75.amzn1 will be installed
---&amp;gt; Processing Dependency: httpd-mmn = 20120211x86-64 for package: php54-5.4.45-1.75.amzn1.x86_64
---&amp;gt; Processing Dependency: php54-common(x86-64) = 5.4.45-1.75.amzn1 for package: php54-5.4.45-1.75.amzn1.x86_64
---&amp;gt; Processing Dependency: php54-cli(x86-64) = 5.4.45-1.75.amzn1 for package: php54-5.4.45-1.75.amzn1.x86_64
---&amp;gt; Processing Dependency: httpd24 for package: php54-5.4.45-1.75.amzn1.x86_64
-（中略）
---&amp;gt; Finished Dependency Resolution
-Error: httpd24-tools conflicts with httpd-tools-2.2.31-1.6.amzn1.x86_64
-Error: httpd24 conflicts with httpd-2.2.31-1.6.amzn1.x86_64
-&lt;/code&gt;&lt;/pre&gt;
 </description>
     </item>
     
