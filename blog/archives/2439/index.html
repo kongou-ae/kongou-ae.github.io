@@ -70,11 +70,11 @@
 
 <p>Terraformのroot_block_deviceで躓いたのでメモ。</p>
 
-<h2 id="やりたいこと:bf37395249d323f0a481b0db49ec8488">やりたいこと</h2>
+<h2 id="やりたいこと">やりたいこと</h2>
 
 <p>　Terraformを利用して、10Gのルートデバイスと20Gのブロックデバイスを持ったt2.microのインスタンスを起動する</p>
 
-<h2 id="やったこと:bf37395249d323f0a481b0db49ec8488">やったこと</h2>
+<h2 id="やったこと">やったこと</h2>
 
 <p>　クレデンシャルを記載したtfファイルを作成する</p>
 
@@ -96,7 +96,7 @@
 
 <script src="https://gist.github.com/kongou-ae/4b8f40fe3a91b6a288c1.js"></script>
 
-<h2 id="失敗談:bf37395249d323f0a481b0db49ec8488">失敗談</h2>
+<h2 id="失敗談">失敗談</h2>
 
 <p>　ebs_root_device_nameの値をAMIのルートデバイス名と異なる値にしたところ、root_block_deviceのパラメータが追加のブロックデバイスとして判断されてしまった。</p>
 
@@ -104,7 +104,7 @@
 
 <p>　</p>
 
-<h3 id="失敗の事例:bf37395249d323f0a481b0db49ec8488">失敗の事例</h3>
+<h3 id="失敗の事例">失敗の事例</h3>
 
 <p>　ebs_root_device_nameを指定せずにterraformしたログは以下の通り。terraform plan ではルートデバイス1個、ブロックデバイス1個となっているが、terraform applyしてみると、block_device.# = 2になっている。</p>
 

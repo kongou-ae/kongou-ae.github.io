@@ -70,13 +70,13 @@
 
 <p>先週終わってしまったDNSSECを復旧させたので、改めて鍵の更新を試していきます。まずは自ドメイン内で簡単にできるZSKの更新です。多分あってる。自信はない。</p>
 
-<h3 id="作業前の状態:bcc4de6ceeef2e2e168e44da2683ab6e">作業前の状態</h3>
+<h3 id="作業前の状態">作業前の状態</h3>
 
 <p>　DNSVizで確認した状態は下記の通りです。</p>
 
 <p><img src="http://aimless.jp/blog/images/doublesign110825_1.png" alt="doublesign1" /></p>
 
-<h3 id="新しいzskの作成:bcc4de6ceeef2e2e168e44da2683ab6e">新しいZSKの作成</h3>
+<h3 id="新しいzskの作成">新しいZSKの作成</h3>
 
 <p>　更新後に利用する新しいZSKを作成します。bindを9.7に変更したのでRSA-SHA256が利用可能になりました。CentOS5.6でyum installしたbindは9.3だったので、RSASHA256が使えませんでした。。。</p>
 
@@ -85,7 +85,7 @@ Generating key pair.............++++++ ...++++++
 Kaimless.jp.+008+18138
 </code></pre>
 
-<h3 id="ゾーンファイルへの追記:bcc4de6ceeef2e2e168e44da2683ab6e">ゾーンファイルへの追記</h3>
+<h3 id="ゾーンファイルへの追記">ゾーンファイルへの追記</h3>
 
 <p>　作成したZSKをゾーンファイルに追記します。</p>
 
@@ -94,7 +94,7 @@ $INCLUDE /var/named/chroot/var/named/work/Kaimless.jp.+008+05766.key
 $INCLUDE /var/named/chroot/var/named/work/Kaimless.jp.+008+18138.key
 </code></pre>
 
-<h3 id="既存のzskで署名する:bcc4de6ceeef2e2e168e44da2683ab6e">既存のZSKで署名する</h3>
+<h3 id="既存のzskで署名する">既存のZSKで署名する</h3>
 
 <p>　新しいZSKをDNSKEYレコードで事前に公開しておくことで、キャッシュDNSサーバに新旧両方のZSKを所持させます。こうしないと、ZSKを切り替えた際に、古いDNSKEYレコードをキャッシュしているキャッシュDNSサーバが、新しいZSKで作られた署名を検証できなくなってしまうからです。</p>
 
@@ -129,11 +129,11 @@ Algorithm: RSASHA256: KSKs: 1 active, 0 stand-by, 0 revoked
 
 <p><img src="http://aimless.jp/blog/images/doublesign110825_2.png" alt="doublesign2" /></p>
 
-<h3 id="dnskeyのttl分放置する:bcc4de6ceeef2e2e168e44da2683ab6e">DNSKEYのTTL分放置する</h3>
+<h3 id="dnskeyのttl分放置する">DNSKEYのTTL分放置する</h3>
 
 <p>　事前公開した新ZSKが広まるのを待ちます。古いZSKだけをキャッシュしたキャッシュDNSサーバがいなくなれば良いので、DNSKEYのTTL分我慢します。</p>
 
-<h3 id="新しいzskで署名する:bcc4de6ceeef2e2e168e44da2683ab6e">新しいZSKで署名する</h3>
+<h3 id="新しいzskで署名する">新しいZSKで署名する</h3>
 
 <p>　キャッシュDNSサーバが新旧のZSKをキャッシュするようになったタイミングで、署名するZSKを切り替えます。署名後のゾーンファイルを見ると、作業前は5766だったRRSIGの鍵IDが18138に切り替わっています。</p>
 
@@ -165,11 +165,11 @@ Algorithm: RSASHA256: KSKs: 1 active, 0 stand-by, 0 revoked
 
 <p>　注意しないといけない点は、RRSIGをキャッシュしているキャッシュDNSサーバへの対処です。古いZSKをゾーンファイルから抜いて新しいZSKで署名してしまうと、古いRRSIGを検証するDNSKEYが存在しないので、検証に失敗してしまいます。</p>
 
-<h3 id="古いrrsigのttl分放置する:bcc4de6ceeef2e2e168e44da2683ab6e">古いRRSIGのTTL分放置する</h3>
+<h3 id="古いrrsigのttl分放置する">古いRRSIGのTTL分放置する</h3>
 
 <p>　あとは、古いZSKをDNSKEYから削除すれば鍵の更新が完了します。ですが、旧ZSKをすぐにゾーンファイルから削除してしまうと、古いRRSIGをキャッシュしているキャッシュDNSサーバの検証が失敗してしまします。というわけで、古いRRSIGのTTL分放置してキャッシュがクリアされるのを待ちます。</p>
 
-<h3 id="古いzskを削除し-新しいzskで再署名する:bcc4de6ceeef2e2e168e44da2683ab6e">古いZSKを削除し、新しいZSKで再署名する</h3>
+<h3 id="古いzskを削除し-新しいzskで再署名する">古いZSKを削除し、新しいZSKで再署名する</h3>
 
 <p>　TTLが経過しキャッシュ上に存在しなくなった古いZSKをゾーンファイルから削除し、新ZSKで再署名します。その後bindを再起動させれば、事前公開方式によるZSKの更新が終了します。</p>
 

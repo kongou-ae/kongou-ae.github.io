@@ -70,7 +70,7 @@
 
 <p><a href="http://sdelements.github.io/lets-chat/">Let&#8217;s Chat</a>でhubotを動かしてみました。</p>
 
-<h2 id="let-8217-s-chatのインストール:cfa74896d771b319eb38f92c098ab1f2">Let&#8217;s Chatのインストール</h2>
+<h2 id="let-8217-s-chatのインストール">Let&#8217;s Chatのインストール</h2>
 
 <p>　nodejsとpythonはインストール済みなので、mongodbのみyumでインストールします。</p>
 
@@ -85,13 +85,13 @@ npm start
 
 <p>　デフォルトだと5000番でリッスンします。FQDNやポート番号を含む各種パラメータは<code>settings.yml</code>で変更可能です。今回は、Let&#8217;s Chatはデフォルト設定のままとし、前段のnginxでバーチャルホスト+80番のアクセスを受けて、Let&#8217;s Chatの5000番にProxyPassしています。</p>
 
-<h2 id="hubot用アカウントの作成:cfa74896d771b319eb38f92c098ab1f2">hubot用アカウントの作成</h2>
+<h2 id="hubot用アカウントの作成">hubot用アカウントの作成</h2>
 
 <p>　Let&#8217;s Chatにhubot用のアカウントを作成します。また作成したアカウントのAuth Tokenを取得します。</p>
 
 <p><img src="http://aimless.jp/blog/wp-content/uploads/2015/05/SnapCrab_NoName_2015-5-2_23-16-54_No-00.png" alt="Token" /></p>
 
-<h2 id="hubotのインストール:cfa74896d771b319eb38f92c098ab1f2">hubotのインストール</h2>
+<h2 id="hubotのインストール">hubotのインストール</h2>
 
 <pre><code>sudo  npm install -g yo generator-hubot
 mkdir myhubot
@@ -100,7 +100,7 @@ yo hubot
 npm install hubot-lets-chat --save
 </code></pre>
 
-<h2 id="hubot起動スクリプトの作成:cfa74896d771b319eb38f92c098ab1f2">hubot起動スクリプトの作成</h2>
+<h2 id="hubot起動スクリプトの作成">hubot起動スクリプトの作成</h2>
 
 <p>　<code>HUBOT_LCB_TOKEN</code>の項目に、Let&#8217;s Chat上で取得したhubotアカウントのAuth Tokenを記載します。また<code>HUBOT_LCB_ROOMS</code>にはhubotを常駐させたいRoomの識別子（URLに含まれる値）を入力します。</p>
 
@@ -110,7 +110,7 @@ export HUBOT_LCB_ROOMS=553db2dcf62762863672ea19
 bin/hubot -a lets-chat
 </code></pre>
 
-<h2 id="hubotの起動-動作確認:cfa74896d771b319eb38f92c098ab1f2">hubotの起動＋動作確認</h2>
+<h2 id="hubotの起動-動作確認">hubotの起動＋動作確認</h2>
 
 <pre><code>myhubot]$ ./run_hubot.sh                                 
 connected

@@ -93,7 +93,7 @@
 </tbody>
 </table>
 
-<h2 id="ファイル構成:29a47d36f0cb88ad8f2feca5cd4e2d83">ファイル構成</h2>
+<h2 id="ファイル構成">ファイル構成</h2>
 
 <pre><code>$ ls                                               
 var.tf　　  　terraform.tfvars        web-sg.tf
@@ -151,7 +151,7 @@ resource "aws_security_group" "web-server" {
 }
 </code></pre>
 
-<h2 id="セキュリティグループの作成:29a47d36f0cb88ad8f2feca5cd4e2d83">セキュリティグループの作成</h2>
+<h2 id="セキュリティグループの作成">セキュリティグループの作成</h2>
 
 <p>まずは<code>terraform plan</code></p>
 
@@ -253,7 +253,7 @@ aws_security_group.web-server:
 
 <p>　<img src="http://aimless.jp/blog/wp-content/uploads/2015/03/2015-03-22-01.png" alt="" /></p>
 
-<h2 id="ルールの追加-inbound:29a47d36f0cb88ad8f2feca5cd4e2d83">ルールの追加（Inbound）</h2>
+<h2 id="ルールの追加-inbound">ルールの追加（Inbound）</h2>
 
 <p>　inboundにHTTPSを追加してみましょう。</p>
 
@@ -391,7 +391,7 @@ aws_security_group.web-server:
 
 <p>　<img src="http://aimless.jp/blog/wp-content/uploads/2015/03/2015-03-22-02.png" alt="" /></p>
 
-<h2 id="ルールの追加-outbound:29a47d36f0cb88ad8f2feca5cd4e2d83">ルールの追加（Outbound）</h2>
+<h2 id="ルールの追加-outbound">ルールの追加（Outbound）</h2>
 
 <p>　新たにサポートされたegressも使ってみます。sg-2da11148がNATインスタンスに適用されている体で、sg-2da11148向けのOutbound全通信を許可するルールを追加します。</p>
 

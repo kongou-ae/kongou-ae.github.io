@@ -17,7 +17,7 @@
       <guid>http://aimless.jp/blog/archives/2686</guid>
       <description>
 
-&lt;h2 id=&#34;はじめに:fdefdb4df80f925e79defa0315e73418&#34;&gt;はじめに&lt;/h2&gt;
+&lt;h2 id=&#34;はじめに&#34;&gt;はじめに&lt;/h2&gt;
 
 &lt;p&gt;&lt;a href=&#34;http://aimless.jp/blog/archives/2685/&#34;&gt;RedPenにスペルチェック機能を追加する&lt;/a&gt;の続きです。CircleCI上でRedPenを動かしてみました。&lt;/p&gt;
 
@@ -25,7 +25,7 @@
 &lt;p&gt;RedPenを利用したスペルチェックがローカル環境で動くことを確認しました。JavaScriptでチェック項目を拡張できるのがいいですね。次はスペルチェック用辞書の単語を増やした上で、CircleCI上で動作させてみようと思います。&lt;/p&gt;
 &lt;/blockquote&gt;
 
-&lt;h2 id=&#34;コンテナの仕込み:fdefdb4df80f925e79defa0315e73418&#34;&gt;コンテナの仕込み&lt;/h2&gt;
+&lt;h2 id=&#34;コンテナの仕込み&#34;&gt;コンテナの仕込み&lt;/h2&gt;
 
 &lt;p&gt;CircleCIのコンテナでRedPenを動かさなければなりません。RedPenはJava 1.8が必要なのでcircle.ymの&lt;code&gt;machine&lt;/code&gt;の箇所に追加します。また、RedPenそのものをダウンロードしなければなりませんので、&lt;code&gt;dependencies&lt;/code&gt;の箇所でアーカイブのダウンロードと展開、削除を行います。&lt;/p&gt;
 
@@ -41,7 +41,7 @@ dependencies:
     - rm RedPen-1.4.1.tar.gz
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h2 id=&#34;テストの仕込み:fdefdb4df80f925e79defa0315e73418&#34;&gt;テストの仕込み&lt;/h2&gt;
+&lt;h2 id=&#34;テストの仕込み&#34;&gt;テストの仕込み&lt;/h2&gt;
 
 &lt;p&gt;RedPenで独自JavaScriptを利用するためには、設定ファイルとJavaScriptファイルが必要です。せっかくなので、これらもリポジトリで管理します。ブログ用リポジトリにRedPenの設定ファイルとスペルチェック用JavaScriptを配置します。&lt;/p&gt;
 
@@ -78,7 +78,7 @@ fi
       - bash ./test-redpen.sh
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h3 id=&#34;実行:fdefdb4df80f925e79defa0315e73418&#34;&gt;実行&lt;/h3&gt;
+&lt;h3 id=&#34;実行&#34;&gt;実行&lt;/h3&gt;
 
 &lt;p&gt;さて、試してみます。書きかけのこのエントリをブログ用リポジトリにプッシュしてみます。slackからテスト結果の通知があるまで、艦これでもやりつつ待ちます。&lt;/p&gt;
 
@@ -95,7 +95,7 @@ fi
 
 &lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/images/20151125-03.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
 
-&lt;h2 id=&#34;リトライ:fdefdb4df80f925e79defa0315e73418&#34;&gt;リトライ&lt;/h2&gt;
+&lt;h2 id=&#34;リトライ&#34;&gt;リトライ&lt;/h2&gt;
 
 &lt;p&gt;4項目を修正しまして再プッシュしましたが、再びエラーです。&lt;/p&gt;
 
@@ -121,7 +121,7 @@ fi
 
 &lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/images/20151125-05.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
 
-&lt;h2 id=&#34;所感:fdefdb4df80f925e79defa0315e73418&#34;&gt;所感&lt;/h2&gt;
+&lt;h2 id=&#34;所感&#34;&gt;所感&lt;/h2&gt;
 
 &lt;p&gt;CircleCIを利用して、ブログに対する継続的なテストを実装することができました。やりたいことができたので満足です。ブログを書きながら、スペルチェック用の辞書を育てていこうとおもいます。&lt;/p&gt;
 </description>
@@ -135,19 +135,19 @@ fi
       <guid>http://aimless.jp/blog/archives/2685</guid>
       <description>
 
-&lt;h2 id=&#34;前置き:6a8429973c6a1dee2b4aa041f6e841a8&#34;&gt;前置き&lt;/h2&gt;
+&lt;h2 id=&#34;前置き&#34;&gt;前置き&lt;/h2&gt;
 
 &lt;p&gt;もともとこのブログはWordpressで運用していました。ですが、アウトプットすることが目的であってCMSを運用することは目的ではありませんので、HUGO + Github Pagesの構成に切り替えました。&lt;/p&gt;
 
 &lt;p&gt;切り替えに伴い、ブログ用のGithubリポジトリにMarkdownをPushすると、CircleCIがHUGOを使ってブログをビルドし、HTMLをGithub PagesにPushする、という仕組みにしました。&lt;/p&gt;
 
-&lt;h2 id=&#34;文章をテストする:6a8429973c6a1dee2b4aa041f6e841a8&#34;&gt;文章をテストする&lt;/h2&gt;
+&lt;h2 id=&#34;文章をテストする&#34;&gt;文章をテストする&lt;/h2&gt;
 
 &lt;p&gt;ブログを公開するプロセスにCircleCIがいますので、ブログの文章に対してCIを行うことがでいます。何をするか考えた結果、文章をテストすることにしました。ブログ用のGithubリポジトリにPushされたMarkdownをCircleCIでテストし、誤記や文法の誤りなどがあればテスト失敗とみなしビルドを行わない。こうすることで、ブログに誤った情報を含むエントリーが乗ってしまう可能性を減らすことができます。&lt;/p&gt;
 
 &lt;p&gt;文章をテストするツールを探してみると、&lt;a href=&#34;https://github.com/textlint/textlint&#34;&gt;textlint/textlint&lt;/a&gt;と&lt;a href=&#34;https://github.com/redpen-cc/redpen/&#34;&gt;redpen-cc/redpen&lt;/a&gt;が見つかりました。asciidocとasciidocter-pdfを利用した気軽なドキュメント作成を模索していることもありますので、今回はasciidocをサポートするRedPenを使うことにします。&lt;/p&gt;
 
-&lt;h2 id=&#34;実践:6a8429973c6a1dee2b4aa041f6e841a8&#34;&gt;実践&lt;/h2&gt;
+&lt;h2 id=&#34;実践&#34;&gt;実践&lt;/h2&gt;
 
 &lt;p&gt;UTM製品であるフォーティゲートの正しいスペルは「FortiGate」です。FortigateやFroutigateではありません。ネットワークエンジニアとして、ネットワーク機器のスペルを間違えるのは恥ずかしい。そこでRedPenに、自分が指定するキーワードを利用したスペルチェック機能を実装します。&lt;/p&gt;
 
@@ -286,7 +286,7 @@ test.md:15: ValidationError[JavaScript], [spellcheck.js] Frotigateはスペル�
 [aimless@dev redpen-distribution-1.4.1]$
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h2 id=&#34;所感:6a8429973c6a1dee2b4aa041f6e841a8&#34;&gt;所感&lt;/h2&gt;
+&lt;h2 id=&#34;所感&#34;&gt;所感&lt;/h2&gt;
 
 &lt;p&gt;RedPenを利用したスペルチェックがローカル環境で動くことを確認しました。JavaScriptでチェック項目を拡張できるのがいいですね。次はスペルチェック用辞書の単語を増やした上で、CircleCI上で動作させてみようと思います。&lt;/p&gt;
 </description>
@@ -302,17 +302,17 @@ test.md:15: ValidationError[JavaScript], [spellcheck.js] Frotigateはスペル�
 
 &lt;p&gt;リーダと呼ばれるポジションに就き、5名のメンバーと一緒に仕事を行うこと3年、ふと「昔と比べると丸くなったなー」と思ったので、今意識している事をメモしておきます。社内研修や書籍、聖杯問答など、人を導くということについて色々な角度で学んだことを自分なりに消化した結果です。実際にできていることもあれば、中々できないこともあるので、今一度意識しなおして、半年くらい経ったら見返したい。&lt;/p&gt;
 
-&lt;h2 id=&#34;信じて任せる:cfff3a3a77bc1035e507c0bd778c73d2&#34;&gt;信じて任せる&lt;/h2&gt;
+&lt;h2 id=&#34;信じて任せる&#34;&gt;信じて任せる&lt;/h2&gt;
 
 &lt;p&gt;大原則として、メンバーを信じることにしています。また、メンバーを信じているということを、心の中で思っているだけでなくメンバーの前で明言します。「信じてるよ」と。メンバーを信じでいますので、能動的に仕事を回しているメンバーに対しては、仕事の細部に口を出すことはしません。信じて任せます。&lt;/p&gt;
 
-&lt;h2 id=&#34;放置しない:cfff3a3a77bc1035e507c0bd778c73d2&#34;&gt;放置しない&lt;/h2&gt;
+&lt;h2 id=&#34;放置しない&#34;&gt;放置しない&lt;/h2&gt;
 
 &lt;p&gt;信じると放置するは違うと考えています。リーダである私は、チームとして与えられたミッションをクリアすることで評価されます。そのためには、自分のメンバーが成果を出すことが必要不可欠です。チームに与えられているミッションは、自分の力だけで解決できる量をとうに超えています。従って、信じていると宣言する一方で、メンバーの成果が出ていることを確認し、必要に応じて軌道修正を行うことを意識しています。&lt;/p&gt;
 
 &lt;p&gt;例えば、週次ミーティングでの進捗報告や、メーリングリストに流れるメンバーのメールでのやりとりで、メンバーのアウトプットの有無や質を確認し、期待する成果に届いていない場合は声をかけます。困っているようであれば自分の仕事を止めて助け、悩んでいるようであれば一緒に悩みます。すべての変更作業について、私の承認が必要なプロセスにしているのも、放置しないの一環です。信じているし任せますが、最終的な責任まで放棄する気はありません。&lt;/p&gt;
 
-&lt;h2 id=&#34;メンバーに決めさせる:cfff3a3a77bc1035e507c0bd778c73d2&#34;&gt;メンバーに決めさせる&lt;/h2&gt;
+&lt;h2 id=&#34;メンバーに決めさせる&#34;&gt;メンバーに決めさせる&lt;/h2&gt;
 
 &lt;p&gt;リーダになった当初、リーダの仕事は決める事だと思っていましたが、何から何まで決めるのは止めました。特に、メンバーのタスクであれば、メンバーに決めてもらうことにしています。決められないのであれば、メンバーの悩みや迷いを聴いた上で、整理した上で再提示し、解決へのヒントを与える。こんな地味な事を繰り返し、メンバーに決めてもらう事を意識しています。&lt;/p&gt;
 
@@ -320,13 +320,13 @@ test.md:15: ValidationError[JavaScript], [spellcheck.js] Frotigateはスペル�
 
 &lt;p&gt;一方で、メンバーが悩んでどうしても決められない場合や、チームとしての決断が必要な場合は、即判断します。リーダですから。&lt;/p&gt;
 
-&lt;h2 id=&#34;ほめる:cfff3a3a77bc1035e507c0bd778c73d2&#34;&gt;ほめる&lt;/h2&gt;
+&lt;h2 id=&#34;ほめる&#34;&gt;ほめる&lt;/h2&gt;
 
 &lt;p&gt;仕事だからやって当然という考えは捨てました。仕事はツライ。だからこそ、頑張ってくれたメンバーはしっかり褒める。メールだけでなく、言葉で、他のメンバーのいる場で褒めます。「さすが」「完璧」といった簡易な言葉でも構わないので、ほめることを意識しています。&lt;/p&gt;
 
 &lt;p&gt;作業直前で手順の誤りに気がついた部下が相談に来たら、皆さんはどうしますか。「何やってんの、、」と怒りを示していませんか？私は褒めます。「作業する前に気がついてよかったじゃん。よく気がついたよ。ありがとね」と。怒っても仕方ない。&lt;/p&gt;
 
-&lt;h2 id=&#34;感情を表に出す:cfff3a3a77bc1035e507c0bd778c73d2&#34;&gt;感情を表に出す&lt;/h2&gt;
+&lt;h2 id=&#34;感情を表に出す&#34;&gt;感情を表に出す&lt;/h2&gt;
 
 &lt;p&gt;あえて感情を表に出すことにしています。私が人間臭い人が好きだからです。ただし、自分の負の感情は除く。負の感情はメンバーのいないところで発散します。&lt;/p&gt;
 
@@ -336,19 +336,19 @@ test.md:15: ValidationError[JavaScript], [spellcheck.js] Frotigateはスペル�
 
 &lt;p&gt;しょうもない雑談と笑いも大事にしています。仕事の合間の雑談、楽しいでしょ。こういうの大事。&lt;/p&gt;
 
-&lt;h2 id=&#34;やり方ではなくゴールを指示する:cfff3a3a77bc1035e507c0bd778c73d2&#34;&gt;やり方ではなくゴールを指示する&lt;/h2&gt;
+&lt;h2 id=&#34;やり方ではなくゴールを指示する&#34;&gt;やり方ではなくゴールを指示する&lt;/h2&gt;
 
 &lt;p&gt;仕事の細かいやり方を指示することはやめました。やり方はメンバーでも考えられるのですから（むしろメンバーの方が詳細に考えらえる事の方が多い）、やり方ではなく、私が期待する成果のあり姿を明確に伝える事を意識しています。「この仕事をお願いします。こーやって、あーやって、こうやってください」ではなく「この仕事をお願いします。成果物はこんなイメージ」であったり「この仕事をお願いします。○○できるようにするのがゴール」といったイメージです。&lt;/p&gt;
 
-&lt;h2 id=&#34;門戸を開く:cfff3a3a77bc1035e507c0bd778c73d2&#34;&gt;門戸を開く&lt;/h2&gt;
+&lt;h2 id=&#34;門戸を開く&#34;&gt;門戸を開く&lt;/h2&gt;
 
 &lt;p&gt;「何かあったら相談してね」「出かけるけど、何かあったら携帯ならしてね」は口癖になりました。明言することで、相談や緊急時の連絡が増えたような気がしています。相談や緊急連絡が増えると自分の仕事は止まりますが、リーダというものは、こういうものだと割り切ることにしました。チームとして成果が出ればいいよ。ゆえに、リーダ以外の業務は、メンバーが退社した17時以降が本番です。&lt;/p&gt;
 
-&lt;h2 id=&#34;チームである事を口にし続ける:cfff3a3a77bc1035e507c0bd778c73d2&#34;&gt;チームである事を口にし続ける&lt;/h2&gt;
+&lt;h2 id=&#34;チームである事を口にし続ける&#34;&gt;チームである事を口にし続ける&lt;/h2&gt;
 
 &lt;p&gt;自分とメンバーの事を「○○チーム」と呼ぶことを意識しています。私たちは個ではなくチームであること、つまり仲間であることを自分とメンバーに意識づけられればと思ってあえて言い続けています。最大の効果は、自分がチームのリーダであることを常に自分に意識づけし続けられることかもしれません。&lt;/p&gt;
 
-&lt;h2 id=&#34;最後に:cfff3a3a77bc1035e507c0bd778c73d2&#34;&gt;最後に&lt;/h2&gt;
+&lt;h2 id=&#34;最後に&#34;&gt;最後に&lt;/h2&gt;
 
 &lt;p&gt;　リーダーって何なんだろうなー。&lt;/p&gt;
 </description>
@@ -366,7 +366,7 @@ test.md:15: ValidationError[JavaScript], [spellcheck.js] Frotigateはスペル�
 
 &lt;p&gt;　さて、&lt;a href=&#34;http://akimotoshoji.blog.jp/archives/51481475.html&#34;&gt;iPhone6sの機種変で、ソフトバンクに3500円/月のオプション加入を迫られたwww&lt;/a&gt;を見て、「そういえば私もかなりのオプションサービスに加入したなぁ」と思ったのでメモ。&lt;/p&gt;
 
-&lt;h2 id=&#34;加入したオプション一覧:ce8ce68010b7d182bf86a7b0486be8f5&#34;&gt;加入したオプション一覧&lt;/h2&gt;
+&lt;h2 id=&#34;加入したオプション一覧&#34;&gt;加入したオプション一覧&lt;/h2&gt;
 
 &lt;table&gt;
 &lt;thead&gt;
@@ -436,7 +436,7 @@ test.md:15: ValidationError[JavaScript], [spellcheck.js] Frotigateはスペル�
 
 &lt;p&gt;　さらに、速度維持の仕組みが「制限モード」から「快適モード」に変更になりました。「快適モード」だと、「3日で1Gバイト」の制限に引っかかった場合に、￥2500/2Gの権利が自動的に購入されます。つまり、この現代においてパケ死するモードです。&lt;/p&gt;
 
-&lt;h2 id=&#34;対応:ce8ce68010b7d182bf86a7b0486be8f5&#34;&gt;対応&lt;/h2&gt;
+&lt;h2 id=&#34;対応&#34;&gt;対応&lt;/h2&gt;
 
 &lt;p&gt;　契約時に不要なオプションがつくのは儀式だと思っているので、お店の方と「今日家に帰ってすぐに全部解約してもいいんですよね？」「お店としては10月1日以降だとありがたいのですが・・・」というやり取りをしたうえで、不要なオプションは全部解約＆速度維持を制限モードに変更しました。&lt;/p&gt;
 
@@ -444,7 +444,7 @@ test.md:15: ValidationError[JavaScript], [spellcheck.js] Frotigateはスペル�
 
 &lt;p&gt;　唯一、NETFLIXだけが、解約手続きをしたはずなのに、My Softbankのオプションサービス一覧に居続けています。これは、NETFLIXの契約が請求期間の最終日にキャンセルになる関係だと信じたい。&lt;/p&gt;
 
-&lt;h2 id=&#34;感想:ce8ce68010b7d182bf86a7b0486be8f5&#34;&gt;感想&lt;/h2&gt;
+&lt;h2 id=&#34;感想&#34;&gt;感想&lt;/h2&gt;
 
 &lt;p&gt;　お店の方は「いらなければ全部変更してくださいね」「（説明資料をマーキングしたうえで）これを外してくださいね」ときちんと説明してくれました。また、説明資料にはオプションサービスの解約方法がしっかり書いてありました。そのため、いらいないサービスを押し付けられたにも関わらず、お店の印象は悪くないという不思議。気持ちよく儀式を終えることができました。&lt;/p&gt;
 
@@ -466,21 +466,21 @@ test.md:15: ValidationError[JavaScript], [spellcheck.js] Frotigateはスペル�
 
 &lt;p&gt;使い方ではまった箇所をメモしておきます。&lt;/p&gt;
 
-&lt;h2 id=&#34;インストール:0276447e54b8cc1adc3ebe7f7301ea42&#34;&gt;インストール&lt;/h2&gt;
+&lt;h2 id=&#34;インストール&#34;&gt;インストール&lt;/h2&gt;
 
 &lt;p&gt;githubのREADMEに書いてある通り、gemでインストールするだけ。&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;$ gem install --pre asciidoctor-pdf
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h2 id=&#34;デフォルトのテーマでpdfに変換する:0276447e54b8cc1adc3ebe7f7301ea42&#34;&gt;デフォルトのテーマでPDFに変換する&lt;/h2&gt;
+&lt;h2 id=&#34;デフォルトのテーマでpdfに変換する&#34;&gt;デフォルトのテーマでPDFに変換する&lt;/h2&gt;
 
 &lt;p&gt;asciidoctor-pdfコマンドを利用します。&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;$ asciidoctor-pdf basic-example.adoc
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h2 id=&#34;自作テーマを利用してpdfに変換する:0276447e54b8cc1adc3ebe7f7301ea42&#34;&gt;自作テーマを利用してPDFに変換する&lt;/h2&gt;
+&lt;h2 id=&#34;自作テーマを利用してpdfに変換する&#34;&gt;自作テーマを利用してPDFに変換する&lt;/h2&gt;
 
 &lt;p&gt;&lt;a href=&#34;https://github.com/asciidoctor/asciidoctor-pdf/blob/master/docs/theming-guide.adoc&#34;&gt;Asciidoctor PDF Theming Guide&lt;/a&gt;に記載されている通り、自分なりのテーマを作ることができます。テーマを自作するにあたっては、&lt;a href=&#34;https://github.com/asciidoctor/asciidoctor-pdf/blob/master/data/themes/default-theme.yml&#34;&gt;デフォルトテーマ&lt;/a&gt;の記載内容が参考になります。&lt;/p&gt;
 
@@ -505,7 +505,7 @@ test.md:15: ValidationError[JavaScript], [spellcheck.js] Frotigateはスペル�
 &lt;pre&gt;&lt;code&gt;asciidoctor-pdf -a pdf-stylesdir=/resources/themes -a pdf-style=basic README.adoc
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h2 id=&#34;ページ番号を振る:0276447e54b8cc1adc3ebe7f7301ea42&#34;&gt;ページ番号を振る&lt;/h2&gt;
+&lt;h2 id=&#34;ページ番号を振る&#34;&gt;ページ番号を振る&lt;/h2&gt;
 
 &lt;p&gt;ヘッダーとフッターにページ番号を振ることができます。今回は、.adocに:pagenums:を設定した上で、テーマファイルにページ番号の具体的なスタイルを記載します。&lt;/p&gt;
 
@@ -547,7 +547,7 @@ v1.0, 2014-01-01
 
 &lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/wp-content/uploads/2015/07/asciidoctor_page_number.png&#34; alt=&#34;フッタ&#34; /&gt;&lt;/p&gt;
 
-&lt;h2 id=&#34;ヘッダーやフッターに画像を追加する:0276447e54b8cc1adc3ebe7f7301ea42&#34;&gt;ヘッダーやフッターに画像を追加する&lt;/h2&gt;
+&lt;h2 id=&#34;ヘッダーやフッターに画像を追加する&#34;&gt;ヘッダーやフッターに画像を追加する&lt;/h2&gt;
 
 &lt;p&gt;ヘッダーやフッターに画像を追加することが可能です。まずは。追加したい画像をテーマと同じディレクトリに配置します。&lt;/p&gt;
 
@@ -587,7 +587,7 @@ v1.0, 2014-01-01
 
 &lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/wp-content/uploads/2015/07/asciidoctor_header_image.png&#34; alt=&#34;ヘッダーに画像&#34; /&gt;&lt;/p&gt;
 
-&lt;h2 id=&#34;フォントを指定する:0276447e54b8cc1adc3ebe7f7301ea42&#34;&gt;フォントを指定する&lt;/h2&gt;
+&lt;h2 id=&#34;フォントを指定する&#34;&gt;フォントを指定する&lt;/h2&gt;
 
 &lt;p&gt;デフォルトでは以下3種類のフォントが利用可能です。これら以外のフォントを利用することも可能です。&lt;/p&gt;
 
@@ -648,7 +648,7 @@ base:
 &lt;pre&gt;&lt;code&gt;asciidoctor-pdf -a pdf-stylesdir=/resources/themes -a pdf-style=basic -a pdf-fontsdir=/resources/fonts README.adoc
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h2 id=&#34;所感:0276447e54b8cc1adc3ebe7f7301ea42&#34;&gt;所感&lt;/h2&gt;
+&lt;h2 id=&#34;所感&#34;&gt;所感&lt;/h2&gt;
 
 &lt;ul&gt;
 &lt;li&gt;PDFは綺麗に描画された。&lt;/li&gt;
@@ -673,9 +673,9 @@ base:
 
 &lt;p&gt;これまで、Wordの使い方を覚えた方が早いのは理解しつつ、設計書や仕様書といったドキュメントを気軽に書く方法を模索してきました。&lt;/p&gt;
 
-&lt;h2 id=&#34;これまでの取り組み:955fa4efa5135950a9b3b93648703bd0&#34;&gt;これまでの取り組み&lt;/h2&gt;
+&lt;h2 id=&#34;これまでの取り組み&#34;&gt;これまでの取り組み&lt;/h2&gt;
 
-&lt;h3 id=&#34;rest-rst2pdf:955fa4efa5135950a9b3b93648703bd0&#34;&gt;reST + rst2pdf&lt;/h3&gt;
+&lt;h3 id=&#34;rest-rst2pdf&#34;&gt;reST + rst2pdf&lt;/h3&gt;
 
 &lt;ul&gt;
 &lt;li&gt;方針
@@ -693,7 +693,7 @@ base:
 &lt;/ul&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h3 id=&#34;markdown-pandoc:955fa4efa5135950a9b3b93648703bd0&#34;&gt;markdown + pandoc&lt;/h3&gt;
+&lt;h3 id=&#34;markdown-pandoc&#34;&gt;markdown + pandoc&lt;/h3&gt;
 
 &lt;ul&gt;
 &lt;li&gt;方針
@@ -713,7 +713,7 @@ base:
 &lt;/ul&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h3 id=&#34;atom-pdf印刷:955fa4efa5135950a9b3b93648703bd0&#34;&gt;Atom + PDF印刷&lt;/h3&gt;
+&lt;h3 id=&#34;atom-pdf印刷&#34;&gt;Atom + PDF印刷&lt;/h3&gt;
 
 &lt;ul&gt;
 &lt;li&gt;方針
@@ -731,7 +731,7 @@ base:
 &lt;/ul&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h2 id=&#34;現在の取り組み:955fa4efa5135950a9b3b93648703bd0&#34;&gt;現在の取り組み&lt;/h2&gt;
+&lt;h2 id=&#34;現在の取り組み&#34;&gt;現在の取り組み&lt;/h2&gt;
 
 &lt;p&gt;　上記の紆余曲折の結果、以下の形で試行錯誤を継続中です。&lt;/p&gt;
 
@@ -753,7 +753,7 @@ base:
 &lt;/ul&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h2 id=&#34;ドキュメントを中心とした継続的な運用改善:955fa4efa5135950a9b3b93648703bd0&#34;&gt;ドキュメントを中心とした継続的な運用改善&lt;/h2&gt;
+&lt;h2 id=&#34;ドキュメントを中心とした継続的な運用改善&#34;&gt;ドキュメントを中心とした継続的な運用改善&lt;/h2&gt;
 
 &lt;p&gt;　現在の会社では、運用チームのリーダとして継続的な運用の改善を生業としています。ちゃんとやれているかは、かなり疑問ですが。。&lt;/p&gt;
 
@@ -779,11 +779,11 @@ base:
 
 &lt;p&gt;子供が生まれたので、記念？に病院にかかった費用を簡単にまとめておきます。記憶があいまいな部分もありますが、今後出産を考えている人の参考になればなと。&lt;/p&gt;
 
-&lt;h3 id=&#34;出産までの検診:a24886dad6ec2076a91d313e1924f45b&#34;&gt;出産までの検診&lt;/h3&gt;
+&lt;h3 id=&#34;出産までの検診&#34;&gt;出産までの検診&lt;/h3&gt;
 
 &lt;p&gt;　母子手帳＆公費助成の受診票（詳細：&lt;a href=&#34;http://www.city.kashiwa.lg.jp/soshiki/061800/p003803.html&#34; title=&#34;妊婦一般健康診査&#34; target=&#34;_blank&#34;&gt;妊婦一般健康診査&lt;/a&gt;）をもらえるまでの診察は完全実費で￥5,000～￥10,000くらい、以降の診察はほとんど受診票が利用可能だったため、0円～数千円でした。受診表はマジで神。40週で生まれてきたので受診表はぴったり足りました。受診表がなくなった後の診察は完全実費なので、予定週に生まれてきた息子に感謝。&lt;/p&gt;
 
-&lt;h3 id=&#34;出産:a24886dad6ec2076a91d313e1924f45b&#34;&gt;出産&lt;/h3&gt;
+&lt;h3 id=&#34;出産&#34;&gt;出産&lt;/h3&gt;
 
 &lt;p&gt;　自然分娩で部屋は個室、入院中に受けた抗生物質の点滴、陣痛促進剤の点滴、栄養剤の点滴、出産後のリラクゼーションエステ？などを含め、総額は￥538,180でした。ここから出産育児一時金￥420,000が引かれ、窓口での支払いは￥118,180でした。なお、ITS独自の出産育児付加金￥90,000を事後申請したので、最終的な実費は￥28,180になる予定です。ここまで来るとほぼゼロ円ですね。ありがたいことです。&lt;/p&gt;
 </description>

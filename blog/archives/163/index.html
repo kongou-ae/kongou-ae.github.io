@@ -72,7 +72,7 @@
 
 <p>IHAnet関連で、Vyattaの経路制御を試しているので少しずつメモ書きします。多分あってるんじゃないかなー。BGPでの経路制御は一つの目的でも色々なやり方があるので、これが正しいとは限りません。</p>
 
-<h3 id="フィルタしたい経路用のprefix-listを作成する-p:703902c26acee1f3cd67c342d0b615b5">フィルタしたい経路用のPrefix-listを作成する</p></h3>
+<h3 id="フィルタしたい経路用のprefix-listを作成する-p">フィルタしたい経路用のPrefix-listを作成する</p></h3>
 
 <p>PeerとのBGPがestablishになると、ルーティングテーブル上にPeerが広告した経路が載ってきます。なんでも載せられてしまうと自身のルーティングテーブルがおかしくなってしまうので、広告されるはずのない経路は受け取らないようにします。</p>
 
@@ -137,7 +137,7 @@
 
 <li><p>Rule999：上記Ruleにmatchしなかった経路</p>
 
-<h3 id="作成したprefix-listをpeerに関連付ける:703902c26acee1f3cd67c342d0b615b5">作成したprefix-listをPeerに関連付ける</h3></li>
+<h3 id="作成したprefix-listをpeerに関連付ける">作成したprefix-listをPeerに関連付ける</h3></li>
 </ul>
 
 <p>下記の様に各Peerごとにprefix-listを関連付けてもいいのですが、Peerが増えるたびに同じ設定しなければなりません。今はinのprefix-listだけなので簡単ですが、一つのpeerに対して、outのprefix-listやas-path-list、route-mapなど様々な経路制御を設定するようになると、設定作業が煩雑になります。</p>
@@ -217,7 +217,7 @@ disable-send-community  nexthop-self            route-server-client
 (config-router-af)# neighbor 2001:**:**:**::6 peer-group IHAnet
 </code></pre>
 
-<h3 id="動作確認:703902c26acee1f3cd67c342d0b615b5">動作確認</h3>
+<h3 id="動作確認">動作確認</h3>
 
 <p>こうする事で、IPv6でpeer-groupが利用可能になります。実際にSpecial-Use-prefixが適応されている事がline11で確認できます。試しにSpecial-Use-prefixのrule90に、peerが広告するprefixを追加してみた所、peerから経路を受け取れなくなりましたので、ちゃんと動いているようです。</p>
 

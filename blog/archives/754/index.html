@@ -70,13 +70,13 @@
 
 <p>念願のFortiOS4.0が動くFortigateを手に入れたぞ！！という事で、VDOMで遊んでみました。環境はFortigate50BとFortiOS4.0 MR3 Patch 6です。</p>
 
-<h3 id="構成図:53c738c0f35b9e72e785be171e1cc256">構成図</h3>
+<h3 id="構成図">構成図</h3>
 
 <p>　上の箱がFortigate50B、下の箱がCisco892Jです。1台のFortigate50Bの中にL3SW1台と2台のFWを作ってみました。VDOM rootはインターネットとFWをつなぐL3SW、VDOM14はLAN側のNICが二つ（InternalとDMZ）があるFW、VDOM15はLAN側のNICが一つだけのFWをイメージしています。今回のエントリーはVDOM14に関する部分だけです。</p>
 
 <p><img src="http://aimless.jp/blog/images/vdom-topo.png" alt="" /></p>
 
-<h3 id="global設定:53c738c0f35b9e72e785be171e1cc256">Global設定</h3>
+<h3 id="global設定">Global設定</h3>
 
 <p>　インターフェースの設定は下記の通りです。各VDOMのWAN側にグローバルIPアドレスを振る余裕はないので、グローバルIPアドレスを振ったWAN1をVDOM rootにルーテッドポートで接続します。そして、VDOM配下の端末がインターネットと通信できる様、VDOMリンクを利用してVDOM-14/15とVDOM rootを接続します。VDOMリンクはVLAN-14の様にIPアドレスを固定で設定する方法だけでなく、VDOM-15の様にunnumberedにすることもできます。</p>
 
@@ -84,7 +84,7 @@
 
 <p><img src="http://aimless.jp/blog/images/vdom-global-interface.png" alt="" /></p>
 
-<h3 id="vdom-root設定:53c738c0f35b9e72e785be171e1cc256">VDOM root設定</h3>
+<h3 id="vdom-root設定">VDOM root設定</h3>
 
 <p>　VDOM rootにインターネット向けのデフォルトルートと、下にぶら下がっているVDOM向けのルーティングを追加します。VDOM向けのネクストホップはVDOMリンクのIPアドレスです。unnumbered設定の場合、ネクストホップは不要です。初めは少々混乱しましたが、FW間の物理リンクが仮想的なVDOMリンクに置き換わっただけです。</p>
 
@@ -92,7 +92,7 @@
 
 <p>　VDOM rootのFWポリシーは全開けし、個別の制御は各VDOMに任せます。VDOMからInternetへのルールはNATを有効にします。</p>
 
-<h3 id="vdom14設定:53c738c0f35b9e72e785be171e1cc256">VDOM14設定</h3>
+<h3 id="vdom14設定">VDOM14設定</h3>
 
 <p>　VDOM14のインターフェースを確認すると、グローバルで設定した通りWAN側1つ、LAN側2つになっています。</p>
 
@@ -106,7 +106,7 @@
 
 <p><img src="http://aimless.jp/blog/images/vdom-vdom14-policy.png" alt="" /></p>
 
-<h3 id="動作確認:53c738c0f35b9e72e785be171e1cc256">動作確認</h3>
+<h3 id="動作確認">動作確認</h3>
 
 <p>　Cisco892Jから疎通確認を行います。各SVIはVRFで論理分割されているので、SVI間の通信は必ずVDOM14を経由します。想定通り動きました。</p>
 
@@ -153,7 +153,7 @@ VRF info: (vrf in name/id, vrf out name/id)
   2  *  *  * 　←FWのルールがないので通信不可。
 </code></pre>
 
-<h3 id="その他:53c738c0f35b9e72e785be171e1cc256">その他</h3>
+<h3 id="その他">その他</h3>
 
 <p>　何もしないと装置のリソースを全てのVDOMで共有しますが、VDOM単位で装置全体のリソースを固定割り当てすることもできます。</p>
 
@@ -196,7 +196,7 @@ end         end and save last config
 FGT50B3G08625936 (VDOM-14) # 
 </code></pre>
 
-<h3 id="まとめ:53c738c0f35b9e72e785be171e1cc256">まとめ</h3>
+<h3 id="まとめ">まとめ</h3>
 
 <p>　これはすごい。設定はGUIでぽちぽち、各VDOM上の操作も通常のFortigateと変わりません。動作確認はしていませんが、VDOM単位でアカウントを作成して権限を付与できそう。</p>
 

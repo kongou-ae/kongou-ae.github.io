@@ -17,7 +17,7 @@
       <guid>http://aimless.jp/blog/archives/2016-05-01-testing-docx-by-pandoc-and-redpen</guid>
       <description>
 
-&lt;h2 id=&#34;経緯:2f134639a43ab886b880c1e34ff1c11b&#34;&gt;経緯&lt;/h2&gt;
+&lt;h2 id=&#34;経緯&#34;&gt;経緯&lt;/h2&gt;
 
 &lt;p&gt;textlintとRedPenのどちらを使うかを悩み、「会社で使うWindowsのPCにインストールしやすいから」という理由でRedPenを選んでから、数か月がたちました。そんな中、昨日、自分の頭の中に神が降りてきました。&lt;/p&gt;
 
@@ -26,7 +26,7 @@
 
 &lt;p&gt;RedPenはWordファイルに対応していません。ですが、Pandocを使ってWordファイルをMarkdownに変換すれば、RedPenでWordファイルの内容をテストできます。なぜ今まで思いつかなかった。&lt;/p&gt;
 
-&lt;h2 id=&#34;実践:2f134639a43ab886b880c1e34ff1c11b&#34;&gt;実践&lt;/h2&gt;
+&lt;h2 id=&#34;実践&#34;&gt;実践&lt;/h2&gt;
 
 &lt;p&gt;Pandocはインストーラを使ってインストールします。RedPenはGitHubで配布されている圧縮ファイルをCドライブ直下に展開します。&lt;/p&gt;
 
@@ -85,7 +85,7 @@ tmp.md:1: ValidationError[JavaScript], [jtfStyleGuideValidator.js] 文書規約�
 PS C:\pandoc-redpen&amp;gt;
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h2 id=&#34;所感:2f134639a43ab886b880c1e34ff1c11b&#34;&gt;所感&lt;/h2&gt;
+&lt;h2 id=&#34;所感&#34;&gt;所感&lt;/h2&gt;
 
 &lt;p&gt;Pandocを利用することで、RedPenが対応していないフォーマットのドキュメントを検査することができました。&lt;/p&gt;
 
@@ -101,7 +101,7 @@ PS C:\pandoc-redpen&amp;gt;
       <guid>http://aimless.jp/blog/archives/2016-04-25-skipping-test-by-circleci</guid>
       <description>
 
-&lt;h2 id=&#34;テストをスキップしたい時もある:4ea3f16a74861147e21314ea9d30e344&#34;&gt;テストをスキップしたい時もある&lt;/h2&gt;
+&lt;h2 id=&#34;テストをスキップしたい時もある&#34;&gt;テストをスキップしたい時もある&lt;/h2&gt;
 
 &lt;p&gt;下図のようなデプロイメントプロセスでブログを書いています。CircleCIを中心としたプロセスで、それなりに便利なのですが、ブログを公開するためにはRedPenのテストに合格しなければなりません。&lt;/p&gt;
 
@@ -119,13 +119,13 @@ bash ./test-redpen.sh returned exit code 1
 
 &lt;p&gt;本来はテストを直すべきなのですが、「テストをスキップしたいことがあるだろう」ということで、任意のコミットについてCircleCIでのテストをスキップする仕組みを実装しました。&lt;/p&gt;
 
-&lt;h2 id=&#34;circleci標準のスキップ機能:4ea3f16a74861147e21314ea9d30e344&#34;&gt;CircleCI標準のスキップ機能&lt;/h2&gt;
+&lt;h2 id=&#34;circleci標準のスキップ機能&#34;&gt;CircleCI標準のスキップ機能&lt;/h2&gt;
 
 &lt;p&gt;CircleCIに標準実装されている機能は&lt;code&gt;[skip ci]&lt;/code&gt;です。コミットログに&lt;code&gt;[skip ci]&lt;/code&gt;を含めるとCircleCIによる処理が行われません。&lt;/p&gt;
 
 &lt;p&gt;私の場合、③テストだけをスキップしたいので、&lt;code&gt;[skip ci]&lt;/code&gt;はやりすぎです。CircleCIによる処理が行われない場合、HUGOによるビルトやGitHub Pagesへの公開がなされないためです。&lt;/p&gt;
 
-&lt;h2 id=&#34;実装:4ea3f16a74861147e21314ea9d30e344&#34;&gt;実装&lt;/h2&gt;
+&lt;h2 id=&#34;実装&#34;&gt;実装&lt;/h2&gt;
 
 &lt;p&gt;そこでテスト実行のスクリプトに、コミットメッセージに応じた条件分岐を追加することにしました。&lt;/p&gt;
 
@@ -160,7 +160,7 @@ else
 fi
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h2 id=&#34;動作確認:4ea3f16a74861147e21314ea9d30e344&#34;&gt;動作確認&lt;/h2&gt;
+&lt;h2 id=&#34;動作確認&#34;&gt;動作確認&lt;/h2&gt;
 
 &lt;p&gt;コミットメッセージを「update」とすると、CircleCIによってRedPenのテストが実行されます。ひらがなにしたほうが読みやすい表現に関するエラーがでています。&lt;/p&gt;
 
@@ -170,7 +170,7 @@ fi
 
 &lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/images/2016-04-25-003.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
 
-&lt;h2 id=&#34;まとめ:4ea3f16a74861147e21314ea9d30e344&#34;&gt;まとめ&lt;/h2&gt;
+&lt;h2 id=&#34;まとめ&#34;&gt;まとめ&lt;/h2&gt;
 
 &lt;p&gt;任意のコミットメッセージによって、CircleCIが実行するテスト用スクリプトを分岐させてみました。CIツールが実行する処理を、個々のコマンドを実行する形ではなく、個々のコマンドをまとめたスクリプトを実行する形にすると、コミットメッセージに応じてCIツールのテストの処理を分岐させることができます。これはテストに限らず、いろいろなシーンで活用できそうです。&lt;/p&gt;
 </description>
@@ -188,13 +188,13 @@ fi
 
 &lt;p&gt;というわけで、GmailのSMTPサーバを使ってアラートメールを送信してみました。SMTP heloは適当です。&lt;/p&gt;
 
-&lt;h3 id=&#34;設定:bf42c88477c8d52859eb3bfe8b32c7a6&#34;&gt;設定&lt;/h3&gt;
+&lt;h3 id=&#34;設定&#34;&gt;設定&lt;/h3&gt;
 
 &lt;p&gt;管理＞メディアタイプから以下の通り設定します。&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/images/2016-04-18-001.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
 
-&lt;h3 id=&#34;動作確認:bf42c88477c8d52859eb3bfe8b32c7a6&#34;&gt;動作確認&lt;/h3&gt;
+&lt;h3 id=&#34;動作確認&#34;&gt;動作確認&lt;/h3&gt;
 
 &lt;p&gt;無事メールが届きました。&lt;/p&gt;
 
@@ -210,7 +210,7 @@ fi
       <guid>http://aimless.jp/blog/archives/2016-02-16-titlepage-of-pdffile-created-by-asciidoctorpdf</guid>
       <description>
 
-&lt;h2 id=&#34;デフォルトの表紙:5feccf674ee677e899c7266b1cf01563&#34;&gt;デフォルトの表紙&lt;/h2&gt;
+&lt;h2 id=&#34;デフォルトの表紙&#34;&gt;デフォルトの表紙&lt;/h2&gt;
 
 &lt;p&gt;asciidoctor-pdfでは、H1と以下2行をもとに表紙が生成されます。&lt;/p&gt;
 
@@ -223,7 +223,7 @@ v1.0, 2014-01-01
 
 &lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/images/2016-02-16-001.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
 
-&lt;h2 id=&#34;テーマファイルを使って表紙をカスタマイズする:5feccf674ee677e899c7266b1cf01563&#34;&gt;テーマファイルを使って表紙をカスタマイズする&lt;/h2&gt;
+&lt;h2 id=&#34;テーマファイルを使って表紙をカスタマイズする&#34;&gt;テーマファイルを使って表紙をカスタマイズする&lt;/h2&gt;
 
 &lt;p&gt;&lt;a href=&#34;https://github.com/asciidoctor/asciidoctor-pdf/blob/master/docs/theming-guide.adoc#title-page&#34;&gt;テーマファイルのコンフィグ例&lt;/a&gt;をもとに、表紙をカスタマイズしてみます。&lt;/p&gt;
 
@@ -247,7 +247,7 @@ v1.0, 2014-01-01
 
 &lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/images/2016-02-16-002.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
 
-&lt;h2 id=&#34;タイトルの改行位置を調整する:5feccf674ee677e899c7266b1cf01563&#34;&gt;タイトルの改行位置を調整する&lt;/h2&gt;
+&lt;h2 id=&#34;タイトルの改行位置を調整する&#34;&gt;タイトルの改行位置を調整する&lt;/h2&gt;
 
 &lt;p&gt;タイトルが変な位置で改行されてしまっているので修正します。H1の文字列をで区切ることで、PDFのタイトルを任意の位置で改行することができます。&lt;/p&gt;
 
@@ -270,13 +270,13 @@ v1.0, 2014-01-01
       <guid>http://aimless.jp/blog/archives/2016-02-14-analysing-vpcflowlogs-by-apachedrill</guid>
       <description>
 
-&lt;h2 id=&#34;vpc-flow-logsを集計する:a5223f4f9e4d0e3990f74882dfbbe94b&#34;&gt;VPC FLow Logsを集計する&lt;/h2&gt;
+&lt;h2 id=&#34;vpc-flow-logsを集計する&#34;&gt;VPC FLow Logsを集計する&lt;/h2&gt;
 
 &lt;p&gt;&lt;a href=&#34;http://aimless.jp/blog/archives/2016-02-02-retrieving-aws-vpc-flow-logs-using-flowlogs-reader/&#34;&gt;flowlogs-readerを使って、VPC Flow Logsをコマンドラインで操作する&lt;/a&gt;にて、flowlogs-readerの標準出力をawkで集計する方法を紹介しました。&lt;/p&gt;
 
 &lt;p&gt;ですが、この方法は自分が意図するシェル芸を考えることが大変です。もう少しスマートなやり方はないものかと考えた結果、Apache Drillを使う方法を思いついたので試してみました。&lt;/p&gt;
 
-&lt;h2 id=&#34;apache-drillのインストール:a5223f4f9e4d0e3990f74882dfbbe94b&#34;&gt;Apache Drillのインストール&lt;/h2&gt;
+&lt;h2 id=&#34;apache-drillのインストール&#34;&gt;Apache Drillのインストール&lt;/h2&gt;
 
 &lt;p&gt;とりあえず使うことを目的としますので、tar.gzをダウンロードして解凍するだけにします。&lt;/p&gt;
 
@@ -323,7 +323,7 @@ OpenJDK 64-Bit Server VM warning: INFO: os::commit_memory(0x00000006e0000000, 14
 # /tmp/jvm-10501/hs_error.log
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h2 id=&#34;集計元データの作成:a5223f4f9e4d0e3990f74882dfbbe94b&#34;&gt;集計元データの作成&lt;/h2&gt;
+&lt;h2 id=&#34;集計元データの作成&#34;&gt;集計元データの作成&lt;/h2&gt;
 
 &lt;p&gt;flowlogs-readerの標準出力をawkでCSV形式にします。&lt;/p&gt;
 
@@ -363,7 +363,7 @@ time,srcaddr,dstaddr,srcport,dstport,protocol,bytes,result
 &lt;pre&gt;&lt;code&gt;sed -i -e &amp;quot;s/-/0/g&amp;quot; /home/xxxxxxxx/result.csvh  
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h2 id=&#34;集計してみる:a5223f4f9e4d0e3990f74882dfbbe94b&#34;&gt;集計してみる&lt;/h2&gt;
+&lt;h2 id=&#34;集計してみる&#34;&gt;集計してみる&lt;/h2&gt;
 
 &lt;p&gt;とりあえずselectしてみましょう。CSVH形式にすると追加したヘッダがカラムになります。これならば集計できますね。&lt;/p&gt;
 
@@ -448,7 +448,7 @@ time,srcaddr,dstaddr,srcport,dstport,protocol,bytes,result
 24 rows selected (0.714 seconds)
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h2 id=&#34;所感:a5223f4f9e4d0e3990f74882dfbbe94b&#34;&gt;所感&lt;/h2&gt;
+&lt;h2 id=&#34;所感&#34;&gt;所感&lt;/h2&gt;
 
 &lt;p&gt;VPC Flow Logsを分析する手法として、Apache Drillを試しました。CSVファイルに対してmysqlライクなクエリを投げられるのが大変便利だなと思いました。Apache Drillを使っても自分がやりたいことをクエリにしなければなりませんが、シェル芸のワンライナーを考えるよりもmysqlライクなクエリを考える方が簡単です。&lt;/p&gt;
 
@@ -466,7 +466,7 @@ time,srcaddr,dstaddr,srcport,dstport,protocol,bytes,result
 
 &lt;p&gt;RedPenのJavaScript拡張を利用して、&lt;a href=&#34;http://www.danshihack.com/2015/06/04/junp/twitter-editter-kana.html&#34;&gt;プロの編集が教える「開いた（平仮名）のほうが読みやすくなる表現一覧」が超勉強になると話題&lt;/a&gt;に乗っている修正事項をチェックしてみました。&lt;/p&gt;
 
-&lt;h2 id=&#34;javascript拡張:168337d188fe34a2b2c2d8d61b97e765&#34;&gt;Javascript拡張&lt;/h2&gt;
+&lt;h2 id=&#34;javascript拡張&#34;&gt;Javascript拡張&lt;/h2&gt;
 
 &lt;p&gt;表現一覧から、日常で使ってしまいそうな表現だけをチェックするようにします。&lt;/p&gt;
 
@@ -508,7 +508,7 @@ function validateSentence(sentence) {
 }
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h2 id=&#34;テストしてみる:168337d188fe34a2b2c2d8d61b97e765&#34;&gt;テストしてみる&lt;/h2&gt;
+&lt;h2 id=&#34;テストしてみる&#34;&gt;テストしてみる&lt;/h2&gt;
 
 &lt;p&gt;以下の文章をテストしてみます。&lt;/p&gt;
 
@@ -557,7 +557,7 @@ test2.md:18: ValidationError[JavaScript], [easyReadCheck.js] 「更に」を「�
 
 &lt;p&gt;会社のWordテンプレのフッターが複数行なので、asciidoctor-pdfで複数行のフッタを出力する方法を調べました。&lt;/p&gt;
 
-&lt;h2 id=&#34;テーマファイルの書き方:2493613cc362f0c0ba05912c0cc3a509&#34;&gt;テーマファイルの書き方&lt;/h2&gt;
+&lt;h2 id=&#34;テーマファイルの書き方&#34;&gt;テーマファイルの書き方&lt;/h2&gt;
 
 &lt;p&gt;今回は、PDFのフッタにページ番号とコピーライトをつけます。その場合、テーマファイルを以下のように記載します。参考：&lt;a href=&#34;https://github.com/asciidoctor/asciidoctor-pdf/blob/master/docs/theming-guide.adoc#running-header--footer&#34;&gt;Running header &amp;amp; footer&lt;/a&gt;&lt;/p&gt;
 
@@ -578,7 +578,7 @@ test2.md:18: ValidationError[JavaScript], [easyReadCheck.js] 「更に」を「�
         Copyright &amp;amp;#169; hogehoge company CO.,LTD. All right reserved.
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h2 id=&#34;pdf出力:2493613cc362f0c0ba05912c0cc3a509&#34;&gt;PDF出力&lt;/h2&gt;
+&lt;h2 id=&#34;pdf出力&#34;&gt;PDF出力&lt;/h2&gt;
 
 &lt;p&gt;asciidoctor-pdfでビルドする際に上記のテーマファイルを利用すると、以下のPDFが生成されます。やりたいことができました。&lt;/p&gt;
 
@@ -605,7 +605,7 @@ test2.md:18: ValidationError[JavaScript], [easyReadCheck.js] 「更に」を「�
 
 &lt;p&gt;どれも素晴らしいツールなのですが、気軽にログを調査する、集計するといった用途で使うには少々大がかりです。もっと気軽なツールはないかとGithubをさまよった結果、&lt;a href=&#34;https://github.com/obsrvbl/flowlogs-reader&#34;&gt;obsrvbl/flowlogs-reader&lt;/a&gt;というツールを見つけたので試してみました。&lt;/p&gt;
 
-&lt;h2 id=&#34;インストール:ca10f760ffb323fafc126a34735ccb7a&#34;&gt;インストール&lt;/h2&gt;
+&lt;h2 id=&#34;インストール&#34;&gt;インストール&lt;/h2&gt;
 
 &lt;p&gt;READMEに書いてある通りです。ソースからインストールしてみました。&lt;/p&gt;
 
@@ -614,7 +614,7 @@ cd flowlogs-reader
 pyenv exec python setup.py develop
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h2 id=&#34;基本操作:ca10f760ffb323fafc126a34735ccb7a&#34;&gt;基本操作&lt;/h2&gt;
+&lt;h2 id=&#34;基本操作&#34;&gt;基本操作&lt;/h2&gt;
 
 &lt;p&gt;READMEに従って、&lt;code&gt;flowlogs_reader logGroupName&lt;/code&gt;を実行してみます。&lt;/p&gt;
 
@@ -639,7 +639,7 @@ botocore.exceptions.ClientError: An error occurred (ResourceNotFoundException) w
 
 &lt;p&gt;出ました！なにこれすごい！&lt;/p&gt;
 
-&lt;h3 id=&#34;時間指定:ca10f760ffb323fafc126a34735ccb7a&#34;&gt;時間指定&lt;/h3&gt;
+&lt;h3 id=&#34;時間指定&#34;&gt;時間指定&lt;/h3&gt;
 
 &lt;p&gt;&lt;code&gt;-s&lt;/code&gt;と&lt;code&gt;-e&lt;/code&gt;オプションを使うことで、抽出する範囲を限定することができます。&lt;/p&gt;
 
@@ -659,7 +659,7 @@ botocore.exceptions.ClientError: An error occurred (ResourceNotFoundException) w
 
 &lt;p&gt;おおお、すごい。VPC Flow Logs内のstartをもとにフィルタリングしてるようです。&lt;/p&gt;
 
-&lt;h2 id=&#34;ipアドレスで抽出:ca10f760ffb323fafc126a34735ccb7a&#34;&gt;IPアドレスで抽出&lt;/h2&gt;
+&lt;h2 id=&#34;ipアドレスで抽出&#34;&gt;IPアドレスで抽出&lt;/h2&gt;
 
 &lt;p&gt;&lt;code&gt;findip&lt;/code&gt;を利用することで、IPアドレスを利用したログの抽出が可能です。&lt;/p&gt;
 
@@ -669,7 +669,7 @@ botocore.exceptions.ClientError: An error occurred (ResourceNotFoundException) w
 2 743065858817 eni-63444414 172.20.0.10 54.245.120.220 48618 443 6 11 2232 1454324362 1454324415 ACCEPT OK
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h2 id=&#34;awkで処理する:ca10f760ffb323fafc126a34735ccb7a&#34;&gt;AWKで処理する&lt;/h2&gt;
+&lt;h2 id=&#34;awkで処理する&#34;&gt;AWKで処理する&lt;/h2&gt;
 
 &lt;p&gt;VPC Flow Logsの内容が標準出力されるということは、AWKで自由に編集できるということです。&lt;/p&gt;
 
@@ -714,7 +714,7 @@ botocore.exceptions.ClientError: An error occurred (ResourceNotFoundException) w
 
 &lt;p&gt;おお、できたっぽい！&lt;/p&gt;
 
-&lt;h2 id=&#34;所感:ca10f760ffb323fafc126a34735ccb7a&#34;&gt;所感&lt;/h2&gt;
+&lt;h2 id=&#34;所感&#34;&gt;所感&lt;/h2&gt;
 
 &lt;p&gt;過去触ってきた各種サービスは、VPC Flow Logsを継続的に保管し、傾向を分析、可視化するにはもってこいです。ですが、トラブルシュートなどのスポット用途でログを見たい、分析したいという用途には少々オーバースペックです。そんな人には、&lt;a href=&#34;https://github.com/obsrvbl/flowlogs-reader&#34;&gt;obsrvbl/flowlogs-reader&lt;/a&gt;をお勧めします。気軽ですよ。&lt;/p&gt;
 </description>
@@ -728,7 +728,7 @@ botocore.exceptions.ClientError: An error occurred (ResourceNotFoundException) w
       <guid>http://aimless.jp/blog/archives/2016-01-24-analysing-vpcflowlogs-by-sumologic</guid>
       <description>
 
-&lt;h2 id=&#34;vpc-flow-logsを可視化したい:d7ed45000ec743b096ff53f4eb6f2750&#34;&gt;VPC FLow Logsを可視化したい&lt;/h2&gt;
+&lt;h2 id=&#34;vpc-flow-logsを可視化したい&#34;&gt;VPC FLow Logsを可視化したい&lt;/h2&gt;
 
 &lt;p&gt;検証環境のVPC Flow Logsを収集、調査、分析するためにElasticSearch Serviceを利用していましたが、利用料をケチるためにt2.microで動かしていたため動作が遅く困っていました。オンプレミスで十分なリソースを積んだElasticSearchを立ててもよかったのですが、目的はログを分析することであって、ElasticSearchを運用することではありません。&lt;/p&gt;
 
@@ -740,7 +740,7 @@ botocore.exceptions.ClientError: An error occurred (ResourceNotFoundException) w
 
 &lt;p&gt;なお、現時点でのプランが30日トライアルのため、sumologicの全機能が利用できる状況です。30日後にフリープランになった場合、このエントリーに記載したことの何ができなくなるのか少々不安です。30日後に確認します。（参考：&lt;a href=&#34;https://www.sumologic.com/pricing/&#34;&gt;Pricing&lt;/a&gt;）&lt;/p&gt;
 
-&lt;h2 id=&#34;sumologicにログを転送する仕組み:d7ed45000ec743b096ff53f4eb6f2750&#34;&gt;SumoLogicにログを転送する仕組み&lt;/h2&gt;
+&lt;h2 id=&#34;sumologicにログを転送する仕組み&#34;&gt;SumoLogicにログを転送する仕組み&lt;/h2&gt;
 
 &lt;p&gt;sumologicにログを転送する方法は2つあります。&lt;/p&gt;
 
@@ -780,7 +780,7 @@ botocore.exceptions.ClientError: An error occurred (ResourceNotFoundException) w
 
 &lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/images/2016-01-24-001.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
 
-&lt;h2 id=&#34;sumologicにvpc-flow-logsを送る方法:d7ed45000ec743b096ff53f4eb6f2750&#34;&gt;sumologicにVPC Flow Logsを送る方法&lt;/h2&gt;
+&lt;h2 id=&#34;sumologicにvpc-flow-logsを送る方法&#34;&gt;sumologicにVPC Flow Logsを送る方法&lt;/h2&gt;
 
 &lt;p&gt;公式のヘルプ(&lt;a href=&#34;https://service.sumologic.com/help/Default.htm#Collecting_Amazon_VPC_Flow_Logs.htm%3FTocPath%3DApps%7CSumo%2520Logic%2520App%2520for%2520Amazon%2520VPC%2520Flow%2520Logs%7C_____1&#34;&gt;Collecting Amazon VPC Flow Logs&lt;/a&gt;)に従い、installed Collectorを利用したログ転送を試したのですが、以下のエラーが出てしまい上手く行きませんでした。&lt;/p&gt;
 
@@ -791,7 +791,7 @@ botocore.exceptions.ClientError: An error occurred (ResourceNotFoundException) w
 
 &lt;p&gt;なお、sumologicのAPI（Collector Management API）は、PROFESSIONALプラン以上で利用可能です。そのため、FREEプランでは利用できません。。。&lt;/p&gt;
 
-&lt;h2 id=&#34;sumologicにログを送る:d7ed45000ec743b096ff53f4eb6f2750&#34;&gt;sumologicにログを送る&lt;/h2&gt;
+&lt;h2 id=&#34;sumologicにログを送る&#34;&gt;sumologicにログを送る&lt;/h2&gt;
 
 &lt;p&gt;Hosted Collectorを作成します。&lt;/p&gt;
 
@@ -817,7 +817,7 @@ botocore.exceptions.ClientError: An error occurred (ResourceNotFoundException) w
 
 &lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/images/2016-01-24-006.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
 
-&lt;h2 id=&#34;ログを可視化する:d7ed45000ec743b096ff53f4eb6f2750&#34;&gt;ログを可視化する&lt;/h2&gt;
+&lt;h2 id=&#34;ログを可視化する&#34;&gt;ログを可視化する&lt;/h2&gt;
 
 &lt;p&gt;sumologicには標準でVPC Flow Logsを可視化するAppsが用意されています。とりあえずこれを利用します。FREEプランになっても使えるかは要確認です。&lt;/p&gt;
 
@@ -833,7 +833,7 @@ botocore.exceptions.ClientError: An error occurred (ResourceNotFoundException) w
 
 &lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/images/2016-01-24-013.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
 
-&lt;h2 id=&#34;ログを検索する:d7ed45000ec743b096ff53f4eb6f2750&#34;&gt;ログを検索する&lt;/h2&gt;
+&lt;h2 id=&#34;ログを検索する&#34;&gt;ログを検索する&lt;/h2&gt;
 
 &lt;p&gt;独自のクエリ言語を利用して、ログを検索することができます。&lt;/p&gt;
 
@@ -865,7 +865,7 @@ botocore.exceptions.ClientError: An error occurred (ResourceNotFoundException) w
 
 &lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/images/2016-01-24-018.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
 
-&lt;h2 id=&#34;雑な所感:d7ed45000ec743b096ff53f4eb6f2750&#34;&gt;雑な所感&lt;/h2&gt;
+&lt;h2 id=&#34;雑な所感&#34;&gt;雑な所感&lt;/h2&gt;
 
 &lt;p&gt;有料のSaaSだけあってかなり使いやすいです。また、Hosted Collectorを利用することで、サーバレスでAWSの各種ログを収集・分析することができます。今後、AWSのログを保存・分析するための基盤のお仕事があった場合、検討候補にしたいと思います。&lt;/p&gt;
 </description>
@@ -884,13 +884,13 @@ botocore.exceptions.ClientError: An error occurred (ResourceNotFoundException) w
 &lt;p&gt;もう少し不便にすることでセキュリティを高められないか、と考え、WorkSpacesのセキュリティや監査に関する機能を調査したのでメモします。
 なお多要素認証については当たり前なので触れません。&lt;/p&gt;
 
-&lt;h2 id=&#34;認証情報の記憶を無効化する:052ae81a42bf391414298e21d62dd7a3&#34;&gt;認証情報の記憶を無効化する&lt;/h2&gt;
+&lt;h2 id=&#34;認証情報の記憶を無効化する&#34;&gt;認証情報の記憶を無効化する&lt;/h2&gt;
 
 &lt;p&gt;WorkSpacesクライアントは、認証情報を記憶する機能（Remember Me）があります。これを利用することで、次回以降のログインにおいてIDとパスワードの入力が不要となります。多要素認証を使っている場合、多要素認証のパスワードも記憶します。&lt;/p&gt;
 
 &lt;p&gt;この機能は大変便利ですが、社外からのリモートアクセス用途の場合、第三者による不正利用のリスクが生まれます。この機能は利用しているDirectory Service単位で無効にすることができます。詳細は&lt;a href=&#34;http://aimless.jp/blog/archives/2015-12-15-aws-workspaces-with-remember-me/&#34;&gt;Amazon WorkSpacesのRemember Me機能を使う&lt;/a&gt;を参照ください。&lt;/p&gt;
 
-&lt;h2 id=&#34;利用状況を記録する:052ae81a42bf391414298e21d62dd7a3&#34;&gt;利用状況を記録する&lt;/h2&gt;
+&lt;h2 id=&#34;利用状況を記録する&#34;&gt;利用状況を記録する&lt;/h2&gt;
 
 &lt;p&gt;リモートアクセス用途の場合、有事の際に備えて、いつ誰が使っていたかをロギングできることが望ましいでしょう。&lt;/p&gt;
 
@@ -908,7 +908,7 @@ botocore.exceptions.ClientError: An error occurred (ResourceNotFoundException) w
 
 &lt;p&gt;なお、現時点で、どこから（送信元IPアドレス）と、どの端末（WorkSpacesクライアントがインストールされている環境）からを調べることはできません。実装されるとうれしいです。&lt;/p&gt;
 
-&lt;h2 id=&#34;情報漏えいを防ぐ:052ae81a42bf391414298e21d62dd7a3&#34;&gt;情報漏えいを防ぐ&lt;/h2&gt;
+&lt;h2 id=&#34;情報漏えいを防ぐ&#34;&gt;情報漏えいを防ぐ&lt;/h2&gt;
 
 &lt;p&gt;デフォルトのAmazon WorkSpacesは、クリップボードのリダイレクトが有効になっています。WorkSpacesでコピーしたものを、WorkSpacesクライアントが動作するPCにペーストすることができます。リモートアクセス用途でWorkSpacesを利用している場合、技術的には、悪意あるユーザが情報を漏洩させることができます。&lt;/p&gt;
 
@@ -919,7 +919,7 @@ botocore.exceptions.ClientError: An error occurred (ResourceNotFoundException) w
 &lt;li&gt;ローカルプリンタを利用した印刷&lt;a href=&#34;http://docs.aws.amazon.com/workspaces/latest/adminguide/group_policy.html#gp_local_printers&#34;&gt;(Local Printer Support)&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h2 id=&#34;不要なセッションを積極的に切断する:052ae81a42bf391414298e21d62dd7a3&#34;&gt;不要なセッションを積極的に切断する&lt;/h2&gt;
+&lt;h2 id=&#34;不要なセッションを積極的に切断する&#34;&gt;不要なセッションを積極的に切断する&lt;/h2&gt;
 
 &lt;p&gt;WorkSpacesクライアントは、ネットワークが切れない限りセッションを維持します。所謂アイドルタイムアウトがないようです。リモートアクセス用途の場合、使っていないのに社内LANへのアクセス口が有効になっていることはリスクです。&lt;/p&gt;
 
@@ -927,7 +927,7 @@ botocore.exceptions.ClientError: An error occurred (ResourceNotFoundException) w
 
 &lt;p&gt;&lt;a href=&#34;https://technet.microsoft.com/ja-jp/library/cc758177%28v=ws.10%29.aspx&#34;&gt;切断されたセッション、アクティブなセッション、およびアイドル状態のセッションに対するタイムアウト値を設定する&lt;/a&gt;&lt;/p&gt;
 
-&lt;h2 id=&#34;まとめ:052ae81a42bf391414298e21d62dd7a3&#34;&gt;まとめ&lt;/h2&gt;
+&lt;h2 id=&#34;まとめ&#34;&gt;まとめ&lt;/h2&gt;
 
 &lt;p&gt;これまでの設定を実施すると、以下のようなWorkSpacesが完成します。かなり不便になりました。ですが、WorkSpacesをリモートアクセス用途で使う場合のリスクを大幅に軽減することができました。満足。&lt;/p&gt;
 
@@ -950,7 +950,7 @@ botocore.exceptions.ClientError: An error occurred (ResourceNotFoundException) w
 
 &lt;p&gt;Amazon WorkSpacesへの憧れが止まりません。BYOD＋WorkSpacesで仕事がしたい。とはいえ、古きSIerである弊社において、いきなりBYODはレベルが高すぎます。そこで、自宅からのリモートアクセス用途として会社に対してWorkSpacesを提案することにしました。そのために色々と調べたのでメモしておきます。&lt;/p&gt;
 
-&lt;h2 id=&#34;mfaの罠:31f38dca8007ccf1ee688b8fda274f87&#34;&gt;MFAの罠&lt;/h2&gt;
+&lt;h2 id=&#34;mfaの罠&#34;&gt;MFAの罠&lt;/h2&gt;
 
 &lt;p&gt;AD ConnectorとRADIUSサーバによる多要素認証を使ってみて気が付いたのですが、WorkSpacesクライアントは多要素認証を使っていても認証情報を記憶します。多要素認証でログインした後に一旦切断しても、以下の画面になりボタン一つで簡単に再接続ができます。&lt;/p&gt;
 
@@ -958,7 +958,7 @@ botocore.exceptions.ClientError: An error occurred (ResourceNotFoundException) w
 
 &lt;p&gt;　認証情報を保存する機能は便利なのですが、社外に配置するPCで利用するWorkSpacesクライアントには認証情報を保存したくありません。誰が触るかわかりませんので。&lt;/p&gt;
 
-&lt;h2 id=&#34;remember-meの無効化:31f38dca8007ccf1ee688b8fda274f87&#34;&gt;Remember Meの無効化&lt;/h2&gt;
+&lt;h2 id=&#34;remember-meの無効化&#34;&gt;Remember Meの無効化&lt;/h2&gt;
 
 &lt;p&gt;ドキュメントを調べたところ、ぴったりな機能がありました。Remember Meの無効化です。&lt;/p&gt;
 
@@ -970,7 +970,7 @@ botocore.exceptions.ClientError: An error occurred (ResourceNotFoundException) w
 
 &lt;p&gt;現時点で、Remember Meの無効化はサポートにお願いする必要があります。マネジメントコンソールでは無効にできません。&lt;/p&gt;
 
-&lt;h2 id=&#34;remember-me無効後の動作:31f38dca8007ccf1ee688b8fda274f87&#34;&gt;Remember Me無効後の動作&lt;/h2&gt;
+&lt;h2 id=&#34;remember-me無効後の動作&#34;&gt;Remember Me無効後の動作&lt;/h2&gt;
 
 &lt;p&gt;WorkSpacesクライアントを切断します。&lt;/p&gt;
 
@@ -984,7 +984,7 @@ botocore.exceptions.ClientError: An error occurred (ResourceNotFoundException) w
 
 &lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/images/2015-12-15-004.png&#34; alt=&#34;http://aimless.jp/blog/images/2015-12-15-004.png&#34; /&gt;&lt;/p&gt;
 
-&lt;h2 id=&#34;所感:31f38dca8007ccf1ee688b8fda274f87&#34;&gt;所感&lt;/h2&gt;
+&lt;h2 id=&#34;所感&#34;&gt;所感&lt;/h2&gt;
 
 &lt;p&gt;WorkSpacesはどこでもどんな端末でも使えるのが最大のメリットだと思います。ですが、どこでも使える端末に社内ネットワークにアクセスするための認証情報を保存するのはリスクがあります。Remember Meの無効化は、利便性とセキュリティを両立させる良いオプションだと思います。&lt;/p&gt;
 </description>
@@ -998,7 +998,7 @@ botocore.exceptions.ClientError: An error occurred (ResourceNotFoundException) w
       <guid>http://aimless.jp/blog/archives/2686</guid>
       <description>
 
-&lt;h2 id=&#34;はじめに:fdefdb4df80f925e79defa0315e73418&#34;&gt;はじめに&lt;/h2&gt;
+&lt;h2 id=&#34;はじめに&#34;&gt;はじめに&lt;/h2&gt;
 
 &lt;p&gt;&lt;a href=&#34;http://aimless.jp/blog/archives/2685/&#34;&gt;RedPenにスペルチェック機能を追加する&lt;/a&gt;の続きです。CircleCI上でRedPenを動かしてみました。&lt;/p&gt;
 
@@ -1006,7 +1006,7 @@ botocore.exceptions.ClientError: An error occurred (ResourceNotFoundException) w
 &lt;p&gt;RedPenを利用したスペルチェックがローカル環境で動くことを確認しました。JavaScriptでチェック項目を拡張できるのがいいですね。次はスペルチェック用辞書の単語を増やした上で、CircleCI上で動作させてみようと思います。&lt;/p&gt;
 &lt;/blockquote&gt;
 
-&lt;h2 id=&#34;コンテナの仕込み:fdefdb4df80f925e79defa0315e73418&#34;&gt;コンテナの仕込み&lt;/h2&gt;
+&lt;h2 id=&#34;コンテナの仕込み&#34;&gt;コンテナの仕込み&lt;/h2&gt;
 
 &lt;p&gt;CircleCIのコンテナでRedPenを動かさなければなりません。RedPenはJava 1.8が必要なのでcircle.ymの&lt;code&gt;machine&lt;/code&gt;の箇所に追加します。また、RedPenそのものをダウンロードしなければなりませんので、&lt;code&gt;dependencies&lt;/code&gt;の箇所でアーカイブのダウンロードと展開、削除を行います。&lt;/p&gt;
 
@@ -1022,7 +1022,7 @@ dependencies:
     - rm RedPen-1.4.1.tar.gz
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h2 id=&#34;テストの仕込み:fdefdb4df80f925e79defa0315e73418&#34;&gt;テストの仕込み&lt;/h2&gt;
+&lt;h2 id=&#34;テストの仕込み&#34;&gt;テストの仕込み&lt;/h2&gt;
 
 &lt;p&gt;RedPenで独自JavaScriptを利用するためには、設定ファイルとJavaScriptファイルが必要です。せっかくなので、これらもリポジトリで管理します。ブログ用リポジトリにRedPenの設定ファイルとスペルチェック用JavaScriptを配置します。&lt;/p&gt;
 
@@ -1059,7 +1059,7 @@ fi
       - bash ./test-redpen.sh
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h3 id=&#34;実行:fdefdb4df80f925e79defa0315e73418&#34;&gt;実行&lt;/h3&gt;
+&lt;h3 id=&#34;実行&#34;&gt;実行&lt;/h3&gt;
 
 &lt;p&gt;さて、試してみます。書きかけのこのエントリをブログ用リポジトリにプッシュしてみます。slackからテスト結果の通知があるまで、艦これでもやりつつ待ちます。&lt;/p&gt;
 
@@ -1076,7 +1076,7 @@ fi
 
 &lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/images/20151125-03.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
 
-&lt;h2 id=&#34;リトライ:fdefdb4df80f925e79defa0315e73418&#34;&gt;リトライ&lt;/h2&gt;
+&lt;h2 id=&#34;リトライ&#34;&gt;リトライ&lt;/h2&gt;
 
 &lt;p&gt;4項目を修正しまして再プッシュしましたが、再びエラーです。&lt;/p&gt;
 
@@ -1102,7 +1102,7 @@ fi
 
 &lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/images/20151125-05.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
 
-&lt;h2 id=&#34;所感:fdefdb4df80f925e79defa0315e73418&#34;&gt;所感&lt;/h2&gt;
+&lt;h2 id=&#34;所感&#34;&gt;所感&lt;/h2&gt;
 
 &lt;p&gt;CircleCIを利用して、ブログに対する継続的なテストを実装することができました。やりたいことができたので満足です。ブログを書きながら、スペルチェック用の辞書を育てていこうとおもいます。&lt;/p&gt;
 </description>
@@ -1116,19 +1116,19 @@ fi
       <guid>http://aimless.jp/blog/archives/2685</guid>
       <description>
 
-&lt;h2 id=&#34;前置き:6a8429973c6a1dee2b4aa041f6e841a8&#34;&gt;前置き&lt;/h2&gt;
+&lt;h2 id=&#34;前置き&#34;&gt;前置き&lt;/h2&gt;
 
 &lt;p&gt;もともとこのブログはWordpressで運用していました。ですが、アウトプットすることが目的であってCMSを運用することは目的ではありませんので、HUGO + Github Pagesの構成に切り替えました。&lt;/p&gt;
 
 &lt;p&gt;切り替えに伴い、ブログ用のGithubリポジトリにMarkdownをPushすると、CircleCIがHUGOを使ってブログをビルドし、HTMLをGithub PagesにPushする、という仕組みにしました。&lt;/p&gt;
 
-&lt;h2 id=&#34;文章をテストする:6a8429973c6a1dee2b4aa041f6e841a8&#34;&gt;文章をテストする&lt;/h2&gt;
+&lt;h2 id=&#34;文章をテストする&#34;&gt;文章をテストする&lt;/h2&gt;
 
 &lt;p&gt;ブログを公開するプロセスにCircleCIがいますので、ブログの文章に対してCIを行うことがでいます。何をするか考えた結果、文章をテストすることにしました。ブログ用のGithubリポジトリにPushされたMarkdownをCircleCIでテストし、誤記や文法の誤りなどがあればテスト失敗とみなしビルドを行わない。こうすることで、ブログに誤った情報を含むエントリーが乗ってしまう可能性を減らすことができます。&lt;/p&gt;
 
 &lt;p&gt;文章をテストするツールを探してみると、&lt;a href=&#34;https://github.com/textlint/textlint&#34;&gt;textlint/textlint&lt;/a&gt;と&lt;a href=&#34;https://github.com/redpen-cc/redpen/&#34;&gt;redpen-cc/redpen&lt;/a&gt;が見つかりました。asciidocとasciidocter-pdfを利用した気軽なドキュメント作成を模索していることもありますので、今回はasciidocをサポートするRedPenを使うことにします。&lt;/p&gt;
 
-&lt;h2 id=&#34;実践:6a8429973c6a1dee2b4aa041f6e841a8&#34;&gt;実践&lt;/h2&gt;
+&lt;h2 id=&#34;実践&#34;&gt;実践&lt;/h2&gt;
 
 &lt;p&gt;UTM製品であるフォーティゲートの正しいスペルは「FortiGate」です。FortigateやFroutigateではありません。ネットワークエンジニアとして、ネットワーク機器のスペルを間違えるのは恥ずかしい。そこでRedPenに、自分が指定するキーワードを利用したスペルチェック機能を実装します。&lt;/p&gt;
 
@@ -1267,7 +1267,7 @@ test.md:15: ValidationError[JavaScript], [spellcheck.js] Frotigateはスペル�
 [aimless@dev redpen-distribution-1.4.1]$
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h2 id=&#34;所感:6a8429973c6a1dee2b4aa041f6e841a8&#34;&gt;所感&lt;/h2&gt;
+&lt;h2 id=&#34;所感&#34;&gt;所感&lt;/h2&gt;
 
 &lt;p&gt;RedPenを利用したスペルチェックがローカル環境で動くことを確認しました。JavaScriptでチェック項目を拡張できるのがいいですね。次はスペルチェック用辞書の単語を増やした上で、CircleCI上で動作させてみようと思います。&lt;/p&gt;
 </description>
@@ -1281,13 +1281,13 @@ test.md:15: ValidationError[JavaScript], [spellcheck.js] Frotigateはスペル�
       <guid>http://aimless.jp/blog/archives/2684</guid>
       <description>
 
-&lt;h2 id=&#34;作ったもの:d4fd824ade6bd5facb61487e58730a29&#34;&gt;作ったもの&lt;/h2&gt;
+&lt;h2 id=&#34;作ったもの&#34;&gt;作ったもの&lt;/h2&gt;
 
 &lt;p&gt;&lt;a href=&#34;https://github.com/kongou-ae/aws2excel&#34;&gt;kongou-ae/aws2excel&lt;/a&gt;&lt;/p&gt;
 
 &lt;p&gt;AWSの構成情報をxlsxファイルに書き出すスクリプトです。出力されるファイルのイメージはREADMEの画像を参照ください。勢いでやっつけているので、一部サービスにのみ対応しています。最終的にはLambdaで動かしてs3にExcelを吐き出す実装にしたい。&lt;/p&gt;
 
-&lt;h2 id=&#34;経緯:d4fd824ade6bd5facb61487e58730a29&#34;&gt;経緯&lt;/h2&gt;
+&lt;h2 id=&#34;経緯&#34;&gt;経緯&lt;/h2&gt;
 
 &lt;p&gt;&lt;blockquote class=&#34;twitter-tweet&#34; lang=&#34;ja&#34;&gt;&lt;p lang=&#34;en&#34; dir=&#34;ltr&#34;&gt;&lt;a href=&#34;https://twitter.com/ishikawa84g&#34;&gt;@ishikawa84g&lt;/a&gt; cloud2excel!&lt;/p&gt;&amp;mdash; 前佛 雅人(M.Zembutsu) (@zembutsu) &lt;a href=&#34;https://twitter.com/zembutsu/status/660383609283457024&#34;&gt;2015, 10月 31&lt;/a&gt;&lt;/blockquote&gt;
 &lt;script async src=&#34;//platform.twitter.com/widgets.js&#34; charset=&#34;utf-8&#34;&gt;&lt;/script&gt;&lt;/p&gt;
@@ -1300,11 +1300,11 @@ test.md:15: ValidationError[JavaScript], [spellcheck.js] Frotigateはスペル�
 
 &lt;p&gt;自分もワクワクしながらcloud2excelを検索しまして、、、無いのであれば、勉強がてら作ってみようということで作ってみました。&lt;/p&gt;
 
-&lt;h2 id=&#34;実装:d4fd824ade6bd5facb61487e58730a29&#34;&gt;実装&lt;/h2&gt;
+&lt;h2 id=&#34;実装&#34;&gt;実装&lt;/h2&gt;
 
 &lt;p&gt;aws-sdkを利用してAPIを叩き必要な情報を取得し、その情報をExcel に書き出しているだけです。Excelへの書き出しは&lt;a href=&#34;https://github.com/guyonroche/exceljs&#34;&gt;guyonroche/exceljs&lt;/a&gt;を使いました。&lt;/p&gt;
 
-&lt;h2 id=&#34;雑感:d4fd824ade6bd5facb61487e58730a29&#34;&gt;雑感&lt;/h2&gt;
+&lt;h2 id=&#34;雑感&#34;&gt;雑感&lt;/h2&gt;
 
 &lt;p&gt;&lt;a href=&#34;https://github.com/guyonroche/exceljs&#34;&gt;guyonroche/exceljs&lt;/a&gt;を見つけたのが今回の最大の収穫です。配列やオブジェクトの情報を、かなり簡単に表形式でExcelに書き出すことができます。さらに、&lt;a href=&#34;https://github.com/guyonroche/exceljs&#34;&gt;guyonroche/exceljs&lt;/a&gt;は、Excelからの読み込みもできるようなので、Infrastrucrture as Excelが実現できます。Excelでパラメータシートを作り、そこにパラメータを書くとAWS上にインスタンスができる。なんという黒魔術。やりませんけど。。。&lt;/p&gt;
 
@@ -1324,17 +1324,17 @@ test.md:15: ValidationError[JavaScript], [spellcheck.js] Frotigateはスペル�
 
 &lt;p&gt;リーダと呼ばれるポジションに就き、5名のメンバーと一緒に仕事を行うこと3年、ふと「昔と比べると丸くなったなー」と思ったので、今意識している事をメモしておきます。社内研修や書籍、聖杯問答など、人を導くということについて色々な角度で学んだことを自分なりに消化した結果です。実際にできていることもあれば、中々できないこともあるので、今一度意識しなおして、半年くらい経ったら見返したい。&lt;/p&gt;
 
-&lt;h2 id=&#34;信じて任せる:cfff3a3a77bc1035e507c0bd778c73d2&#34;&gt;信じて任せる&lt;/h2&gt;
+&lt;h2 id=&#34;信じて任せる&#34;&gt;信じて任せる&lt;/h2&gt;
 
 &lt;p&gt;大原則として、メンバーを信じることにしています。また、メンバーを信じているということを、心の中で思っているだけでなくメンバーの前で明言します。「信じてるよ」と。メンバーを信じでいますので、能動的に仕事を回しているメンバーに対しては、仕事の細部に口を出すことはしません。信じて任せます。&lt;/p&gt;
 
-&lt;h2 id=&#34;放置しない:cfff3a3a77bc1035e507c0bd778c73d2&#34;&gt;放置しない&lt;/h2&gt;
+&lt;h2 id=&#34;放置しない&#34;&gt;放置しない&lt;/h2&gt;
 
 &lt;p&gt;信じると放置するは違うと考えています。リーダである私は、チームとして与えられたミッションをクリアすることで評価されます。そのためには、自分のメンバーが成果を出すことが必要不可欠です。チームに与えられているミッションは、自分の力だけで解決できる量をとうに超えています。従って、信じていると宣言する一方で、メンバーの成果が出ていることを確認し、必要に応じて軌道修正を行うことを意識しています。&lt;/p&gt;
 
 &lt;p&gt;例えば、週次ミーティングでの進捗報告や、メーリングリストに流れるメンバーのメールでのやりとりで、メンバーのアウトプットの有無や質を確認し、期待する成果に届いていない場合は声をかけます。困っているようであれば自分の仕事を止めて助け、悩んでいるようであれば一緒に悩みます。すべての変更作業について、私の承認が必要なプロセスにしているのも、放置しないの一環です。信じているし任せますが、最終的な責任まで放棄する気はありません。&lt;/p&gt;
 
-&lt;h2 id=&#34;メンバーに決めさせる:cfff3a3a77bc1035e507c0bd778c73d2&#34;&gt;メンバーに決めさせる&lt;/h2&gt;
+&lt;h2 id=&#34;メンバーに決めさせる&#34;&gt;メンバーに決めさせる&lt;/h2&gt;
 
 &lt;p&gt;リーダになった当初、リーダの仕事は決める事だと思っていましたが、何から何まで決めるのは止めました。特に、メンバーのタスクであれば、メンバーに決めてもらうことにしています。決められないのであれば、メンバーの悩みや迷いを聴いた上で、整理した上で再提示し、解決へのヒントを与える。こんな地味な事を繰り返し、メンバーに決めてもらう事を意識しています。&lt;/p&gt;
 
@@ -1342,13 +1342,13 @@ test.md:15: ValidationError[JavaScript], [spellcheck.js] Frotigateはスペル�
 
 &lt;p&gt;一方で、メンバーが悩んでどうしても決められない場合や、チームとしての決断が必要な場合は、即判断します。リーダですから。&lt;/p&gt;
 
-&lt;h2 id=&#34;ほめる:cfff3a3a77bc1035e507c0bd778c73d2&#34;&gt;ほめる&lt;/h2&gt;
+&lt;h2 id=&#34;ほめる&#34;&gt;ほめる&lt;/h2&gt;
 
 &lt;p&gt;仕事だからやって当然という考えは捨てました。仕事はツライ。だからこそ、頑張ってくれたメンバーはしっかり褒める。メールだけでなく、言葉で、他のメンバーのいる場で褒めます。「さすが」「完璧」といった簡易な言葉でも構わないので、ほめることを意識しています。&lt;/p&gt;
 
 &lt;p&gt;作業直前で手順の誤りに気がついた部下が相談に来たら、皆さんはどうしますか。「何やってんの、、」と怒りを示していませんか？私は褒めます。「作業する前に気がついてよかったじゃん。よく気がついたよ。ありがとね」と。怒っても仕方ない。&lt;/p&gt;
 
-&lt;h2 id=&#34;感情を表に出す:cfff3a3a77bc1035e507c0bd778c73d2&#34;&gt;感情を表に出す&lt;/h2&gt;
+&lt;h2 id=&#34;感情を表に出す&#34;&gt;感情を表に出す&lt;/h2&gt;
 
 &lt;p&gt;あえて感情を表に出すことにしています。私が人間臭い人が好きだからです。ただし、自分の負の感情は除く。負の感情はメンバーのいないところで発散します。&lt;/p&gt;
 
@@ -1358,19 +1358,19 @@ test.md:15: ValidationError[JavaScript], [spellcheck.js] Frotigateはスペル�
 
 &lt;p&gt;しょうもない雑談と笑いも大事にしています。仕事の合間の雑談、楽しいでしょ。こういうの大事。&lt;/p&gt;
 
-&lt;h2 id=&#34;やり方ではなくゴールを指示する:cfff3a3a77bc1035e507c0bd778c73d2&#34;&gt;やり方ではなくゴールを指示する&lt;/h2&gt;
+&lt;h2 id=&#34;やり方ではなくゴールを指示する&#34;&gt;やり方ではなくゴールを指示する&lt;/h2&gt;
 
 &lt;p&gt;仕事の細かいやり方を指示することはやめました。やり方はメンバーでも考えられるのですから（むしろメンバーの方が詳細に考えらえる事の方が多い）、やり方ではなく、私が期待する成果のあり姿を明確に伝える事を意識しています。「この仕事をお願いします。こーやって、あーやって、こうやってください」ではなく「この仕事をお願いします。成果物はこんなイメージ」であったり「この仕事をお願いします。○○できるようにするのがゴール」といったイメージです。&lt;/p&gt;
 
-&lt;h2 id=&#34;門戸を開く:cfff3a3a77bc1035e507c0bd778c73d2&#34;&gt;門戸を開く&lt;/h2&gt;
+&lt;h2 id=&#34;門戸を開く&#34;&gt;門戸を開く&lt;/h2&gt;
 
 &lt;p&gt;「何かあったら相談してね」「出かけるけど、何かあったら携帯ならしてね」は口癖になりました。明言することで、相談や緊急時の連絡が増えたような気がしています。相談や緊急連絡が増えると自分の仕事は止まりますが、リーダというものは、こういうものだと割り切ることにしました。チームとして成果が出ればいいよ。ゆえに、リーダ以外の業務は、メンバーが退社した17時以降が本番です。&lt;/p&gt;
 
-&lt;h2 id=&#34;チームである事を口にし続ける:cfff3a3a77bc1035e507c0bd778c73d2&#34;&gt;チームである事を口にし続ける&lt;/h2&gt;
+&lt;h2 id=&#34;チームである事を口にし続ける&#34;&gt;チームである事を口にし続ける&lt;/h2&gt;
 
 &lt;p&gt;自分とメンバーの事を「○○チーム」と呼ぶことを意識しています。私たちは個ではなくチームであること、つまり仲間であることを自分とメンバーに意識づけられればと思ってあえて言い続けています。最大の効果は、自分がチームのリーダであることを常に自分に意識づけし続けられることかもしれません。&lt;/p&gt;
 
-&lt;h2 id=&#34;最後に:cfff3a3a77bc1035e507c0bd778c73d2&#34;&gt;最後に&lt;/h2&gt;
+&lt;h2 id=&#34;最後に&#34;&gt;最後に&lt;/h2&gt;
 
 &lt;p&gt;　リーダーって何なんだろうなー。&lt;/p&gt;
 </description>

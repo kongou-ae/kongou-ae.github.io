@@ -68,7 +68,7 @@
     <article>
       
 
-<h2 id="vpc-flow-logsを可視化したい:d7ed45000ec743b096ff53f4eb6f2750">VPC FLow Logsを可視化したい</h2>
+<h2 id="vpc-flow-logsを可視化したい">VPC FLow Logsを可視化したい</h2>
 
 <p>検証環境のVPC Flow Logsを収集、調査、分析するためにElasticSearch Serviceを利用していましたが、利用料をケチるためにt2.microで動かしていたため動作が遅く困っていました。オンプレミスで十分なリソースを積んだElasticSearchを立ててもよかったのですが、目的はログを分析することであって、ElasticSearchを運用することではありません。</p>
 
@@ -80,7 +80,7 @@
 
 <p>なお、現時点でのプランが30日トライアルのため、sumologicの全機能が利用できる状況です。30日後にフリープランになった場合、このエントリーに記載したことの何ができなくなるのか少々不安です。30日後に確認します。（参考：<a href="https://www.sumologic.com/pricing/">Pricing</a>）</p>
 
-<h2 id="sumologicにログを転送する仕組み:d7ed45000ec743b096ff53f4eb6f2750">SumoLogicにログを転送する仕組み</h2>
+<h2 id="sumologicにログを転送する仕組み">SumoLogicにログを転送する仕組み</h2>
 
 <p>sumologicにログを転送する方法は2つあります。</p>
 
@@ -120,7 +120,7 @@
 
 <p><img src="http://aimless.jp/blog/images/2016-01-24-001.png" alt="" /></p>
 
-<h2 id="sumologicにvpc-flow-logsを送る方法:d7ed45000ec743b096ff53f4eb6f2750">sumologicにVPC Flow Logsを送る方法</h2>
+<h2 id="sumologicにvpc-flow-logsを送る方法">sumologicにVPC Flow Logsを送る方法</h2>
 
 <p>公式のヘルプ(<a href="https://service.sumologic.com/help/Default.htm#Collecting_Amazon_VPC_Flow_Logs.htm%3FTocPath%3DApps%7CSumo%2520Logic%2520App%2520for%2520Amazon%2520VPC%2520Flow%2520Logs%7C_____1">Collecting Amazon VPC Flow Logs</a>)に従い、installed Collectorを利用したログ転送を試したのですが、以下のエラーが出てしまい上手く行きませんでした。</p>
 
@@ -131,7 +131,7 @@
 
 <p>なお、sumologicのAPI（Collector Management API）は、PROFESSIONALプラン以上で利用可能です。そのため、FREEプランでは利用できません。。。</p>
 
-<h2 id="sumologicにログを送る:d7ed45000ec743b096ff53f4eb6f2750">sumologicにログを送る</h2>
+<h2 id="sumologicにログを送る">sumologicにログを送る</h2>
 
 <p>Hosted Collectorを作成します。</p>
 
@@ -157,7 +157,7 @@
 
 <p><img src="http://aimless.jp/blog/images/2016-01-24-006.png" alt="" /></p>
 
-<h2 id="ログを可視化する:d7ed45000ec743b096ff53f4eb6f2750">ログを可視化する</h2>
+<h2 id="ログを可視化する">ログを可視化する</h2>
 
 <p>sumologicには標準でVPC Flow Logsを可視化するAppsが用意されています。とりあえずこれを利用します。FREEプランになっても使えるかは要確認です。</p>
 
@@ -173,7 +173,7 @@
 
 <p><img src="http://aimless.jp/blog/images/2016-01-24-013.png" alt="" /></p>
 
-<h2 id="ログを検索する:d7ed45000ec743b096ff53f4eb6f2750">ログを検索する</h2>
+<h2 id="ログを検索する">ログを検索する</h2>
 
 <p>独自のクエリ言語を利用して、ログを検索することができます。</p>
 
@@ -205,7 +205,7 @@
 
 <p><img src="http://aimless.jp/blog/images/2016-01-24-018.png" alt="" /></p>
 
-<h2 id="雑な所感:d7ed45000ec743b096ff53f4eb6f2750">雑な所感</h2>
+<h2 id="雑な所感">雑な所感</h2>
 
 <p>有料のSaaSだけあってかなり使いやすいです。また、Hosted Collectorを利用することで、サーバレスでAWSの各種ログを収集・分析することができます。今後、AWSのログを保存・分析するための基盤のお仕事があった場合、検討候補にしたいと思います。</p>
 

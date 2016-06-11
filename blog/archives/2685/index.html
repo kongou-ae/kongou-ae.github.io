@@ -68,19 +68,19 @@
     <article>
       
 
-<h2 id="前置き:6a8429973c6a1dee2b4aa041f6e841a8">前置き</h2>
+<h2 id="前置き">前置き</h2>
 
 <p>もともとこのブログはWordpressで運用していました。ですが、アウトプットすることが目的であってCMSを運用することは目的ではありませんので、HUGO + Github Pagesの構成に切り替えました。</p>
 
 <p>切り替えに伴い、ブログ用のGithubリポジトリにMarkdownをPushすると、CircleCIがHUGOを使ってブログをビルドし、HTMLをGithub PagesにPushする、という仕組みにしました。</p>
 
-<h2 id="文章をテストする:6a8429973c6a1dee2b4aa041f6e841a8">文章をテストする</h2>
+<h2 id="文章をテストする">文章をテストする</h2>
 
 <p>ブログを公開するプロセスにCircleCIがいますので、ブログの文章に対してCIを行うことがでいます。何をするか考えた結果、文章をテストすることにしました。ブログ用のGithubリポジトリにPushされたMarkdownをCircleCIでテストし、誤記や文法の誤りなどがあればテスト失敗とみなしビルドを行わない。こうすることで、ブログに誤った情報を含むエントリーが乗ってしまう可能性を減らすことができます。</p>
 
 <p>文章をテストするツールを探してみると、<a href="https://github.com/textlint/textlint">textlint/textlint</a>と<a href="https://github.com/redpen-cc/redpen/">redpen-cc/redpen</a>が見つかりました。asciidocとasciidocter-pdfを利用した気軽なドキュメント作成を模索していることもありますので、今回はasciidocをサポートするRedPenを使うことにします。</p>
 
-<h2 id="実践:6a8429973c6a1dee2b4aa041f6e841a8">実践</h2>
+<h2 id="実践">実践</h2>
 
 <p>UTM製品であるフォーティゲートの正しいスペルは「FortiGate」です。FortigateやFroutigateではありません。ネットワークエンジニアとして、ネットワーク機器のスペルを間違えるのは恥ずかしい。そこでRedPenに、自分が指定するキーワードを利用したスペルチェック機能を実装します。</p>
 
@@ -219,7 +219,7 @@ test.md:15: ValidationError[JavaScript], [spellcheck.js] Frotigateはスペル�
 [aimless@dev redpen-distribution-1.4.1]$
 </code></pre>
 
-<h2 id="所感:6a8429973c6a1dee2b4aa041f6e841a8">所感</h2>
+<h2 id="所感">所感</h2>
 
 <p>RedPenを利用したスペルチェックがローカル環境で動くことを確認しました。JavaScriptでチェック項目を拡張できるのがいいですね。次はスペルチェック用辞書の単語を増やした上で、CircleCI上で動作させてみようと思います。</p>
 

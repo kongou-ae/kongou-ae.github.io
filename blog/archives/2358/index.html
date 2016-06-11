@@ -72,7 +72,7 @@
 
 <p><a href="http://aimless.jp/blog/blog/archives/2317">AWSにFortiGateをデプロイしてみた（ネットワーク設定編）</a>の続きです。AWS上に設置したFortiGateでNATとFWポリシーを試します。</p>
 
-<h2 id="vpc環境:ec17bdc7c38ff198df2edaa2953430eb">VPC環境</h2>
+<h2 id="vpc環境">VPC環境</h2>
 
 <p><strong>FortiGate-VM</strong></p>
 
@@ -183,11 +183,11 @@
 
 <p>　internal_subnetにAmazon_linuxを設置します。IPアドレスは10.175.2.152です。</p>
 
-<h2 id="事前準備:ec17bdc7c38ff198df2edaa2953430eb">事前準備</h2>
+<h2 id="事前準備">事前準備</h2>
 
 <p>　FortiGate-VMの2つのENIで「Source/dest. check」をfalseにします。なお、インスタンスを右クリックしてSource/dest. checkをfalseにしても、2本目のENIはenableのままでした。Source/dest. checkは、インスタンスではなくENIに対して実施しましょう。</p>
 
-<h2 id="ポートフォワード:ec17bdc7c38ff198df2edaa2953430eb">ポートフォワード</h2>
+<h2 id="ポートフォワード">ポートフォワード</h2>
 
 <p>　まずはポートフォワードからです。internalに設置されているEC2:10.175.2.152のSSHを、EIP:54.65.151.103の11022で外部公開します。</p>
 
@@ -199,7 +199,7 @@
 
 <p><img src="http://aimless.jp/blog/wp-content/uploads/2015/01/aws-fg-2.png" alt="enter image description here" /></p>
 
-<h2 id="スタティックnat:ec17bdc7c38ff198df2edaa2953430eb">スタティックNAT</h2>
+<h2 id="スタティックnat">スタティックNAT</h2>
 
 <p>　次はスタティックNATです。FortiGate-VMとは異なるグローバルIPアドレスでEC2を外部公開します。</p>
 
@@ -249,7 +249,7 @@
 
 <p><img src="http://aimless.jp/blog/wp-content/uploads/2015/01/aws-fg-2.png" alt="enter image description here" /></p>
 
-<h2 id="ポリシー:ec17bdc7c38ff198df2edaa2953430eb">ポリシー</h2>
+<h2 id="ポリシー">ポリシー</h2>
 
 <p>　ネットワークやNATの設定はAWSの仕様を意識する必要がありますが、ポリシーの設定はFortiGate-VM単体の設定ですので、普通のFortiGateと同じです。</p>
 
@@ -264,7 +264,7 @@
 <li>それ以外の通信はすべて拒否する。</li>
 </ul>
 
-<h2 id="ipアドレスの制限:ec17bdc7c38ff198df2edaa2953430eb">IPアドレスの制限</h2>
+<h2 id="ipアドレスの制限">IPアドレスの制限</h2>
 
 <p>　バーチャルIP用のアドレスを確保するためには、ENIにIPアドレスを追加割り当てする必要があります。ただし、ENIに割り当てられるIPアドレスはインスタンスタイプによって上限があります。（<a href="http://docs.aws.amazon.com/ja_jp/AWSEC2/latest/UserGuide/using-eni.html#AvailableIpPerENI">参考：インスタンスタイプあたりの ENI ごとのプライベート IP アドレス</a>）</p>
 

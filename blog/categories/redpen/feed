@@ -17,7 +17,7 @@
       <guid>http://aimless.jp/blog/archives/2016-05-01-testing-docx-by-pandoc-and-redpen</guid>
       <description>
 
-&lt;h2 id=&#34;経緯:2f134639a43ab886b880c1e34ff1c11b&#34;&gt;経緯&lt;/h2&gt;
+&lt;h2 id=&#34;経緯&#34;&gt;経緯&lt;/h2&gt;
 
 &lt;p&gt;textlintとRedPenのどちらを使うかを悩み、「会社で使うWindowsのPCにインストールしやすいから」という理由でRedPenを選んでから、数か月がたちました。そんな中、昨日、自分の頭の中に神が降りてきました。&lt;/p&gt;
 
@@ -26,7 +26,7 @@
 
 &lt;p&gt;RedPenはWordファイルに対応していません。ですが、Pandocを使ってWordファイルをMarkdownに変換すれば、RedPenでWordファイルの内容をテストできます。なぜ今まで思いつかなかった。&lt;/p&gt;
 
-&lt;h2 id=&#34;実践:2f134639a43ab886b880c1e34ff1c11b&#34;&gt;実践&lt;/h2&gt;
+&lt;h2 id=&#34;実践&#34;&gt;実践&lt;/h2&gt;
 
 &lt;p&gt;Pandocはインストーラを使ってインストールします。RedPenはGitHubで配布されている圧縮ファイルをCドライブ直下に展開します。&lt;/p&gt;
 
@@ -85,7 +85,7 @@ tmp.md:1: ValidationError[JavaScript], [jtfStyleGuideValidator.js] 文書規約�
 PS C:\pandoc-redpen&amp;gt;
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h2 id=&#34;所感:2f134639a43ab886b880c1e34ff1c11b&#34;&gt;所感&lt;/h2&gt;
+&lt;h2 id=&#34;所感&#34;&gt;所感&lt;/h2&gt;
 
 &lt;p&gt;Pandocを利用することで、RedPenが対応していないフォーマットのドキュメントを検査することができました。&lt;/p&gt;
 
@@ -101,7 +101,7 @@ PS C:\pandoc-redpen&amp;gt;
       <guid>http://aimless.jp/blog/archives/2016-04-25-skipping-test-by-circleci</guid>
       <description>
 
-&lt;h2 id=&#34;テストをスキップしたい時もある:4ea3f16a74861147e21314ea9d30e344&#34;&gt;テストをスキップしたい時もある&lt;/h2&gt;
+&lt;h2 id=&#34;テストをスキップしたい時もある&#34;&gt;テストをスキップしたい時もある&lt;/h2&gt;
 
 &lt;p&gt;下図のようなデプロイメントプロセスでブログを書いています。CircleCIを中心としたプロセスで、それなりに便利なのですが、ブログを公開するためにはRedPenのテストに合格しなければなりません。&lt;/p&gt;
 
@@ -119,13 +119,13 @@ bash ./test-redpen.sh returned exit code 1
 
 &lt;p&gt;本来はテストを直すべきなのですが、「テストをスキップしたいことがあるだろう」ということで、任意のコミットについてCircleCIでのテストをスキップする仕組みを実装しました。&lt;/p&gt;
 
-&lt;h2 id=&#34;circleci標準のスキップ機能:4ea3f16a74861147e21314ea9d30e344&#34;&gt;CircleCI標準のスキップ機能&lt;/h2&gt;
+&lt;h2 id=&#34;circleci標準のスキップ機能&#34;&gt;CircleCI標準のスキップ機能&lt;/h2&gt;
 
 &lt;p&gt;CircleCIに標準実装されている機能は&lt;code&gt;[skip ci]&lt;/code&gt;です。コミットログに&lt;code&gt;[skip ci]&lt;/code&gt;を含めるとCircleCIによる処理が行われません。&lt;/p&gt;
 
 &lt;p&gt;私の場合、③テストだけをスキップしたいので、&lt;code&gt;[skip ci]&lt;/code&gt;はやりすぎです。CircleCIによる処理が行われない場合、HUGOによるビルトやGitHub Pagesへの公開がなされないためです。&lt;/p&gt;
 
-&lt;h2 id=&#34;実装:4ea3f16a74861147e21314ea9d30e344&#34;&gt;実装&lt;/h2&gt;
+&lt;h2 id=&#34;実装&#34;&gt;実装&lt;/h2&gt;
 
 &lt;p&gt;そこでテスト実行のスクリプトに、コミットメッセージに応じた条件分岐を追加することにしました。&lt;/p&gt;
 
@@ -160,7 +160,7 @@ else
 fi
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h2 id=&#34;動作確認:4ea3f16a74861147e21314ea9d30e344&#34;&gt;動作確認&lt;/h2&gt;
+&lt;h2 id=&#34;動作確認&#34;&gt;動作確認&lt;/h2&gt;
 
 &lt;p&gt;コミットメッセージを「update」とすると、CircleCIによってRedPenのテストが実行されます。ひらがなにしたほうが読みやすい表現に関するエラーがでています。&lt;/p&gt;
 
@@ -170,7 +170,7 @@ fi
 
 &lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/images/2016-04-25-003.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
 
-&lt;h2 id=&#34;まとめ:4ea3f16a74861147e21314ea9d30e344&#34;&gt;まとめ&lt;/h2&gt;
+&lt;h2 id=&#34;まとめ&#34;&gt;まとめ&lt;/h2&gt;
 
 &lt;p&gt;任意のコミットメッセージによって、CircleCIが実行するテスト用スクリプトを分岐させてみました。CIツールが実行する処理を、個々のコマンドを実行する形ではなく、個々のコマンドをまとめたスクリプトを実行する形にすると、コミットメッセージに応じてCIツールのテストの処理を分岐させることができます。これはテストに限らず、いろいろなシーンで活用できそうです。&lt;/p&gt;
 </description>
@@ -186,7 +186,7 @@ fi
 
 &lt;p&gt;RedPenのJavaScript拡張を利用して、&lt;a href=&#34;http://www.danshihack.com/2015/06/04/junp/twitter-editter-kana.html&#34;&gt;プロの編集が教える「開いた（平仮名）のほうが読みやすくなる表現一覧」が超勉強になると話題&lt;/a&gt;に乗っている修正事項をチェックしてみました。&lt;/p&gt;
 
-&lt;h2 id=&#34;javascript拡張:168337d188fe34a2b2c2d8d61b97e765&#34;&gt;Javascript拡張&lt;/h2&gt;
+&lt;h2 id=&#34;javascript拡張&#34;&gt;Javascript拡張&lt;/h2&gt;
 
 &lt;p&gt;表現一覧から、日常で使ってしまいそうな表現だけをチェックするようにします。&lt;/p&gt;
 
@@ -228,7 +228,7 @@ function validateSentence(sentence) {
 }
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h2 id=&#34;テストしてみる:168337d188fe34a2b2c2d8d61b97e765&#34;&gt;テストしてみる&lt;/h2&gt;
+&lt;h2 id=&#34;テストしてみる&#34;&gt;テストしてみる&lt;/h2&gt;
 
 &lt;p&gt;以下の文章をテストしてみます。&lt;/p&gt;
 

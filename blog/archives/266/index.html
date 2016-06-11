@@ -74,7 +74,7 @@
 
 <p><a href="http://yebo-blog.blogspot.com/2007/01/dnssec-3.html" target="_blank">・DNSSECの勉強 (3)</a></li></p>
 
-<h3 id="鍵の作成:dc2aa0268301db4b9dc9854277a5060c">鍵の作成</h3>
+<h3 id="鍵の作成">鍵の作成</h3>
 
 <p>　まずは署名に必要な鍵を作成します。DNSSECで必要な鍵は、ゾーンファイルを署名する為のZSKと、ZSK公開鍵を署名する為のKSKです。ZSKは「Zone Signing Key」の略称、KSKは「Key signing key」の略称ですが、個人的には「Zone syomei kagi」「Kagi syomei kagi」だと思っています。この方が覚えやすい。</p>
 
@@ -95,7 +95,7 @@ Kaimless.jp.+008+28518</code></pre>
 
 <p>　コマンド内で鍵のファイル名を指定する部分を、このファイルをcatで開くコマンド＋.keyに置換する事で、これはどっちの鍵？問題を解決します。JPRSの資料に書いてあるのですが、この方法を利用すると鍵の取り扱いがかなり楽になります。これはスゴイ。</p>
 
-<h3 id="ゾーンファイルに公開鍵を追記:dc2aa0268301db4b9dc9854277a5060c">ゾーンファイルに公開鍵を追記</h3>
+<h3 id="ゾーンファイルに公開鍵を追記">ゾーンファイルに公開鍵を追記</h3>
 
 <p>　作成したZSK公開鍵とKSK公開鍵を、INCLUDEを使いゾーンファイルに追記します。</p>
 
@@ -104,7 +104,7 @@ $INCLUDE Kaimless.jp.+008+30799.key
 $INCLUDE Kaimless.jp.+008+28518.key
 </code></pre>
 
-<h3 id="ゾーンファイルへの署名:dc2aa0268301db4b9dc9854277a5060c">ゾーンファイルへの署名</h3>
+<h3 id="ゾーンファイルへの署名">ゾーンファイルへの署名</h3>
 
 <p>　作成した秘密鍵を使い、ゾーンファイルに署名します。ここで判明したのですが、秘密鍵が同じディレクトリに存在すれば、鍵を指定しなくてもいいらしいです。鍵のファイル名をリダイレクトした意味なし。。。</p>
 
@@ -118,7 +118,7 @@ aimless.zone.signed
 
 <p>　無事成功すると、署名済みのゾーンファイル（aimless.zone.signed）とDSレコードが記載されたファイル（dsset-aimless.jp.）が作成されます。署名済みのファイルはDNSKEYレコードとRRSIGレコード、NSECレコードが追記されカオスになりました。。。ファイルサイズは署名前と比べて10倍です。</p>
 
-<h3 id="named-confの設定変更:dc2aa0268301db4b9dc9854277a5060c">named.confの設定変更</h3>
+<h3 id="named-confの設定変更">named.confの設定変更</h3>
 
 <p>　bindが利用するゾーンファイルを署名済み物に変更します。また、dnssecを有効化する一文を追加します。変更後にbindを再起動します。</p>
 
@@ -129,11 +129,11 @@ aimless.zone.signed
         dnssec-enable yes;
 </code></pre>
 
-<h3 id="上位dnsへのdsレコード追加:dc2aa0268301db4b9dc9854277a5060c">上位DNSへのDSレコード追加</h3>
+<h3 id="上位dnsへのdsレコード追加">上位DNSへのDSレコード追加</h3>
 
 <p>　信頼の連鎖を構築すべく、自ドメインの指定事業者である21-domain.comに、JPRSのa.dns.jpへのDSレコード登録を依頼します。21:45頃、担当の方にメールでdsset-aimless.jpを送付した所、30分後に対応して頂けました。この指定事業者は、IPv6とDNSSSEC両方に対応しているデキル子です。</p>
 
-<h3 id="動作確認:dc2aa0268301db4b9dc9854277a5060c">動作確認</h3>
+<h3 id="動作確認">動作確認</h3>
 
 <p>　Verisignが提供しているDNSSECの動作確認サービス <a href="http://dnssec-debugger.verisignlabs.com/">（DNSSEC Debugge）</a>を使い、信頼の連鎖が構築されているかどうかを確認します。</p>
 

@@ -72,7 +72,7 @@
 
 <p>　GWの課題ということで、自宅のISP回線を冗長化しました。GMOの固定IPを契約した際にOCNを解約していなかったので、それを有効活用します。また、お仕事で「メインDCとDRサイト間でのISP冗長」ってのを提案しないといけない事もあり、その技術検証も兼ねてます。機器が足りないので縮小構成ですが・・</p>
 
-<h3 id="論理構成図:35d6442d401d4b2408b49f2a76e1173c">論理構成図</h3>
+<h3 id="論理構成図">論理構成図</h3>
 
 <p><img src="http://aimless.jp/blog/images/dr.png" alt="nw-topology" /></p>
 
@@ -80,7 +80,7 @@
 
 <p>　実際の所、物理構成的には1本のフレッツをマルチセッションで使っているので、全く冗長化されていません。さらにモデムの配下を二つに分解するSWとしてCisco892Jを利用しているので、Cisco892Jが死ぬと全てが終わります。。。。</p>
 
-<h3 id="インターネットに接続できない-を具体化する:35d6442d401d4b2408b49f2a76e1173c">「インターネットに接続できない」を具体化する</h3>
+<h3 id="インターネットに接続できない-を具体化する">「インターネットに接続できない」を具体化する</h3>
 
 <p>　インターネットへ接続できないと一言で言っても、実際のNWでは色々な状態が考えられます。ISPの網内トラブル、ゲートウェイになっているFWが壊れた、デフォルトルートを広告している機器が壊れた等々。</p>
 
@@ -88,7 +88,7 @@
 
 <p>　こうすると、コアSWがOSPFにデフォルトルートを広告しているような構成の場合に、ISP網内のインターネット接続性が死んでいる事をコアSWで検知して広告を止める⇒別DCのコアL3SWが広告するメトリックが高いデフォルトルートに切り替わる、みたいな事も出来ます。</p>
 
-<h3 id="ip-sla-object-tracking:35d6442d401d4b2408b49f2a76e1173c">IP SLA &amp; Object Tracking</h3>
+<h3 id="ip-sla-object-tracking">IP SLA &amp; Object Tracking</h3>
 
 <p>　メイン回線のデフォルトルートが正常かどうかを調べる為に、IP SLAを利用を利用して、ルータのDialer1（GMOのPPPoEインターフェース）から10秒に1回icmp-echoを送信します。</p>
 
@@ -123,7 +123,7 @@ Track 20
 
 <p><a href="http://www.cisco.com/en/US/docs/ios/ipapp/configuration/guide/ipapp_eot.html" title="Configuring Enhanced Object Tracking" target="_blank">Object Trackingの設定例：Configuring Enhanced Object Tracking</a></p>
 
-<h3 id="バックアップルートの設定:35d6442d401d4b2408b49f2a76e1173c">バックアップルートの設定</h3>
+<h3 id="バックアップルートの設定">バックアップルートの設定</h3>
 
 <p>　OCNに接続しているFortigateから、OSPFでデフォルトルートを広告します。こうする事で、Cisco892Jのルーティングテーブルは、通常時はAD値1のStaticが利用されてGMO経由に、StaticがObject Trackingで消えたあとはOSPFで受信しているAD値110のOCN経由に切り替わります。</p>
 
@@ -134,7 +134,7 @@ Track 20
 <pre><code>ip route 8.8.8.8 255.255.255.255 Dialer1
 </code></pre>
 
-<h3 id="動作確認:35d6442d401d4b2408b49f2a76e1173c">動作確認</h3>
+<h3 id="動作確認">動作確認</h3>
 
 <p>　疑似的に障害を発生させるために、8.8.8.8をnull0に落とします。PPPoEをしゃべるIFのケーブルを抜いてもいいのですが、そうするとDialer1が落ちてデフォルトルートが消えてしまいます。PPPoEは生きてるけど網内が死んでる、つまりコアSWのネクストホップは生きてるけどその先が死んでる、という状況にも対応できるのがこの構成の良さなので、疑似的に8.8.8.8へPingが飛ばないようにします。</p>
 
@@ -174,7 +174,7 @@ Router#show ip route
 S*    0.0.0.0/0 is directly connected, Dialer1
 </code></pre>
 
-<h3 id="今後の野望:35d6442d401d4b2408b49f2a76e1173c">今後の野望</h3>
+<h3 id="今後の野望">今後の野望</h3>
 
 <p>　IP SLA &amp; Object Trackingでデフォルトルートを消すのは問題なく動きそうなので、エンタープライズにありがちな下記のような構成でもちゃんとISP冗長できることを確認したいです。動きそうな気はするのですが、検証するための機器が足りない・・・。</p>
 

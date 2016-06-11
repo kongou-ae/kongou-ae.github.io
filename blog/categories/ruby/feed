@@ -17,15 +17,15 @@
       <guid>http://aimless.jp/blog/archives/2669</guid>
       <description>
 
-&lt;h2 id=&#34;やりたいこと:273ca993f084584514ef76dff312aa4b&#34;&gt;やりたいこと&lt;/h2&gt;
+&lt;h2 id=&#34;やりたいこと&#34;&gt;やりたいこと&lt;/h2&gt;
 
 &lt;p&gt;　Cross-Origin Resource SharingでRedmineのデータを取得する&lt;/p&gt;
 
-&lt;h2 id=&#34;実現方法:273ca993f084584514ef76dff312aa4b&#34;&gt;実現方法&lt;/h2&gt;
+&lt;h2 id=&#34;実現方法&#34;&gt;実現方法&lt;/h2&gt;
 
 &lt;p&gt;　&lt;a href=&#34;https://github.com/mavimo/redmine_cors&#34;&gt;Redmine CORS&lt;/a&gt;を使い、RedmineをCORSに対応させる&lt;/p&gt;
 
-&lt;h2 id=&#34;やってみたこと:273ca993f084584514ef76dff312aa4b&#34;&gt;やってみたこと&lt;/h2&gt;
+&lt;h2 id=&#34;やってみたこと&#34;&gt;やってみたこと&lt;/h2&gt;
 
 &lt;p&gt;　READMEに記載されている方法でやってみたところ、以下の環境では動作しませんでした。&lt;/p&gt;
 
@@ -90,7 +90,7 @@ end
 2015-07-07T20:00:46+09:00 app[app3012.03]:   /opt/ruby-2.2/bin/thin:6:in `&amp;lt;main&amp;gt;&amp;#039;
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h2 id=&#34;対応策:273ca993f084584514ef76dff312aa4b&#34;&gt;対応策&lt;/h2&gt;
+&lt;h2 id=&#34;対応策&#34;&gt;対応策&lt;/h2&gt;
 
 &lt;p&gt;　プラグインのroutes.rbを正しく書き換えます。&lt;/p&gt;
 

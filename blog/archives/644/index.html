@@ -72,7 +72,7 @@
 
 <p><img src="http://aimless.jp/blog/images/nwdiag.png" alt="nwdiag oof IPIP tunnel" /></p>
 
-<h3 id="lanだと上手くいくのに:8806f1b340cd4b27cc12e773e0fa59cc">LANだと上手くいくのに・・・</h3>
+<h3 id="lanだと上手くいくのに">LANだと上手くいくのに・・・</h3>
 
 <p>　グローバルIP同士だと上手くトンネルが掘れなかったので、まずは192.168.2.0/24のLANセグメントでIPIPトンネルを掘ってみました。下記設定で互いのトンネルIPアドレスに対してPingが飛ぶので上手くいっていると思います。</p>
 
@@ -94,7 +94,7 @@ tunnel select 10
  tunnel enable 10
 </code></pre>
 
-<h3 id="さらにospf:8806f1b340cd4b27cc12e773e0fa59cc">さらにOSPF</h3>
+<h3 id="さらにospf">さらにOSPF</h3>
 
 <p>　開通したIPIPトンネルでOSPFを回します。なぜだか不明ですが、RTX側のIPIPトンネルに対して明示的にRemoteAddressを追加しないとOSPFのネイバーが上がりません。</p>
 
@@ -134,7 +134,7 @@ Neighbor ID     Pri   State           Dead Time   Address
 36.2.107.75       1   FULL/  -        00:00:36    172.16.16.1     TUNNEL[10]
 </code></pre>
 
-<h3 id="グローバルだと全然だめ:8806f1b340cd4b27cc12e773e0fa59cc">グローバルだと全然だめ・・・</h3>
+<h3 id="グローバルだと全然だめ">グローバルだと全然だめ・・・</h3>
 
 <p>　いけそうな設定が確認できたの同様の設定をグローバルIPでやってみたのですが、全く上手くいきません。何よりもIPIPトンネルが開通しません（互いのトンネルIPにPingが飛ばない）・・・。なんとなーくRTX側のNAT Descriptorが怪しそうなので引き続き検証します。</p>
 

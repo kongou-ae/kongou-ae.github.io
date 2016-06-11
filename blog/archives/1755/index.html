@@ -87,7 +87,7 @@
 <li>ネイバーのID</li>
 </ol>
 
-<h3 id="検証環境:8a801d7caae5205bbd472b545f0f0c21">検証環境</h3>
+<h3 id="検証環境">検証環境</h3>
 
 <p><img src="http://aimless.jp/blog/wp-content/uploads/2014/03/vpc-diag.png" alt="enter image description here" /></p>
 
@@ -95,7 +95,7 @@
 
 <p>　この状態でEC2から192.168.2.254へTracerouteを行うことで、VGWがCiscoとFortiGateが広報した経路のどちらをベストパスとして選択するかを確認します。</p>
 
-<h3 id="1-そのまま接続してみる:8a801d7caae5205bbd472b545f0f0c21">1　そのまま接続してみる</h3>
+<h3 id="1-そのまま接続してみる">1　そのまま接続してみる</h3>
 
 <p>　特に経路制御をせずにVPNコネクションを確立し、EC2からTracerouteを行います。FortiGate（169.254.252.33）経由になりました。これはORIGINによるものです。</p>
 
@@ -122,7 +122,7 @@ Network Next Hop Metric LocPrf Weight Path
 
 <p>　ORIGIN属性はigp、egp、incompliteの順で選ばれるので、FortiGateが広告した192.168.2.0/24がベストパスに選択され、TracerouteがFortiGate経由になります。</p>
 
-<h3 id="2-origionをそろえる:8a801d7caae5205bbd472b545f0f0c21">2　ORIGIONをそろえる</h3>
+<h3 id="2-origionをそろえる">2　ORIGIONをそろえる</h3>
 
 <p>　Cisco側のORIGIN属性をIGPに変更してみます。</p>
 
@@ -140,7 +140,7 @@ Network Next Hop Metric LocPrf Weight Path
 4 192.168.2.254 (192.168.2.254) 20.392 ms * 
 </code></pre>
 
-<h3 id="3-as-pathをprependしてみる:8a801d7caae5205bbd472b545f0f0c21">3　AS-PATHをPrependしてみる。</h3>
+<h3 id="3-as-pathをprependしてみる">3　AS-PATHをPrependしてみる。</h3>
 
 <p>　router-idでベストパスが選択されている状況で、AS-PATHを使ってみます。Cisco側が広報する経路にAS-PATHを3つ積みます。</p>
 
@@ -161,7 +161,7 @@ neighbor 169.254.252.25 route-map aws-aspath out
 4 192.168.2.254 (192.168.2.254) 20.646 ms * *
 </code></pre>
 
-<h3 id="4-medを積んでみる:8a801d7caae5205bbd472b545f0f0c21">4　MEDを積んでみる</h3>
+<h3 id="4-medを積んでみる">4　MEDを積んでみる</h3>
 
 <p>　AS-PATHではなく、MEDを積んでみましょう。Cisco側を通っている状況でCisco側にMEDを積みます。</p>
 

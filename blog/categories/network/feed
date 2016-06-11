@@ -123,9 +123,9 @@
 
 &lt;p&gt;　自分の備忘の含めて、これまで見つけたいい感じの移行方式をまとめます。&lt;/p&gt;
 
-&lt;h2 id=&#34;移行方式その１:408d74faa089a41a4f7a8379e456ab27&#34;&gt;移行方式その１&lt;/h2&gt;
+&lt;h2 id=&#34;移行方式その１&#34;&gt;移行方式その１&lt;/h2&gt;
 
-&lt;h3 id=&#34;オンプレミスのファイアウォールポリシー:408d74faa089a41a4f7a8379e456ab27&#34;&gt;オンプレミスのファイアウォールポリシー&lt;/h3&gt;
+&lt;h3 id=&#34;オンプレミスのファイアウォールポリシー&#34;&gt;オンプレミスのファイアウォールポリシー&lt;/h3&gt;
 
 &lt;p&gt;　同一システムのWEBサーバ群から、同一システムのDBサーバ群へのDBアクセスの通信を一括で許可するポリシーです。よく見る設定方法だと信じたい。&lt;/p&gt;
 
@@ -133,7 +133,7 @@
 | &amp;ndash; | &amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;ndash; | &amp;mdash;&amp;mdash;&amp;mdash;&amp;ndash; | &amp;mdash;&amp;mdash;- | &amp;mdash;&amp;mdash; |
 | n  | WEB1 WEB2 WEB3 | DB1 DB2 DB3 | MySql   | Permit |&lt;/p&gt;
 
-&lt;h3 id=&#34;セキュリティグループの実装方法:408d74faa089a41a4f7a8379e456ab27&#34;&gt;セキュリティグループの実装方法&lt;/h3&gt;
+&lt;h3 id=&#34;セキュリティグループの実装方法&#34;&gt;セキュリティグループの実装方法&lt;/h3&gt;
 
 &lt;p&gt;　以下の二つのセキュリティグループを作成します。そして、AWS上に移行したWEB1とWEB2、WEB3に「sg-web-server」を、DB1とDB2、DB3に「sg-db-server」を適用します。&lt;/p&gt;
 
@@ -191,9 +191,9 @@
 
 &lt;p&gt;　この便利な機能は、オンプレのファイアウォールにおける「グルーピング」の機能だと考えることが出来ます。この機能を利用することで、サーバごとに設定を行う必要があるセキュリティグループを効率的に設定することができます。&lt;/p&gt;
 
-&lt;h2 id=&#34;移行方式その２:408d74faa089a41a4f7a8379e456ab27&#34;&gt;移行方式その２&lt;/h2&gt;
+&lt;h2 id=&#34;移行方式その２&#34;&gt;移行方式その２&lt;/h2&gt;
 
-&lt;h3 id=&#34;オンプレミスのファイアウォールポリシー-1:408d74faa089a41a4f7a8379e456ab27&#34;&gt;オンプレミスのファイアウォールポリシー&lt;/h3&gt;
+&lt;h3 id=&#34;オンプレミスのファイアウォールポリシー-1&#34;&gt;オンプレミスのファイアウォールポリシー&lt;/h3&gt;
 
 &lt;p&gt;　とあるセグメント内の端末が共通で利用するシステムを許可するポリシーです。これもよく見る設定方法だと信じたい。&lt;/p&gt;
 
@@ -227,7 +227,7 @@
 &lt;/tbody&gt;
 &lt;/table&gt;
 
-&lt;h3 id=&#34;セキュリティグループの実装方法-1:408d74faa089a41a4f7a8379e456ab27&#34;&gt;セキュリティグループの実装方法&lt;/h3&gt;
+&lt;h3 id=&#34;セキュリティグループの実装方法-1&#34;&gt;セキュリティグループの実装方法&lt;/h3&gt;
 
 &lt;p&gt;　以下のセキュリティグループを作成し、セグメント内に配置するサーバに適用します。&lt;/p&gt;
 
@@ -269,7 +269,7 @@
 
 &lt;p&gt;　もし、サーバごとに一つのセキュリティグループを設定しており、そのセキュリティグループでDNS resolverへのDNSを許可していたとしたら、すべてのサーバに適用されているセキュリティグループを変更しなければなりません。&lt;/p&gt;
 
-&lt;h2 id=&#34;最後に:408d74faa089a41a4f7a8379e456ab27&#34;&gt;最後に&lt;/h2&gt;
+&lt;h2 id=&#34;最後に&#34;&gt;最後に&lt;/h2&gt;
 
 &lt;p&gt;　セキュリティグループの仕様を利用した移行方式をまとめました。なお、移行にあたって一番大変な作業は通信要件の精査です。俺「このポリシー何？いるの？いらないの？」サーバ担当「昔のことは知らん」みたいなやり取りを繰り返すのはこりごりです。&lt;/p&gt;
 </description>
@@ -283,13 +283,13 @@
       <guid>http://aimless.jp/blog/archives/2229</guid>
       <description>
 
-&lt;h1 id=&#34;はじめに:b35a1c1c8d870e3c08abe903af5123b9&#34;&gt;はじめに&lt;/h1&gt;
+&lt;h1 id=&#34;はじめに&#34;&gt;はじめに&lt;/h1&gt;
 
 &lt;p&gt;ShellShockに関して、私の業務と関わりのあるネットワーク機器ベンダのSecurity Advisoryが揃ってきたので、現時点での情報を簡単にまとめます。&lt;/p&gt;
 
 &lt;p&gt;あくまでも現時点ですので、今後内容が変更になる可能性があります。また、詳細については、保守ベンダにお問い合わせください。&lt;/p&gt;
 
-&lt;h1 id=&#34;cisco:b35a1c1c8d870e3c08abe903af5123b9&#34;&gt;Cisco&lt;/h1&gt;
+&lt;h1 id=&#34;cisco&#34;&gt;Cisco&lt;/h1&gt;
 
 &lt;p&gt;&lt;a href=&#34;http://tools.cisco.com/security/center/content/CiscoSecurityAdvisory/cisco-sa-20140926-bash&#34;&gt;http://tools.cisco.com/security/center/content/CiscoSecurityAdvisory/cisco-sa-20140926-bash&lt;/a&gt;&lt;/p&gt;
 
@@ -297,31 +297,31 @@
 
 &lt;p&gt;（9/28更新）IOSとIOS XRは該当しません。IOS XE、Nexus、UCSは該当します。具体的な対応方法については、個別にBugIDが振られていますので、そちらで確認する必要があります。&lt;/p&gt;
 
-&lt;h1 id=&#34;fortinet:b35a1c1c8d870e3c08abe903af5123b9&#34;&gt;Fortinet&lt;/h1&gt;
+&lt;h1 id=&#34;fortinet&#34;&gt;Fortinet&lt;/h1&gt;
 
 &lt;p&gt;&lt;a href=&#34;http://www.fortiguard.com/advisory/FG-IR-14-030&#34;&gt;http://www.fortiguard.com/advisory/FG-IR-14-030&lt;/a&gt;&lt;/p&gt;
 
 &lt;p&gt;FortiGateは該当しません。ManagerやAnalyzerが該当します。&lt;/p&gt;
 
-&lt;h1 id=&#34;juniper:b35a1c1c8d870e3c08abe903af5123b9&#34;&gt;Juniper&lt;/h1&gt;
+&lt;h1 id=&#34;juniper&#34;&gt;Juniper&lt;/h1&gt;
 
 &lt;p&gt;&lt;a href=&#34;http://kb.juniper.net/InfoCenter/index?page=content&amp;amp;id=JSA10648&#34;&gt;http://kb.juniper.net/InfoCenter/index?page=content&amp;amp;id=JSA10648&lt;/a&gt;&lt;/p&gt;
 
 &lt;p&gt;Junos、ScreenOS、IVE OSといった主要製品は該当しません。&lt;/p&gt;
 
-&lt;h1 id=&#34;f5:b35a1c1c8d870e3c08abe903af5123b9&#34;&gt;F5&lt;/h1&gt;
+&lt;h1 id=&#34;f5&#34;&gt;F5&lt;/h1&gt;
 
 &lt;p&gt;&lt;a href=&#34;http://support.f5.com/kb/en-us/solutions/public/15000/600/sol15629.html&#34;&gt;http://support.f5.com/kb/en-us/solutions/public/15000/600/sol15629.html&lt;/a&gt;&lt;/p&gt;
 
 &lt;p&gt;主要な製品はほとんど該当します。&lt;/p&gt;
 
-&lt;h1 id=&#34;checkpoint:b35a1c1c8d870e3c08abe903af5123b9&#34;&gt;CheckPoint&lt;/h1&gt;
+&lt;h1 id=&#34;checkpoint&#34;&gt;CheckPoint&lt;/h1&gt;
 
 &lt;p&gt;&lt;a href=&#34;https://supportcenter.checkpoint.com/supportcenter/portal?eventSubmit_doGoviewsolutiondetails=&amp;amp;solutionid=sk102673&amp;amp;src=securityAlerts&#34;&gt;https://supportcenter.checkpoint.com/supportcenter/portal?eventSubmit_doGoviewsolutiondetails=&amp;amp;solutionid=sk102673&amp;amp;src=securityAlerts&lt;/a&gt;&lt;/p&gt;
 
 &lt;p&gt;GaiaとSPLATともに該当します。&lt;/p&gt;
 
-&lt;h1 id=&#34;hp:b35a1c1c8d870e3c08abe903af5123b9&#34;&gt;HP&lt;/h1&gt;
+&lt;h1 id=&#34;hp&#34;&gt;HP&lt;/h1&gt;
 
 &lt;p&gt;&lt;s&gt;Security Advisoryのページが見当たりません。。。どこー。&lt;/s&gt;&lt;/p&gt;
 
@@ -331,7 +331,7 @@
 
 &lt;p&gt;&lt;a href=&#34;http://webcache.googleusercontent.com/search?q=cache:cq8A9XMgwUIJ:h17007.www1.hp.com/docs/networking/alert/GNUBASHStatement-20140926.pdf+&amp;amp;cd=1&amp;amp;hl=ja&amp;amp;ct=clnk&amp;amp;gl=jp&#34;&gt;http://webcache.googleusercontent.com/search?q=cache:cq8A9XMgwUIJ:h17007.www1.hp.com/docs/networking/alert/GNUBASHStatement-20140926.pdf+&amp;amp;cd=1&amp;amp;hl=ja&amp;amp;ct=clnk&amp;amp;gl=jp&lt;/a&gt;&lt;/p&gt;
 
-&lt;h1 id=&#34;a10:b35a1c1c8d870e3c08abe903af5123b9&#34;&gt;A10&lt;/h1&gt;
+&lt;h1 id=&#34;a10&#34;&gt;A10&lt;/h1&gt;
 
 &lt;p&gt;&lt;s&gt;Security Advisoryのページが見当たりません。。。どこー&lt;/s&gt;&lt;/p&gt;
 
@@ -339,7 +339,7 @@
 
 &lt;p&gt;主要な製品は該当するようです。ただし、A10のSecurity Advisory を見るためには、製品のSNを使ってアカウント登録が必要のようなので、詳細は不明です。。。&lt;/p&gt;
 
-&lt;h1 id=&#34;radware:b35a1c1c8d870e3c08abe903af5123b9&#34;&gt;Radware&lt;/h1&gt;
+&lt;h1 id=&#34;radware&#34;&gt;Radware&lt;/h1&gt;
 
 &lt;p&gt;&lt;s&gt;現時点でのアナウンスは確認できません。&lt;/s&gt;&lt;/p&gt;
 
@@ -359,7 +359,7 @@
 
 &lt;p&gt;UTM製品は、SSLによって暗号化されている通信の中身を見てUTM処理を行うものがあります。イマイチ振る舞いが分からなかったので、いろいろと調べました。きっとこんな感じだろレベルであり、あってるかどうかは不明です。なお、絵を描く気力はなかったです。&lt;/p&gt;
 
-&lt;h1 id=&#34;ssl通信の流れ:7fa59bb8c2a35e1843fcd1fa00ab3ce6&#34;&gt;SSL通信の流れ&lt;/h1&gt;
+&lt;h1 id=&#34;ssl通信の流れ&#34;&gt;SSL通信の流れ&lt;/h1&gt;
 
 &lt;p&gt;　クライアントとサーバ間で、SSLのセッションとコネクションを確立するまでの流れは以下の通りです。&lt;/p&gt;
 
@@ -376,7 +376,7 @@
 &lt;li&gt;サーバとクライアントは、生成した共通鍵を利用して通信を暗号化する。&lt;/li&gt;
 &lt;/ol&gt;
 
-&lt;h1 id=&#34;サーバ証明書に書かれている事:7fa59bb8c2a35e1843fcd1fa00ab3ce6&#34;&gt;サーバ証明書に書かれている事&lt;/h1&gt;
+&lt;h1 id=&#34;サーバ証明書に書かれている事&#34;&gt;サーバ証明書に書かれている事&lt;/h1&gt;
 
 &lt;p&gt;　3つのことが書かれている。&lt;/p&gt;
 
@@ -386,7 +386,7 @@
 &lt;li&gt;signatureValue : 認証局の署名&lt;/li&gt;
 &lt;/ol&gt;
 
-&lt;h1 id=&#34;証明書検証の流れ:7fa59bb8c2a35e1843fcd1fa00ab3ce6&#34;&gt;証明書検証の流れ&lt;/h1&gt;
+&lt;h1 id=&#34;証明書検証の流れ&#34;&gt;証明書検証の流れ&lt;/h1&gt;
 
 &lt;ol&gt;
 &lt;li&gt;クライアントは、サーバ証明書に記載された認証局が、自身の信頼された認証局に登録されているかを確認する。（証明書の発行者が信じるに値するかをチェックする）&lt;/li&gt;
@@ -394,7 +394,7 @@
 &lt;li&gt;クライアントは、サーバ証明書に記載されているコモンネームが、アクセスしようとしているサーバのFQDNと一致することを確認する。（信じられる証明書に記載されている場所にアクセスしているかチェックする）&lt;/li&gt;
 &lt;/ol&gt;
 
-&lt;h1 id=&#34;sslインスペクションにおけるssl通信の仕組み:7fa59bb8c2a35e1843fcd1fa00ab3ce6&#34;&gt;SSLインスペクションにおけるSSL通信の仕組み&lt;/h1&gt;
+&lt;h1 id=&#34;sslインスペクションにおけるssl通信の仕組み&#34;&gt;SSLインスペクションにおけるSSL通信の仕組み&lt;/h1&gt;
 
 &lt;p&gt;　SSLインスペクションでは、暗号化されたSL通信に対してUTM処理を行う必要があります。&lt;/p&gt;
 
@@ -435,7 +435,7 @@
 
 &lt;p&gt;　最終的には、クライアントとUTM製品間、UTM製品とサーバ間で、2つのSSL通信が確立します。こうすることで、UTM製品はサーバとクライアントがやりとりする通信を平文で得ることができますので、UTM処理を行うことができます。よくできてるなーと思いますし、SSLインスペクションが高負荷であること理由も納得がいきます。&lt;/p&gt;
 
-&lt;h1 id=&#34;備考:7fa59bb8c2a35e1843fcd1fa00ab3ce6&#34;&gt;備考&lt;/h1&gt;
+&lt;h1 id=&#34;備考&#34;&gt;備考&lt;/h1&gt;
 
 &lt;p&gt;　ふと、UTM製品用にサーバ証明書をインストールしたらどうなるんだろうかと思いました。しかし、サーバのサーバ証明書に含まれるtbsCertificateをクライアントに提示しないと、実在証明の検証失敗による証明書エラーが出てしまうので意味がないですね。&lt;/p&gt;
 
@@ -443,7 +443,7 @@
 
 &lt;p&gt;　これを回避するには自分で再署名して署名を作り直すしかありません。結局オレオレ認証局に頼るしかないので、結果は同じですね。サーバ証明書が無駄になります。&lt;/p&gt;
 
-&lt;h1 id=&#34;参考:7fa59bb8c2a35e1843fcd1fa00ab3ce6&#34;&gt;参考&lt;/h1&gt;
+&lt;h1 id=&#34;参考&#34;&gt;参考&lt;/h1&gt;
 
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;http://support.microsoft.com/kb/257587/ja&#34;&gt;SSL ハンドシェイクでのサーバー認証プロセスに関する説明&lt;/a&gt;&lt;/li&gt;
@@ -473,7 +473,7 @@
 &lt;li&gt;ONEP_IF_STAT_TX_BYTES_PER_SEC &amp;#8211; Interface transmit rate in bytes per second.&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h2 id=&#34;実装:53a3e2db0d325714ffd926fa92e60c07&#34;&gt;実装&lt;/h2&gt;
+&lt;h2 id=&#34;実装&#34;&gt;実装&lt;/h2&gt;
 
 &lt;p&gt;　onePKで対象機器から情報を取得し、取得した情報をローカルで動作するgraphiteに入れます。&lt;/p&gt;
 
@@ -503,7 +503,7 @@
 
 &lt;p&gt;　CVE-2010-5298がCVE-2014-5298になっていたので、修正しました（6/9）　&lt;/p&gt;
 
-&lt;h1 id=&#34;サマリー:3197b1351379e2f9e723d5ccc5720427&#34;&gt;サマリー&lt;/h1&gt;
+&lt;h1 id=&#34;サマリー&#34;&gt;サマリー&lt;/h1&gt;
 
 &lt;table&gt;
 &lt;thead&gt;
@@ -583,7 +583,7 @@
 &lt;/tbody&gt;
 &lt;/table&gt;
 
-&lt;h1 id=&#34;fortinet:3197b1351379e2f9e723d5ccc5720427&#34;&gt;Fortinet&lt;/h1&gt;
+&lt;h1 id=&#34;fortinet&#34;&gt;Fortinet&lt;/h1&gt;
 
 &lt;p&gt;　私が影響を受けるFortGateだけ記載します。その他については&lt;a href=&#34;https://www.fortiguard.com/advisory/FG-IR-14-018/&#34;&gt;Multiple Vulnerabilities in OpenSSL&lt;/a&gt;を参照してください。これはバージョンアップ祭りか？&lt;/p&gt;
 
@@ -651,7 +651,7 @@
 &lt;/tbody&gt;
 &lt;/table&gt;
 
-&lt;h1 id=&#34;juniper:3197b1351379e2f9e723d5ccc5720427&#34;&gt;Juniper&lt;/h1&gt;
+&lt;h1 id=&#34;juniper&#34;&gt;Juniper&lt;/h1&gt;
 
 &lt;p&gt;　私が影響を受けるScreenOSとVPNだけ記載します。その他について&lt;a href=&#34;http://kb.juniper.net/InfoCenter/index?page=content&amp;amp;id=JSA10629&#34;&gt;2014-06 Out of Cycle Security Bulletin: Vulnerabilities in OpenSSL related to ChangeCipherSpec, DTLS, SSL_MODE_RELEASE_BUFFERS and ECDH ciphersuites&lt;/a&gt;を参照してください。&lt;/p&gt;
 
@@ -775,13 +775,13 @@
 &lt;/tbody&gt;
 &lt;/table&gt;
 
-&lt;h1 id=&#34;checkpoint:3197b1351379e2f9e723d5ccc5720427&#34;&gt;CheckPoint&lt;/h1&gt;
+&lt;h1 id=&#34;checkpoint&#34;&gt;CheckPoint&lt;/h1&gt;
 
 &lt;p&gt;　こちらにまとまっています。[　週明けからの対応に向けて、自分に影響のありそうなベンダのアナウンスを調べたのでメモ。（6/7 21:30現在です）&lt;/p&gt;
 
 &lt;p&gt;　CVE-2010-5298がCVE-2014-5298になっていたので、修正しました（6/9）　&lt;/p&gt;
 
-&lt;h1 id=&#34;サマリー-1:3197b1351379e2f9e723d5ccc5720427&#34;&gt;サマリー&lt;/h1&gt;
+&lt;h1 id=&#34;サマリー-1&#34;&gt;サマリー&lt;/h1&gt;
 
 &lt;table&gt;
 &lt;thead&gt;
@@ -861,7 +861,7 @@
 &lt;/tbody&gt;
 &lt;/table&gt;
 
-&lt;h1 id=&#34;fortinet-1:3197b1351379e2f9e723d5ccc5720427&#34;&gt;Fortinet&lt;/h1&gt;
+&lt;h1 id=&#34;fortinet-1&#34;&gt;Fortinet&lt;/h1&gt;
 
 &lt;p&gt;　私が影響を受けるFortGateだけ記載します。その他については&lt;a href=&#34;https://www.fortiguard.com/advisory/FG-IR-14-018/&#34;&gt;Multiple Vulnerabilities in OpenSSL&lt;/a&gt;を参照してください。これはバージョンアップ祭りか？&lt;/p&gt;
 
@@ -929,7 +929,7 @@
 &lt;/tbody&gt;
 &lt;/table&gt;
 
-&lt;h1 id=&#34;juniper-1:3197b1351379e2f9e723d5ccc5720427&#34;&gt;Juniper&lt;/h1&gt;
+&lt;h1 id=&#34;juniper-1&#34;&gt;Juniper&lt;/h1&gt;
 
 &lt;p&gt;　私が影響を受けるScreenOSとVPNだけ記載します。その他について&lt;a href=&#34;http://kb.juniper.net/InfoCenter/index?page=content&amp;amp;id=JSA10629&#34;&gt;2014-06 Out of Cycle Security Bulletin: Vulnerabilities in OpenSSL related to ChangeCipherSpec, DTLS, SSL_MODE_RELEASE_BUFFERS and ECDH ciphersuites&lt;/a&gt;を参照してください。&lt;/p&gt;
 
@@ -1053,7 +1053,7 @@
 &lt;/tbody&gt;
 &lt;/table&gt;
 
-&lt;h1 id=&#34;checkpoint-1:3197b1351379e2f9e723d5ccc5720427&#34;&gt;CheckPoint&lt;/h1&gt;
+&lt;h1 id=&#34;checkpoint-1&#34;&gt;CheckPoint&lt;/h1&gt;
 
 &lt;p&gt;　こちらにまとまっています。]&lt;a href=&#34;https://supportcenter.checkpoint.com/supportcenter/portal?eventSubmit_doGoviewsolutiondetails=&amp;amp;solutionid=sk92447&amp;amp;js_peid=P-114a7ba5fd7-10001&amp;amp;partition=General&amp;amp;product=All%22&#34;&gt;4&lt;/a&gt; 　OpenSSL脆弱性に対しては安心のCheckPoint。 　&lt;/p&gt;
 
@@ -1121,7 +1121,7 @@
 &lt;/tbody&gt;
 &lt;/table&gt;
 
-&lt;h1 id=&#34;cisco:3197b1351379e2f9e723d5ccc5720427&#34;&gt;Cisco&lt;/h1&gt;
+&lt;h1 id=&#34;cisco&#34;&gt;Cisco&lt;/h1&gt;
 
 &lt;p&gt;　絶賛調査中のようです。&lt;a href=&#34;http://tools.cisco.com/security/center/content/CiscoSecurityAdvisory/cisco-sa-20140605-openssl&#34;&gt;Multiple Vulnerabilities in OpenSSL Affecting Cisco Products&lt;/a&gt; 　HeartBleedの影響を受けた製品と、今回の脆弱性の内容を踏まえると、ASA,Aironetあたりが対象になるのかも。&lt;/p&gt;
 </description>
@@ -1145,13 +1145,13 @@
 
 &lt;p&gt;　なお、一個人が調べただけですので、業務でご利用されている方々につきましては、必要に応じて保守ベンダにお問い合わせいただくのがよろしいかと思います。&lt;/p&gt;
 
-&lt;h2 id=&#34;確認項目:26a7460c10c0825f9b7a62518ec9b00d&#34;&gt;確認項目&lt;/h2&gt;
+&lt;h2 id=&#34;確認項目&#34;&gt;確認項目&lt;/h2&gt;
 
 &lt;p&gt;　一言で「ネットワークアドレス変換（NAT）機能」といっても、一般的なネットワーク機器では「NAT」と「NAPT」の二つが実装されています。NATは送信元ポート番号を変換しませんので、キャッシュDNSサーバ側でソースポートランダマイゼーションを行っていれば問題ありません。確認すべきは、ネットワーク機器が送信元ポートを変換するNAPTの仕様です。&lt;/p&gt;
 
 &lt;p&gt;　なお、本エントリーを書いている最中に、ネットワーク機器自身のキャッシュDNSサーバ機能はソースポートランダマイゼーションが有効になっているのか気になりました。。。別途調べようと思います。&lt;/p&gt;
 
-&lt;h2 id=&#34;check-point:26a7460c10c0825f9b7a62518ec9b00d&#34;&gt;Check Point&lt;/h2&gt;
+&lt;h2 id=&#34;check-point&#34;&gt;Check Point&lt;/h2&gt;
 
 &lt;p&gt;　デフォルトの動作は&lt;a href=&#34;https://supportcenter.checkpoint.com/supportcenter/portal?js_peid=P-114a7ba5fd7-10001&amp;amp;eventSubmit_doGoviewsolutiondetails&amp;amp;solutionid=sk35623&#34;&gt;Hide NAT cancels DNS source port randomization&lt;/a&gt;に記載されています。&lt;/p&gt;
 
@@ -1182,7 +1182,7 @@
 &lt;li&gt;DNSパケットに対してIPS処理が行われますので、RFCに準拠しない等の誤ったDNSパケットはCheckpointが破棄する可能性があります。設定は計画的に。&lt;/li&gt;
 &lt;/ol&gt;
 
-&lt;h2 id=&#34;juniper-screenos:26a7460c10c0825f9b7a62518ec9b00d&#34;&gt;Juniper（ScreenOS）&lt;/h2&gt;
+&lt;h2 id=&#34;juniper-screenos&#34;&gt;Juniper（ScreenOS）&lt;/h2&gt;
 
 &lt;p&gt;　以下のKBが参考になります。&lt;/p&gt;
 
@@ -1206,13 +1206,13 @@
 
 &lt;p&gt;　比較的最近導入した機器、または適切にバージョンアップを行っている機器であれば、改修済みのOSで稼働していると思います。改修前のOSでDIPを利用している場合は、改修済みのOSにバージョンアップしましょう。また、改修済みのOSでポリシーベースのDIPを利用している場合は、random-portオプションを利用しましょう。&lt;/p&gt;
 
-&lt;h2 id=&#34;fortigate:26a7460c10c0825f9b7a62518ec9b00d&#34;&gt;FortiGate&lt;/h2&gt;
+&lt;h2 id=&#34;fortigate&#34;&gt;FortiGate&lt;/h2&gt;
 
 &lt;p&gt;　KBを調べたのですが、それらしものを見つけられませんでした。&lt;/p&gt;
 
 &lt;p&gt;　手元にあるFortiOS4.0系の通信ログを見ると、インターフェースベースのNAPTとIP Poolを利用したNAPTともに、変換後の送信元ポートはランダムであるように見受けられました。おそらく、機器デフォルトの動作がランダム化だと思われます。&lt;/p&gt;
 
-&lt;h2 id=&#34;yamaha:26a7460c10c0825f9b7a62518ec9b00d&#34;&gt;Yamaha&lt;/h2&gt;
+&lt;h2 id=&#34;yamaha&#34;&gt;Yamaha&lt;/h2&gt;
 
 &lt;p&gt;　デフォルトの動作は&lt;a href=&#34;http://www.rtpro.yamaha.co.jp/RT/docs/nat-descriptor/nat-abstruct.html&#34;&gt;NATディスクリプタ機能 概要&lt;/a&gt;に記載されています。&lt;/p&gt;
 
@@ -1234,7 +1234,7 @@
 
 &lt;p&gt;　RTXのMLでファームの改修要望が出ていましたので、現時点でNAPTの動作そのものがランダム化に変更されたファームはないようです。&lt;/p&gt;
 
-&lt;h2 id=&#34;cisco:26a7460c10c0825f9b7a62518ec9b00d&#34;&gt;Cisco&lt;/h2&gt;
+&lt;h2 id=&#34;cisco&#34;&gt;Cisco&lt;/h2&gt;
 
 &lt;p&gt;　以下が参考になります。&lt;/p&gt;
 
@@ -1269,7 +1269,7 @@
 
 &lt;p&gt;上司と同僚に送信元アドレス検証の必要性を説明するための下調べです。&lt;/p&gt;
 
-&lt;h2 id=&#34;送信元アドレス検証とは:b2c768efbc01dc147b6982f01549d6ef&#34;&gt;送信元アドレス検証とは&lt;/h2&gt;
+&lt;h2 id=&#34;送信元アドレス検証とは&#34;&gt;送信元アドレス検証とは&lt;/h2&gt;
 
 &lt;p&gt;　非トランジットASな弊社においては、インターネット接続サービスを利用している顧客から転送されるパケットが、適切なものかを検証すること。&lt;/p&gt;
 
@@ -1287,14 +1287,14 @@
 
 &lt;p&gt;　ただし、別の用途（e.g. 帯域制御）で顧客に割り当てたグローバルIPアドレスのACLを定義済みなのであり、送信元アドレス検証に流用可能であれば、そのACLを顧客収容インターフェースにin方向でかけてしまえばいいので、運用性での差異はない。&lt;/p&gt;
 
-&lt;h2 id=&#34;関連するrfc:b2c768efbc01dc147b6982f01549d6ef&#34;&gt;関連するRFC&lt;/h2&gt;
+&lt;h2 id=&#34;関連するrfc&#34;&gt;関連するRFC&lt;/h2&gt;
 
 &lt;ul&gt;
 &lt;li&gt;RFC2827（BCP38）&lt;/li&gt;
 &lt;li&gt;RFC3704（BCP84）&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h2 id=&#34;実施を表明しているisp:b2c768efbc01dc147b6982f01549d6ef&#34;&gt;実施を表明しているISP&lt;/h2&gt;
+&lt;h2 id=&#34;実施を表明しているisp&#34;&gt;実施を表明しているISP&lt;/h2&gt;
 
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;http://japan.cnet.com/news/sec/20098110/&#34;&gt;IIJ（2006/03/08～）&lt;/a&gt;&lt;/li&gt;
@@ -1314,7 +1314,7 @@
       <guid>http://aimless.jp/blog/archives/1815</guid>
       <description>
 
-&lt;h2 id=&#34;昔ながらの変更作業:480259f75c8c6ea6384e6478e44a3989&#34;&gt;昔ながらの変更作業&lt;/h2&gt;
+&lt;h2 id=&#34;昔ながらの変更作業&#34;&gt;昔ながらの変更作業&lt;/h2&gt;
 
 &lt;p&gt;　SIerの中で、ネットワーク機器の運用受託業務をやっておりまして、毎日毎日、色々なお客様のスイッチやルータ、ファイアウォールの設定変更をしています。&lt;/p&gt;
 
@@ -1332,7 +1332,7 @@
 
 &lt;p&gt;　それなりの人と時間をかけて対応している中で、上からは「コストを圧縮しろ！ただし、品質は下げるな！」という無茶を言われています。現時点では「二重チェックをやめて作業員を減らしましょうー。コストは下がりますよえへへ」という対応しか思いつかず、こんなことを言えば上長に殺されるわけです。&lt;/p&gt;
 
-&lt;h2 id=&#34;継続的デリバリーへの憧れ:480259f75c8c6ea6384e6478e44a3989&#34;&gt;継続的デリバリーへの憧れ&lt;/h2&gt;
+&lt;h2 id=&#34;継続的デリバリーへの憧れ&#34;&gt;継続的デリバリーへの憧れ&lt;/h2&gt;
 
 &lt;p&gt;　このような状況で、サーバやアプリケーションの世界で行われている「継続的デリバリ」の話を聞くと、素直にうらやましいわけです。テストが自動！？デプロイも自動！？&lt;/p&gt;
 
@@ -1344,7 +1344,7 @@
 
 &lt;p&gt;　このような設定変更作業を続けた結果、考慮漏れによる通信障害や作業ミスによる通信障害が発生し、ごめんなさいする羽目になります。深夜まで報告書を書いたのが懐かしい。&lt;/p&gt;
 
-&lt;h2 id=&#34;希望:480259f75c8c6ea6384e6478e44a3989&#34;&gt;希望&lt;/h2&gt;
+&lt;h2 id=&#34;希望&#34;&gt;希望&lt;/h2&gt;
 
 &lt;p&gt;　コストを下げて品質を維持するために、頻度の多いファイアウォールの設定変更作業で、継続的デリバリな仕組みができるといいなと思うわけです。ちゃんとテストしよう。手作業は止めよう。&lt;/p&gt;
 
@@ -1365,21 +1365,21 @@
 
 &lt;p&gt;　運用担当者がやることは手順となるコードの作成とレビューだけです。なんて素晴らしい！お客様！業後作業を希望ですか？いいですよ！CIツールがやりますんで！&lt;/p&gt;
 
-&lt;h2 id=&#34;課題:480259f75c8c6ea6384e6478e44a3989&#34;&gt;課題&lt;/h2&gt;
+&lt;h2 id=&#34;課題&#34;&gt;課題&lt;/h2&gt;
 
 &lt;p&gt;　実現に向けた課題は以下の通りです。Programmableな仮想ファイアウォールさえあれば、あとは仮想環境とオーケストレーションツール、CIツールを組み合わて作りこみでできそうな気がする。気がする。&lt;/p&gt;
 
-&lt;h3 id=&#34;1-programmableなファイアウォール:480259f75c8c6ea6384e6478e44a3989&#34;&gt;1. Programmableなファイアウォール&lt;/h3&gt;
+&lt;h3 id=&#34;1-programmableなファイアウォール&#34;&gt;1. Programmableなファイアウォール&lt;/h3&gt;
 
 &lt;p&gt;　CIツールに自動テスト、自動デプロイさせるためには、ファイアウォールがprogrammableである必要があります。GUIと同様の機能をAPIで提供するファイアウォールはあるのでしょうか。Expectでやる？&lt;/p&gt;
 
-&lt;h3 id=&#34;2-顧客ごとに異なるテスト環境を自動デプロイする必要がある:480259f75c8c6ea6384e6478e44a3989&#34;&gt;2. 顧客ごとに異なるテスト環境を自動デプロイする必要がある&lt;/h3&gt;
+&lt;h3 id=&#34;2-顧客ごとに異なるテスト環境を自動デプロイする必要がある&#34;&gt;2. 顧客ごとに異なるテスト環境を自動デプロイする必要がある&lt;/h3&gt;
 
 &lt;p&gt;　顧客ごとにネットワーク環境が違うので、当然必要となるテスト環境も顧客ごとに異なります。そのため、CIツールが、全く違うテスト環境を気軽に作っては壊し作っては壊してできる仕組みが必要です。&lt;/p&gt;
 
 &lt;p&gt;　これは初回に手作業で仮想マシンと仮想ネットワークを作り、顧客ごとにテンプレート化しておけばいけそう。2回目からは、オーケストレーションツールにテスト環境を用意してもらいましょう。&lt;/p&gt;
 
-&lt;h3 id=&#34;3-ポリシーに沿って動的にトラフィックを生成する必要がある:480259f75c8c6ea6384e6478e44a3989&#34;&gt;3. ポリシーに沿って動的にトラフィックを生成する必要がある。&lt;/h3&gt;
+&lt;h3 id=&#34;3-ポリシーに沿って動的にトラフィックを生成する必要がある&#34;&gt;3. ポリシーに沿って動的にトラフィックを生成する必要がある。&lt;/h3&gt;
 
 &lt;p&gt;　複数の顧客を運用しているので、流れるトラフィックは送信元宛先プロトコルの組み合わせで千差万別になります。そのため、事前にテスト用のトラフィックを準備するのではなく、テストの度にファイアウォールのポリシーから動的にトラフィックを生成する必要があります。&lt;/p&gt;
 
@@ -1412,7 +1412,7 @@
 &lt;li&gt;ネイバーのID&lt;/li&gt;
 &lt;/ol&gt;
 
-&lt;h3 id=&#34;検証環境:8a801d7caae5205bbd472b545f0f0c21&#34;&gt;検証環境&lt;/h3&gt;
+&lt;h3 id=&#34;検証環境&#34;&gt;検証環境&lt;/h3&gt;
 
 &lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/wp-content/uploads/2014/03/vpc-diag.png&#34; alt=&#34;enter image description here&#34; /&gt;&lt;/p&gt;
 
@@ -1420,7 +1420,7 @@
 
 &lt;p&gt;　この状態でEC2から192.168.2.254へTracerouteを行うことで、VGWがCiscoとFortiGateが広報した経路のどちらをベストパスとして選択するかを確認します。&lt;/p&gt;
 
-&lt;h3 id=&#34;1-そのまま接続してみる:8a801d7caae5205bbd472b545f0f0c21&#34;&gt;1　そのまま接続してみる&lt;/h3&gt;
+&lt;h3 id=&#34;1-そのまま接続してみる&#34;&gt;1　そのまま接続してみる&lt;/h3&gt;
 
 &lt;p&gt;　特に経路制御をせずにVPNコネクションを確立し、EC2からTracerouteを行います。FortiGate（169.254.252.33）経由になりました。これはORIGINによるものです。&lt;/p&gt;
 
@@ -1447,7 +1447,7 @@ Network Next Hop Metric LocPrf Weight Path
 
 &lt;p&gt;　ORIGIN属性はigp、egp、incompliteの順で選ばれるので、FortiGateが広告した192.168.2.0/24がベストパスに選択され、TracerouteがFortiGate経由になります。&lt;/p&gt;
 
-&lt;h3 id=&#34;2-origionをそろえる:8a801d7caae5205bbd472b545f0f0c21&#34;&gt;2　ORIGIONをそろえる&lt;/h3&gt;
+&lt;h3 id=&#34;2-origionをそろえる&#34;&gt;2　ORIGIONをそろえる&lt;/h3&gt;
 
 &lt;p&gt;　Cisco側のORIGIN属性をIGPに変更してみます。&lt;/p&gt;
 
@@ -1465,7 +1465,7 @@ Network Next Hop Metric LocPrf Weight Path
 4 192.168.2.254 (192.168.2.254) 20.392 ms * 
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h3 id=&#34;3-as-pathをprependしてみる:8a801d7caae5205bbd472b545f0f0c21&#34;&gt;3　AS-PATHをPrependしてみる。&lt;/h3&gt;
+&lt;h3 id=&#34;3-as-pathをprependしてみる&#34;&gt;3　AS-PATHをPrependしてみる。&lt;/h3&gt;
 
 &lt;p&gt;　router-idでベストパスが選択されている状況で、AS-PATHを使ってみます。Cisco側が広報する経路にAS-PATHを3つ積みます。&lt;/p&gt;
 
@@ -1486,7 +1486,7 @@ neighbor 169.254.252.25 route-map aws-aspath out
 4 192.168.2.254 (192.168.2.254) 20.646 ms * *
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h3 id=&#34;4-medを積んでみる:8a801d7caae5205bbd472b545f0f0c21&#34;&gt;4　MEDを積んでみる&lt;/h3&gt;
+&lt;h3 id=&#34;4-medを積んでみる&#34;&gt;4　MEDを積んでみる&lt;/h3&gt;
 
 &lt;p&gt;　AS-PATHではなく、MEDを積んでみましょう。Cisco側を通っている状況でCisco側にMEDを積みます。&lt;/p&gt;
 
@@ -1585,13 +1585,13 @@ end
 
 &lt;p&gt;　利用しているIPv6アドレスはHEのTunnel Brokerで割り当ててもらっているものです。HEはIPv6の逆引きを権限委譲してくれるので、Gmailにメールを送信する為に逆引きを設定してみました。&lt;/p&gt;
 
-&lt;h3 id=&#34;heに逆引きゾーンを委譲してもらう:257ab340aabbd3110eab36a4c8d84da0&#34;&gt;　HEに逆引きゾーンを委譲してもらう&lt;/h3&gt;
+&lt;h3 id=&#34;heに逆引きゾーンを委譲してもらう&#34;&gt;　HEに逆引きゾーンを委譲してもらう&lt;/h3&gt;
 
 &lt;p&gt;　Tunnel Broker管理画面の『rDNS Delegations』欄に、権限移譲してほしいDNSサーバのホスト名を入力します。BIND9のプライマリと、BIND10のセカンダリDNSを登録しました。&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/images/rDNS_of_HE.png&#34; alt=&#34;HE&#39;s rDNS&#34; /&gt;&lt;/p&gt;
 
-&lt;h3 id=&#34;プライマリ-bind9-を設定する:257ab340aabbd3110eab36a4c8d84da0&#34;&gt;　プライマリ（BIND9）を設定する&lt;/h3&gt;
+&lt;h3 id=&#34;プライマリ-bind9-を設定する&#34;&gt;　プライマリ（BIND9）を設定する&lt;/h3&gt;
 
 &lt;p&gt;　プライマリ側にゾーンファイルを作成します。HEの管理画面では移譲されるゾーン名が不明なので、dig +trace [逆引きしたいIPv6アドレス]などで委譲されるゾーン名を確認します。私の場合（/48でもらっているIPv6）は1.e.d.f.0.7.4.0.1.0.0.2.ip6.arpaでした。ゾーンファイル内に記載するPTRレコードはかなり長くなります。。。&lt;/p&gt;
 
@@ -1600,7 +1600,7 @@ end
 
 &lt;p&gt;　ゾーンファイル作成後、named.confに1.e.d.f.0.7.4.0.1.0.0.2.ip6.arpaをゾーンとして登録します。&lt;/p&gt;
 
-&lt;h3 id=&#34;セカンダリdns-bind10-を設定する:257ab340aabbd3110eab36a4c8d84da0&#34;&gt;　セカンダリDNS(BIND10）を設定する&lt;/h3&gt;
+&lt;h3 id=&#34;セカンダリdns-bind10-を設定する&#34;&gt;　セカンダリDNS(BIND10）を設定する&lt;/h3&gt;
 
 &lt;p&gt;　BIND10を1.e.d.f.0.7.4.0.1.0.0.2.ip6.arpaのセカンダリDNSとして設定します。Zonemgrにゾーンを登録し、Xfrinにゾーン転送を受け付けるドメインとして登録します。登録後にプライマリからゾーンを転送してもらいます。&lt;/p&gt;
 
@@ -1617,7 +1617,7 @@ end
 2013-08-31 01:24:46.853 INFO  [b10-xfrin.xfrin/4658] XFRIN_TRANSFER_SUCCESS full AXFR transfer of zone 1.e.d.f.0.7.4.0.1.0.0.2.ip6.arpa/IN succeeded (messages: 1, records: 4, bytes: 237, run time: 0.727 seconds, 326 bytes/second)
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h3 id=&#34;動作確認:257ab340aabbd3110eab36a4c8d84da0&#34;&gt;動作確認&lt;/h3&gt;
+&lt;h3 id=&#34;動作確認&#34;&gt;動作確認&lt;/h3&gt;
 
 &lt;p&gt;　プライマリDNSに問い合わせてみる。ANSWER SECTIONで設定したPTRが返ってきています。&lt;/p&gt;
 
@@ -1690,7 +1690,7 @@ x.x.0.0.0.0.0.0.0.0.0.0.0.0.0.0.3.5.0.0.1.e.d.f.0.7.4.0.1.0.0.2.ip6.arpa. 3600 I
 
 &lt;p&gt;15.3(2)TからHSRPのVIPとしてGUAがサポートされたようなので試してみました。&lt;/p&gt;
 
-&lt;h3 id=&#34;cisco892-k9-ios-15-3-1-tの場合:bb196d36658ab089ac6f611d58e19167&#34;&gt;CISCO892-K9 IOS 15.3(1)Tの場合&lt;/h3&gt;
+&lt;h3 id=&#34;cisco892-k9-ios-15-3-1-tの場合&#34;&gt;CISCO892-K9 IOS 15.3(1)Tの場合&lt;/h3&gt;
 
 &lt;pre&gt;&lt;code&gt;Router(config)#interface vlan 15 
 Router(config-if)#standby ? 
@@ -1698,7 +1698,7 @@ Router(config-if)#standby ipv6 ?
 X:X:X:X::X IPv6 link-local address autoconfig Obtain address using autoconfiguration
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h3 id=&#34;cisco892-k9-ios-15-3-2-tの場合:bb196d36658ab089ac6f611d58e19167&#34;&gt;CISCO892-K9 IOS 15.3(2)Tの場合&lt;/h3&gt;
+&lt;h3 id=&#34;cisco892-k9-ios-15-3-2-tの場合&#34;&gt;CISCO892-K9 IOS 15.3(2)Tの場合&lt;/h3&gt;
 
 &lt;pre&gt;&lt;code&gt;Router(config)#interface vlan 15 
 Router(config-if)#standby 0 ipv6 ? 
@@ -1726,11 +1726,11 @@ Router#
       <guid>http://aimless.jp/blog/archives/1561</guid>
       <description>
 
-&lt;h3 id=&#34;事の発端:e6b66ea7b6e81941f4e69d2576af25cc&#34;&gt;事の発端&lt;/h3&gt;
+&lt;h3 id=&#34;事の発端&#34;&gt;事の発端&lt;/h3&gt;
 
 &lt;p&gt;[tweet &lt;a href=&#34;https://twitter.com/ttkzw/status/306913213272977408&#34;&gt;https://twitter.com/ttkzw/status/306913213272977408&lt;/a&gt; lang=&amp;#8217;ja&amp;#8217;]&lt;/p&gt;
 
-&lt;h3 id=&#34;とりあえずやってみた:e6b66ea7b6e81941f4e69d2576af25cc&#34;&gt;とりあえずやってみた&lt;/h3&gt;
+&lt;h3 id=&#34;とりあえずやってみた&#34;&gt;とりあえずやってみた&lt;/h3&gt;
 
 &lt;p&gt;　何事もやってみるのが大事。&lt;/p&gt;
 
@@ -1777,7 +1777,7 @@ $CFG[&#39;Sources&#39;][&#39;Source2&#39;][&#39;DiskFile&#39;] = &#39;/var/log/m
 
 &lt;p&gt;閲覧するログの切り替えはGUIの右上「select Source」で可能です。&lt;/p&gt;
 
-&lt;h3 id=&#34;感想:e6b66ea7b6e81941f4e69d2576af25cc&#34;&gt;感想&lt;/h3&gt;
+&lt;h3 id=&#34;感想&#34;&gt;感想&lt;/h3&gt;
 
 &lt;p&gt;　rsyslogで収集しているログをWEBで見せたいというニッチな用途に最適だと思います。インストールは簡単で、操作も分りやすいです。@ttkzw、要件にあったツールを教えて下さりありがとうございました。&lt;/p&gt;
 </description>
@@ -1793,13 +1793,13 @@ $CFG[&#39;Sources&#39;][&#39;Source2&#39;][&#39;DiskFile&#39;] = &#39;/var/log/m
 
 &lt;p&gt;前回（&lt;a href=&#34;http://aimless.jp/blog/blog/archives/1538&#34; title=&#34;CiscoルータのConfigをHTTPを使ってバックアップする&#34; target=&#34;_blank&#34;&gt;CiscoルータのConfigをHTTPを使ってバックアップする&lt;/a&gt;）の続きです。ルータのCLIから世代管理システムにcommitできないなら、設定変更したタイミングで世代管理システムが勝手にcommitしてくれないかなーというズボラを実現しました。楽をする為の努力は大事です。&lt;/p&gt;
 
-&lt;h3 id=&#34;構成図:44f15c9e6fba689af041d66dd834bfd8&#34;&gt;構成図&lt;/h3&gt;
+&lt;h3 id=&#34;構成図&#34;&gt;構成図&lt;/h3&gt;
 
 &lt;p&gt;　Ciscoルータと世代管理システムの間に、rsyslogとlogsurfer、RANSIDを挟みます。設定変更を示すログがsyslogで飛んできたら、RANSIDが対象機器のリポジトリを自動更新します。あとは、ViewVCでリポジトリにアクセスして作業による差分を確認するだけ！&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/images/diagram.png&#34; alt=&#34;rancid diagram&#34; /&gt;&lt;/p&gt;
 
-&lt;h3 id=&#34;rsyslog:44f15c9e6fba689af041d66dd834bfd8&#34;&gt;rsyslog&lt;/h3&gt;
+&lt;h3 id=&#34;rsyslog&#34;&gt;rsyslog&lt;/h3&gt;
 
 &lt;p&gt;　rsyslogの式ベースフィルタを利用して、NW機器から送信されるsyslogを機器ごとのログファイルに書き込みます。&lt;/p&gt;
 
@@ -1809,7 +1809,7 @@ if ( $FROMHOST-IP == &#39;xxx.xxx.xxx.xxx&#39; ) and ($syslogfacility-text == &#
 &amp; ~
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h3 id=&#34;logsurfer:44f15c9e6fba689af041d66dd834bfd8&#34;&gt;logsurfer&lt;/h3&gt;
+&lt;h3 id=&#34;logsurfer&#34;&gt;logsurfer&lt;/h3&gt;
 
 &lt;p&gt;　rsyslogが出力するログファイルをlosurferで監視します。監視するログはconfiguration modeから抜けた時に表示される「%SYS-5-CONFIG_I: Configured from console by user on vty0 (xxx.xxx.xxx.xxx)」です。このログが監視でHITした場合、losurferがruncid-runを実施しリポジトリを更新します。&lt;/p&gt;
 
@@ -1821,11 +1821,11 @@ if ( $FROMHOST-IP == &#39;xxx.xxx.xxx.xxx&#39; ) and ($syslogfacility-text == &#
 # logsurfer -c /etc/logsurfer/rancid.conf -f /var/log/rsyslog/xxx.xxx.xxx.xxx_local3.log
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h3 id=&#34;ransid-viewvc:44f15c9e6fba689af041d66dd834bfd8&#34;&gt;RANSID＋ViewVC&lt;/h3&gt;
+&lt;h3 id=&#34;ransid-viewvc&#34;&gt;RANSID＋ViewVC&lt;/h3&gt;
 
 &lt;p&gt;　&lt;a href=&#34;http://d.hatena.ne.jp/stereocat/20111204/1322982683&#34; title=&#34;RANCID+ViewVCでコンフィグ管理&#34; target=&#34;_blank&#34;&gt;RANCID+ViewVCでコンフィグ管理&lt;/a&gt;を参考に、粛々と構築します。&lt;/p&gt;
 
-&lt;h3 id=&#34;課題:44f15c9e6fba689af041d66dd834bfd8&#34;&gt;課題&lt;/h3&gt;
+&lt;h3 id=&#34;課題&#34;&gt;課題&lt;/h3&gt;
 
 &lt;p&gt;　この仕組みは、rsyslogとlogsurfer、RANSIDが同一マシン上で稼働している必要があります。その為、既存環境に追加するには少々自由度が低いです。また、管理対象が増えた際にスケールさせるのが大変です。この仕組みで複数台を管理しようとすると、その分のログファイルとlogsurferのプロセスが必要になります。ちゃんと動くのか不安です。。。&lt;/p&gt;
 

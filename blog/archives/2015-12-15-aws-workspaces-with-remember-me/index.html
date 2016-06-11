@@ -70,7 +70,7 @@
 
 <p>Amazon WorkSpacesへの憧れが止まりません。BYOD＋WorkSpacesで仕事がしたい。とはいえ、古きSIerである弊社において、いきなりBYODはレベルが高すぎます。そこで、自宅からのリモートアクセス用途として会社に対してWorkSpacesを提案することにしました。そのために色々と調べたのでメモしておきます。</p>
 
-<h2 id="mfaの罠:31f38dca8007ccf1ee688b8fda274f87">MFAの罠</h2>
+<h2 id="mfaの罠">MFAの罠</h2>
 
 <p>AD ConnectorとRADIUSサーバによる多要素認証を使ってみて気が付いたのですが、WorkSpacesクライアントは多要素認証を使っていても認証情報を記憶します。多要素認証でログインした後に一旦切断しても、以下の画面になりボタン一つで簡単に再接続ができます。</p>
 
@@ -78,7 +78,7 @@
 
 <p>　認証情報を保存する機能は便利なのですが、社外に配置するPCで利用するWorkSpacesクライアントには認証情報を保存したくありません。誰が触るかわかりませんので。</p>
 
-<h2 id="remember-meの無効化:31f38dca8007ccf1ee688b8fda274f87">Remember Meの無効化</h2>
+<h2 id="remember-meの無効化">Remember Meの無効化</h2>
 
 <p>ドキュメントを調べたところ、ぴったりな機能がありました。Remember Meの無効化です。</p>
 
@@ -90,7 +90,7 @@
 
 <p>現時点で、Remember Meの無効化はサポートにお願いする必要があります。マネジメントコンソールでは無効にできません。</p>
 
-<h2 id="remember-me無効後の動作:31f38dca8007ccf1ee688b8fda274f87">Remember Me無効後の動作</h2>
+<h2 id="remember-me無効後の動作">Remember Me無効後の動作</h2>
 
 <p>WorkSpacesクライアントを切断します。</p>
 
@@ -104,7 +104,7 @@
 
 <p><img src="http://aimless.jp/blog/images/2015-12-15-004.png" alt="http://aimless.jp/blog/images/2015-12-15-004.png" /></p>
 
-<h2 id="所感:31f38dca8007ccf1ee688b8fda274f87">所感</h2>
+<h2 id="所感">所感</h2>
 
 <p>WorkSpacesはどこでもどんな端末でも使えるのが最大のメリットだと思います。ですが、どこでも使える端末に社内ネットワークにアクセスするための認証情報を保存するのはリスクがあります。Remember Meの無効化は、利便性とセキュリティを両立させる良いオプションだと思います。</p>
 

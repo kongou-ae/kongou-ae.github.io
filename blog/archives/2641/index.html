@@ -74,21 +74,21 @@
 
 <p>使い方ではまった箇所をメモしておきます。</p>
 
-<h2 id="インストール:0276447e54b8cc1adc3ebe7f7301ea42">インストール</h2>
+<h2 id="インストール">インストール</h2>
 
 <p>githubのREADMEに書いてある通り、gemでインストールするだけ。</p>
 
 <pre><code>$ gem install --pre asciidoctor-pdf
 </code></pre>
 
-<h2 id="デフォルトのテーマでpdfに変換する:0276447e54b8cc1adc3ebe7f7301ea42">デフォルトのテーマでPDFに変換する</h2>
+<h2 id="デフォルトのテーマでpdfに変換する">デフォルトのテーマでPDFに変換する</h2>
 
 <p>asciidoctor-pdfコマンドを利用します。</p>
 
 <pre><code>$ asciidoctor-pdf basic-example.adoc
 </code></pre>
 
-<h2 id="自作テーマを利用してpdfに変換する:0276447e54b8cc1adc3ebe7f7301ea42">自作テーマを利用してPDFに変換する</h2>
+<h2 id="自作テーマを利用してpdfに変換する">自作テーマを利用してPDFに変換する</h2>
 
 <p><a href="https://github.com/asciidoctor/asciidoctor-pdf/blob/master/docs/theming-guide.adoc">Asciidoctor PDF Theming Guide</a>に記載されている通り、自分なりのテーマを作ることができます。テーマを自作するにあたっては、<a href="https://github.com/asciidoctor/asciidoctor-pdf/blob/master/data/themes/default-theme.yml">デフォルトテーマ</a>の記載内容が参考になります。</p>
 
@@ -113,7 +113,7 @@
 <pre><code>asciidoctor-pdf -a pdf-stylesdir=/resources/themes -a pdf-style=basic README.adoc
 </code></pre>
 
-<h2 id="ページ番号を振る:0276447e54b8cc1adc3ebe7f7301ea42">ページ番号を振る</h2>
+<h2 id="ページ番号を振る">ページ番号を振る</h2>
 
 <p>ヘッダーとフッターにページ番号を振ることができます。今回は、.adocに:pagenums:を設定した上で、テーマファイルにページ番号の具体的なスタイルを記載します。</p>
 
@@ -155,7 +155,7 @@ v1.0, 2014-01-01
 
 <p><img src="http://aimless.jp/blog/wp-content/uploads/2015/07/asciidoctor_page_number.png" alt="フッタ" /></p>
 
-<h2 id="ヘッダーやフッターに画像を追加する:0276447e54b8cc1adc3ebe7f7301ea42">ヘッダーやフッターに画像を追加する</h2>
+<h2 id="ヘッダーやフッターに画像を追加する">ヘッダーやフッターに画像を追加する</h2>
 
 <p>ヘッダーやフッターに画像を追加することが可能です。まずは。追加したい画像をテーマと同じディレクトリに配置します。</p>
 
@@ -195,7 +195,7 @@ v1.0, 2014-01-01
 
 <p><img src="http://aimless.jp/blog/wp-content/uploads/2015/07/asciidoctor_header_image.png" alt="ヘッダーに画像" /></p>
 
-<h2 id="フォントを指定する:0276447e54b8cc1adc3ebe7f7301ea42">フォントを指定する</h2>
+<h2 id="フォントを指定する">フォントを指定する</h2>
 
 <p>デフォルトでは以下3種類のフォントが利用可能です。これら以外のフォントを利用することも可能です。</p>
 
@@ -256,7 +256,7 @@ base:
 <pre><code>asciidoctor-pdf -a pdf-stylesdir=/resources/themes -a pdf-style=basic -a pdf-fontsdir=/resources/fonts README.adoc
 </code></pre>
 
-<h2 id="所感:0276447e54b8cc1adc3ebe7f7301ea42">所感</h2>
+<h2 id="所感">所感</h2>
 
 <ul>
 <li>PDFは綺麗に描画された。</li>

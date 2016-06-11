@@ -70,7 +70,7 @@
 
 <p><a href="http://aimless.jp/blog/blog/archives/675" title="Cisco-YAMAHA-IPIP" target="_blank">前回</a>のパケットキャプチャに引き続き、PPインタフェースにANY-ANY-pass-logなフィルターを掛けてパケットの動きを確認してみました。</p>
 
-<h3 id="正常な通信-lan側でipipトンネル:f85d22971c4da116df949b0fd1856906">正常な通信（LAN側でIPIPトンネル）</h3>
+<h3 id="正常な通信-lan側でipipトンネル">正常な通信（LAN側でIPIPトンネル）</h3>
 
 <p>　下記がPingによる疎通確認のログです。プロトコル番号4番がIPIPなので、IPIPトンネル経由のICMP requestに対してecho replyを返している模様</p>
 
@@ -83,7 +83,7 @@
 2012/02/05 18:55:04: LAN2 Passed at OUT(100) filter: proto=4 192.168.2.200 &gt; 192.168.2.254
 </code></pre>
 
-<h3 id="上手くいかないな通信-global側でipipトンネル:f85d22971c4da116df949b0fd1856906">上手くいかないな通信（Global側でIPIPトンネル）</h3>
+<h3 id="上手くいかないな通信-global側でipipトンネル">上手くいかないな通信（Global側でIPIPトンネル）</h3>
 
 <p>　下記がグローバル側のトンネルでPingによる疎通確認をした結果です。・・・PPトンネルに入ってきたパケットが、そのままPPトンネルから出て行ってる？？</p>
 

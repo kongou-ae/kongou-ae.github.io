@@ -70,7 +70,7 @@
 
 <p>「ネットワークエンジニアたるもの、やっぱりグローバルASの一つや二つ欲しいよね」という事で試算しました。JPNICの中のひとではないので間違っているかもしれません。その点ご了承ください。</p>
 
-<h3 id="as番号の取得条件:951c94c7fe00d288960d2674af9cbffa">AS番号の取得条件</h3>
+<h3 id="as番号の取得条件">AS番号の取得条件</h3>
 
 <p>　<a href="http://www.nic.ad.jp/ja/ip/asnumber.html" title="asnumber" target="_blank">AS番号の申請について</a>に記載されている条件は下記の通りです。素直に読むと、「二つのグローバルASとebgpで経路交換しろ」という条件ですね。これは某AS45679と、Hurricane ElectricのCreate BGP Tunnel（AS6939）でクリアできそうです。と○ちゃさん何とぞPeeringのほどorz HE以外にもBGPなtunnel brokerがあるみたいなので、それを使うのもいいかと思います。<a href="http://en.wikipedia.org/wiki/List_of_IPv6_tunnel_brokers" title="tunnel brokers" target="_blank">List of IPv6 tunnel brokers</a></p>
 
@@ -84,7 +84,7 @@
 <p><a href="http://www.nic.ad.jp/ja/ip/asnumber.html" title="asnumber" target="_blank">AS番号の申請について</a></p>
 </blockquote>
 
-<h3 id="広告するグローバルipアドレスの取得:951c94c7fe00d288960d2674af9cbffa">広告するグローバルIPアドレスの取得</h3>
+<h3 id="広告するグローバルipアドレスの取得">広告するグローバルIPアドレスの取得</h3>
 
 <p>　経路交換することが条件なので、広告するグローバルIPアドレスが必要です。二つのグローバルASが両方ともIPv6なので、IPv6のGUA Prefixを取得します。</p>
 
@@ -96,7 +96,7 @@
 <p><a href="http://www.nic.ad.jp/ja/ip/pi-application.html" title="pi-application" target="_blank">特殊用途用プロバイダ非依存アドレス割り当て申請</a></p>
 </blockquote>
 
-<h3 id="お見積り:951c94c7fe00d288960d2674af9cbffa">お見積り</h3>
+<h3 id="お見積り">お見積り</h3>
 
 <p>　<a href="http://www.nic.ad.jp/ja/ip/member/fee.html#2" title="as_fee" target="_blank">AS番号に関連する費用</a>によると、AS番号の契約料が262,500円、維持料が52,500円です。また、<a href="http://www.nic.ad.jp/ja/ip/member/fee.html#3" title="ipv6_fee" target="_blank">プロバイダ非依存アドレスに関連する費用</a>によると、GUAの契約料が262,500円、維持料が210,000円/年です。</p>
 

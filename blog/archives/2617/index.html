@@ -70,7 +70,7 @@
 
 <p>VPC FLow Logsのリリース直後から、クラメソさんの「<a href="http://dev.classmethod.jp/cloud/aws/vpc-flow-logs-visualized-kibana4/">VPC Flow LogsをElasticsearch + Kibana4で可視化する</a>」と同じことを考えていました。週末に試行錯誤した結果をアウトプットします。</p>
 
-<h2 id="ログの取り方:879fe74068b1e39f8423ed492442144f">ログの取り方</h2>
+<h2 id="ログの取り方">ログの取り方</h2>
 
 <p>　AWS SDK for Ruby を利用してClodWatch Logsを取得する方法は以下の様になります。</p>
 
@@ -100,7 +100,7 @@ resp = cloudwatchlogs.get_log_events(options)
 
 <p>　したがって、このコードを継続的に実行すると、最初から1M byte分のログを繰り返し取得してしまいます。これでは意味がありません。実行時には、前回実行分以降のログを取得してほしい。これを実現する方法が、<code>get_log_events</code>の<code>next_token</code>オプションです。</p>
 
-<h2 id="増分ログの取り方:879fe74068b1e39f8423ed492442144f">増分ログの取り方</h2>
+<h2 id="増分ログの取り方">増分ログの取り方</h2>
 
 <p>　<code>get_log_events</code>のレスポンスには<code>next_forward_token</code>と<code>next_backward_token</code>が含まれています。これらは取得結果の次のページの位置を示しています。より新しいログの位置は名前的に<code>next_forward_token</code>が保持しているっぽいです。</p>
 
@@ -168,7 +168,7 @@ resp = cloudwatchlogs.get_log_events(options)
 write_token(resp.next_forward_token)
 </code></pre>
 
-<h2 id="動作確認:879fe74068b1e39f8423ed492442144f">動作確認</h2>
+<h2 id="動作確認">動作確認</h2>
 
 <p>　ElasticSearchに投入済みのデータは以下の通りです。19:25:47までのログが格納されています。</p>
 

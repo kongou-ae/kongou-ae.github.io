@@ -68,13 +68,13 @@
     <article>
       
 
-<h2 id="作ったもの:d4fd824ade6bd5facb61487e58730a29">作ったもの</h2>
+<h2 id="作ったもの">作ったもの</h2>
 
 <p><a href="https://github.com/kongou-ae/aws2excel">kongou-ae/aws2excel</a></p>
 
 <p>AWSの構成情報をxlsxファイルに書き出すスクリプトです。出力されるファイルのイメージはREADMEの画像を参照ください。勢いでやっつけているので、一部サービスにのみ対応しています。最終的にはLambdaで動かしてs3にExcelを吐き出す実装にしたい。</p>
 
-<h2 id="経緯:d4fd824ade6bd5facb61487e58730a29">経緯</h2>
+<h2 id="経緯">経緯</h2>
 
 <p><blockquote class="twitter-tweet" lang="ja"><p lang="en" dir="ltr"><a href="https://twitter.com/ishikawa84g">@ishikawa84g</a> cloud2excel!</p>&mdash; 前佛 雅人(M.Zembutsu) (@zembutsu) <a href="https://twitter.com/zembutsu/status/660383609283457024">2015, 10月 31</a></blockquote>
 <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script></p>
@@ -87,11 +87,11 @@
 
 <p>自分もワクワクしながらcloud2excelを検索しまして、、、無いのであれば、勉強がてら作ってみようということで作ってみました。</p>
 
-<h2 id="実装:d4fd824ade6bd5facb61487e58730a29">実装</h2>
+<h2 id="実装">実装</h2>
 
 <p>aws-sdkを利用してAPIを叩き必要な情報を取得し、その情報をExcel に書き出しているだけです。Excelへの書き出しは<a href="https://github.com/guyonroche/exceljs">guyonroche/exceljs</a>を使いました。</p>
 
-<h2 id="雑感:d4fd824ade6bd5facb61487e58730a29">雑感</h2>
+<h2 id="雑感">雑感</h2>
 
 <p><a href="https://github.com/guyonroche/exceljs">guyonroche/exceljs</a>を見つけたのが今回の最大の収穫です。配列やオブジェクトの情報を、かなり簡単に表形式でExcelに書き出すことができます。さらに、<a href="https://github.com/guyonroche/exceljs">guyonroche/exceljs</a>は、Excelからの読み込みもできるようなので、Infrastrucrture as Excelが実現できます。Excelでパラメータシートを作り、そこにパラメータを書くとAWS上にインスタンスができる。なんという黒魔術。やりませんけど。。。</p>
 

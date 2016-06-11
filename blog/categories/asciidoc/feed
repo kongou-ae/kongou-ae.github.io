@@ -17,7 +17,7 @@
       <guid>http://aimless.jp/blog/archives/2016-02-16-titlepage-of-pdffile-created-by-asciidoctorpdf</guid>
       <description>
 
-&lt;h2 id=&#34;デフォルトの表紙:5feccf674ee677e899c7266b1cf01563&#34;&gt;デフォルトの表紙&lt;/h2&gt;
+&lt;h2 id=&#34;デフォルトの表紙&#34;&gt;デフォルトの表紙&lt;/h2&gt;
 
 &lt;p&gt;asciidoctor-pdfでは、H1と以下2行をもとに表紙が生成されます。&lt;/p&gt;
 
@@ -30,7 +30,7 @@ v1.0, 2014-01-01
 
 &lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/images/2016-02-16-001.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
 
-&lt;h2 id=&#34;テーマファイルを使って表紙をカスタマイズする:5feccf674ee677e899c7266b1cf01563&#34;&gt;テーマファイルを使って表紙をカスタマイズする&lt;/h2&gt;
+&lt;h2 id=&#34;テーマファイルを使って表紙をカスタマイズする&#34;&gt;テーマファイルを使って表紙をカスタマイズする&lt;/h2&gt;
 
 &lt;p&gt;&lt;a href=&#34;https://github.com/asciidoctor/asciidoctor-pdf/blob/master/docs/theming-guide.adoc#title-page&#34;&gt;テーマファイルのコンフィグ例&lt;/a&gt;をもとに、表紙をカスタマイズしてみます。&lt;/p&gt;
 
@@ -54,7 +54,7 @@ v1.0, 2014-01-01
 
 &lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/images/2016-02-16-002.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
 
-&lt;h2 id=&#34;タイトルの改行位置を調整する:5feccf674ee677e899c7266b1cf01563&#34;&gt;タイトルの改行位置を調整する&lt;/h2&gt;
+&lt;h2 id=&#34;タイトルの改行位置を調整する&#34;&gt;タイトルの改行位置を調整する&lt;/h2&gt;
 
 &lt;p&gt;タイトルが変な位置で改行されてしまっているので修正します。H1の文字列をで区切ることで、PDFのタイトルを任意の位置で改行することができます。&lt;/p&gt;
 
@@ -79,7 +79,7 @@ v1.0, 2014-01-01
 
 &lt;p&gt;会社のWordテンプレのフッターが複数行なので、asciidoctor-pdfで複数行のフッタを出力する方法を調べました。&lt;/p&gt;
 
-&lt;h2 id=&#34;テーマファイルの書き方:2493613cc362f0c0ba05912c0cc3a509&#34;&gt;テーマファイルの書き方&lt;/h2&gt;
+&lt;h2 id=&#34;テーマファイルの書き方&#34;&gt;テーマファイルの書き方&lt;/h2&gt;
 
 &lt;p&gt;今回は、PDFのフッタにページ番号とコピーライトをつけます。その場合、テーマファイルを以下のように記載します。参考：&lt;a href=&#34;https://github.com/asciidoctor/asciidoctor-pdf/blob/master/docs/theming-guide.adoc#running-header--footer&#34;&gt;Running header &amp;amp; footer&lt;/a&gt;&lt;/p&gt;
 
@@ -100,7 +100,7 @@ v1.0, 2014-01-01
         Copyright &amp;amp;#169; hogehoge company CO.,LTD. All right reserved.
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h2 id=&#34;pdf出力:2493613cc362f0c0ba05912c0cc3a509&#34;&gt;PDF出力&lt;/h2&gt;
+&lt;h2 id=&#34;pdf出力&#34;&gt;PDF出力&lt;/h2&gt;
 
 &lt;p&gt;asciidoctor-pdfでビルドする際に上記のテーマファイルを利用すると、以下のPDFが生成されます。やりたいことができました。&lt;/p&gt;
 

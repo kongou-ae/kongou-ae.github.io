@@ -68,7 +68,7 @@
     <article>
       
 
-<h2 id="はじめに:fdefdb4df80f925e79defa0315e73418">はじめに</h2>
+<h2 id="はじめに">はじめに</h2>
 
 <p><a href="http://aimless.jp/blog/archives/2685/">RedPenにスペルチェック機能を追加する</a>の続きです。CircleCI上でRedPenを動かしてみました。</p>
 
@@ -76,7 +76,7 @@
 <p>RedPenを利用したスペルチェックがローカル環境で動くことを確認しました。JavaScriptでチェック項目を拡張できるのがいいですね。次はスペルチェック用辞書の単語を増やした上で、CircleCI上で動作させてみようと思います。</p>
 </blockquote>
 
-<h2 id="コンテナの仕込み:fdefdb4df80f925e79defa0315e73418">コンテナの仕込み</h2>
+<h2 id="コンテナの仕込み">コンテナの仕込み</h2>
 
 <p>CircleCIのコンテナでRedPenを動かさなければなりません。RedPenはJava 1.8が必要なのでcircle.ymの<code>machine</code>の箇所に追加します。また、RedPenそのものをダウンロードしなければなりませんので、<code>dependencies</code>の箇所でアーカイブのダウンロードと展開、削除を行います。</p>
 
@@ -92,7 +92,7 @@ dependencies:
     - rm RedPen-1.4.1.tar.gz
 </code></pre>
 
-<h2 id="テストの仕込み:fdefdb4df80f925e79defa0315e73418">テストの仕込み</h2>
+<h2 id="テストの仕込み">テストの仕込み</h2>
 
 <p>RedPenで独自JavaScriptを利用するためには、設定ファイルとJavaScriptファイルが必要です。せっかくなので、これらもリポジトリで管理します。ブログ用リポジトリにRedPenの設定ファイルとスペルチェック用JavaScriptを配置します。</p>
 
@@ -129,7 +129,7 @@ fi
       - bash ./test-redpen.sh
 </code></pre>
 
-<h3 id="実行:fdefdb4df80f925e79defa0315e73418">実行</h3>
+<h3 id="実行">実行</h3>
 
 <p>さて、試してみます。書きかけのこのエントリをブログ用リポジトリにプッシュしてみます。slackからテスト結果の通知があるまで、艦これでもやりつつ待ちます。</p>
 
@@ -146,7 +146,7 @@ fi
 
 <p><img src="http://aimless.jp/blog/images/20151125-03.png" alt="" /></p>
 
-<h2 id="リトライ:fdefdb4df80f925e79defa0315e73418">リトライ</h2>
+<h2 id="リトライ">リトライ</h2>
 
 <p>4項目を修正しまして再プッシュしましたが、再びエラーです。</p>
 
@@ -172,7 +172,7 @@ fi
 
 <p><img src="http://aimless.jp/blog/images/20151125-05.png" alt="" /></p>
 
-<h2 id="所感:fdefdb4df80f925e79defa0315e73418">所感</h2>
+<h2 id="所感">所感</h2>
 
 <p>CircleCIを利用して、ブログに対する継続的なテストを実装することができました。やりたいことができたので満足です。ブログを書きながら、スペルチェック用の辞書を育てていこうとおもいます。</p>
 

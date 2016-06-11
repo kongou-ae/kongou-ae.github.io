@@ -70,7 +70,7 @@
 
 <p><a href="http://aimless.jp/blog/blog/archives/2586">Amazon LinuxでPrometheusを動かしてみた</a>で動いたPrometheusを利用して、サーバのメトリクスを収集します。今回はPrometheusが稼働しているAmazon Linuxのメトリクスを収集します。</p>
 
-<h2 id="node-exporterを稼働させる:e67d1193b4ff96687e3431437834ddb9">node_exporterを稼働させる</h2>
+<h2 id="node-exporterを稼働させる">node_exporterを稼働させる</h2>
 
 <p>　メトリクスを収集したいサーバでnode_exporterというバイナリを起動します。</p>
 
@@ -99,7 +99,7 @@ go_gc_duration_seconds_count 205
 
 <p>　node_exporterと同じように、定期的に自サーバのメトリクスを取得し、ファイルに書き込み、httpで公開できる仕組みを作れば、windowsでもメトリクスを収集できる気がします。</p>
 
-<h2 id="prometheusにnodeを登録する:e67d1193b4ff96687e3431437834ddb9">Prometheusにnodeを登録する</h2>
+<h2 id="prometheusにnodeを登録する">Prometheusにnodeを登録する</h2>
 
 <p>　Prometheusサーバに、node_exporterが生成するデータを登録します。</p>
 
@@ -114,7 +114,7 @@ job: {
 }
 </code></pre>
 
-<h2 id="prometheusでメトリクスを確認する:e67d1193b4ff96687e3431437834ddb9">Prometheusでメトリクスを確認する</h2>
+<h2 id="prometheusでメトリクスを確認する">Prometheusでメトリクスを確認する</h2>
 
 <p>　Prometheusサーバを再起動すると、コンソールにNodeが追加され、メトリクスを収集している対象の一覧が表示されます。</p>
 

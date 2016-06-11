@@ -72,19 +72,19 @@
 
 <p>@stereocatさんのエントリーを見て自分もルータにフルルートを注入したくなったので、RouteViews+bgpdump+exabgpで試してみました。</p>
 
-<h3 id="経路情報の準備:f1ff86de82d9f4089c5525dc9e58f1c5">経路情報の準備</h3>
+<h3 id="経路情報の準備">経路情報の準備</h3>
 
 <p>　<a href="http://archive.routeviews.org/route-views6/bgpdata/">route-views6.oregon-ix.net</a>が公開しているIPv6のMRTデータを利用します。</p>
 
-<h3 id="bgpdumpのインストール:f1ff86de82d9f4089c5525dc9e58f1c5">bgpdumpのインストール</h3>
+<h3 id="bgpdumpのインストール">bgpdumpのインストール</h3>
 
 <p>　<a href="http://d.hatena.ne.jp/stereocat/20120311/1331451000" target="_blank">@stereocatさんのエントリー</a>を見ながら粛々と実施します。</p>
 
-<h3 id="exabgpの準備:f1ff86de82d9f4089c5525dc9e58f1c5">exabgpの準備</h3>
+<h3 id="exabgpの準備">exabgpの準備</h3>
 
 <p>　これも<a href="http://d.hatena.ne.jp/stereocat/20120311/1331450868" target="_blank">@stereocatさんのエントリー</a>を見ながら粛々と実施します。なおCentOS5.8のyumでインストールされるpython2.4だとエラーが出て動かなかった為、別途2.6をソースからインストールしました。</p>
 
-<h3 id="コンフィグ作成スクリプトの実施:f1ff86de82d9f4089c5525dc9e58f1c5">コンフィグ作成スクリプトの実施</h3>
+<h3 id="コンフィグ作成スクリプトの実施">コンフィグ作成スクリプトの実施</h3>
 
 <p>　MRT形式のデータをbgpdumpで変換しただけではexabgpのコンフィグに必要な構文になりません。そこで、スクリプトでbgpdumpの変換結果をexabgpのコンフィグにそった形に修正します。イケてないスクリプトなのはご了承ください。</p>
 
@@ -122,7 +122,7 @@ echo } &gt;&gt;/tmp/bgproute/exabgpconf
 
 <p>　neighborファイルの中にネイバーに関する設定（Static部分はスクリプトが自動生成します）を準備してから、変換したいRMT形式のデータを引数にしてシェルを実行すると、static部分が追記されたexabgpconfというコンフィグファイルが出来上がります。（cloudcore上で実施したら凄い時間がかかりました・・・）　</p>
 
-<h3 id="ルータへ経路を注入する:f1ff86de82d9f4089c5525dc9e58f1c5">ルータへ経路を注入する</h3>
+<h3 id="ルータへ経路を注入する">ルータへ経路を注入する</h3>
 
 <p>　Cisco892J側にexabgpをネイバーとして追加して、いざ経路注入。</p>
 

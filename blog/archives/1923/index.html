@@ -78,13 +78,13 @@
 
 <p>　なお、一個人が調べただけですので、業務でご利用されている方々につきましては、必要に応じて保守ベンダにお問い合わせいただくのがよろしいかと思います。</p>
 
-<h2 id="確認項目:26a7460c10c0825f9b7a62518ec9b00d">確認項目</h2>
+<h2 id="確認項目">確認項目</h2>
 
 <p>　一言で「ネットワークアドレス変換（NAT）機能」といっても、一般的なネットワーク機器では「NAT」と「NAPT」の二つが実装されています。NATは送信元ポート番号を変換しませんので、キャッシュDNSサーバ側でソースポートランダマイゼーションを行っていれば問題ありません。確認すべきは、ネットワーク機器が送信元ポートを変換するNAPTの仕様です。</p>
 
 <p>　なお、本エントリーを書いている最中に、ネットワーク機器自身のキャッシュDNSサーバ機能はソースポートランダマイゼーションが有効になっているのか気になりました。。。別途調べようと思います。</p>
 
-<h2 id="check-point:26a7460c10c0825f9b7a62518ec9b00d">Check Point</h2>
+<h2 id="check-point">Check Point</h2>
 
 <p>　デフォルトの動作は<a href="https://supportcenter.checkpoint.com/supportcenter/portal?js_peid=P-114a7ba5fd7-10001&amp;eventSubmit_doGoviewsolutiondetails&amp;solutionid=sk35623">Hide NAT cancels DNS source port randomization</a>に記載されています。</p>
 
@@ -115,7 +115,7 @@
 <li>DNSパケットに対してIPS処理が行われますので、RFCに準拠しない等の誤ったDNSパケットはCheckpointが破棄する可能性があります。設定は計画的に。</li>
 </ol>
 
-<h2 id="juniper-screenos:26a7460c10c0825f9b7a62518ec9b00d">Juniper（ScreenOS）</h2>
+<h2 id="juniper-screenos">Juniper（ScreenOS）</h2>
 
 <p>　以下のKBが参考になります。</p>
 
@@ -139,13 +139,13 @@
 
 <p>　比較的最近導入した機器、または適切にバージョンアップを行っている機器であれば、改修済みのOSで稼働していると思います。改修前のOSでDIPを利用している場合は、改修済みのOSにバージョンアップしましょう。また、改修済みのOSでポリシーベースのDIPを利用している場合は、random-portオプションを利用しましょう。</p>
 
-<h2 id="fortigate:26a7460c10c0825f9b7a62518ec9b00d">FortiGate</h2>
+<h2 id="fortigate">FortiGate</h2>
 
 <p>　KBを調べたのですが、それらしものを見つけられませんでした。</p>
 
 <p>　手元にあるFortiOS4.0系の通信ログを見ると、インターフェースベースのNAPTとIP Poolを利用したNAPTともに、変換後の送信元ポートはランダムであるように見受けられました。おそらく、機器デフォルトの動作がランダム化だと思われます。</p>
 
-<h2 id="yamaha:26a7460c10c0825f9b7a62518ec9b00d">Yamaha</h2>
+<h2 id="yamaha">Yamaha</h2>
 
 <p>　デフォルトの動作は<a href="http://www.rtpro.yamaha.co.jp/RT/docs/nat-descriptor/nat-abstruct.html">NATディスクリプタ機能 概要</a>に記載されています。</p>
 
@@ -167,7 +167,7 @@
 
 <p>　RTXのMLでファームの改修要望が出ていましたので、現時点でNAPTの動作そのものがランダム化に変更されたファームはないようです。</p>
 
-<h2 id="cisco:26a7460c10c0825f9b7a62518ec9b00d">Cisco</h2>
+<h2 id="cisco">Cisco</h2>
 
 <p>　以下が参考になります。</p>
 

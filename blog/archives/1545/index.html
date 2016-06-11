@@ -72,13 +72,13 @@
 
 <p>前回（<a href="http://aimless.jp/blog/blog/archives/1538" title="CiscoルータのConfigをHTTPを使ってバックアップする" target="_blank">CiscoルータのConfigをHTTPを使ってバックアップする</a>）の続きです。ルータのCLIから世代管理システムにcommitできないなら、設定変更したタイミングで世代管理システムが勝手にcommitしてくれないかなーというズボラを実現しました。楽をする為の努力は大事です。</p>
 
-<h3 id="構成図:44f15c9e6fba689af041d66dd834bfd8">構成図</h3>
+<h3 id="構成図">構成図</h3>
 
 <p>　Ciscoルータと世代管理システムの間に、rsyslogとlogsurfer、RANSIDを挟みます。設定変更を示すログがsyslogで飛んできたら、RANSIDが対象機器のリポジトリを自動更新します。あとは、ViewVCでリポジトリにアクセスして作業による差分を確認するだけ！</p>
 
 <p><img src="http://aimless.jp/blog/images/diagram.png" alt="rancid diagram" /></p>
 
-<h3 id="rsyslog:44f15c9e6fba689af041d66dd834bfd8">rsyslog</h3>
+<h3 id="rsyslog">rsyslog</h3>
 
 <p>　rsyslogの式ベースフィルタを利用して、NW機器から送信されるsyslogを機器ごとのログファイルに書き込みます。</p>
 
@@ -88,7 +88,7 @@ if ( $FROMHOST-IP == 'xxx.xxx.xxx.xxx' ) and ($syslogfacility-text == 'local3' )
 & ~
 </code></pre>
 
-<h3 id="logsurfer:44f15c9e6fba689af041d66dd834bfd8">logsurfer</h3>
+<h3 id="logsurfer">logsurfer</h3>
 
 <p>　rsyslogが出力するログファイルをlosurferで監視します。監視するログはconfiguration modeから抜けた時に表示される「%SYS-5-CONFIG_I: Configured from console by user on vty0 (xxx.xxx.xxx.xxx)」です。このログが監視でHITした場合、losurferがruncid-runを実施しリポジトリを更新します。</p>
 
@@ -100,11 +100,11 @@ if ( $FROMHOST-IP == 'xxx.xxx.xxx.xxx' ) and ($syslogfacility-text == 'local3' )
 # logsurfer -c /etc/logsurfer/rancid.conf -f /var/log/rsyslog/xxx.xxx.xxx.xxx_local3.log
 </code></pre>
 
-<h3 id="ransid-viewvc:44f15c9e6fba689af041d66dd834bfd8">RANSID＋ViewVC</h3>
+<h3 id="ransid-viewvc">RANSID＋ViewVC</h3>
 
 <p>　<a href="http://d.hatena.ne.jp/stereocat/20111204/1322982683" title="RANCID+ViewVCでコンフィグ管理" target="_blank">RANCID+ViewVCでコンフィグ管理</a>を参考に、粛々と構築します。</p>
 
-<h3 id="課題:44f15c9e6fba689af041d66dd834bfd8">課題</h3>
+<h3 id="課題">課題</h3>
 
 <p>　この仕組みは、rsyslogとlogsurfer、RANSIDが同一マシン上で稼働している必要があります。その為、既存環境に追加するには少々自由度が低いです。また、管理対象が増えた際にスケールさせるのが大変です。この仕組みで複数台を管理しようとすると、その分のログファイルとlogsurferのプロセスが必要になります。ちゃんと動くのか不安です。。。</p>
 

@@ -17,13 +17,13 @@
       <guid>http://aimless.jp/blog/archives/2229</guid>
       <description>
 
-&lt;h1 id=&#34;はじめに:b35a1c1c8d870e3c08abe903af5123b9&#34;&gt;はじめに&lt;/h1&gt;
+&lt;h1 id=&#34;はじめに&#34;&gt;はじめに&lt;/h1&gt;
 
 &lt;p&gt;ShellShockに関して、私の業務と関わりのあるネットワーク機器ベンダのSecurity Advisoryが揃ってきたので、現時点での情報を簡単にまとめます。&lt;/p&gt;
 
 &lt;p&gt;あくまでも現時点ですので、今後内容が変更になる可能性があります。また、詳細については、保守ベンダにお問い合わせください。&lt;/p&gt;
 
-&lt;h1 id=&#34;cisco:b35a1c1c8d870e3c08abe903af5123b9&#34;&gt;Cisco&lt;/h1&gt;
+&lt;h1 id=&#34;cisco&#34;&gt;Cisco&lt;/h1&gt;
 
 &lt;p&gt;&lt;a href=&#34;http://tools.cisco.com/security/center/content/CiscoSecurityAdvisory/cisco-sa-20140926-bash&#34;&gt;http://tools.cisco.com/security/center/content/CiscoSecurityAdvisory/cisco-sa-20140926-bash&lt;/a&gt;&lt;/p&gt;
 
@@ -31,31 +31,31 @@
 
 &lt;p&gt;（9/28更新）IOSとIOS XRは該当しません。IOS XE、Nexus、UCSは該当します。具体的な対応方法については、個別にBugIDが振られていますので、そちらで確認する必要があります。&lt;/p&gt;
 
-&lt;h1 id=&#34;fortinet:b35a1c1c8d870e3c08abe903af5123b9&#34;&gt;Fortinet&lt;/h1&gt;
+&lt;h1 id=&#34;fortinet&#34;&gt;Fortinet&lt;/h1&gt;
 
 &lt;p&gt;&lt;a href=&#34;http://www.fortiguard.com/advisory/FG-IR-14-030&#34;&gt;http://www.fortiguard.com/advisory/FG-IR-14-030&lt;/a&gt;&lt;/p&gt;
 
 &lt;p&gt;FortiGateは該当しません。ManagerやAnalyzerが該当します。&lt;/p&gt;
 
-&lt;h1 id=&#34;juniper:b35a1c1c8d870e3c08abe903af5123b9&#34;&gt;Juniper&lt;/h1&gt;
+&lt;h1 id=&#34;juniper&#34;&gt;Juniper&lt;/h1&gt;
 
 &lt;p&gt;&lt;a href=&#34;http://kb.juniper.net/InfoCenter/index?page=content&amp;amp;id=JSA10648&#34;&gt;http://kb.juniper.net/InfoCenter/index?page=content&amp;amp;id=JSA10648&lt;/a&gt;&lt;/p&gt;
 
 &lt;p&gt;Junos、ScreenOS、IVE OSといった主要製品は該当しません。&lt;/p&gt;
 
-&lt;h1 id=&#34;f5:b35a1c1c8d870e3c08abe903af5123b9&#34;&gt;F5&lt;/h1&gt;
+&lt;h1 id=&#34;f5&#34;&gt;F5&lt;/h1&gt;
 
 &lt;p&gt;&lt;a href=&#34;http://support.f5.com/kb/en-us/solutions/public/15000/600/sol15629.html&#34;&gt;http://support.f5.com/kb/en-us/solutions/public/15000/600/sol15629.html&lt;/a&gt;&lt;/p&gt;
 
 &lt;p&gt;主要な製品はほとんど該当します。&lt;/p&gt;
 
-&lt;h1 id=&#34;checkpoint:b35a1c1c8d870e3c08abe903af5123b9&#34;&gt;CheckPoint&lt;/h1&gt;
+&lt;h1 id=&#34;checkpoint&#34;&gt;CheckPoint&lt;/h1&gt;
 
 &lt;p&gt;&lt;a href=&#34;https://supportcenter.checkpoint.com/supportcenter/portal?eventSubmit_doGoviewsolutiondetails=&amp;amp;solutionid=sk102673&amp;amp;src=securityAlerts&#34;&gt;https://supportcenter.checkpoint.com/supportcenter/portal?eventSubmit_doGoviewsolutiondetails=&amp;amp;solutionid=sk102673&amp;amp;src=securityAlerts&lt;/a&gt;&lt;/p&gt;
 
 &lt;p&gt;GaiaとSPLATともに該当します。&lt;/p&gt;
 
-&lt;h1 id=&#34;hp:b35a1c1c8d870e3c08abe903af5123b9&#34;&gt;HP&lt;/h1&gt;
+&lt;h1 id=&#34;hp&#34;&gt;HP&lt;/h1&gt;
 
 &lt;p&gt;&lt;s&gt;Security Advisoryのページが見当たりません。。。どこー。&lt;/s&gt;&lt;/p&gt;
 
@@ -65,7 +65,7 @@
 
 &lt;p&gt;&lt;a href=&#34;http://webcache.googleusercontent.com/search?q=cache:cq8A9XMgwUIJ:h17007.www1.hp.com/docs/networking/alert/GNUBASHStatement-20140926.pdf+&amp;amp;cd=1&amp;amp;hl=ja&amp;amp;ct=clnk&amp;amp;gl=jp&#34;&gt;http://webcache.googleusercontent.com/search?q=cache:cq8A9XMgwUIJ:h17007.www1.hp.com/docs/networking/alert/GNUBASHStatement-20140926.pdf+&amp;amp;cd=1&amp;amp;hl=ja&amp;amp;ct=clnk&amp;amp;gl=jp&lt;/a&gt;&lt;/p&gt;
 
-&lt;h1 id=&#34;a10:b35a1c1c8d870e3c08abe903af5123b9&#34;&gt;A10&lt;/h1&gt;
+&lt;h1 id=&#34;a10&#34;&gt;A10&lt;/h1&gt;
 
 &lt;p&gt;&lt;s&gt;Security Advisoryのページが見当たりません。。。どこー&lt;/s&gt;&lt;/p&gt;
 
@@ -73,7 +73,7 @@
 
 &lt;p&gt;主要な製品は該当するようです。ただし、A10のSecurity Advisory を見るためには、製品のSNを使ってアカウント登録が必要のようなので、詳細は不明です。。。&lt;/p&gt;
 
-&lt;h1 id=&#34;radware:b35a1c1c8d870e3c08abe903af5123b9&#34;&gt;Radware&lt;/h1&gt;
+&lt;h1 id=&#34;radware&#34;&gt;Radware&lt;/h1&gt;
 
 &lt;p&gt;&lt;s&gt;現時点でのアナウンスは確認できません。&lt;/s&gt;&lt;/p&gt;
 
@@ -285,7 +285,7 @@ end-set     | Save Buffers       ^XS |
 
 &lt;p&gt;IOS XRvでBGPの設定を試したのでメモ。&lt;/p&gt;
 
-&lt;h1 id=&#34;自asの経路を広報する:7254d2635514f7f3eb366b003c624840&#34;&gt;自ASの経路を広報する&lt;/h1&gt;
+&lt;h1 id=&#34;自asの経路を広報する&#34;&gt;自ASの経路を広報する&lt;/h1&gt;
 
 &lt;p&gt;　お作法的な方法で、広報したい経路をNull0で設定し、Networkコマンドで広報します。追加後のコンフィグ（抜粋）は以下のような形になります。スタティックルートがIOSとは全く異なります。&lt;/p&gt;
 
@@ -305,7 +305,7 @@ router bgp 64585
 !
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h1 id=&#34;inboundのソフトリセットを有効にする:7254d2635514f7f3eb366b003c624840&#34;&gt;Inboundのソフトリセットを有効にする&lt;/h1&gt;
+&lt;h1 id=&#34;inboundのソフトリセットを有効にする&#34;&gt;Inboundのソフトリセットを有効にする&lt;/h1&gt;
 
 &lt;p&gt;　IOS XRvでは[auto-policy-soft-reset]という機能がデフォルトで有効になっています。この機能が有効だとBGPのポリシー設定を変更した際、直後に自動的にsoft reset が実行されます。&lt;/p&gt;
 
@@ -326,7 +326,7 @@ router bgp 64585
    soft-reconfiguration inbound always
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h1 id=&#34;経路制御:7254d2635514f7f3eb366b003c624840&#34;&gt;経路制御&lt;/h1&gt;
+&lt;h1 id=&#34;経路制御&#34;&gt;経路制御&lt;/h1&gt;
 
 &lt;p&gt;　IOSで言う所のprefix-list、filter-list、route-mapに代わりに、route-policyが実装されています。全ての経路の受信を止める場合は、条件に[drop]を使えばよさそうです。&lt;/p&gt;
 
@@ -397,7 +397,7 @@ end-policy
 
 &lt;p&gt;ASR9001を運用する機会がありそうなので、IOS XRvで事前勉強中です。取りあえず、昔ながらのターミナルで設定を変更するにはどうすればいいかを調べました。&lt;/p&gt;
 
-&lt;h1 id=&#34;設定を変更してみる:95be1ad11a83191468b6d828f20cde11&#34;&gt;設定を変更してみる&lt;/h1&gt;
+&lt;h1 id=&#34;設定を変更してみる&#34;&gt;設定を変更してみる&lt;/h1&gt;
 
 &lt;pre&gt;&lt;code&gt;RP/0/0/CPU0:aimless-XRv#show running-config 
 Sat May 24 10:40:28.924 UTC
@@ -507,7 +507,7 @@ Sat May 24 11:37:10.301 UTC
       Comment:   ### added address-family ipv6 unicast  
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h1 id=&#34;設定をロールバックしてみる:95be1ad11a83191468b6d828f20cde11&#34;&gt;設定をロールバックしてみる&lt;/h1&gt;
+&lt;h1 id=&#34;設定をロールバックしてみる&#34;&gt;設定をロールバックしてみる&lt;/h1&gt;
 
 &lt;p&gt;　「あ、やべ間違えた」という事で先ほどの設定をなかったことにします。[rollback]を利用します。[last 1]で直近のコミットを取り消します。&lt;/p&gt;
 
@@ -557,7 +557,7 @@ end
 &lt;li&gt;認証&lt;/li&gt;
 &lt;/ol&gt;
 
-&lt;h2 id=&#34;onepkのバージョン:121230cfe88f8075c75727c1b3ea9e45&#34;&gt;onePKのバージョン&lt;/h2&gt;
+&lt;h2 id=&#34;onepkのバージョン&#34;&gt;onePKのバージョン&lt;/h2&gt;
 
 &lt;p&gt;　自宅のCisco892J：IOS 15.3(2)Tに対してonePKで書いたアプリを試してみたのですが、ONEP_BASE-3-VERSION_ERR:のエラーが出て接続できませんでした。ルータに出力されたログを見ると、IOSのバージョンが0.7.0、SDKのバージョンが1.2.0であることが原因のようです。&lt;/p&gt;
 
@@ -565,7 +565,7 @@ end
 
 &lt;p&gt;　現時点で最新の15.4(2)Tにアップデートしたところ、onePKのバージョンが1.2.0になりました。契約していてよかったSMARTnet。課題ひとつ解決。&lt;/p&gt;
 
-&lt;h2 id=&#34;認証:121230cfe88f8075c75727c1b3ea9e45&#34;&gt;認証&lt;/h2&gt;
+&lt;h2 id=&#34;認証&#34;&gt;認証&lt;/h2&gt;
 
 &lt;p&gt;　次は認証です。TLS認証は自己署名証明書と認証局の二択ですが、スタートガイドの注意点（&lt;a href=&#34;https://developer.cisco.com/media/onepk_getting_started_guide/GUID-03D9D7BB-B201-45FD-B0DE-B928C9D70692.html&#34;&gt;Using a Cisco Router with a Self-Signed Certificate&lt;/a&gt;）を踏まえて、認証局（ただしオレオレ）を立てることにしました。&lt;/p&gt;
 
@@ -603,11 +603,11 @@ end
 
 &lt;p&gt;　次はルーティングを追加するスクリプトを書いてみようと思います。&lt;/p&gt;
 
-&lt;h2 id=&#34;実行結果:6e2abe9be2e5eb47329c287eceefb687&#34;&gt;実行結果&lt;/h2&gt;
+&lt;h2 id=&#34;実行結果&#34;&gt;実行結果&lt;/h2&gt;
 
-&lt;h3 id=&#34;スクリプト:6e2abe9be2e5eb47329c287eceefb687&#34;&gt;スクリプト&lt;/h3&gt;
+&lt;h3 id=&#34;スクリプト&#34;&gt;スクリプト&lt;/h3&gt;
 
-&lt;h3 id=&#34;メモ:6e2abe9be2e5eb47329c287eceefb687&#34;&gt;メモ&lt;/h3&gt;
+&lt;h3 id=&#34;メモ&#34;&gt;メモ&lt;/h3&gt;
 
 &lt;ul&gt;
 &lt;li&gt;ルータでonepkを有効にする。設定はGetting Staredに書いてある通り。&lt;a href=&#34;https://developer.cisco.com/media/onepk_getting_started_guide/GUID-03D9D7BB-B201-45FD-B0DE-B928C9D70692.html&#34;&gt;Using a Cisco Router with a Self-Signed Certificate&lt;/a&gt;&lt;/li&gt;
@@ -652,19 +652,19 @@ end
 
 &lt;p&gt;&lt;a href=&#34;http://aimless.jp/blog/blog/archives/1796&#34;&gt;IOS XRv&lt;/a&gt;の続きです。我が家のESXiではCiscoのドキュメントに記載された方法（ネットワーク越しの仮想コンソール接続）でIOS XRvのコンソールに接続することができないようなので、名前付きパイプを利用したコンソール接続を行いました。&lt;/p&gt;
 
-&lt;h2 id=&#34;ios-xrvの設定:a47b7d9c46ee1c93b25a8346c48dd9c8&#34;&gt;IOS XRvの設定&lt;/h2&gt;
+&lt;h2 id=&#34;ios-xrvの設定&#34;&gt;IOS XRvの設定&lt;/h2&gt;
 
 &lt;p&gt;　下記の様に、IOS XRvが稼働している仮想マシンに、名前付きパイプを使用したシリアルポートを追加します。&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/wp-content/uploads/2014/04/named-pipe_xrv.png&#34; alt=&#34;IOS XRv sirial setting&#34; /&gt;&lt;/p&gt;
 
-&lt;h2 id=&#34;コンソールサーバの設定:a47b7d9c46ee1c93b25a8346c48dd9c8&#34;&gt;コンソールサーバの設定&lt;/h2&gt;
+&lt;h2 id=&#34;コンソールサーバの設定&#34;&gt;コンソールサーバの設定&lt;/h2&gt;
 
 &lt;p&gt;　IOS XRvが稼働しているESXi上にシリアルポートを利用可能なサーバをデプロイし、IOS XRvと同様、名前付きパイプを使用したシリアルポートを追加します。パイプ名はIOS XRvの設定と同一にしてください。今回は元々vmdkが配置されていたCentos6.2を利用しました。&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/wp-content/uploads/2014/04/named-pipe_centos.png&#34; alt=&#34;centos sirial setting&#34; /&gt;&lt;/p&gt;
 
-&lt;h2 id=&#34;接続:a47b7d9c46ee1c93b25a8346c48dd9c8&#34;&gt;接続&lt;/h2&gt;
+&lt;h2 id=&#34;接続&#34;&gt;接続&lt;/h2&gt;
 
 &lt;p&gt;　コンソールサーバからscreenを利用してIOS XRvに接続します。IDの作成を求められたので適当なユーザを作ったところ、無事繋がりましたー。&lt;/p&gt;
 </description>
@@ -680,31 +680,31 @@ end
 
 &lt;p&gt;onePKのGeneral Availabilityが目前の様なので、利用する際に何度も見そうなドキュメントのリンクを纏めておきます。現時点では日本語の情報が見当たらないため、DevNetに載っている英語の情報を見る形になりそうです。&lt;/p&gt;
 
-&lt;h3 id=&#34;公式サイト:bb0dca5de7c128a969ca5a7464d74623&#34;&gt;公式サイト&lt;/h3&gt;
+&lt;h3 id=&#34;公式サイト&#34;&gt;公式サイト&lt;/h3&gt;
 
 &lt;p&gt;　とりあえずここを見ればOK。&lt;a href=&#34;https://developer.cisco.com/site/networking/one/onepk/overview/&#34;&gt;Cisco DevNet&lt;/a&gt;&lt;/p&gt;
 
-&lt;h3 id=&#34;sdk:bb0dca5de7c128a969ca5a7464d74623&#34;&gt;SDK&lt;/h3&gt;
+&lt;h3 id=&#34;sdk&#34;&gt;SDK&lt;/h3&gt;
 
 &lt;p&gt;　公式からダウンロードします。&lt;a href=&#34;https://developer.cisco.com/site/networking/one/onepk/sdk-and-docs/sdk-and-docs-for-python/index.gsp&#34;&gt;SDK and Docs for Python &amp;#8211; Cisco Developer Community&lt;/a&gt;&lt;/p&gt;
 
-&lt;h3 id=&#34;開発環境:bb0dca5de7c128a969ca5a7464d74623&#34;&gt;開発環境&lt;/h3&gt;
+&lt;h3 id=&#34;開発環境&#34;&gt;開発環境&lt;/h3&gt;
 
 &lt;p&gt;　onePKのアプリケーションを作成するために必要なものがセットになったVMが配布されてます。Cisco IOSvなるエミュレータが動いている模様。ご自宅にCiscoルータが無い人はこちらを使うのがよさそうです。&lt;a href=&#34;https://developer.cisco.com/site/networking/one/onepk/sdk-and-docs/all-in-one-vm/index.gsp&#34;&gt;All-in-One VM &amp;#8211; Cisco Developer Community&lt;/a&gt;&lt;/p&gt;
 
-&lt;h3 id=&#34;はじめに:bb0dca5de7c128a969ca5a7464d74623&#34;&gt;はじめに&lt;/h3&gt;
+&lt;h3 id=&#34;はじめに&#34;&gt;はじめに&lt;/h3&gt;
 
 &lt;p&gt;　Getting Startedに開発環境の準備方法とルータの設定方法が載っています。これを見て、onePKでアプリケーションを環境するための準備をします。&lt;a href=&#34;https://developer.cisco.com/site/networking/one/onepk/getting-started/getting-started-1-1/index.gsp&#34;&gt;Getting Started with onePK Version 1.1, Controlled Availability&lt;/a&gt;&lt;/p&gt;
 
-&lt;h3 id=&#34;チュートリアル:bb0dca5de7c128a969ca5a7464d74623&#34;&gt;チュートリアル&lt;/h3&gt;
+&lt;h3 id=&#34;チュートリアル&#34;&gt;チュートリアル&lt;/h3&gt;
 
 &lt;p&gt;　で、どうやってコーディングすればいいの？という人のために、チュートリアルがあります。私は1個ずつやっていこうと思います。 &lt;a href=&#34;https://developer.cisco.com/site/networking/one/onepk/tutorials/online-python-tutorial/index.gsp&#34;&gt;Cisco onePK &amp;#8211; Python Tutorial&lt;/a&gt;&lt;/p&gt;
 
-&lt;h3 id=&#34;リファレンス:bb0dca5de7c128a969ca5a7464d74623&#34;&gt;リファレンス&lt;/h3&gt;
+&lt;h3 id=&#34;リファレンス&#34;&gt;リファレンス&lt;/h3&gt;
 
 &lt;p&gt;　モジュールが提供する機能の一覧がファレンスにまとまっています。実際にコーディングする際に使うのはもちろんのこと、onePKでどのような事が出来るかを把握するためにも便利だと思います。&lt;a href=&#34;https://developer.cisco.com/media/onePKPythonAPI-v1-1-0/index.html&#34;&gt;onePK Python Presentation Library&lt;/a&gt;&lt;/p&gt;
 
-&lt;h3 id=&#34;コミュニティ:bb0dca5de7c128a969ca5a7464d74623&#34;&gt;コミュニティ&lt;/h3&gt;
+&lt;h3 id=&#34;コミュニティ&#34;&gt;コミュニティ&lt;/h3&gt;
 
 &lt;p&gt;　Ciscoのコミュニティサイトに、onePKのカテゴリがあります。 いざという時に役に立つはずです。 &lt;a href=&#34;https://communities.cisco.com/community/developer/networking/cisco-one/onepk&#34;&gt;Space: onePK | Cisco Communities&lt;/a&gt;&lt;/p&gt;
 </description>
@@ -733,7 +733,7 @@ end
 &lt;li&gt;ネイバーのID&lt;/li&gt;
 &lt;/ol&gt;
 
-&lt;h3 id=&#34;検証環境:8a801d7caae5205bbd472b545f0f0c21&#34;&gt;検証環境&lt;/h3&gt;
+&lt;h3 id=&#34;検証環境&#34;&gt;検証環境&lt;/h3&gt;
 
 &lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/wp-content/uploads/2014/03/vpc-diag.png&#34; alt=&#34;enter image description here&#34; /&gt;&lt;/p&gt;
 
@@ -741,7 +741,7 @@ end
 
 &lt;p&gt;　この状態でEC2から192.168.2.254へTracerouteを行うことで、VGWがCiscoとFortiGateが広報した経路のどちらをベストパスとして選択するかを確認します。&lt;/p&gt;
 
-&lt;h3 id=&#34;1-そのまま接続してみる:8a801d7caae5205bbd472b545f0f0c21&#34;&gt;1　そのまま接続してみる&lt;/h3&gt;
+&lt;h3 id=&#34;1-そのまま接続してみる&#34;&gt;1　そのまま接続してみる&lt;/h3&gt;
 
 &lt;p&gt;　特に経路制御をせずにVPNコネクションを確立し、EC2からTracerouteを行います。FortiGate（169.254.252.33）経由になりました。これはORIGINによるものです。&lt;/p&gt;
 
@@ -768,7 +768,7 @@ Network Next Hop Metric LocPrf Weight Path
 
 &lt;p&gt;　ORIGIN属性はigp、egp、incompliteの順で選ばれるので、FortiGateが広告した192.168.2.0/24がベストパスに選択され、TracerouteがFortiGate経由になります。&lt;/p&gt;
 
-&lt;h3 id=&#34;2-origionをそろえる:8a801d7caae5205bbd472b545f0f0c21&#34;&gt;2　ORIGIONをそろえる&lt;/h3&gt;
+&lt;h3 id=&#34;2-origionをそろえる&#34;&gt;2　ORIGIONをそろえる&lt;/h3&gt;
 
 &lt;p&gt;　Cisco側のORIGIN属性をIGPに変更してみます。&lt;/p&gt;
 
@@ -786,7 +786,7 @@ Network Next Hop Metric LocPrf Weight Path
 4 192.168.2.254 (192.168.2.254) 20.392 ms * 
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h3 id=&#34;3-as-pathをprependしてみる:8a801d7caae5205bbd472b545f0f0c21&#34;&gt;3　AS-PATHをPrependしてみる。&lt;/h3&gt;
+&lt;h3 id=&#34;3-as-pathをprependしてみる&#34;&gt;3　AS-PATHをPrependしてみる。&lt;/h3&gt;
 
 &lt;p&gt;　router-idでベストパスが選択されている状況で、AS-PATHを使ってみます。Cisco側が広報する経路にAS-PATHを3つ積みます。&lt;/p&gt;
 
@@ -807,7 +807,7 @@ neighbor 169.254.252.25 route-map aws-aspath out
 4 192.168.2.254 (192.168.2.254) 20.646 ms * *
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h3 id=&#34;4-medを積んでみる:8a801d7caae5205bbd472b545f0f0c21&#34;&gt;4　MEDを積んでみる&lt;/h3&gt;
+&lt;h3 id=&#34;4-medを積んでみる&#34;&gt;4　MEDを積んでみる&lt;/h3&gt;
 
 &lt;p&gt;　AS-PATHではなく、MEDを積んでみましょう。Cisco側を通っている状況でCisco側にMEDを積みます。&lt;/p&gt;
 
@@ -884,7 +884,7 @@ end
 
 &lt;p&gt;15.3(2)TからHSRPのVIPとしてGUAがサポートされたようなので試してみました。&lt;/p&gt;
 
-&lt;h3 id=&#34;cisco892-k9-ios-15-3-1-tの場合:bb196d36658ab089ac6f611d58e19167&#34;&gt;CISCO892-K9 IOS 15.3(1)Tの場合&lt;/h3&gt;
+&lt;h3 id=&#34;cisco892-k9-ios-15-3-1-tの場合&#34;&gt;CISCO892-K9 IOS 15.3(1)Tの場合&lt;/h3&gt;
 
 &lt;pre&gt;&lt;code&gt;Router(config)#interface vlan 15 
 Router(config-if)#standby ? 
@@ -892,7 +892,7 @@ Router(config-if)#standby ipv6 ?
 X:X:X:X::X IPv6 link-local address autoconfig Obtain address using autoconfiguration
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h3 id=&#34;cisco892-k9-ios-15-3-2-tの場合:bb196d36658ab089ac6f611d58e19167&#34;&gt;CISCO892-K9 IOS 15.3(2)Tの場合&lt;/h3&gt;
+&lt;h3 id=&#34;cisco892-k9-ios-15-3-2-tの場合&#34;&gt;CISCO892-K9 IOS 15.3(2)Tの場合&lt;/h3&gt;
 
 &lt;pre&gt;&lt;code&gt;Router(config)#interface vlan 15 
 Router(config-if)#standby 0 ipv6 ? 

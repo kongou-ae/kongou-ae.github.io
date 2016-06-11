@@ -78,7 +78,7 @@
 
 <p><img src="http://aimless.jp/blog/images/sslvpn.png" alt="sslvpn" /></p>
 
-<h3 id="ユーザ作成のハマりどころ:483e536bcb93d01cf7c3b5a7bcb27b43">ユーザ作成のハマりどころ</h3>
+<h3 id="ユーザ作成のハマりどころ">ユーザ作成のハマりどころ</h3>
 
 <p>　ユーザとIPアドレスを直接関連付ける設定箇所が見当たりませんでした。トンネル用のIPアドレスを指定できる場所は、ポータルの設定部分しかありません。そこで下記の様にしました。</p>
 
@@ -87,7 +87,7 @@
 <li>ユーザグループ作成時に、そのグループ用のポータルを割り当てる</li>
 </ol>
 
-<h3 id="fwの設定:483e536bcb93d01cf7c3b5a7bcb27b43">FWの設定</h3>
+<h3 id="fwの設定">FWの設定</h3>
 
 <p>　必要な設定は大きく二つ。一つはSSL-VPNでのアクセスを自体を許可するルール、もう一つはトンネル接続を許可するルールです。</p>
 
@@ -101,7 +101,7 @@
 
 <p><img src="http://aimless.jp/blog/images/sslvpn-policy-detail2.png" alt="sslvpn-policy-detail2" /></p>
 
-<h3 id="forticlientの設定:483e536bcb93d01cf7c3b5a7bcb27b43">FortiClientの設定</h3>
+<h3 id="forticlientの設定">FortiClientの設定</h3>
 
 <p>　これでブラウザ経由でのトンネル接続が可能になります。なお、FortigateにはFortiClinetと呼ばれるクライアントソフトがあります。昔はFortiClientそのものが一般公開されていたように記憶していますが、現在はFortiClient Liteしか一般公開されていないみたいです。これを使うための特殊な設定は不要です。クライアントを入れてアクセス先を指定すれば普通に繋がります。</p>
 

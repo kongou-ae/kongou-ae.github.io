@@ -123,7 +123,7 @@ Router(config-router)#route-server-context ?
 
 &lt;p&gt;　そんなことより、IHANetのIPv6ネイバーがSNMPで取得できなかったのですが、CiscoのBGP4-MIBはIPv6未対応なのでしょうか。&lt;/p&gt;
 
-&lt;h3 id=&#34;ipv6のネイバしかいない場合:62a6820cfa83bdbfdf8d00ae010de588&#34;&gt;IPv6のネイバしかいない場合&lt;/h3&gt;
+&lt;h3 id=&#34;ipv6のネイバしかいない場合&#34;&gt;IPv6のネイバしかいない場合&lt;/h3&gt;
 
 &lt;p&gt;　bgpPeerTable（1.3.6.1.2.1.15.3.1）の中身が存在しません。&lt;/p&gt;
 
@@ -133,7 +133,7 @@ SNMPv2-SMI::mib-2.15.2.0 = INTEGER: 64585
 SNMPv2-SMI::mib-2.15.4.0 = IpAddress: 36.2.xxx.xxx
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h3 id=&#34;ipv4のネイバがいる場合:62a6820cfa83bdbfdf8d00ae010de588&#34;&gt;IPv4のネイバがいる場合&lt;/h3&gt;
+&lt;h3 id=&#34;ipv4のネイバがいる場合&#34;&gt;IPv4のネイバがいる場合&lt;/h3&gt;
 
 &lt;p&gt;　bgpPeerTable（1.3.6.1.2.1.15.3.1）の中身が存在します。ただしIPv4だけ。。。&lt;/p&gt;
 
@@ -179,19 +179,19 @@ SNMPv2-SMI::mib-2.15.4.0 = IpAddress: 36.2.xxx.xxx
 
 &lt;p&gt;@stereocatさんのエントリーを見て自分もルータにフルルートを注入したくなったので、RouteViews+bgpdump+exabgpで試してみました。&lt;/p&gt;
 
-&lt;h3 id=&#34;経路情報の準備:f1ff86de82d9f4089c5525dc9e58f1c5&#34;&gt;経路情報の準備&lt;/h3&gt;
+&lt;h3 id=&#34;経路情報の準備&#34;&gt;経路情報の準備&lt;/h3&gt;
 
 &lt;p&gt;　&lt;a href=&#34;http://archive.routeviews.org/route-views6/bgpdata/&#34;&gt;route-views6.oregon-ix.net&lt;/a&gt;が公開しているIPv6のMRTデータを利用します。&lt;/p&gt;
 
-&lt;h3 id=&#34;bgpdumpのインストール:f1ff86de82d9f4089c5525dc9e58f1c5&#34;&gt;bgpdumpのインストール&lt;/h3&gt;
+&lt;h3 id=&#34;bgpdumpのインストール&#34;&gt;bgpdumpのインストール&lt;/h3&gt;
 
 &lt;p&gt;　&lt;a href=&#34;http://d.hatena.ne.jp/stereocat/20120311/1331451000&#34; target=&#34;_blank&#34;&gt;@stereocatさんのエントリー&lt;/a&gt;を見ながら粛々と実施します。&lt;/p&gt;
 
-&lt;h3 id=&#34;exabgpの準備:f1ff86de82d9f4089c5525dc9e58f1c5&#34;&gt;exabgpの準備&lt;/h3&gt;
+&lt;h3 id=&#34;exabgpの準備&#34;&gt;exabgpの準備&lt;/h3&gt;
 
 &lt;p&gt;　これも&lt;a href=&#34;http://d.hatena.ne.jp/stereocat/20120311/1331450868&#34; target=&#34;_blank&#34;&gt;@stereocatさんのエントリー&lt;/a&gt;を見ながら粛々と実施します。なおCentOS5.8のyumでインストールされるpython2.4だとエラーが出て動かなかった為、別途2.6をソースからインストールしました。&lt;/p&gt;
 
-&lt;h3 id=&#34;コンフィグ作成スクリプトの実施:f1ff86de82d9f4089c5525dc9e58f1c5&#34;&gt;コンフィグ作成スクリプトの実施&lt;/h3&gt;
+&lt;h3 id=&#34;コンフィグ作成スクリプトの実施&#34;&gt;コンフィグ作成スクリプトの実施&lt;/h3&gt;
 
 &lt;p&gt;　MRT形式のデータをbgpdumpで変換しただけではexabgpのコンフィグに必要な構文になりません。そこで、スクリプトでbgpdumpの変換結果をexabgpのコンフィグにそった形に修正します。イケてないスクリプトなのはご了承ください。&lt;/p&gt;
 
@@ -229,7 +229,7 @@ echo } &amp;gt;&amp;gt;/tmp/bgproute/exabgpconf
 
 &lt;p&gt;　neighborファイルの中にネイバーに関する設定（Static部分はスクリプトが自動生成します）を準備してから、変換したいRMT形式のデータを引数にしてシェルを実行すると、static部分が追記されたexabgpconfというコンフィグファイルが出来上がります。（cloudcore上で実施したら凄い時間がかかりました・・・）　&lt;/p&gt;
 
-&lt;h3 id=&#34;ルータへ経路を注入する:f1ff86de82d9f4089c5525dc9e58f1c5&#34;&gt;ルータへ経路を注入する&lt;/h3&gt;
+&lt;h3 id=&#34;ルータへ経路を注入する&#34;&gt;ルータへ経路を注入する&lt;/h3&gt;
 
 &lt;p&gt;　Cisco892J側にexabgpをネイバーとして追加して、いざ経路注入。&lt;/p&gt;
 
@@ -279,7 +279,7 @@ exabgp
 
 &lt;p&gt;InternetExchange経由でトラフィックをやりとりするのにも当然費用がかかりますが、大概トランジットを利用するよりも安くなります。こうする事でデータセンタの通信コストを下げます。データセンタ事業者からすれば、大量の通信が発生するコンテンツプロバイダとは、是非IX経由でpeeringしたいところです。&lt;/p&gt;
 
-&lt;h3 id=&#34;作業前の経路情報:79e487abc6c7162c445d8f19e1134e09&#34;&gt;作業前の経路情報&lt;/h3&gt;
+&lt;h3 id=&#34;作業前の経路情報&#34;&gt;作業前の経路情報&lt;/h3&gt;
 
 &lt;p&gt;設定前にpeerから受け取った経路2001:**:**:2a20::/64のLocPrfは空欄です。IPv6だと表示が崩れてしまうのが残念。&lt;/p&gt;
 
@@ -295,7 +295,7 @@ Origin codes: i - IGP, e - EGP, ? - incomplete
                                                            0 645** 645** 645** ?
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h3 id=&#34;local-preference値を付与するroute-mapを作成する:79e487abc6c7162c445d8f19e1134e09&#34;&gt;local preference値を付与するroute-mapを作成する&lt;/h3&gt;
+&lt;h3 id=&#34;local-preference値を付与するroute-mapを作成する&#34;&gt;local preference値を付与するroute-mapを作成する&lt;/h3&gt;
 
 &lt;p&gt;Peerからの経路は全てLocal preference値を付与するので、matchによるprefixの指定は行いません。LPというroute-mapを作成し、local-preference値400を付与します。line5-6の部分です。&lt;/p&gt;
 
@@ -310,7 +310,7 @@ Origin codes: i - IGP, e - EGP, ? - incomplete
  }
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h3 id=&#34;route-mapをpeerと関連付ける:79e487abc6c7162c445d8f19e1134e09&#34;&gt;route-mapをpeerと関連付ける&lt;/h3&gt;
+&lt;h3 id=&#34;route-mapをpeerと関連付ける&#34;&gt;route-mapをpeerと関連付ける&lt;/h3&gt;
 
 &lt;p&gt;peerとの関連付けは、その①で作成したpeer-groupで行います。peer-group IHAnet に先程作成したroute-mapを関連付けます。line19-20の部分です。&lt;/p&gt;
 
@@ -340,7 +340,7 @@ Origin codes: i - IGP, e - EGP, ? - incomplete
                     }
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h3 id=&#34;設定後の確認:79e487abc6c7162c445d8f19e1134e09&#34;&gt;設定後の確認&lt;/h3&gt;
+&lt;h3 id=&#34;設定後の確認&#34;&gt;設定後の確認&lt;/h3&gt;
 
 &lt;p&gt;peerから受け取った経路2001:**:**:2a20::/64のLocPrfに400が付与されています。この状態でトランジットから同じ経路を広告されたとしても、トランジット側のLocal Preference値は何もしていない＝デフォルトの100なので、Peer側の経路がベストパスとして選択されます。&lt;/p&gt;
 

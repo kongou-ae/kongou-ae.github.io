@@ -78,7 +78,7 @@
 
 <p>　これを回避する方法は、ASα向けのリンクで障害が発生した場合に、ASαとの経路交換を停止し全てのトラフィックをASβに向けるしかありません。（ASβ向けの帯域に120M以上の余裕がある事が前提です）</p>
 
-<h3 id="embedded-event-managerでbgpを操作する:0d8548d25cf8e6e6710a6eb5b55e3447">Embedded Event ManagerでBGPを操作する</h3>
+<h3 id="embedded-event-managerでbgpを操作する">Embedded Event ManagerでBGPを操作する</h3>
 
 <p>　上記はObjrctTrackingだけでは対応できないため、IP SLA + ObjectTracking + EEMを利用します。まずはIP SLAとObjeckTrackingにて、「片方のリンクが落ちたら～」の部分を実装します。</p>
 
@@ -142,7 +142,7 @@ event manager applet bgp-1-activate
  action 1.5 cli command "end"
 </code></pre>
 
-<h3 id="動作確認:0d8548d25cf8e6e6710a6eb5b55e3447">動作確認</h3>
+<h3 id="動作確認">動作確認</h3>
 
 <p>　試しにLeftの10.0.1.1のIPアドレスを消してみます。リンクは上がってるけどL3で障害発生中のパターンです。IP SLA 1がダウンしたことをObjectTrackingが検知して、2本目のネイバがshutdownされているのが分ります。その後1本目のネイバがホールドダウンタイムを経過してDownします。これによりRigthはASαとの経路交換を完全に停止します。</p>
 
