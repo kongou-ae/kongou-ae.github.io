@@ -6,8 +6,216 @@
     <description>Recent content in Aws on Aimless</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja</language>
-    <lastBuildDate>Sun, 14 Feb 2016 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 11 Jun 2016 00:00:00 +0000</lastBuildDate>
     <atom:link href="http://aimless.jp/categories/aws/feed/" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>airinterop.jpを支える技術</title>
+      <link>http://aimless.jp/blog/archives/2016-06-11-the-technology-to-support-airinterop</link>
+      <pubDate>Sat, 11 Jun 2016 00:00:00 +0000</pubDate>
+      
+      <guid>http://aimless.jp/blog/archives/2016-06-11-the-technology-to-support-airinterop</guid>
+      <description>
+
+&lt;h2 id=&#34;はじめに&#34;&gt;はじめに&lt;/h2&gt;
+
+&lt;p&gt;2年前から、「airinterop.jp」という非公認ネタサイトを作っています。簡単なウェブサイトくらい気軽に建てられるくらいのスキルは欲しいので。&lt;/p&gt;
+
+&lt;p&gt;例年は、適当にHTMLとCSSを作りVPS上のApacheで公開するだけでした。ですが、今年のairinterop.jpは、製作者のスキル向上に伴い、新しい取り組みを行いました。来年のためにもやったことをメモしておきます&lt;/p&gt;
+
+&lt;h2 id=&#34;webページ公開&#34;&gt;WEBページ公開&lt;/h2&gt;
+
+&lt;p&gt;今年のairinterop.jpは、S3の静的ウェブサイトホスティングを利用しました。&lt;/p&gt;
+
+&lt;p&gt;去年までのairInterop.jpはConoHaで稼働していました。ですが、経費節約を目的にConoHaを解約したため、Apacheやnginxに頼ることができません。現時点で常時稼働しているVPSは、リモート艦これ用のさくらのVPS for Windows Serverだけです。ですが、このVPSは、艦これのせいでCPUが常時90%を超えているため、サービスを公開するのに不向きです。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/images/2016-06-11-01.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;ネタサイトのために再びVPSを借りるのは馬鹿らしいので、S3の静的ウェブサイトホスティングでリリースしました&lt;/p&gt;
+
+&lt;h2 id=&#34;参加者カウンタ&#34;&gt;参加者カウンタ&lt;/h2&gt;
+
+&lt;p&gt;「airinterop.jpの参加者が可視化されたら面白くね？」という思いつきから、Doorkeeperなどのイベント登録サイトのように、参加者のTwitterアイコンを表示するようにしました。公式サイトも来場者数を公表していますし。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/images/2016-06-11-02.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;静的ウェブサイトホスティングにしてしまったので、サーバ側でTwitterアイコンを動的に描画することはできません。そこで、API Gateway＋mithril.jsを使って、クライアント側で動的に描画することにしました。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/images/2016-06-11-04.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;API Gatewayが返すデータはMockを使いました。DynamoDBやLambdaからデータを返すよりも安上がりで実装も簡単です。Lambdaを利用して#airinteropのハッシュタグをツイートした人のデータを作成し、そのデータを使ってAPI GatewayのMock を更新しました。&lt;/p&gt;
+
+&lt;p&gt;初めてaws-sdkでAPI Gatewayを操作したので、updateIntegrationResponseしたあとにcreateDeploymentすることに気が付くのに時間がかかりました。その結果、Mockのデータは更新されているのにAPI Gatewayが返すデータが古いままという事象に数時間悩みました。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;function(body,callback){
+  var apigateway = new AWS.APIGateway();
+  var params = {
+    httpMethod: &#39;GET&#39;, /* required */
+    resourceId: &#39;xxxxxxxxxx&#39;, /* required */
+    restApiId: &#39;xxxxxxxxxx&#39;, /* required */
+    statusCode: &#39;200&#39;, /* required */
+    patchOperations: [
+      {
+        op: &#39;replace&#39;,
+        path: &#39;/responseTemplates/application~1json;charset=UTF-8&#39;,
+        value: JSON.stringify(body)
+      }
+    ]
+  };
+  apigateway.updateIntegrationResponse(params, function(err, data) {
+    var params = {
+      restApiId: &#39;xxxxxxxxxx&#39;, /* required */
+      stageName: &#39;prod&#39;, /* required */
+    }
+    apigateway.createDeployment(params, function(err, data) {
+      if (err) {
+        console.log(err, err.stack);
+      } else {
+        callback()  
+      }
+    });
+  });
+});
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;mithril.jsは以下のような簡単なコードです。API Gatewayから取得したjsonをデータバインディング用の配列に格納し格納し、Viewでその配列を描画します。なお、いまだにControllerとView Model、Modelの使い分けがわかりません。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;var register = {}
+
+register.vm = {
+    init: function(){
+    
+        register.vm.listAry = m.prop([])
+        m.request({
+            Method:&amp;quot;GET&amp;quot;,
+            url:&amp;quot;https://xxxxxxxxxx.execute-api.ap-northeast-1.amazonaws.com/prod&amp;quot;,
+        }).then(function(responce){
+            for (var i = 0; i&amp;lt; responce.length; i++){
+                register.vm.listAry().push(responce[i])
+            }
+        });
+    }        
+};
+
+register.controller = function () {
+    register.vm.init()
+}
+
+register.view = function(){
+    return [
+        m(&amp;quot;h2&amp;quot;,register.vm.listAry().length + &#39;人の参加者&#39;),
+        register.vm.listAry().map(function(data){
+            return [
+                m(&amp;quot;div&amp;quot;,{class:&amp;quot;resister-icon&amp;quot;},[
+                    m(&amp;quot;img&amp;quot;,{src:data.profile_image_url})
+                ])
+            ]
+        })        
+    ]
+}
+
+m.mount(document.getElementById(&amp;quot;twit-register&amp;quot;), {
+  controller: register.controller,
+  view: register.view
+});
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;参加者の情報は自動で定期更新されるべきですので、Cloudwatch Eventsを使って、MOCKのデータ更新用Lambdaを定期発火しました。lambdaの定期実行は、Lambda側で設定することもできますが、Cloudwatch Eventsを使ったほうがcrontabのように一覧性が高くなるので好きです。&lt;/p&gt;
+
+&lt;h2 id=&#34;airinteopのツイート分析&#34;&gt;#airinteopのツイート分析&lt;/h2&gt;
+
+&lt;p&gt;会期中、本家のBest of show awardsのようなことをやりたくなりました。そこで、Twitter APを使って#airinteropのツイートを収集し、最もリツイート数の多いツイートを、勝手にBest of Airinterop Awardとして表彰しました。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://aimless.jp/blog/images/2016-06-11-03.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;手作業で集計するのは非常に大変なので、node.jsとtwitを使って集計スクリプトを作りこみました。とりあえず集計優先で動くコードを書きましたが、next_resultsがなくなるまで検索を続ける処理について、もう少し良いアルゴリズムがありそうな気がします。&lt;/p&gt;
+
+&lt;p&gt;以下のスクリプトを動かすと、Retweet数トップ5のツイートを埋め込むためのHTMLコード
+を取得することができます。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;var Twit = require(&#39;twit&#39;);
+var async = require(&#39;async&#39;);
+
+var T = new Twit({
+});
+
+var loop = 20
+var loopAry = []
+for (var k = 0; k&amp;lt;loop; k++){
+  loopAry.push(k)
+}
+  
+var regex = new RegExp(/max_id=(.+)&amp;amp;q=/)
+var max_id = &amp;quot;&amp;quot;
+var body = []
+var param = { 
+  q: &#39;#airinterop&#39;, 
+  count:100
+}
+
+async.eachSeries(loopAry,
+  function(item,callback){  
+    if (max_id != &amp;quot;&amp;quot;){
+      param.max_id = max_id
+    } 
+       
+    T.get(&#39;search/tweets&#39;, param, function(err, data){
+      var statuses = data[&#39;statuses&#39;];
+      for (var i = 0; i &amp;lt; statuses.length ; i++) {
+        // retweetは除く
+        if(!statuses[i].retweeted_status){
+          var obj = {};
+          obj.created_at = statuses[i].created_at;
+          obj.screen_name = statuses[i].user.screen_name
+          obj.id_str = statuses[i].id_str
+          obj.retweet_count = statuses[i].retweet_count;
+          obj.text = statuses[i].text;
+          body.push(obj)                        
+        }
+      };
+      if (data.search_metadata.next_results){
+        max_id = data.search_metadata.next_results.match(regex)[1]          
+        callback();
+      } else {
+        var fakeErr = new Error();
+        fakeErr.break = true;
+        return callback(fakeErr);
+      }
+    })    
+  },
+  function(err){
+    body.sort(function(a,b){
+      if(a.retweet_count &amp;lt; b.retweet_count ) return 1;
+        if(a.retweet_count &amp;gt; b.retweet_count ) return -1;
+        return 0
+    })
+      
+    var awards = []
+    for (var j = 0; j &amp;lt; 5;j++){
+      awards.push(body[j])
+    }
+      
+    var paramOembed ={}
+    
+    async.eachSeries(awards,function(item,callback){
+      paramOembed = {
+        id:item.id_str
+      }
+                
+      T.get(&#39;statuses/oembed&#39;, paramOembed, function(err, data){
+        console.log(data)
+        callback()
+      })
+    })
+  }
+)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;来年への意気込み&#34;&gt;来年への意気込み&lt;/h2&gt;
+
+&lt;p&gt;来年は何をしましょうか。やりきってしまった感があります。公式サイトを眺めてもネタが思いつきませんので、独自路線に進むしかありません。BOTが流行っているので、えあーいんたろっぷん的な、皆様がつぶやいた面白展示をご案内するBOTを作ってみたいですね。&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>Apache Drill を使ってVPC Flow Logsを集計する</title>
@@ -1656,39 +1864,6 @@ aws_security_group.web-server:
 &lt;li&gt;AWS CLIの実行結果が標準出力となり、ec2-userにメールが届いてしまう&lt;/li&gt;
 &lt;li&gt;万が一起動に失敗した場合、他のメンバーに迷惑がかかるので、メール通知したい。&lt;/li&gt;
 &lt;/ul&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>セキュリティグループの詳細をCSV形式で出力する</title>
-      <link>http://aimless.jp/blog/archives/2418</link>
-      <pubDate>Mon, 23 Feb 2015 00:00:00 +0000</pubDate>
-      
-      <guid>http://aimless.jp/blog/archives/2418</guid>
-      <description>&lt;p&gt;セキュリティグループにルールを追加すればするほどマネジメントコンソールでの一覧性が下がるので、全てのルールをCSV形式でエクスポートするコマンドを作ってみました。aws-to-csvです。&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&#34;https://github.com/kongou-ae/aws-to-csv&#34;&gt;kongou-ae/aws-to-csv&lt;/a&gt;&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;$ ./a2csv securityGroups -r ap-northeast-1 -p private
-GroupID,Direction,Type,Protocol,Port Range,IP Range
-sg-b6822ed3,inbound,ALL ICMP,ICMP(1),ALL,sg-a9822ecc
-sg-b6822ed3,outbound,ALL Traffic,ALL,ALL,0.0.0.0/0
-sg-6ad86e0f,inbound,SSH(22),TCP(6),22,0.0.0.0/0
-sg-6ad86e0f,outbound,ALL Traffic,ALL,ALL,0.0.0.0/0
-sg-f07cdd95,inbound,RDP(3389),TCP(6),3389,192.168.11.1/32
-sg-f07cdd95,outbound,ALL Traffic,ALL,ALL,0.0.0.0/0
-sg-a9822ecc,inbound,ALL Traffic,ALL,ALL,192.168.11.1/32
-sg-a9822ecc,outbound,ALL ICMP,ICMP(1),ALL,sg-b6822ed3
-sg-aa2686cf,inbound,Custom Rrotocol Rule,HOPOPT(0),ALL,sg-6ad86e0f
-sg-aa2686cf,inbound,SSH(22),TCP(6),22,192.168.11.1/32
-sg-aa2686cf,outbound,ALL Traffic,ALL,ALL,0.0.0.0/0
-sg-b10aecd4,inbound,SSH(22),TCP(6),22,0.0.0.0/0
-sg-b10aecd4,outbound,ALL Traffic,ALL,ALL,0.0.0.0/0
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;　セキュリティグループは、APIのレスポンスをそのままCSV形式でエクスポートすると、出力内容がマネジメントコンソールの表示と大きく異なってしまい可読性が低くなります。そこで、APIのレスポンスをあの手この手で細工してからCSV形式で出力するようにしています。&lt;/p&gt;
-
-&lt;p&gt;　今までpythonで遊んでいましたが、今回は、クロスコンパイルにあこがれてgolangを使ってみました。これはすごいですね。VPSでwindows用にコンパイルしたa2csv.exeが、会社のwindows端末でそのまま動く。pythonで書いたコードを使うために、会社のPCにpythonをインストールしていたのが馬鹿みたいです。。。&lt;/p&gt;
 </description>
     </item>
     
