@@ -9,7 +9,7 @@
 }
 
 body{  font-size: 15px; }
-body > img {
+body #single img {
     display: block;
     margin: 0 auto;
 }
