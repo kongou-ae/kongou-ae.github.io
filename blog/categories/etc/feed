@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Etc on Aimless</title>
+    <link>http://aimless.jp/categories/etc/</link>
+    <description>Recent content in Etc on Aimless</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ja</language>
+    <lastBuildDate>Tue, 19 Jul 2016 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://aimless.jp/categories/etc/feed/" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>挑戦できない人の背中を押した話</title>
+      <link>http://aimless.jp/blog/archives/2016-07-19-pressing-the-back</link>
+      <pubDate>Tue, 19 Jul 2016 00:00:00 +0000</pubDate>
+      
+      <guid>http://aimless.jp/blog/archives/2016-07-19-pressing-the-back</guid>
+      <description>
+
+&lt;h2 id=&#34;挑戦できない人&#34;&gt;挑戦できない人&lt;/h2&gt;
+
+&lt;p&gt;職場のエンジニア（2年目とオペレータ上がり）と雑談した際に気付いたことがあります。どちらも挑戦できない人でした。具体的な特徴は以下の通りです。&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;挑戦したいことがある。&lt;/li&gt;
+&lt;li&gt;しかし、実現に向けて具体的に取り組まない。&lt;/li&gt;
+&lt;li&gt;取り組まない理由は、「時間がない」「忙しい」などの抽象的なものばかりである。&lt;/li&gt;
+&lt;li&gt;「取り組むために何をすればいいのか」との質問に対する具体的な答えがない。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;わたしは、自分が挑戦したいことに自ら取り組みます。これが普通だと思っていました。ですが、周りを見渡すと、自分が挑戦したいことに自ら取り組めない人がいました。「挑戦したいことがあるのなら挑戦すればいいのに」と思うわたしにとって、これは新しい発見でした。&lt;/p&gt;
+
+&lt;h2 id=&#34;挑戦できない人に挑戦してもらう&#34;&gt;挑戦できない人に挑戦してもらう&lt;/h2&gt;
+
+&lt;p&gt;挑戦しない人の背中を押すことは押しつけです。ですが今回は、挑戦しない人ではなく、挑戦したいことがあるのに挑戦できない人です。&lt;/p&gt;
+
+&lt;p&gt;挑戦できない人が挑戦したいことは、組織としての成果拡大にとって有益なものでした。ぜひとも挑戦し、そして実現してほしい。そこで背中を押すことにしました。&lt;/p&gt;
+
+&lt;p&gt;ただし、「がんばりなよ」「挑戦しなよ」と応援することは無意味です。そこで、挑戦したことがない人でも挑戦しやすいように、以下のような具体的な仕組みで背中を押しました。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;挑戦したいことが漠然としているので、組織の目標に沿った具体的な成果物を設定する。&lt;/li&gt;
+&lt;li&gt;成果物に到達するまでに必要なタスクを明確にする。&lt;/li&gt;
+&lt;li&gt;タスクの具体的な進め方は本人に決めさせる。期待するアウトプットだけを明確にし、細部には口を出さない。&lt;/li&gt;
+&lt;li&gt;「時間がない」「忙しい」などの抽象的な理由に逃げたがるので、1つのタスクに2週間の期限を設ける。&lt;/li&gt;
+&lt;li&gt;新しいことに1人で挑戦するのは不安なので、タスクの進捗報告会（LT方式の気軽な会）を設ける。&lt;/li&gt;
+&lt;li&gt;タスクの達成に必要な知識、IT資源は、わたしが持っているものを可能な限り提供する。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;少しおせっかいかなと思いました。しかし、この仕組みで背中を押した結果、挑戦できない人は、ゴールに到達するためのタスクに挑戦するようになりました。&lt;/p&gt;
+
+&lt;p&gt;はじめたばかりの取り組みであるため、正しい背中の押し方であったのかが不安ですが、引き続き背中を押し続けてみようと思います。最終的には、挑戦できない人に、挑戦する習慣が根付いてほしいです。&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>
